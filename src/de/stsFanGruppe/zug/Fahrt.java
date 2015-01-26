@@ -46,6 +46,10 @@ public class Fahrt
 	{
 		this.linie = linie;
 	}
+	public boolean hasFahrplanhalte()
+	{
+		return !fahrplanhalte.isEmpty();
+	}
 	public List<Fahrplanhalt> getFahrplanhalte()
 	{
 		return fahrplanhalte;

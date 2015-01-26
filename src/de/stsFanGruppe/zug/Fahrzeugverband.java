@@ -42,6 +42,10 @@ public class Fahrzeugverband
 	{
 		this.name = name;
 	}
+	public boolean hasFahrzeuge()
+	{
+		return !fahrzeuge.isEmpty();
+	}
 	public List<Fahrzeugtyp> getFahrzeuge()
 	{
 		return fahrzeuge;

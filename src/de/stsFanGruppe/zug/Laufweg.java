@@ -23,6 +23,10 @@ public class Laufweg
 	{
 		this.name = name;
 	}
+	public boolean hasStreckenabschnitte()
+	{
+		return !streckenabschnitte.isEmpty();
+	}
 	public List<Streckenabschnitt> getStreckenabschnitte()
 	{
 		return streckenabschnitte;

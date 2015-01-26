@@ -7,15 +7,20 @@ import javax.xml.stream.*;
 
 public class HafasXMLImporter
 {
-	public static List<Station> getStations(String match) throws IOException, XMLStreamException
+	public static void main(String[] args) throws Exception
+	{
+		System.out.println(getStations("Horneburg", 20));
+	}
+	
+	public static List<Station> getStations(String match, int maxResults) throws IOException, XMLStreamException
 	{
 		String url = "http://reiseauskunft.bahn.de/bin/query.exe/dn";
 		
 		String charset = "UTF-8";
 		String xmlData = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>"
-				+ "<ReqC ver=\"1.1\" prod=\"String\" lang=\"DE\" timeTableBegin=\"04.10.2009\">"
-				+ "<LocValReq id=\"001\" maxNr=\"20\" sMode=\"1\">"
-				+ "<ReqLoc type=\"ST\" match=\"" + match + "*\" />"
+				+ "<ReqC ver=\"1.1\" prod=\"String\" lang=\"DE\">"
+				+ "<LocValReq id=\"001\" maxNr=\""+maxResults+"\" sMode=\"1\">"
+				+ "<ReqLoc type=\"ST\" match=\"" + match + "*\"></rule>"
 				+ "</LocValReq>" + "</ReqC>";
 		
 		InputStream result = getAnswer(url, xmlData, charset);
@@ -73,6 +78,10 @@ public class HafasXMLImporter
 		}
 		
 		return stations;
+	}
+	public static List<Station> getStations(String match) throws IOException, XMLStreamException
+	{
+		return getStations(match, 20);
 	}
 	
 	protected static InputStream getAnswer(String url, String xmlData,
