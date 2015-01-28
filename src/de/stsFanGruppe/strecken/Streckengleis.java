@@ -2,27 +2,24 @@ package de.stsFanGruppe.strecken;
 
 public class Streckengleis
 {
-	protected Typ typ;
+	protected int typ;
 	
-	public Streckengleis(Typ typ)
+	public Streckengleis(int typ)
 	{
 		this.typ = typ;
 	}
 	
-	public Typ getTyp()
+	public int getTyp()
 	{
 		return typ;
 	}
-	public void setTyp(Typ typ)
+	public void setTyp(int typ)
 	{
 		this.typ = typ;
 	}
 	
-	enum Typ
-	{
-		EINRICHTUNG,
-		FALSCHFAHRBETRIEB,
-		LINKSFAHRBETRIEB,
-		GLEISWECHSELBETRIEB
-	}
+	public static final int EINRICHTUNG = 0;
+	public static final int FALSCHFAHRBETRIEB = 1;
+	public static final int LINKSFAHRBETRIEB = 2;
+	public static final int GLEISWECHSELBETRIEB = 3;
 }
