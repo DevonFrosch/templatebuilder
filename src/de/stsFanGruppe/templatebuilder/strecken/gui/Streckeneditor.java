@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.stsFanGruppe.strecken.gui;
+package de.stsFanGruppe.templatebuilder.strecken.gui;
 
 import javax.swing.*;
 

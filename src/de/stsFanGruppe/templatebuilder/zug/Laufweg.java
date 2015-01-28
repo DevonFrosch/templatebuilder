@@ -1,7 +1,7 @@
-package de.stsFanGruppe.zug;
+package de.stsFanGruppe.templatebuilder.zug;
 
 import java.util.List;
-import de.stsFanGruppe.strecken.Streckenabschnitt;
+import de.stsFanGruppe.templatebuilder.strecken.Streckenabschnitt;
 
 public class Laufweg
 {

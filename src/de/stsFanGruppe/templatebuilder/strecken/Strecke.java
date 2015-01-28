@@ -1,4 +1,4 @@
-package de.stsFanGruppe.strecken;
+package de.stsFanGruppe.templatebuilder.strecken;
 
 /**
  * Eine Strecke ist eine Verbindung zwischen zwei Betriebsstellen.

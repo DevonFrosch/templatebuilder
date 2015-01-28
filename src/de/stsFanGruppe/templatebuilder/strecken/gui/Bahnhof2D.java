@@ -1,4 +1,4 @@
-package de.stsFanGruppe.strecken.gui;
+package de.stsFanGruppe.templatebuilder.strecken.gui;
 
 import java.awt.geom.Rectangle2D;
 

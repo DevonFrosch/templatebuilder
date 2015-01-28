@@ -1,6 +1,6 @@
-package de.stsFanGruppe.zug;
+package de.stsFanGruppe.templatebuilder.zug;
 
-import de.stsFanGruppe.strecken.Gleisabschnitt;
+import de.stsFanGruppe.templatebuilder.strecken.Gleisabschnitt;
 
 public class Fahrplanhalt
 {

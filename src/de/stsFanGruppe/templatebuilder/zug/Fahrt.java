@@ -1,4 +1,4 @@
-package de.stsFanGruppe.zug;
+package de.stsFanGruppe.templatebuilder.zug;
 
 import java.util.List;
 import java.util.LinkedList;

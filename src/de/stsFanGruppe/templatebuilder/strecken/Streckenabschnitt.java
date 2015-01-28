@@ -1,4 +1,4 @@
-package de.stsFanGruppe.strecken;
+package de.stsFanGruppe.templatebuilder.strecken;
 
 import java.util.LinkedList;
 import java.util.List;
