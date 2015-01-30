@@ -50,4 +50,17 @@ public class Fahrzeit
 	{
 		this.dauer = dauer;
 	}
+	
+	public String toString()
+	{
+		return "Fahrzeit "+getName()+" { tempo: "+getTempo()+", dauer: "+getDauer()+", streckenabschnitt: "+streckenabschnitt.getName()+" }";
+	}
+	public String toXML()
+	{
+		return toXML("");
+	}
+	public String toXML(String indent)
+	{
+		return "<fahrzeit name=\""+getName()+"\" tempo=\""+getTempo()+"\" dauer=\""+getDauer()+"\" streckenabschnitt=\""+streckenabschnitt.getName()+"\" />";
+	}
 }

@@ -1,5 +1,7 @@
 package de.stsFanGruppe.templatebuilder.zug;
 
+import java.util.LinkedList;
+import java.util.List;
 import de.stsFanGruppe.templatebuilder.strecken.Gleisabschnitt;
 
 public class Fahrplanhalt
@@ -48,6 +50,25 @@ public class Fahrplanhalt
 	public void setEigenschaften(Eigenschaften eigenschaften)
 	{
 		this.eigenschaften = eigenschaften;
+	}
+	
+	public String toString()
+	{
+		return "Fahrplanhalt { gleisabschnitt: "+gleisabschnitt.getName()+", ankunft: "+ankunft+", abfahrt: "+abfahrt+", "+eigenschaften.toString()+" }";
+	}
+	public String toXML()
+	{
+		return toXML("");
+	}
+	public String toXML(String indent)
+	{
+		StringBuilder str = new StringBuilder();
+		
+		str.append(indent+"<fahrplanhalt gleisabschnitt=\""+gleisabschnitt.getName()+"\" ankunft=\""+ankunft+"\" abfahrt=\""+abfahrt+"\">\n");
+		str.append(eigenschaften.toXML(indent+"  ")+"\n");
+		str.append(indent+"</fahrplanhalt>");
+		
+		return str.toString();
 	}
 	
 	public class Eigenschaften
@@ -107,6 +128,67 @@ public class Fahrplanhalt
 		{
 			this.namenswechsel = null;
 			this.hasNamenswechsel = false;
+		}
+		
+		public String toString()
+		{
+			StringBuilder str = new StringBuilder("Fahrplanhalt-Eigenschaften { ");
+			
+			List<String> opts = new LinkedList<>();
+			if(hasDurchfahrt)
+			{
+				opts.add("fährt durch");
+			}
+			if(hasRichtungswechsel)
+			{
+				opts.add("ändert Richtung");
+			}
+			if(hasNamenswechsel)
+			{
+				if(namenswechsel != null)
+				{
+					opts.add("ändert Name zu "+namenswechsel.getName());
+				}
+				else
+				{
+					opts.add("ändert Name (kein Ziel)");
+				}
+			}
+			str.append(String.join(", ", (String[]) opts.toArray()));
+			
+			str.append(" }");
+			return str.toString();
+		}
+		public String toXML()
+		{
+			return toXML("");
+		}
+		public String toXML(String indent)
+		{
+			StringBuilder str = new StringBuilder(indent+"<fahrplanhalt");
+			
+			if(hasDurchfahrt)
+			{
+				str.append(" durchfahrt=\"true\"");
+			}
+			if(hasRichtungswechsel)
+			{
+				str.append(" richtungswechsel=\"true\"");
+			}
+			if(hasNamenswechsel)
+			{
+				if(namenswechsel != null)
+				{
+					str.append(" namenswechsel=\""+namenswechsel.getName()+"\"");
+				}
+				else
+				{
+					str.append(" namenswechsel=\"null\"");
+				}
+			}
+			
+			str.append(" />\n");
+			return str.toString();
 		}
 	}
 }

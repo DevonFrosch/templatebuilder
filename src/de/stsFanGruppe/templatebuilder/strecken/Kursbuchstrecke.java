@@ -56,4 +56,30 @@ public class Kursbuchstrecke
 	{
 		this.streckenabschnitte.remove(streckenabschnitt);
 	}
+	
+	public String toString()
+	{
+		return "Kursbuchstrecke "+getName()+" ("+getNummer()+") { "+streckenabschnitte.size()+" Gleise }";
+	}
+	public String toXML()
+	{
+		return toXML("");
+	}
+	public String toXML(String indent)
+	{
+		StringBuilder str = new StringBuilder(indent+"<kursbuchstrecke name=\""+getName()+"\" nummer=\""+getNummer()+"\">");
+		
+		if(!streckenabschnitte.isEmpty())
+		{
+			for(Streckenabschnitt sa: streckenabschnitte)
+			{
+				str.append("\n");
+				str.append(sa.toXML(indent+"  "));
+			}
+			str.append("\n"+indent);
+		}
+		
+		str.append("</kursbuchstrecke>");
+		return str.toString();
+	}
 }

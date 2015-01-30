@@ -1,5 +1,7 @@
 package de.stsFanGruppe.templatebuilder.strecken;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.OptionalDouble;
 
 public class Gleisabschnitt
@@ -43,7 +45,7 @@ public class Gleisabschnitt
 	{
 		this.kmAnfang = OptionalDouble.empty();
 	}
-	public OptionalDouble getKm_ende()
+	public OptionalDouble getKmEnde()
 	{
 		return kmEnde;
 	}
@@ -54,5 +56,44 @@ public class Gleisabschnitt
 	public void removeKmEnde()
 	{
 		this.kmEnde = OptionalDouble.empty();
+	}
+	
+	public String toString()
+	{
+		StringBuilder str = new StringBuilder("Gleisabschnitt "+getName()+" { ");
+		
+		List<String> opts = new LinkedList<>();
+		if(kmAnfang.isPresent())
+		{
+			opts.add("kmAnfang: "+getKmEnde().getAsDouble());
+		}
+		if(kmEnde.isPresent())
+		{
+			opts.add("kmEnde: "+getKmEnde().getAsDouble());
+		}
+		str.append(String.join(", ", (String[]) opts.toArray()));
+		
+		str.append(" }");
+		return str.toString();
+	}
+	public String toXML()
+	{
+		return toXML("");
+	}
+	public String toXML(String indent)
+	{
+		StringBuilder str = new StringBuilder(indent+"<gleis name=\""+getName()+"\"");
+		
+		if(kmAnfang.isPresent())
+		{
+			str.append(" kmAnfang=\""+getKmAnfang().getAsDouble()+"\"");
+		}
+		if(kmEnde.isPresent())
+		{
+			str.append(" kmEnde=\""+getKmEnde().getAsDouble()+"\"");
+		}
+		
+		str.append(" />");
+		return str.toString();
 	}
 }

@@ -46,4 +46,30 @@ public class Gleis
 	{
 		this.gleisabschnitte.remove(gleisabschnitt);
 	}
+	
+	public String toString()
+	{
+		return "Gleis "+getName()+" { "+gleisabschnitte.size()+" Gleisabschnitte }";
+	}
+	public String toXML()
+	{
+		return toXML("");
+	}
+	public String toXML(String indent)
+	{
+		StringBuilder str = new StringBuilder(indent+"<gleis name=\""+getName()+"\">");
+		
+		if(!gleisabschnitte.isEmpty())
+		{
+			for(Gleisabschnitt ga: gleisabschnitte)
+			{
+				str.append("\n");
+				str.append(ga.toXML(indent+"  "));
+			}
+			str.append("\n"+indent);
+		}
+		
+		str.append("</gleis>");
+		return str.toString();
+	}
 }

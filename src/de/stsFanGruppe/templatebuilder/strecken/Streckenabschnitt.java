@@ -8,6 +8,7 @@ public class Streckenabschnitt
 	protected String name;
 	protected List<Strecke> strecken;
 	
+	// Konstruktoren
 	public Streckenabschnitt(String name, List<Strecke> strecken)
 	{
 		this.name = name;
@@ -18,6 +19,7 @@ public class Streckenabschnitt
 		this(name, new LinkedList<>());
 	}
 	
+	// primitive Getter/Setter
 	public String getName()
 	{
 		return this.name;
@@ -41,5 +43,32 @@ public class Streckenabschnitt
 	public void removeStrecke(Strecke strecke)
 	{
 		this.strecken.remove(strecke);
+	}
+	
+	// String-Produkte
+	public String toString()
+	{
+		return "Streckenabschnitt "+getName()+" { "+strecken.size()+" Strecken }";
+	}
+	public String toXML()
+	{
+		return toXML("");
+	}
+	public String toXML(String indent)
+	{
+		StringBuilder str = new StringBuilder(indent+"<streckenabschnitt name=\""+getName()+"\">");
+		
+		if(!strecken.isEmpty())
+		{
+			for(Strecke s: strecken)
+			{
+				str.append("\n");
+				str.append(s.toXML(indent+"  "));
+			}
+			str.append("\n"+indent);
+		}
+		
+		str.append("</streckenabschnitt>");
+		return str.toString();
 	}
 }

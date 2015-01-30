@@ -46,4 +46,30 @@ public class Betriebsstelle
 	{
 		this.gleise.remove(gleis);
 	}
+	
+	public String toString()
+	{
+		return "Betriebsstelle "+getName()+" { "+gleise.size()+" Gleise }";
+	}
+	public String toXML()
+	{
+		return toXML("");
+	}
+	public String toXML(String indent)
+	{
+		StringBuilder str = new StringBuilder(indent+"<betriebsstelle name=\""+getName()+"\">");
+		
+		if(!gleise.isEmpty())
+		{
+			for(Gleis g: gleise)
+			{
+				str.append("\n");
+				str.append(g.toXML(indent+"  "));
+			}
+			str.append("\n"+indent);
+		}
+		
+		str.append("</betriebsstelle>");
+		return str.toString();
+	}
 }

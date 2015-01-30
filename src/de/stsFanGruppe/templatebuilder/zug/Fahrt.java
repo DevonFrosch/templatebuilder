@@ -6,20 +6,20 @@ import java.util.LinkedList;
 public class Fahrt
 {
 	protected String name;
-	protected Fahrzeugverband fahrzeugverband;
+	protected Fahrzeug fahrzeug;
 	protected Linie linie;
 	protected List<Fahrplanhalt> fahrplanhalte;
 	
-	public Fahrt(String name, Fahrzeugverband fahrzeugverband, Linie linie, List<Fahrplanhalt> fahrplanhalte)
+	public Fahrt(String name, Fahrzeug fahrzeug, Linie linie, List<Fahrplanhalt> fahrplanhalte)
 	{
 		this.name = name;
-		this.fahrzeugverband = fahrzeugverband;
+		this.fahrzeug = fahrzeug;
 		this.linie = linie;
 		this.fahrplanhalte = fahrplanhalte;
 	}
-	public Fahrt(String name, Fahrzeugverband fahrzeugverband, Linie linie)
+	public Fahrt(String name, Fahrzeug fahrzeug, Linie linie)
 	{
-		this(name, fahrzeugverband, linie, new LinkedList<>());
+		this(name, fahrzeug, linie, new LinkedList<>());
 	}
 	
 	public String getName()
@@ -30,13 +30,13 @@ public class Fahrt
 	{
 		this.name = name;
 	}
-	public Fahrzeugverband getFahrzeugverband()
+	public Fahrzeug getFahrzeug()
 	{
-		return fahrzeugverband;
+		return fahrzeug;
 	}
-	public void setFahrzeugverband(Fahrzeugverband fahrzeugverband)
+	public void setFahrzeug(Fahrzeug fahrzeug)
 	{
-		this.fahrzeugverband = fahrzeugverband;
+		this.fahrzeug = fahrzeug;
 	}
 	public Linie getLinie()
 	{
@@ -65,5 +65,45 @@ public class Fahrt
 	public void removeFahrplanhalt(Fahrplanhalt halt)
 	{
 		this.fahrplanhalte.remove(halt);
+	}
+	
+	public String toString()
+	{
+		return "Fahrt "+getName()+" { Linie: "+getLinie()+", "+fahrplanhalte.size()+" Fahrplanhalte, "+fahrzeug+" }";
+	}
+	public String toXML()
+	{
+		return toXML("");
+	}
+	public String toXML(String indent)
+	{
+		StringBuilder str = new StringBuilder(indent+"<fahrt linie=\""+linie.getName()+"\">");
+		String newLine = "\n"+indent+"  ";
+		
+		if(fahrzeug != null)
+		{
+			str.append(newLine+fahrzeug.toXML());
+		}
+		
+		if(!fahrplanhalte.isEmpty())
+		{
+			str.append(newLine+"<fahrplanhalte>");
+			
+			for(Fahrplanhalt fh: fahrplanhalte)
+			{
+				str.append("\n");
+				str.append(fh.toXML(indent+"  "+"  "));
+			}
+			
+			str.append(newLine+"</fahrplanhalte>");
+		}
+		else
+		{
+			str.append(newLine+"<fahrplanhalte />");
+		}
+		
+		str.append("\n"+indent);
+		str.append("</fahrt>");
+		return str.toString();
 	}
 }

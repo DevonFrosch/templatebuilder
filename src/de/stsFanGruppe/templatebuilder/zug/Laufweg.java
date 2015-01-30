@@ -43,4 +43,30 @@ public class Laufweg
 	{
 		this.streckenabschnitte.remove(streckenabschnitt);
 	}
+	
+	public String toString()
+	{
+		return "Laufweg "+getName()+" { "+streckenabschnitte.size()+" Streckenabschnitte }";
+	}
+	public String toXML()
+	{
+		return toXML("");
+	}
+	public String toXML(String indent)
+	{
+		StringBuilder str = new StringBuilder(indent+"<laufweg name=\""+getName()+"\">");
+		
+		if(!streckenabschnitte.isEmpty())
+		{
+			for(Streckenabschnitt sa: streckenabschnitte)
+			{
+				str.append("\n");
+				str.append(sa.toXML(indent+"  "));
+			}
+			str.append("\n"+indent);
+		}
+		
+		str.append("</laufweg>");
+		return str.toString();
+	}
 }

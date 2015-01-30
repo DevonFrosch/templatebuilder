@@ -10,6 +10,13 @@ public class Linie
 		this.name = name;
 		this.nummer = nummer;
 	}
+	/**
+	 * Legt eine neue Linie mit Namen = Nummer an
+	 */
+	public Linie(String nummer)
+	{
+		this(nummer, nummer);
+	}
 	
 	public String getName()
 	{
@@ -26,5 +33,18 @@ public class Linie
 	public void setNummer(String nummer)
 	{
 		this.nummer = nummer;
+	}
+	
+	public String toString()
+	{
+		return getName();
+	}
+	public String toXML()
+	{
+		return toXML("");
+	}
+	public String toXML(String indent)
+	{
+		return indent+"<linie name=\""+getName()+"\" nummer=\""+getNummer()+"\" />";
 	}
 }
