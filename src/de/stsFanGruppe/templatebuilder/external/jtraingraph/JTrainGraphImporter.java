@@ -64,6 +64,7 @@ public class JTrainGraphImporter implements Importer
 		
 		for(int i=0; i < stations.size()-1; i++)
 		{
+			System.out.println(stations.get(i).toXML());
 			JTGStation bs1 = stations.get(i);
 			JTGStation bs2 = stations.get(i+1);
 			String strName = bs1.getName() + " - " + bs2.getName();
@@ -81,7 +82,7 @@ public class JTrainGraphImporter implements Importer
 		
 		Streckenabschnitt sa = imp.importStreckenabschnitt("Test", new java.io.FileInputStream("D:/Test.fpl"));
 		
-		System.out.println(sa);
+		System.out.println(sa.toXML());
 	}
 	
 	protected class JTGStation extends Betriebsstelle
