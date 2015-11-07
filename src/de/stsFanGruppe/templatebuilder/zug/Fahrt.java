@@ -1,15 +1,15 @@
 package de.stsFanGruppe.templatebuilder.zug;
 
-import java.util.List;
-import java.util.LinkedList;
+import java.util.NavigableSet;
+import java.util.TreeSet;
 
 public class Fahrt
 {
 	protected String name;
 	protected Linie linie;
-	protected List<Fahrplanhalt> fahrplanhalte;
+	protected NavigableSet<Fahrplanhalt> fahrplanhalte;
 	
-	public Fahrt(String name, Linie linie, List<Fahrplanhalt> fahrplanhalte)
+	public Fahrt(String name, Linie linie, NavigableSet<Fahrplanhalt> fahrplanhalte)
 	{
 		this.name = name;
 		this.linie = linie;
@@ -17,7 +17,7 @@ public class Fahrt
 	}
 	public Fahrt(String name, Linie linie)
 	{
-		this(name, linie, new LinkedList<>());
+		this(name, linie, new TreeSet<>());
 	}
 	
 	public String getName()
@@ -40,17 +40,13 @@ public class Fahrt
 	{
 		return !fahrplanhalte.isEmpty();
 	}
-	public List<Fahrplanhalt> getFahrplanhalte()
+	public NavigableSet<Fahrplanhalt> getFahrplanhalte()
 	{
 		return fahrplanhalte;
 	}
 	public void addFahrplanhalt(Fahrplanhalt halt)
 	{
 		this.fahrplanhalte.add(halt);
-	}
-	public void addFahrplanhalt(int index, Fahrplanhalt halt)
-	{
-		this.fahrplanhalte.add(index, halt);
 	}
 	public void removeFahrplanhalt(Fahrplanhalt halt)
 	{

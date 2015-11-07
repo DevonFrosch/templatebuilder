@@ -4,7 +4,13 @@ import java.util.LinkedList;
 import java.util.List;
 import de.stsFanGruppe.templatebuilder.strecken.Gleisabschnitt;
 
-public class Fahrplanhalt
+/**
+ * Ein Fahrplanhalt ist ein Eintrag in einem Fahrplan eines Zuges, der einem Gleisabschnitt
+ * eine Ankunft und eine Abfahrt zuweist.
+ * Fahrplanhalte sind zeitlich geordnet, zuerst nach Ankunft, dann nach Abfahrt.
+ * @author DevonFrosch
+ */
+public class Fahrplanhalt implements Comparable<Fahrplanhalt>
 {
 	protected Gleisabschnitt gleisabschnitt;
 	protected double ankunft;
@@ -69,6 +75,29 @@ public class Fahrplanhalt
 		str.append(indent+"</fahrplanhalt>");
 		
 		return str.toString();
+	}
+	
+	/**
+	 * Vergleicht den Fahrplanhalt mit einem anderen. Sie sind zuerst nach Ankunft, dann nach Abfahrt sortiert.
+	 * @param other der andere Fahrplanhalt.
+	 * @return einen negativen Wert, 0, oder einen positiven Wert, wenn dieser Fahrplanhalt kleiner, gleich
+	 * oder größer als der andere Fahrplanhalt ist.
+	 * @throws NullPointerException falls der andere Fahrplanhalt null ist.
+	 */
+	public int compareTo(Fahrplanhalt other)
+	{
+		if(other == null)
+		{
+			throw new NullPointerException();
+		}
+		
+		// Sortiere erst nach Ankunft...
+		if(Double.compare(this.ankunft, other.ankunft) != 0)
+		{
+			return Double.compare(this.ankunft, other.ankunft);
+		}
+		// ... dann nach Abfahrt
+		return Double.compare(this.abfahrt, other.abfahrt);
 	}
 	
 	public class Eigenschaften
