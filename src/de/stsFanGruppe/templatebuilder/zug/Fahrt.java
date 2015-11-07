@@ -6,20 +6,18 @@ import java.util.LinkedList;
 public class Fahrt
 {
 	protected String name;
-	protected Fahrzeug fahrzeug;
 	protected Linie linie;
 	protected List<Fahrplanhalt> fahrplanhalte;
 	
-	public Fahrt(String name, Fahrzeug fahrzeug, Linie linie, List<Fahrplanhalt> fahrplanhalte)
+	public Fahrt(String name, Linie linie, List<Fahrplanhalt> fahrplanhalte)
 	{
 		this.name = name;
-		this.fahrzeug = fahrzeug;
 		this.linie = linie;
 		this.fahrplanhalte = fahrplanhalte;
 	}
-	public Fahrt(String name, Fahrzeug fahrzeug, Linie linie)
+	public Fahrt(String name, Linie linie)
 	{
-		this(name, fahrzeug, linie, new LinkedList<>());
+		this(name, linie, new LinkedList<>());
 	}
 	
 	public String getName()
@@ -29,14 +27,6 @@ public class Fahrt
 	public void setName(String name)
 	{
 		this.name = name;
-	}
-	public Fahrzeug getFahrzeug()
-	{
-		return fahrzeug;
-	}
-	public void setFahrzeug(Fahrzeug fahrzeug)
-	{
-		this.fahrzeug = fahrzeug;
 	}
 	public Linie getLinie()
 	{
@@ -69,7 +59,7 @@ public class Fahrt
 	
 	public String toString()
 	{
-		return "Fahrt "+getName()+" { Linie: "+getLinie()+", "+fahrplanhalte.size()+" Fahrplanhalte, "+fahrzeug+" }";
+		return "Fahrt "+getName()+" { Linie: "+getLinie()+", "+fahrplanhalte.size()+" Fahrplanhalte }";
 	}
 	public String toXML()
 	{
@@ -79,11 +69,6 @@ public class Fahrt
 	{
 		StringBuilder str = new StringBuilder(indent+"<fahrt linie=\""+linie.getName()+"\">");
 		String newLine = "\n"+indent+"  ";
-		
-		if(fahrzeug != null)
-		{
-			str.append(newLine+fahrzeug.toXML());
-		}
 		
 		if(!fahrplanhalte.isEmpty())
 		{
