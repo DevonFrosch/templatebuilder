@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.stsFanGruppe.templatebuilder.strecken.gui;
+package de.stsFanGruppe.templatebuilder.gui;
 
 import javax.swing.*;
 
@@ -11,13 +11,13 @@ import javax.swing.*;
  *
  * @author DevonFrosch
  */
-public class Streckeneditor extends JFrame
+public class StreckeneditorGUI extends JFrame
 {
 
     /**
      * Creates new form Streckeneditor
      */
-    public Streckeneditor()
+    public StreckeneditorGUI()
     {
         initComponents();
     }
@@ -120,13 +120,13 @@ public class Streckeneditor extends JFrame
 		}
 		catch(ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex)
 		{
-			java.util.logging.Logger.getLogger(Streckeneditor.class.getName())
+			java.util.logging.Logger.getLogger(StreckeneditorGUI.class.getName())
 					.log(java.util.logging.Level.SEVERE, null, ex);
 		}
 		
 		/* Create and display the form */
 		java.awt.EventQueue.invokeLater(() -> {
-                    new Streckeneditor().setVisible(true);
+                    new StreckeneditorGUI().setVisible(true);
                 });
     }
 
