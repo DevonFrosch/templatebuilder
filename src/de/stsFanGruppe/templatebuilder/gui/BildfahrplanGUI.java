@@ -57,7 +57,7 @@ public class BildfahrplanGUI extends javax.swing.JFrame
 		
 		jScrollPane1.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		
-		jPanel2.setBackground(new java.awt.Color(153, 255, 51));
+		jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 		jPanel2.setMinimumSize(new java.awt.Dimension(100, 1000));
 		jPanel2.setName(""); // NOI18N
 		
@@ -109,8 +109,17 @@ public class BildfahrplanGUI extends javax.swing.JFrame
 		
 		/* Create and display the form */
 		java.awt.EventQueue.invokeLater(() -> {
-			new BildfahrplanGUI().setVisible(true);
+			BildfahrplanGUI bfp = new BildfahrplanGUI();
+			bfp.setVisible(true);
+			
+			bfp.testPlan();
 		});
+	}
+	
+	private void testPlan()
+	{
+		BildfahrplanZeichner z = new BildfahrplanZeichner(jPanel2);
+		
 	}
 	
 	// Variables declaration - do not modify//GEN-BEGIN:variables
