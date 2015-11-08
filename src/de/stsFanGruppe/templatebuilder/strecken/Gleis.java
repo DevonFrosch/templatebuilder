@@ -1,21 +1,21 @@
 package de.stsFanGruppe.templatebuilder.strecken;
 
-import java.util.List;
-import java.util.LinkedList;
+import java.util.NavigableSet;
+import java.util.TreeSet;
 
 public class Gleis
 {
 	protected String name;
-	protected List<Gleisabschnitt> gleisabschnitte;
+	protected NavigableSet<Gleisabschnitt> gleisabschnitte;
 	
-	public Gleis(String name, List<Gleisabschnitt> gleisabschnitte)
+	public Gleis(String name, NavigableSet<Gleisabschnitt> gleisabschnitte)
 	{
 		this.name = name;
 		this.gleisabschnitte = gleisabschnitte;
 	}
 	public Gleis(String name)
 	{
-		this(name, new LinkedList<>());
+		this(name, new TreeSet<>());
 	}
 	
 	public String getName()
@@ -30,17 +30,13 @@ public class Gleis
 	{
 		return !gleisabschnitte.isEmpty();
 	}
-	public List<Gleisabschnitt> getGleisabschnitte()
+	public NavigableSet<Gleisabschnitt> getGleisabschnitte()
 	{
 		return gleisabschnitte;
 	}
 	public void addGleisabschnitt(Gleisabschnitt gleisabschnitt)
 	{
 		this.gleisabschnitte.add(gleisabschnitt);
-	}
-	public void addGleisabschnitt(int index, Gleisabschnitt gleisabschnitt)
-	{
-		this.gleisabschnitte.add(index, gleisabschnitt);
 	}
 	public void removeGleisabschnitt(Gleisabschnitt gleisabschnitt)
 	{
