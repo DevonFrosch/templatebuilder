@@ -7,15 +7,27 @@ public class Gleis
 {
 	protected String name;
 	protected NavigableSet<Gleisabschnitt> gleisabschnitte;
+	protected boolean verwendetGleisabschnitte;
 	
+	/**
+	 * Erstellt ein Gleis mit den gegebenen Gleisabschnitten.
+	 * @param name der Name des Gleises.
+	 * @param gleisabschnitte die Gleisabschnitte, die das Gleis umfasst.
+	 * @thows NullPointerException falls die Liste der Gleisabschnitte null ist.
+	 */
 	public Gleis(String name, NavigableSet<Gleisabschnitt> gleisabschnitte)
 	{
-		this.name = name;
-		this.gleisabschnitte = gleisabschnitte;
+		this(name);
+		this.addGleisabschnitte(gleisabschnitte);
 	}
+	/**
+	 * Erstellt ein Gleis ohne Gleisabschnitte.
+	 * @param name der Name des Gleises.
+	 */
 	public Gleis(String name)
 	{
-		this(name, new TreeSet<>());
+		this.name = name;
+		this.resetGleisabschnitte();
 	}
 	
 	public String getName()
@@ -28,7 +40,7 @@ public class Gleis
 	}
 	public boolean hasGleisabschnitte()
 	{
-		return !gleisabschnitte.isEmpty();
+		return verwendetGleisabschnitte;
 	}
 	public NavigableSet<Gleisabschnitt> getGleisabschnitte()
 	{
@@ -36,16 +48,58 @@ public class Gleis
 	}
 	public void addGleisabschnitt(Gleisabschnitt gleisabschnitt)
 	{
+		if(!this.verwendetGleisabschnitte)
+		{
+			this.resetGleisabschnitte();
+		}
 		this.gleisabschnitte.add(gleisabschnitt);
+	}
+	/**
+	 * 
+	 * @param gleisabschnitte
+	 * @thows NullPointerException falls die Liste der Gleisabschnitte null ist.
+	 */
+	// protected da hier ungülitge Werte kommen können
+	protected void addGleisabschnitte(NavigableSet<Gleisabschnitt> gleisabschnitte)
+	{
+		if(gleisabschnitte == null)
+		{
+			throw new NullPointerException();
+		}
+		this.gleisabschnitte = gleisabschnitte;
+		this.verwendetGleisabschnitte = true;
 	}
 	public void removeGleisabschnitt(Gleisabschnitt gleisabschnitt)
 	{
+		if(!this.verwendetGleisabschnitte)
+		{
+			// keine offiziellen Gleisabschnitte
+			throw new NullPointerException();
+		}
+		
 		this.gleisabschnitte.remove(gleisabschnitt);
+		
+		if(this.gleisabschnitte.isEmpty())
+		{
+			this.resetGleisabschnitte();
+		}
+	}
+	public void resetGleisabschnitte()
+	{
+		this.gleisabschnitte = initGleisabschnitte(name);
+		this.verwendetGleisabschnitte = false;
 	}
 	
 	public String toString()
 	{
-		return "Gleis "+getName()+" { "+gleisabschnitte.size()+" Gleisabschnitte }";
+		if(verwendetGleisabschnitte)
+		{
+			return "Gleis "+getName();
+		}
+		else
+		{
+			return "Gleis "+getName()+" { "+gleisabschnitte.size()+" Gleisabschnitte }";
+		}
 	}
 	public String toXML()
 	{
@@ -67,5 +121,13 @@ public class Gleis
 		
 		str.append("</gleis>");
 		return str.toString();
+	}
+	
+	// Gleisabschnittliste mit einem Gleisabschnitt
+	private static NavigableSet<Gleisabschnitt> initGleisabschnitte(String name)
+	{
+		TreeSet<Gleisabschnitt> ga = new TreeSet<>();
+		ga.add(new Gleisabschnitt(name));
+		return ga;
 	}
 }

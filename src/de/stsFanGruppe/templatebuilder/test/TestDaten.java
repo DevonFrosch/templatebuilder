@@ -20,7 +20,7 @@ public class TestDaten
 	}
 	public static Gleis gleis()
 	{
-		return new Gleis("Testgleis 1", gleisabschnitte());
+		return new Gleis("Testgleis 1");
 	}
 	public static FahrplanhaltEigenschaften eigenschaften()
 	{
