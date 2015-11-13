@@ -86,7 +86,8 @@ public class Gleis
 	}
 	public void resetGleisabschnitte()
 	{
-		this.gleisabschnitte = initGleisabschnitte(name);
+		this.gleisabschnitte = new TreeSet<>();
+		this.gleisabschnitte.add(new Gleisabschnitt(name, this));
 		this.verwendetGleisabschnitte = false;
 	}
 	
@@ -121,13 +122,5 @@ public class Gleis
 		
 		str.append("</gleis>");
 		return str.toString();
-	}
-	
-	// Gleisabschnittliste mit einem Gleisabschnitt
-	private static NavigableSet<Gleisabschnitt> initGleisabschnitte(String name)
-	{
-		TreeSet<Gleisabschnitt> ga = new TreeSet<>();
-		ga.add(new Gleisabschnitt(name));
-		return ga;
 	}
 }

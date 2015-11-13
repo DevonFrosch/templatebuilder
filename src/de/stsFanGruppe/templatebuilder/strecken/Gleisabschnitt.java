@@ -9,19 +9,26 @@ public class Gleisabschnitt implements Comparable<Gleisabschnitt>
 	protected OptionalDouble kmAnfang;
 	protected OptionalDouble kmEnde;
 	
-	protected Gleisabschnitt(String name, OptionalDouble kmAnfang, OptionalDouble kmEnde)
+	protected Gleis parent;
+	
+	public Gleisabschnitt(String name, Gleis parent)
 	{
-		this.name = name;
+		this.setName(name);
+		this.setParent(parent);
+		this.resetKmAnfang();
+		this.resetKmEnde();
+	}
+	public Gleisabschnitt(String name, Gleis parent, double kmAnfang, double kmEnde)
+	{
+		this(name, parent);
+		this.setKmAnfang(kmAnfang);
+		this.setKmEnde(kmEnde);
+	}
+	protected Gleisabschnitt(String name, Gleis parent, OptionalDouble kmAnfang, OptionalDouble kmEnde)
+	{
+		this(name, parent);
 		this.kmAnfang = kmAnfang;
 		this.kmEnde = kmEnde;
-	}
-	public Gleisabschnitt(String name, double kmAnfang, double kmEnde)
-	{
-		this(name, OptionalDouble.of(kmAnfang), OptionalDouble.of(kmEnde));
-	}
-	public Gleisabschnitt(String name)
-	{
-		this(name, OptionalDouble.empty(), OptionalDouble.empty());
 	}
 	
 	public String getName()
@@ -36,11 +43,11 @@ public class Gleisabschnitt implements Comparable<Gleisabschnitt>
 	{
 		return kmAnfang;
 	}
-	public void setKmAnfang(double km_anfang)
+	public void setKmAnfang(double kmAnfang)
 	{
-		this.kmAnfang = OptionalDouble.of(km_anfang);
+		this.kmAnfang = OptionalDouble.of(kmAnfang);
 	}
-	public void removeKmAnfang()
+	public void resetKmAnfang()
 	{
 		this.kmAnfang = OptionalDouble.empty();
 	}
@@ -48,13 +55,21 @@ public class Gleisabschnitt implements Comparable<Gleisabschnitt>
 	{
 		return kmEnde;
 	}
-	public void setKmEnde(double km_ende)
+	public void setKmEnde(double kmEnde)
 	{
-		this.kmEnde = OptionalDouble.of(km_ende);
+		this.kmEnde = OptionalDouble.of(kmEnde);
 	}
-	public void removeKmEnde()
+	public void resetKmEnde()
 	{
 		this.kmEnde = OptionalDouble.empty();
+	}
+	public Gleis getParent()
+	{
+		return parent;
+	}
+	protected void setParent(Gleis parent)
+	{
+		this.parent = parent;
 	}
 	
 	public String toString()
