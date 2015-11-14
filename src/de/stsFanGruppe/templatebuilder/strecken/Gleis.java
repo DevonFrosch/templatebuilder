@@ -8,18 +8,7 @@ public class Gleis
 	protected String name;
 	protected NavigableSet<Gleisabschnitt> gleisabschnitte;
 	protected boolean verwendetGleisabschnitte;
-	
-	/**
-	 * Erstellt ein Gleis mit den gegebenen Gleisabschnitten.
-	 * @param name der Name des Gleises.
-	 * @param gleisabschnitte die Gleisabschnitte, die das Gleis umfasst.
-	 * @thows NullPointerException falls die Liste der Gleisabschnitte null ist.
-	 */
-	public Gleis(String name, NavigableSet<Gleisabschnitt> gleisabschnitte)
-	{
-		this(name);
-		this.addGleisabschnitte(gleisabschnitte);
-	}
+
 	/**
 	 * Erstellt ein Gleis ohne Gleisabschnitte.
 	 * @param name der Name des Gleises.
@@ -28,6 +17,19 @@ public class Gleis
 	{
 		this.name = name;
 		this.resetGleisabschnitte();
+	}
+	/**
+	 * Erstellt ein Gleis mit den gegebenen Gleisabschnitten.
+	 * @param name der Name des Gleises.
+	 * @param gleisabschnitte die Gleisabschnitte, die das Gleis umfasst.
+	 * @thows NullPointerException falls die Liste der Gleisabschnitte null ist.
+	 */
+	protected Gleis(String name, NavigableSet<Gleisabschnitt> gleisabschnitte)
+	{
+		this(name);
+		assert gleisabschnitte != null;
+		
+		gleisabschnitte.iterator().forEachRemaining((Gleisabschnitt g) -> this.addGleisabschnitt(g));
 	}
 	
 	public String getName()
@@ -53,20 +55,7 @@ public class Gleis
 			this.resetGleisabschnitte();
 		}
 		this.gleisabschnitte.add(gleisabschnitt);
-	}
-	/**
-	 * 
-	 * @param gleisabschnitte
-	 * @thows NullPointerException falls die Liste der Gleisabschnitte null ist.
-	 */
-	// protected da hier ungülitge Werte kommen können
-	protected void addGleisabschnitte(NavigableSet<Gleisabschnitt> gleisabschnitte)
-	{
-		if(gleisabschnitte == null)
-		{
-			throw new NullPointerException();
-		}
-		this.gleisabschnitte = gleisabschnitte;
+		gleisabschnitt.setParent(this);
 		this.verwendetGleisabschnitte = true;
 	}
 	public void removeGleisabschnitt(Gleisabschnitt gleisabschnitt)
@@ -78,6 +67,7 @@ public class Gleis
 		}
 		
 		this.gleisabschnitte.remove(gleisabschnitt);
+		gleisabschnitt.setParent(null);
 		
 		if(this.gleisabschnitte.isEmpty())
 		{

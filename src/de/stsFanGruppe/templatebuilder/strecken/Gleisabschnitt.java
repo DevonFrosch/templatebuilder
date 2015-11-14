@@ -9,7 +9,7 @@ public class Gleisabschnitt implements Comparable<Gleisabschnitt>
 	protected OptionalDouble kmAnfang;
 	protected OptionalDouble kmEnde;
 	
-	protected Gleis parent;
+	protected Gleis parent = null;
 	
 	public Gleisabschnitt(String name, Gleis parent)
 	{
@@ -24,9 +24,14 @@ public class Gleisabschnitt implements Comparable<Gleisabschnitt>
 		this.setKmAnfang(kmAnfang);
 		this.setKmEnde(kmEnde);
 	}
-	protected Gleisabschnitt(String name, Gleis parent, OptionalDouble kmAnfang, OptionalDouble kmEnde)
+	public Gleisabschnitt(String name, Gleis parent, OptionalDouble kmAnfang, OptionalDouble kmEnde)
 	{
 		this(name, parent);
+		if(kmAnfang == null || kmEnde == null)
+		{
+			throw new NullPointerException();
+		}
+		
 		this.kmAnfang = kmAnfang;
 		this.kmEnde = kmEnde;
 	}
