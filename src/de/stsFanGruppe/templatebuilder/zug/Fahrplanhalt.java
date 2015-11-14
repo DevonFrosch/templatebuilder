@@ -14,13 +14,20 @@ public class Fahrplanhalt implements Comparable<Fahrplanhalt>
 	protected double ankunft;
 	protected double abfahrt;
 	protected FahrplanhaltEigenschaften eigenschaften;
-	
+	protected Fahrt parent;
+
 	public Fahrplanhalt(Gleisabschnitt gleisabschnitt, double ankunft, double abfahrt, FahrplanhaltEigenschaften eigenschaften)
 	{
 		this.gleisabschnitt = gleisabschnitt;
 		this.ankunft = ankunft;
 		this.abfahrt = abfahrt;
 		this.eigenschaften = eigenschaften;
+		this.parent = null;
+	}
+	protected Fahrplanhalt(Fahrt parent, Gleisabschnitt gleisabschnitt, double ankunft, double abfahrt, FahrplanhaltEigenschaften eigenschaften)
+	{
+		this(gleisabschnitt, ankunft, abfahrt, eigenschaften);
+		this.parent = parent;
 	}
 	
 	public Gleisabschnitt getGleisabschnitt()
@@ -54,6 +61,14 @@ public class Fahrplanhalt implements Comparable<Fahrplanhalt>
 	public void setEigenschaften(FahrplanhaltEigenschaften eigenschaften)
 	{
 		this.eigenschaften = eigenschaften;
+	}
+	public Fahrt getParent()
+	{
+		return parent;
+	}
+	protected void setParent(Fahrt parent)
+	{
+		this.parent = parent;
 	}
 	
 	public String toString()

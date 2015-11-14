@@ -8,16 +8,17 @@ public class Fahrt
 	protected String name;
 	protected Linie linie;
 	protected NavigableSet<Fahrplanhalt> fahrplanhalte;
-	
-	public Fahrt(String name, Linie linie, NavigableSet<Fahrplanhalt> fahrplanhalte)
+
+	public Fahrt(String name, Linie linie)
 	{
 		this.name = name;
 		this.linie = linie;
-		this.fahrplanhalte = fahrplanhalte;
+		this.fahrplanhalte = new TreeSet<>();
 	}
-	public Fahrt(String name, Linie linie)
+	protected Fahrt(String name, Linie linie, NavigableSet<Fahrplanhalt> fahrplanhalte)
 	{
-		this(name, linie, new TreeSet<>());
+		this(name, linie);
+		fahrplanhalte.iterator().forEachRemaining((Fahrplanhalt f) -> this.addFahrplanhalt(f));
 	}
 	
 	public String getName()
@@ -47,10 +48,12 @@ public class Fahrt
 	public void addFahrplanhalt(Fahrplanhalt halt)
 	{
 		this.fahrplanhalte.add(halt);
+		halt.setParent(this);
 	}
 	public void removeFahrplanhalt(Fahrplanhalt halt)
 	{
 		this.fahrplanhalte.remove(halt);
+		halt.setParent(null);
 	}
 	
 	public String toString()
