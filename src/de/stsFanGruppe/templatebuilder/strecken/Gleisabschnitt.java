@@ -27,13 +27,8 @@ public class Gleisabschnitt implements Comparable<Gleisabschnitt>
 	public Gleisabschnitt(String name, Gleis parent, OptionalDouble kmAnfang, OptionalDouble kmEnde)
 	{
 		this(name, parent);
-		if(kmAnfang == null || kmEnde == null)
-		{
-			throw new NullPointerException();
-		}
-		
-		this.kmAnfang = kmAnfang;
-		this.kmEnde = kmEnde;
+		this.setKmAnfang(kmAnfang);
+		this.setKmEnde(kmEnde);
 	}
 	
 	public String getName()
@@ -48,6 +43,17 @@ public class Gleisabschnitt implements Comparable<Gleisabschnitt>
 	{
 		return kmAnfang;
 	}
+	public void setKmAnfang(OptionalDouble kmAnfang)
+	{
+		if(kmAnfang == null)
+		{
+			this.resetKmAnfang();
+		}
+		else
+		{
+			this.kmEnde = kmAnfang;
+		}
+	}
 	public void setKmAnfang(double kmAnfang)
 	{
 		this.kmAnfang = OptionalDouble.of(kmAnfang);
@@ -59,6 +65,17 @@ public class Gleisabschnitt implements Comparable<Gleisabschnitt>
 	public OptionalDouble getKmEnde()
 	{
 		return kmEnde;
+	}
+	public void setKmEnde(OptionalDouble kmEnde)
+	{
+		if(kmEnde == null)
+		{
+			this.resetKmEnde();
+		}
+		else
+		{
+			this.kmEnde = kmEnde;
+		}
 	}
 	public void setKmEnde(double kmEnde)
 	{
