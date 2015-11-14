@@ -5,5 +5,5 @@ import de.stsFanGruppe.templatebuilder.strecken.Streckenabschnitt;
 
 public interface Importer
 {	
-	public Streckenabschnitt importStreckenabschnitt(String name, InputStream input) throws ImportException;
+	public Streckenabschnitt importStreckenabschnitt(InputStream input) throws ImportException;
 }

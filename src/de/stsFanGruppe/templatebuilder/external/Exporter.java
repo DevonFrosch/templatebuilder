@@ -5,5 +5,5 @@ import de.stsFanGruppe.templatebuilder.strecken.Streckenabschnitt;
 
 public interface Exporter
 {	
-	public Streckenabschnitt exportStreckenabschnitt(String name, InputStream input) throws ExportException;
+	public Streckenabschnitt exportStreckenabschnitt(InputStream input) throws ExportException;
 }
