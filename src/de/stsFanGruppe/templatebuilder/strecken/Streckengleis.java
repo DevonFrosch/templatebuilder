@@ -13,6 +13,10 @@ public class Streckengleis
 	{
 		this.typ = typ;
 	}
+	public Streckengleis()
+	{
+		this(GLEISWECHSELBETRIEB);
+	}
 	
 	public int getTyp()
 	{

@@ -50,6 +50,16 @@ public class Strecke
 	{
 		this(name, anfang, ende, streckengleis, null);
 	}
+	/**
+	 * Erzeugt eine zweigleisige Strecke mit Gleiswechselbetrieb
+	 * @param name Name der Strecke
+	 * @param anfang
+	 * @param ende
+	 */
+	public Strecke(String name, Betriebsstelle anfang, Betriebsstelle ende)
+	{
+		this(name, anfang, ende, new Streckengleis(), new Streckengleis());
+	}
 	
 	public String getName()
 	{
