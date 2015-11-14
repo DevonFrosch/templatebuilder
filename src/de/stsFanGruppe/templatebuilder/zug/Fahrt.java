@@ -18,7 +18,7 @@ public class Fahrt
 	protected Fahrt(String name, Linie linie, NavigableSet<Fahrplanhalt> fahrplanhalte)
 	{
 		this(name, linie);
-		fahrplanhalte.iterator().forEachRemaining((Fahrplanhalt f) -> this.addFahrplanhalt(f));
+		fahrplanhalte.forEach((Fahrplanhalt f) -> this.addFahrplanhalt(f));
 	}
 	
 	public String getName()
@@ -53,7 +53,10 @@ public class Fahrt
 	public void removeFahrplanhalt(Fahrplanhalt halt)
 	{
 		this.fahrplanhalte.remove(halt);
-		halt.setParent(null);
+		if(halt.getParent() == this)
+			halt.setParent(null);
+		else
+			System.out.println("Fahrplanhalt aus Fahrt "+getName()+" löschen: bin nicht parent!");
 	}
 	
 	public String toString()

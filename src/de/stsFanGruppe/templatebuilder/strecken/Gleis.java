@@ -8,6 +8,7 @@ public class Gleis
 	protected String name;
 	protected NavigableSet<Gleisabschnitt> gleisabschnitte;
 	protected boolean verwendetGleisabschnitte;
+	protected Betriebsstelle parent;
 
 	/**
 	 * Erstellt ein Gleis ohne Gleisabschnitte.
@@ -27,9 +28,7 @@ public class Gleis
 	protected Gleis(String name, NavigableSet<Gleisabschnitt> gleisabschnitte)
 	{
 		this(name);
-		assert gleisabschnitte != null;
-		
-		gleisabschnitte.iterator().forEachRemaining((Gleisabschnitt g) -> this.addGleisabschnitt(g));
+		gleisabschnitte.forEach((Gleisabschnitt g) -> this.addGleisabschnitt(g));
 	}
 	
 	public String getName()
@@ -67,7 +66,10 @@ public class Gleis
 		}
 		
 		this.gleisabschnitte.remove(gleisabschnitt);
-		gleisabschnitt.setParent(null);
+		if(gleisabschnitt.getParent() == this)
+			gleisabschnitt.setParent(null);
+		else
+			System.out.println("Gleisabschnitt "+gleisabschnitt.getName()+" aus Gleis "+getName()+" löschen: bin nicht parent!");
 		
 		if(this.gleisabschnitte.isEmpty())
 		{
@@ -79,6 +81,14 @@ public class Gleis
 		this.gleisabschnitte = new TreeSet<>();
 		this.gleisabschnitte.add(new Gleisabschnitt(name, this));
 		this.verwendetGleisabschnitte = false;
+	}
+	public Betriebsstelle getParent()
+	{
+		return parent;
+	}
+	protected void setParent(Betriebsstelle parent)
+	{
+		this.parent = parent;
 	}
 	
 	public String toString()
