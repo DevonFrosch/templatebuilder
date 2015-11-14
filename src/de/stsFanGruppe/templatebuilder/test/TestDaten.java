@@ -8,16 +8,6 @@ import de.stsFanGruppe.templatebuilder.strecken.*;
 public class TestDaten
 {
 	// Paket Strecke
-	public static Gleisabschnitt gleisabschnitt()
-	{
-		return new Gleisabschnitt("Testgleisabschnitt 1.1", 0, 0.5);
-	}
-	public static NavigableSet<Gleisabschnitt> gleisabschnitte()
-	{
-		NavigableSet<Gleisabschnitt> ga = new TreeSet<>();
-		ga.add(gleisabschnitt());
-		return ga;
-	}
 	public static Gleis gleis()
 	{
 		return new Gleis("Testgleis 1");
@@ -32,14 +22,15 @@ public class TestDaten
 	{
 		return new Linie("1");
 	}
-	public static Fahrplanhalt fahrplanhalt()
-	{
-		return new Fahrplanhalt(gleisabschnitt(), 5.0, 5.1, eigenschaften());
-	}
 	public static NavigableSet<Fahrplanhalt> fahrplanhalte()
 	{
 		NavigableSet<Fahrplanhalt> fp = new TreeSet<>();
-		fp.add(fahrplanhalt());
+		Gleis g1 = new Gleis("A-Stadt");
+		Gleis g2 = new Gleis("B-Hausen");
+		Gleis g3 = new Gleis("C-Dorf");
+		fp.add(new Fahrplanhalt(g1.getGleisabschnitte().first(), 0, 0, eigenschaften()));
+		fp.add(new Fahrplanhalt(g2.getGleisabschnitte().first(), 10, 15, eigenschaften()));
+		fp.add(new Fahrplanhalt(g3.getGleisabschnitte().first(), 25, 25, eigenschaften()));
 		return fp;
 	}
 	public static Fahrt fahrt()

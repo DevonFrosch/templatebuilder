@@ -1,71 +1,108 @@
 package de.stsFanGruppe.templatebuilder.gui;
 
+import java.awt.Color;
+import java.awt.Graphics;
 import java.util.*;
 import javax.swing.JPanel;
-import eu.devonfrosch.sts.util.*;
+import de.stsFanGruppe.templatebuilder.zug.*;
 
-public class BildfahrplanZeichner
+public class BildfahrplanZeichner extends JPanel
 {
-	private JPanel p;
 	private BildfahrplanConfig config;
+	private Set<Fahrt> fahrten;
 	
-	int startZeit = 0; // 0:00:00
-	int endeZeit = 86400; // 24:00:00
-	int diffZeit = endeZeit - startZeit;
+	double startZeit = 0; // 0:00
+	double endeZeit = 1440; // 24:00
+	double diffZeit = endeZeit - startZeit;
 	
-	int startKm = 0;
-	int endeKm = 50;
-	int diffKm = endeKm - startKm;
+	double startKm = 0;
+	double endeKm = 3;
+	double diffKm = endeKm - startKm;
 	
-	public BildfahrplanZeichner(JPanel p)
+	boolean changed = false;
+	
+	public BildfahrplanZeichner(BildfahrplanConfig config)
 	{
-		config = new BildfahrplanConfig();
-		this.p = p;
+		this.config = config;
+		this.fahrten = new HashSet<Fahrt>();
 	}
 	
-	public void zeichneZug(Zug zug)
+	public void zeichneFahrt(Fahrt fahrt)
 	{
-		Fahrplan fpl = zug.getFahrplan();
-		Iterator<FahrplanEintrag> it = fpl.iterator();
-		
-		int ab = -1;
-		int kmAb = -1;
-		while(it.hasNext())
+		assert fahrt != null;
+		assert fahrt.getFahrplanhalte() != null;
+		this.fahrten.add(fahrt);
+		changed = true;
+	}
+	
+	protected void paintComponent(Graphics g)
+	{
+		super.paintComponent(g);
+		Iterator<Fahrt> f = this.fahrten.iterator();
+		while(f.hasNext())
 		{
-			FahrplanEintrag fe = it.next();
+			Fahrt fahrt = f.next();
+			log(fahrt.getFahrplanhalte().size()+" Fahrplanhalte...");
+			Iterator<Fahrplanhalt> it = fahrt.getFahrplanhalte().iterator();
 			
-			if(ab < 0 || kmAb < 0)
+			double ab = -1;
+			double kmAb = -1;
+			while(it.hasNext())
 			{
-				int an = fe.getAnkunft().minuten();
+				Fahrplanhalt fh = it.next();
+				log("-- Fahrplanhalt "+fh.getGleisabschnitt().getName());
 				
-				// draw(getZeitPos(p, an), getZeitPos(p, ab));
+				if(ab >= 0 && kmAb >= 0)
+				{
+					double an = fh.getAnkunft();
+					double kmAn = getKm(fh.getGleisabschnitt().getKmAnfang(), kmAb+1);
+					log("Fahrplanhalt: an = "+an+", kmAn = "+kmAn);
+					
+					g.setColor(Color.BLACK);
+					g.drawLine(getWegPos(kmAb), getZeitPos(ab), getWegPos(kmAn), getZeitPos(an));
+					log("drawLine: "+getWegPos(kmAb)+", "+getZeitPos(an)+", "+getWegPos(kmAn)+", "+getZeitPos(ab));
+				}
+				else
+				{
+					log("Erster Fahrplanhalt!");
+				}
 				
+				// für nächsten Eintrag
+				ab = fh.getAbfahrt();
+				kmAb = getKm(fh.getGleisabschnitt().getKmAnfang(), kmAb+1);
+				log("Daten: ab = "+ab+", kmAb = "+kmAb);
 			}
-			
-			// für nächsten Eintrag
-			ab = fe.getAbfahrt().minuten();
-			// abKM = getKM(fe.getGleis());
 		}
-		int start = 0;
-		int ende = 0;
-		
-		
+		changed = false;
 	}
 	
 	
-	int getZeitPos(int zeit)
+	int getZeitPos(double zeit)
 	{
 		int min = config.margin_top;
-		int diff = config.zeichnenHoehe(p) - min;
+		int diff = config.zeichnenHoehe(this);
 		
-		return  min + diff * zeit / diffZeit;
+		return (int) (min + (diff * zeit / diffZeit));
 	}
-	int getWegPos(int km)
+	int getWegPos(double km)
 	{
 		int min = config.margin_left;
-		int diff = config.zeichnenBreite(p) - min;
+		int diff = config.zeichnenBreite(this);
 		
-		return  min + diff * km / diffKm;
+		return (int) (min + (diff * km / diffKm));
 	}
 	
+	double getKm(OptionalDouble km, double defaultValue)
+	{
+		if(km.isPresent())
+		{
+			return km.getAsDouble();
+		}
+		return defaultValue;
+	}
+	public void log(String text)
+	{
+		if(changed)
+			System.out.println(text);
+	}
 }

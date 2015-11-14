@@ -1,5 +1,7 @@
 package de.stsFanGruppe.templatebuilder.gui;
 
+import de.stsFanGruppe.templatebuilder.test.TestDaten;
+
 /**
  *
  * @author DevonFrosch
@@ -25,7 +27,7 @@ public class BildfahrplanGUI extends javax.swing.JFrame
 		
 		jPanel1 = new javax.swing.JPanel();
 		jScrollPane1 = new javax.swing.JScrollPane();
-		jPanel2 = new javax.swing.JPanel();
+		jPanel2 = new BildfahrplanZeichner(new BildfahrplanConfig());
 		
 		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 		setTitle("BildfahrplanGUI");
@@ -118,13 +120,12 @@ public class BildfahrplanGUI extends javax.swing.JFrame
 	
 	private void testPlan()
 	{
-		BildfahrplanZeichner z = new BildfahrplanZeichner(jPanel2);
-		
+		jPanel2.zeichneFahrt(TestDaten.fahrt());
 	}
 	
 	// Variables declaration - do not modify//GEN-BEGIN:variables
 	private javax.swing.JPanel jPanel1;
-	private javax.swing.JPanel jPanel2;
+	private BildfahrplanZeichner jPanel2;
 	private javax.swing.JScrollPane jScrollPane1;
 	// End of variables declaration//GEN-END:variables
 }
