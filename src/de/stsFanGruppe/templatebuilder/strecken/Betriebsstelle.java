@@ -10,12 +10,13 @@ public class Betriebsstelle
 	
 	public Betriebsstelle(String name, List<Gleis> gleise)
 	{
-		this.name = name;
-		this.gleise = gleise;
+		this(name);
+		gleise.forEach((Gleis g) -> this.addGleis(g));
 	}
 	public Betriebsstelle(String name)
 	{
-		this(name, new LinkedList<>());
+		this.name = name;
+		this.gleise = new LinkedList<>();
 	}
 	
 	public String getName()
@@ -37,14 +38,20 @@ public class Betriebsstelle
 	public void addGleis(Gleis gleis)
 	{
 		this.gleise.add(gleis);
+		gleis.setParent(this);
 	}
 	public void addGleis(int index, Gleis gleis)
 	{
 		this.gleise.add(index, gleis);
+		gleis.setParent(this);
 	}
 	public void removeGleis(Gleis gleis)
 	{
 		this.gleise.remove(gleis);
+		if(gleis.getParent() == this)
+			gleis.setParent(null);
+		else
+			System.out.println("Gleis "+gleis.getName()+" aus Betriebsstelle "+getName()+" löschen: bin nicht parent!");
 	}
 	
 	public String toString()
