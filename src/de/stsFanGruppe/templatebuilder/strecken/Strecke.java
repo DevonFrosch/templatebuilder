@@ -16,49 +16,32 @@ public class Strecke
 	protected Betriebsstelle anfang;
 	protected Betriebsstelle ende;
 	
-	// Nicht null
-	protected Streckengleis streckengleis0;
-	// null === nur ein Gleis vorhanden
-	protected Streckengleis streckengleis1;
+	protected int anzahlGleise;
 	
 	/**
 	 * Erzeugt eine zweigleisige Strecke
 	 * @param name Name der Strecke
 	 * @param anfang
 	 * @param ende
-	 * @param streckengleis0
-	 * @param streckengleis1
 	 */
-	public Strecke(String name, Betriebsstelle anfang, Betriebsstelle ende,
-			Streckengleis streckengleis0, Streckengleis streckengleis1)
+	public Strecke(String name, Betriebsstelle anfang, Betriebsstelle ende)
 	{
 		this.setName(name);
 		this.setAnfang(anfang);
 		this.setEnde(ende);
-		this.setStreckengleis0(streckengleis0);
-		this.setStreckengleis1(streckengleis1);
+		this.setAnzahlGleise(2);
 	}
 	/**
-	 * Erzeugt eine eingleisige Strecke
+	 * Erzeugt eine Strecke
 	 * @param name
 	 * @param anfang
 	 * @param ende
-	 * @param streckengleis
+	 * @param anzahlGleise
 	 */
-	public Strecke(String name, Betriebsstelle anfang, Betriebsstelle ende,
-			Streckengleis streckengleis)
+	public Strecke(String name, Betriebsstelle anfang, Betriebsstelle ende, int anzahlGleise)
 	{
-		this(name, anfang, ende, streckengleis, null);
-	}
-	/**
-	 * Erzeugt eine zweigleisige Strecke mit Gleiswechselbetrieb
-	 * @param name Name der Strecke
-	 * @param anfang
-	 * @param ende
-	 */
-	public Strecke(String name, Betriebsstelle anfang, Betriebsstelle ende)
-	{
-		this(name, anfang, ende, new Streckengleis(), new Streckengleis());
+		this(name, anfang, ende);
+		this.setAnzahlGleise(anzahlGleise);
 	}
 	
 	public String getName()
@@ -87,45 +70,11 @@ public class Strecke
 	}
 	public int getAnzahlGleise()
 	{
-		if(streckengleis0 == null)
-		{
-			return 1;
-		}
-		else
-		{
-			return 2;
-		}
+		return anzahlGleise;
 	}
-	public Streckengleis getStreckengleis0()
+	public void setAnzahlGleise(int anzahlGleise)
 	{
-		return streckengleis0;
-	}
-	public void setStreckengleis0(Streckengleis streckengleis)
-	{
-		if(streckengleis == null)
-		{
-			throw new IllegalArgumentException();
-		}
-		this.streckengleis0 = streckengleis;
-	}
-	public Streckengleis getStreckengleis1()
-	{
-		return streckengleis1;
-	}
-	public void setStreckengleis1(Streckengleis streckengleis)
-	{
-		if(streckengleis == null)
-		{
-			this.removeStreckengleis1();
-		}
-		else
-		{
-			this.streckengleis1 = streckengleis;
-		}
-	}
-	public void removeStreckengleis1()
-	{
-		this.streckengleis1 = null;
+		this.anzahlGleise = anzahlGleise;
 	}
 	
 	public String toString()
@@ -135,14 +84,7 @@ public class Strecke
 		str.append((anfang != null) ? anfang.getName() : "Undefiniert");
 		str.append(", Ende: ");
 		str.append((ende != null) ? ende.getName() : "Undefiniert");
-		str.append(", Streckengleis Hin: "+streckengleis0.toString());
-		
-		if(getAnzahlGleise() > 1)
-		{
-			str.append(", Streckengleis Rück: "+streckengleis1.toString());
-		}
-		
-		str.append(" }");
+		str.append(", Anzahl Gleise: "+anzahlGleise+" }");
 		return str.toString();
 	}
 	public String toXML()
@@ -151,7 +93,7 @@ public class Strecke
 	}
 	public String toXML(String indent)
 	{
-		StringBuilder str = new StringBuilder(indent+"<strecke name=\""+getName()+"\">");
+		StringBuilder str = new StringBuilder(indent+"<strecke name=\""+getName()+"\" anzahlGleise=\""+anzahlGleise+"\">");
 		String newLine = "\n"+indent+"  ";
 		
 		if(ende != null)
@@ -162,13 +104,6 @@ public class Strecke
 		if(ende != null)
 		{
 			str.append(newLine+"<verbindung typ=\"ende\">\n"+ende.toXML(indent+"    ")+newLine+"</verbindung>");
-		}
-
-		str.append(newLine+streckengleis0.toXML("", 0));
-		
-		if(getAnzahlGleise() > 1)
-		{
-			str.append(newLine+streckengleis1.toXML("", 1));
 		}
 		
 		str.append("\n"+indent);
