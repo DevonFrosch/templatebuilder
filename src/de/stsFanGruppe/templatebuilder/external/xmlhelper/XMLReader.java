@@ -35,6 +35,7 @@ public class XMLReader
 			{
 				case XMLStreamConstants.END_DOCUMENT:
 					parser.close();
+					log("End of Document");
 					throw new EndOfXMLException("Reached end of document");
 				case XMLStreamConstants.START_ELEMENT:
 					element = new XMLElement(event.asStartElement());
@@ -47,7 +48,6 @@ public class XMLReader
 					}
 					else
 					{
-						System.out.println("Nicht: "+element.getName());
 						continue;
 					}
 				case XMLStreamConstants.END_ELEMENT:
@@ -62,11 +62,17 @@ public class XMLReader
 			}
 		}
 		parser.close();
+		log("End of File");
 		throw new EndOfXMLException("Nothing left to parse");
 	}
 	
 	public Stack<XMLElement> getNesting()
 	{
 		return nesting;
+	}
+
+	private void log(String text)
+	{
+		System.out.println("XMLReader: "+text);
 	}
 }
