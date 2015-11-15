@@ -1,22 +1,24 @@
 package de.stsFanGruppe.templatebuilder.strecken;
 
-import java.util.LinkedList;
 import java.util.List;
+import de.stsFanGruppe.tools.FirstLastLinkedList;
+import de.stsFanGruppe.tools.FirstLastList;
 
 public class Streckenabschnitt
 {	
 	protected String name;
-	protected List<Strecke> strecken;
+	protected FirstLastList<Strecke> strecken;
 	
 	// Konstruktoren
 	public Streckenabschnitt(String name, List<Strecke> strecken)
 	{
-		this.name = name;
-		this.strecken = strecken;
+		this(name);
+		this.setStrecken(strecken);
 	}
 	public Streckenabschnitt(String name)
 	{
-		this(name, new LinkedList<>());
+		this.setName(name);
+		this.strecken = new FirstLastLinkedList<>();
 	}
 	
 	// primitive Getter/Setter
@@ -32,9 +34,13 @@ public class Streckenabschnitt
 	{
 		return !strecken.isEmpty();
 	}
-	public List<Strecke> getStrecken()
+	public FirstLastList<Strecke> getStrecken()
 	{
 		return strecken;
+	}
+	protected void setStrecken(List<Strecke> strecken)
+	{
+		this.strecken = new FirstLastLinkedList<>(strecken);
 	}
 	public void addStrecke(Strecke strecke)
 	{
