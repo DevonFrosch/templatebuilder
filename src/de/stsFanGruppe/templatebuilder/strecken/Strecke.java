@@ -156,12 +156,12 @@ public class Strecke
 		
 		if(ende != null)
 		{
-			str.append(newLine+"<verbindung pos=\"0\" betriebsstelleName=\""+anfang.getName()+"\" />");
+			str.append(newLine+"<verbindung typ=\"anfang\">\n"+anfang.toXML(indent+"    ")+newLine+"</verbindung>");
 		}
 		
 		if(ende != null)
 		{
-			str.append(newLine+"<verbindung pos=\"1\" betriebsstelleName=\""+ende.getName()+"\" />");
+			str.append(newLine+"<verbindung typ=\"ende\">\n"+ende.toXML(indent+"    ")+newLine+"</verbindung>");
 		}
 
 		str.append(newLine+streckengleis0.toXML("", 0));
