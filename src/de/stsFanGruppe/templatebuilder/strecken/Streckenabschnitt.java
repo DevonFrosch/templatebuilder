@@ -32,6 +32,10 @@ public class Streckenabschnitt
 	{
 		return !strecken.isEmpty();
 	}
+	public List<Strecke> getStrecken()
+	{
+		return strecken;
+	}
 	public void addStrecke(Strecke strecke)
 	{
 		this.strecken.add(strecke);
