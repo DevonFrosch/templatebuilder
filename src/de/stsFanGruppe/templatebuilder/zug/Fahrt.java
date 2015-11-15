@@ -15,7 +15,7 @@ public class Fahrt
 		this.linie = linie;
 		this.fahrplanhalte = new TreeSet<>();
 	}
-	protected Fahrt(String name, Linie linie, NavigableSet<Fahrplanhalt> fahrplanhalte)
+	public Fahrt(String name, Linie linie, NavigableSet<Fahrplanhalt> fahrplanhalte)
 	{
 		this(name, linie);
 		fahrplanhalte.forEach((Fahrplanhalt f) -> this.addFahrplanhalt(f));
