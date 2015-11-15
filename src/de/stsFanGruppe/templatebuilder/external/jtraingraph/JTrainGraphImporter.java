@@ -3,10 +3,12 @@ package de.stsFanGruppe.templatebuilder.external.jtraingraph;
 import java.io.InputStream;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import javax.xml.stream.XMLStreamException;
 import de.stsFanGruppe.templatebuilder.external.*;
 import de.stsFanGruppe.templatebuilder.external.xmlhelper.*;
 import de.stsFanGruppe.templatebuilder.strecken.*;
+import de.stsFanGruppe.templatebuilder.zug.Fahrt;
 
 public class JTrainGraphImporter implements Importer
 {
@@ -68,6 +70,11 @@ public class JTrainGraphImporter implements Importer
 			throw new ImportException(e);
 		}
 		return streckenabschnitt;
+	}
+	
+	public Set<Fahrt> importFahrten(InputStream input) throws ImportException
+	{
+		return null;
 	}
 	
 	public static void main(String[] args) throws Exception
