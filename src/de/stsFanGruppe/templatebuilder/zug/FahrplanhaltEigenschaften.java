@@ -104,7 +104,7 @@ public class FahrplanhaltEigenschaften
 	}
 	public String toXML(String indent)
 	{
-		StringBuilder str = new StringBuilder(indent+"<fahrplanhalt");
+		StringBuilder str = new StringBuilder(indent+"<fahrplanhaltEigenschaften");
 		
 		if(hasDurchfahrt)
 		{
@@ -126,7 +126,7 @@ public class FahrplanhaltEigenschaften
 			}
 		}
 		
-		str.append(" />\n");
+		str.append(" />");
 		return str.toString();
 	}
 }
