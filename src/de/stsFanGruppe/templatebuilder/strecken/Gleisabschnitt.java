@@ -51,7 +51,7 @@ public class Gleisabschnitt implements Comparable<Gleisabschnitt>
 		}
 		else
 		{
-			this.kmEnde = kmAnfang;
+			this.setKmEnde(kmAnfang);
 		}
 	}
 	public void setKmAnfang(double kmAnfang)
@@ -74,7 +74,7 @@ public class Gleisabschnitt implements Comparable<Gleisabschnitt>
 		}
 		else
 		{
-			this.kmEnde = kmEnde;
+			this.setKmEnde(kmEnde);
 		}
 	}
 	public void setKmEnde(double kmEnde)
@@ -118,7 +118,7 @@ public class Gleisabschnitt implements Comparable<Gleisabschnitt>
 	}
 	public String toXML(String indent)
 	{
-		StringBuilder str = new StringBuilder(indent+"<gleis name=\""+getName()+"\"");
+		StringBuilder str = new StringBuilder(indent+"<gleisabschnitt name=\""+getName()+"\"");
 		
 		if(kmAnfang.isPresent())
 		{
