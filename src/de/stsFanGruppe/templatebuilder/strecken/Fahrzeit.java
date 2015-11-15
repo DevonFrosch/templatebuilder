@@ -1,25 +1,27 @@
 package de.stsFanGruppe.templatebuilder.strecken;
 
+import de.stsFanGruppe.tools.NullTester;
+
 public class Fahrzeit
 {
 	protected String name;
-	protected final Streckenabschnitt streckenabschnitt;
+	protected Streckenabschnitt streckenabschnitt;
 	protected int tempo;
-	protected int dauer;
+	protected double dauer;
 	
 	/**
 	 * Legt eine neue Fahrzeit an
 	 * @param name Name der Fahrzeit
-	 * @param streckenabschnitt Streckenabschnitt, für die die Fahrtzeit gilt (kann nicht mehr verändert werden)
+	 * @param streckenabschnitt Streckenabschnitt, für die die Fahrtzeit gilt
 	 * @param tempo Zugtempo, für das die Fahrtzeit gilt
 	 * @param dauer Fahrzeit, die der Zug benötigt
 	 */
 	public Fahrzeit(String name, Streckenabschnitt streckenabschnitt, int tempo, int dauer)
 	{
-		this.name = name;
-		this.streckenabschnitt = streckenabschnitt;
-		this.tempo = tempo;
-		this.dauer = dauer;
+		this.setName(name);
+		this.setStreckenabschnitt(streckenabschnitt);
+		this.setTempo(tempo);
+		this.setDauer(dauer);
 	}
 	
 	public String getName()
@@ -28,11 +30,17 @@ public class Fahrzeit
 	}
 	public void setName(String name)
 	{
+		NullTester.test(name);
 		this.name = name;
 	}
 	public Streckenabschnitt getStreckenabschnitt()
 	{
 		return streckenabschnitt;
+	}
+	protected void setStreckenabschnitt(Streckenabschnitt streckenabschnitt)
+	{
+		NullTester.test(streckenabschnitt);
+		this.streckenabschnitt = streckenabschnitt;
 	}
 	public int getTempo()
 	{
@@ -40,14 +48,22 @@ public class Fahrzeit
 	}
 	public void setTempo(int tempo)
 	{
+		if(tempo < 0)
+		{
+			throw new IllegalArgumentException("Tempo muss größer gleich 0 sein");
+		}
 		this.tempo = tempo;
 	}
-	public int getDauer()
+	public double getDauer()
 	{
 		return dauer;
 	}
-	public void setDauer(int dauer)
+	public void setDauer(double dauer)
 	{
+		if(dauer < 0)
+		{
+			throw new IllegalArgumentException("Dauer muss größer gleich 0 sein");
+		}
 		this.dauer = dauer;
 	}
 	

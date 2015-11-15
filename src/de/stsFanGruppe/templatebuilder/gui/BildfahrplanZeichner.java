@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.util.*;
 import javax.swing.JPanel;
 import de.stsFanGruppe.templatebuilder.zug.*;
+import de.stsFanGruppe.tools.NullTester;
 
 public class BildfahrplanZeichner extends JPanel
 {
@@ -23,14 +24,14 @@ public class BildfahrplanZeichner extends JPanel
 	
 	public BildfahrplanZeichner(BildfahrplanConfig config)
 	{
+		NullTester.test(config);
 		this.config = config;
 		this.fahrten = new HashSet<Fahrt>();
 	}
 	
 	public void zeichneFahrt(Fahrt fahrt)
 	{
-		assert fahrt != null;
-		assert fahrt.getFahrplanhalte() != null;
+		NullTester.test(fahrt);
 		this.fahrten.add(fahrt);
 		changed = true;
 	}
@@ -79,6 +80,7 @@ public class BildfahrplanZeichner extends JPanel
 	
 	int getZeitPos(double zeit)
 	{
+		assert config != null;
 		int min = config.margin_top;
 		int diff = config.zeichnenHoehe(this);
 		
@@ -86,6 +88,7 @@ public class BildfahrplanZeichner extends JPanel
 	}
 	int getWegPos(double km)
 	{
+		assert config != null;
 		int min = config.margin_left;
 		int diff = config.zeichnenBreite(this);
 		
@@ -94,6 +97,7 @@ public class BildfahrplanZeichner extends JPanel
 	
 	double getKm(OptionalDouble km, double defaultValue)
 	{
+		assert km != null;
 		if(km.isPresent())
 		{
 			return km.getAsDouble();

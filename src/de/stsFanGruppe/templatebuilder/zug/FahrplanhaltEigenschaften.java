@@ -14,13 +14,12 @@ public class FahrplanhaltEigenschaften
 	public FahrplanhaltEigenschaften(boolean hasDurchfahrt, boolean hasRichtungswechsel, Fahrt namenswechsel)
 	{
 		this(hasDurchfahrt, hasRichtungswechsel);
-		this.namenswechsel = namenswechsel;
-		this.hasNamenswechsel = true;
+		this.setNamenswechselNachfolger(namenswechsel);
 	}
 	public FahrplanhaltEigenschaften(boolean hasDurchfahrt, boolean hasRichtungswechsel)
 	{
-		this.hasDurchfahrt = hasDurchfahrt;
-		this.hasRichtungswechsel = hasRichtungswechsel;
+		this.setDurchfahrt(hasDurchfahrt);
+		this.setRichtungswechsel(hasRichtungswechsel);
 	}
 	public FahrplanhaltEigenschaften()
 	{

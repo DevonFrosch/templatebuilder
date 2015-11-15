@@ -1,23 +1,25 @@
 package de.stsFanGruppe.templatebuilder.strecken;
 
-import java.util.List;
-import java.util.LinkedList;
+import java.util.Collection;
+import de.stsFanGruppe.tools.FirstLastLinkedList;
+import de.stsFanGruppe.tools.FirstLastList;
+import de.stsFanGruppe.tools.NullTester;
 
 public class Kursbuchstrecke
 {	
 	protected String name;
 	protected String nummer;
-	protected List<Streckenabschnitt> streckenabschnitte;
+	protected FirstLastList<Streckenabschnitt> streckenabschnitte = new FirstLastLinkedList<>();
 	
-	public Kursbuchstrecke(String name, String nummer, List<Streckenabschnitt> streckenabschnitte)
+	public Kursbuchstrecke(String name, String nummer, Collection<Streckenabschnitt> streckenabschnitte)
 	{
-		this.name = name;
-		this.nummer = nummer;
-		this.streckenabschnitte = streckenabschnitte;
+		this(name, nummer);
+		this.setStreckenabschnitte(streckenabschnitte);
 	}
 	public Kursbuchstrecke(String name, String nummer)
 	{
-		this(name, nummer, new LinkedList<>());
+		this.setName(name);
+		this.setNummer(nummer);
 	}
 	
 	public String getName()
@@ -26,6 +28,7 @@ public class Kursbuchstrecke
 	}
 	public void setName(String name)
 	{
+		NullTester.test(name);
 		this.name = name;
 	}
 	public String getNummer()
@@ -34,27 +37,36 @@ public class Kursbuchstrecke
 	}
 	public void setNummer(String nummer)
 	{
+		NullTester.test(nummer);
 		this.nummer = nummer;
 	}
 	public boolean hasStreckenabschnitte()
 	{
 		return !streckenabschnitte.isEmpty();
 	}
-	public List<Streckenabschnitt> getStreckenabschnitte()
+	public FirstLastList<Streckenabschnitt> getStreckenabschnitte()
 	{
 		return streckenabschnitte;
 	}
 	public void addStreckenabschnitt(Streckenabschnitt streckenabschnitt)
 	{
+		NullTester.test(streckenabschnitt);
 		this.streckenabschnitte.add(streckenabschnitt);
 	}
 	public void addStreckenabschnitt(int index, Streckenabschnitt streckenabschnitt)
 	{
+		NullTester.test(streckenabschnitt);
 		this.streckenabschnitte.add(index, streckenabschnitt);
 	}
-	public void removeStreckenabschnitt(Streckenabschnitt streckenabschnitt)
+	protected void setStreckenabschnitte(Collection<? extends Streckenabschnitt> streckenabschnitte)
 	{
-		this.streckenabschnitte.remove(streckenabschnitt);
+		NullTester.test(streckenabschnitte);
+		streckenabschnitte.forEach((Streckenabschnitt s) -> this.addStreckenabschnitt(s));
+	}
+	public boolean removeStreckenabschnitt(Streckenabschnitt streckenabschnitt)
+	{
+		NullTester.test(streckenabschnitt);
+		return this.streckenabschnitte.remove(streckenabschnitt);
 	}
 	
 	public String toString()

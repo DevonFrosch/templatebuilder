@@ -1,7 +1,9 @@
 package de.stsFanGruppe.templatebuilder.strecken;
 
+import java.util.Collection;
 import java.util.NavigableSet;
 import java.util.TreeSet;
+import de.stsFanGruppe.tools.NullTester;
 
 public class Gleis
 {
@@ -16,7 +18,7 @@ public class Gleis
 	 */
 	public Gleis(String name)
 	{
-		this.name = name;
+		this.setName(name);
 		this.resetGleisabschnitte();
 	}
 	/**
@@ -25,10 +27,10 @@ public class Gleis
 	 * @param gleisabschnitte die Gleisabschnitte, die das Gleis umfasst.
 	 * @thows NullPointerException falls die Liste der Gleisabschnitte null ist.
 	 */
-	protected Gleis(String name, NavigableSet<Gleisabschnitt> gleisabschnitte)
+	protected Gleis(String name, Collection<? extends Gleisabschnitt> gleisabschnitte)
 	{
 		this(name);
-		gleisabschnitte.forEach((Gleisabschnitt g) -> this.addGleisabschnitt(g));
+		this.addGleisabschnitte(gleisabschnitte);
 	}
 	
 	public String getName()
@@ -37,6 +39,7 @@ public class Gleis
 	}
 	public void setName(String name)
 	{
+		NullTester.test(name);
 		this.name = name;
 	}
 	public boolean hasGleisabschnitte()
@@ -49,6 +52,7 @@ public class Gleis
 	}
 	public void addGleisabschnitt(Gleisabschnitt gleisabschnitt)
 	{
+		NullTester.test(gleisabschnitt);
 		if(!this.verwendetGleisabschnitte)
 		{
 			this.resetGleisabschnitte();
@@ -57,15 +61,20 @@ public class Gleis
 		gleisabschnitt.setParent(this);
 		this.verwendetGleisabschnitte = true;
 	}
-	public void removeGleisabschnitt(Gleisabschnitt gleisabschnitt)
+	protected void addGleisabschnitte(Collection<? extends Gleisabschnitt> gleisabschnitte)
 	{
+		NullTester.test(gleisabschnitte);
+		gleisabschnitte.forEach((Gleisabschnitt g) -> this.addGleisabschnitt(g));
+	}
+	public boolean removeGleisabschnitt(Gleisabschnitt gleisabschnitt)
+	{
+		NullTester.test(gleisabschnitt);
 		if(!this.verwendetGleisabschnitte)
 		{
-			// keine offiziellen Gleisabschnitte
-			throw new NullPointerException();
+			return false;
 		}
 		
-		this.gleisabschnitte.remove(gleisabschnitt);
+		boolean erfolg = this.gleisabschnitte.remove(gleisabschnitt);
 		if(gleisabschnitt.getParent() == this)
 			gleisabschnitt.setParent(null);
 		else
@@ -75,6 +84,7 @@ public class Gleis
 		{
 			this.resetGleisabschnitte();
 		}
+		return erfolg;
 	}
 	public void resetGleisabschnitte()
 	{

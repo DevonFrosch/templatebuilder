@@ -1,6 +1,7 @@
 package de.stsFanGruppe.templatebuilder.zug;
 
 import de.stsFanGruppe.templatebuilder.strecken.Gleisabschnitt;
+import de.stsFanGruppe.tools.NullTester;
 
 /**
  * Ein Fahrplanhalt ist ein Eintrag in einem Fahrplan eines Zuges, der einem Gleisabschnitt
@@ -14,20 +15,19 @@ public class Fahrplanhalt implements Comparable<Fahrplanhalt>
 	protected double ankunft;
 	protected double abfahrt;
 	protected FahrplanhaltEigenschaften eigenschaften;
-	protected Fahrt parent;
+	protected Fahrt parent = null;
 
 	public Fahrplanhalt(Gleisabschnitt gleisabschnitt, double ankunft, double abfahrt, FahrplanhaltEigenschaften eigenschaften)
 	{
-		this.gleisabschnitt = gleisabschnitt;
-		this.ankunft = ankunft;
-		this.abfahrt = abfahrt;
-		this.eigenschaften = eigenschaften;
-		this.parent = null;
+		this.setGleisabschnitt(gleisabschnitt);
+		this.setAnkunft(ankunft);
+		this.setAbfahrt(abfahrt);
+		this.setEigenschaften(eigenschaften);
 	}
 	protected Fahrplanhalt(Fahrt parent, Gleisabschnitt gleisabschnitt, double ankunft, double abfahrt, FahrplanhaltEigenschaften eigenschaften)
 	{
 		this(gleisabschnitt, ankunft, abfahrt, eigenschaften);
-		this.parent = parent;
+		this.setParent(parent);
 	}
 	
 	public Gleisabschnitt getGleisabschnitt()
@@ -36,6 +36,7 @@ public class Fahrplanhalt implements Comparable<Fahrplanhalt>
 	}
 	public void setGleisabschnitt(Gleisabschnitt gleisabschnitt)
 	{
+		NullTester.test(gleisabschnitt);
 		this.gleisabschnitt = gleisabschnitt;
 	}
 	public double getAnkunft()
@@ -44,6 +45,10 @@ public class Fahrplanhalt implements Comparable<Fahrplanhalt>
 	}
 	public void setAnkunft(double ankunft)
 	{
+		if(ankunft < 0)
+		{
+			throw new IllegalArgumentException("Zeit muss größer als 0 sein.");
+		}
 		this.ankunft = ankunft;
 	}
 	public double getAbfahrt()
@@ -52,6 +57,10 @@ public class Fahrplanhalt implements Comparable<Fahrplanhalt>
 	}
 	public void setAbfahrt(double abfahrt)
 	{
+		if(abfahrt < 0)
+		{
+			throw new IllegalArgumentException("Zeit muss größer als 0 sein.");
+		}
 		this.abfahrt = abfahrt;
 	}
 	public FahrplanhaltEigenschaften getEigenschaften()
@@ -60,6 +69,7 @@ public class Fahrplanhalt implements Comparable<Fahrplanhalt>
 	}
 	public void setEigenschaften(FahrplanhaltEigenschaften eigenschaften)
 	{
+		NullTester.test(eigenschaften);
 		this.eigenschaften = eigenschaften;
 	}
 	public Fahrt getParent()

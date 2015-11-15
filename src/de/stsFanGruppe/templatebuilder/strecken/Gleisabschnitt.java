@@ -2,6 +2,7 @@ package de.stsFanGruppe.templatebuilder.strecken;
 
 import java.util.LinkedList;
 import java.util.OptionalDouble;
+import de.stsFanGruppe.tools.NullTester;
 
 public class Gleisabschnitt implements Comparable<Gleisabschnitt>
 {
@@ -37,6 +38,7 @@ public class Gleisabschnitt implements Comparable<Gleisabschnitt>
 	}
 	public void setName(String name)
 	{
+		NullTester.test(name);
 		this.name = name;
 	}
 	public OptionalDouble getKmAnfang()

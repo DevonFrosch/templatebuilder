@@ -1,24 +1,24 @@
 package de.stsFanGruppe.templatebuilder.strecken;
 
-import java.util.List;
+import java.util.Collection;
 import de.stsFanGruppe.tools.FirstLastLinkedList;
 import de.stsFanGruppe.tools.FirstLastList;
+import de.stsFanGruppe.tools.NullTester;
 
 public class Streckenabschnitt
 {	
 	protected String name;
-	protected FirstLastList<Strecke> strecken;
+	protected FirstLastList<Strecke> strecken = new FirstLastLinkedList<>();
 	
 	// Konstruktoren
-	public Streckenabschnitt(String name, List<Strecke> strecken)
+	public Streckenabschnitt(String name, Collection<? extends Strecke> strecken)
 	{
 		this(name);
-		this.setStrecken(strecken);
+		this.addStrecken(strecken);
 	}
 	public Streckenabschnitt(String name)
 	{
 		this.setName(name);
-		this.strecken = new FirstLastLinkedList<>();
 	}
 	
 	// primitive Getter/Setter
@@ -28,6 +28,7 @@ public class Streckenabschnitt
 	}
 	public void setName(String name)
 	{
+		NullTester.test(name);
 		this.name = name;
 	}
 	public boolean hasStrecken()
@@ -38,21 +39,25 @@ public class Streckenabschnitt
 	{
 		return strecken;
 	}
-	protected void setStrecken(List<Strecke> strecken)
-	{
-		this.strecken = new FirstLastLinkedList<>(strecken);
-	}
 	public void addStrecke(Strecke strecke)
 	{
+		NullTester.test(strecke);
 		this.strecken.add(strecke);
 	}
 	public void addStrecke(int index, Strecke strecke)
 	{
+		NullTester.test(strecke);
 		this.strecken.add(index, strecke);
 	}
-	public void removeStrecke(Strecke strecke)
+	protected void addStrecken(Collection<? extends Strecke> strecken)
 	{
-		this.strecken.remove(strecke);
+		NullTester.test(strecken);
+		strecken.forEach((Strecke s) -> this.addStrecke(s));
+	}
+	public boolean removeStrecke(Strecke strecke)
+	{
+		NullTester.test(strecke);
+		return this.strecken.remove(strecke);
 	}
 	
 	// String-Produkte

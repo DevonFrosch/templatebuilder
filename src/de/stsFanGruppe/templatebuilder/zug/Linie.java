@@ -1,5 +1,7 @@
 package de.stsFanGruppe.templatebuilder.zug;
 
+import de.stsFanGruppe.tools.NullTester;
+
 public class Linie
 {	
 	protected String name;
@@ -7,8 +9,8 @@ public class Linie
 	
 	public Linie(String name, String nummer)
 	{
-		this.name = name;
-		this.nummer = nummer;
+		this.setName(name);
+		this.setNummer(nummer);
 	}
 	/**
 	 * Legt eine neue Linie mit Namen = Nummer an
@@ -24,6 +26,7 @@ public class Linie
 	}
 	public void setName(String name)
 	{
+		NullTester.test(name);
 		this.name = name;
 	}
 	public String getNummer()
@@ -32,6 +35,7 @@ public class Linie
 	}
 	public void setNummer(String nummer)
 	{
+		NullTester.test(nummer);
 		this.nummer = nummer;
 	}
 	

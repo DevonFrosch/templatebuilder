@@ -4,19 +4,18 @@ import java.io.InputStream;
 import java.util.*;
 import javax.xml.stream.*;
 import javax.xml.stream.events.*;
+import de.stsFanGruppe.tools.NullTester;
 
 public class XMLReader
 {
 	private XMLEventReader parser;
-	private XMLEvent lastEvent;
-	private Stack<XMLElement> nesting;
+	private Stack<XMLElement> nesting = new Stack<>();
 	
 	public XMLReader(InputStream input) throws XMLStreamException
 	{
+		NullTester.test(input);
 		XMLInputFactory factory = XMLInputFactory.newInstance();
 		this.parser = factory.createXMLEventReader(input);
-		this.lastEvent = null;
-		this.nesting = new Stack<>();
 	}
 	
 	public XMLElement findTag(String... searchNames) throws XMLStreamException, EndOfXMLException
@@ -25,7 +24,13 @@ public class XMLReader
 	}
 	public XMLElement findTagUntil(String untilName, String... searchNames) throws XMLStreamException, EndOfXMLException
 	{
+		assert parser != null;
+		
 		List<String> tagNames = Arrays.asList(searchNames);
+		if(tagNames.contains(null))
+		{
+			throw new NullPointerException();
+		}
 		XMLElement element = null;
 		
 		while(parser.hasNext())
@@ -43,7 +48,6 @@ public class XMLReader
 					
 					if(tagNames.isEmpty() || tagNames.contains(element.getName()))
 					{
-						this.lastEvent = event;
 						return element;
 					}
 					else
@@ -51,7 +55,13 @@ public class XMLReader
 						continue;
 					}
 				case XMLStreamConstants.END_ELEMENT:
+					if(!nesting.isEmpty())
+					{
+						throw new EndOfXMLException("Element stack empty");
+					}
+					
 					element = nesting.pop();
+					
 					if(untilName != null && event.asEndElement().getName().getLocalPart() == untilName)
 					{
 						return null;

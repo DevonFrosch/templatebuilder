@@ -9,11 +9,13 @@ import de.stsFanGruppe.templatebuilder.strecken.*;
 import de.stsFanGruppe.templatebuilder.zug.*;
 import de.stsFanGruppe.tools.FirstLastLinkedList;
 import de.stsFanGruppe.tools.FirstLastList;
+import de.stsFanGruppe.tools.NullTester;
 
 public class JTrainGraphImporter implements Importer
 {
 	public Streckenabschnitt importStreckenabschnitt(InputStream input) throws ImportException
 	{
+		NullTester.test(input);
 		Streckenabschnitt streckenabschnitt = null;
 		
 		try
@@ -78,6 +80,9 @@ public class JTrainGraphImporter implements Importer
 	
 	public Set<Fahrt> importFahrten(InputStream input, Streckenabschnitt streckenabschnitt, Linie linie) throws ImportException
 	{
+		NullTester.test(input);
+		NullTester.test(streckenabschnitt);
+		NullTester.test(linie);
 		Set<Fahrt> fahrten = new HashSet<Fahrt>();
 		
 		// Erstelle eine Liste der Gleisabschnitte
@@ -168,12 +173,15 @@ public class JTrainGraphImporter implements Importer
 	
 	private static String makeName(Betriebsstelle anfang, Betriebsstelle ende)
 	{
+		assert anfang != null;
+		assert ende != null;
+		
 		// Anfang - Ende
 		return anfang.getName()+" - "+ende.getName();
 	}
 	private static double parseTime(String time) throws NumberFormatException
 	{
-		if(!time.contains(":") || (time.indexOf(':') != time.lastIndexOf(':')))
+		if(isEmpty(time) || !time.contains(":") || (time.indexOf(':') != time.lastIndexOf(':')))
 			throw new NumberFormatException();
 		
 		String[] ts = time.split(":");
@@ -185,6 +193,8 @@ public class JTrainGraphImporter implements Importer
 	}
 	private static Gleisabschnitt getGleisabschnitt(Betriebsstelle betriebsstelle)
 	{
+		assert betriebsstelle != null;
+		
 		return betriebsstelle.getGleise().get(0).getGleisabschnitte().first();
 	}
 	private void log(String text)

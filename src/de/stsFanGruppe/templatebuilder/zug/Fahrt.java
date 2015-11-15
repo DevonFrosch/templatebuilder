@@ -1,24 +1,25 @@
 package de.stsFanGruppe.templatebuilder.zug;
 
+import java.util.Collection;
 import java.util.NavigableSet;
 import java.util.TreeSet;
+import de.stsFanGruppe.tools.NullTester;
 
 public class Fahrt
 {
 	protected String name;
 	protected Linie linie;
-	protected NavigableSet<Fahrplanhalt> fahrplanhalte;
-
+	protected NavigableSet<Fahrplanhalt> fahrplanhalte = new TreeSet<>();
+	
 	public Fahrt(String name, Linie linie)
 	{
-		this.name = name;
-		this.linie = linie;
-		this.fahrplanhalte = new TreeSet<>();
+		this.setName(name);
+		this.setLinie(linie);
 	}
-	public Fahrt(String name, Linie linie, NavigableSet<Fahrplanhalt> fahrplanhalte)
+	public Fahrt(String name, Linie linie, Collection<? extends Fahrplanhalt> fahrplanhalte)
 	{
 		this(name, linie);
-		fahrplanhalte.forEach((Fahrplanhalt f) -> this.addFahrplanhalt(f));
+		this.addFahrplanhalte(fahrplanhalte);
 	}
 	
 	public String getName()
@@ -27,6 +28,7 @@ public class Fahrt
 	}
 	public void setName(String name)
 	{
+		NullTester.test(name);
 		this.name = name;
 	}
 	public Linie getLinie()
@@ -35,6 +37,7 @@ public class Fahrt
 	}
 	public void setLinie(Linie linie)
 	{
+		NullTester.test(linie);
 		this.linie = linie;
 	}
 	public boolean hasFahrplanhalte()
@@ -47,16 +50,24 @@ public class Fahrt
 	}
 	public void addFahrplanhalt(Fahrplanhalt halt)
 	{
+		NullTester.test(halt);
 		this.fahrplanhalte.add(halt);
 		halt.setParent(this);
 	}
-	public void removeFahrplanhalt(Fahrplanhalt halt)
+	protected void addFahrplanhalte(Collection<? extends Fahrplanhalt> fahrplanhalte)
 	{
-		this.fahrplanhalte.remove(halt);
+		NullTester.test(fahrplanhalte);
+		fahrplanhalte.forEach((Fahrplanhalt f) -> this.addFahrplanhalt(f));
+	}
+	public boolean removeFahrplanhalt(Fahrplanhalt halt)
+	{
+		NullTester.test(halt);
+		boolean erfolg = this.fahrplanhalte.remove(halt);
 		if(halt.getParent() == this)
 			halt.setParent(null);
 		else
 			System.out.println("Fahrplanhalt aus Fahrt "+getName()+" löschen: bin nicht parent!");
+		return erfolg;
 	}
 	
 	public String toString()

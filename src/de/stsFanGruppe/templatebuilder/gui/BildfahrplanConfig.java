@@ -16,10 +16,17 @@ public class BildfahrplanConfig
 
 	int zeichnenBreite(JPanel p)
 	{
+		assert p != null;
 		return p.getWidth() - margin_left - margin_right;
 	}
 	int zeichnenHoehe(JPanel p)
 	{
+		assert p != null;
 		return p.getHeight() - margin_top - margin_bottom;
+	}
+	
+	public String toString()
+	{
+		return "{margin: r="+margin_right+", l="+margin_left+", t="+margin_top+", b="+margin_bottom+"}";
 	}
 }

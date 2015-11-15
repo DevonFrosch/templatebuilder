@@ -1,5 +1,7 @@
 package de.stsFanGruppe.templatebuilder.strecken;
 
+import de.stsFanGruppe.tools.NullTester;
+
 /**
  * Eine Strecke ist eine Verbindung zwischen zwei Betriebsstellen.
  * Jede Strecke hat einen Anfang, ein Ende sowie ein oder zwei Streckengleise.
@@ -50,6 +52,7 @@ public class Strecke
 	}
 	public void setName(String name)
 	{
+		NullTester.test(name);
 		this.name = name;
 	}
 	public Betriebsstelle getAnfang()
@@ -58,6 +61,7 @@ public class Strecke
 	}
 	public void setAnfang(Betriebsstelle anfang)
 	{
+		NullTester.test(anfang);
 		this.anfang = anfang;
 	}
 	public Betriebsstelle getEnde()
@@ -66,6 +70,7 @@ public class Strecke
 	}
 	public void setEnde(Betriebsstelle ende)
 	{
+		NullTester.test(ende);
 		this.ende = ende;
 	}
 	public int getAnzahlGleise()
@@ -74,6 +79,10 @@ public class Strecke
 	}
 	public void setAnzahlGleise(int anzahlGleise)
 	{
+		if(anzahlGleise <= 0)
+		{
+			throw new IllegalArgumentException("Es muss mindestens ein Gleis geben.");
+		}
 		this.anzahlGleise = anzahlGleise;
 	}
 	

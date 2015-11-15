@@ -1,22 +1,23 @@
 package de.stsFanGruppe.templatebuilder.strecken;
 
-import java.util.List;
-import java.util.LinkedList;
+import java.util.Collection;
+import de.stsFanGruppe.tools.FirstLastLinkedList;
+import de.stsFanGruppe.tools.FirstLastList;
+import de.stsFanGruppe.tools.NullTester;
 
 public class Betriebsstelle
 {	
 	protected String name;
-	protected List<Gleis> gleise;
+	protected FirstLastList<Gleis> gleise = new FirstLastLinkedList<>();
 	
-	public Betriebsstelle(String name, List<Gleis> gleise)
+	public Betriebsstelle(String name, Collection<? extends Gleis> gleise)
 	{
 		this(name);
-		gleise.forEach((Gleis g) -> this.addGleis(g));
+		this.addGleise(gleise);
 	}
 	public Betriebsstelle(String name)
 	{
-		this.name = name;
-		this.gleise = new LinkedList<>();
+		this.setName(name);
 	}
 	
 	public String getName()
@@ -25,33 +26,43 @@ public class Betriebsstelle
 	}
 	public void setName(String name)
 	{
+		NullTester.test(name);
 		this.name = name;
 	}
 	public boolean hasGleise()
 	{
 		return !gleise.isEmpty();
 	}
-	public List<Gleis> getGleise()
+	public FirstLastList<Gleis> getGleise()
 	{
 		return gleise;
 	}
 	public void addGleis(Gleis gleis)
 	{
+		NullTester.test(gleis);
 		this.gleise.add(gleis);
 		gleis.setParent(this);
 	}
 	public void addGleis(int index, Gleis gleis)
 	{
+		NullTester.test(gleis);
 		this.gleise.add(index, gleis);
 		gleis.setParent(this);
 	}
-	public void removeGleis(Gleis gleis)
+	protected void addGleise(Collection<? extends Gleis> gleise)
 	{
-		this.gleise.remove(gleis);
+		NullTester.test(gleise);
+		gleise.forEach((Gleis g) -> this.addGleis(g));
+	}
+	public boolean removeGleis(Gleis gleis)
+	{
+		NullTester.test(gleis);
+		boolean erfolg = this.gleise.remove(gleis);
 		if(gleis.getParent() == this)
 			gleis.setParent(null);
 		else
 			System.out.println("Gleis "+gleis.getName()+" aus Betriebsstelle "+getName()+" löschen: bin nicht parent!");
+		return erfolg;
 	}
 	
 	public String toString()
