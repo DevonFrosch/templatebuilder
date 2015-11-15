@@ -6,18 +6,25 @@ import java.util.List;
 public class FahrplanhaltEigenschaften
 {
 	// TODO Kuppeln und Flügeln implementieren
-	protected boolean hasDurchfahrt;
-	protected boolean hasRichtungswechsel;
-	protected boolean hasNamenswechsel;
-	protected Fahrt namenswechsel;
+	protected boolean hasDurchfahrt = false;
+	protected boolean hasRichtungswechsel = false;
+	protected boolean hasNamenswechsel = false;
+	protected Fahrt namenswechsel = null;
 
 	public FahrplanhaltEigenschaften(boolean hasDurchfahrt, boolean hasRichtungswechsel, Fahrt namenswechsel)
 	{
+		this(hasDurchfahrt, hasRichtungswechsel);
+		this.namenswechsel = namenswechsel;
+		this.hasNamenswechsel = true;
+	}
+	public FahrplanhaltEigenschaften(boolean hasDurchfahrt, boolean hasRichtungswechsel)
+	{
 		this.hasDurchfahrt = hasDurchfahrt;
 		this.hasRichtungswechsel = hasRichtungswechsel;
-		this.namenswechsel = namenswechsel;
-		if(namenswechsel != null)
-			this.hasNamenswechsel = true;
+	}
+	public FahrplanhaltEigenschaften()
+	{
+		
 	}
 	
 	public boolean hasDurchfahrt()
