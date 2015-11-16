@@ -20,8 +20,7 @@ public class Fahrplanhalt implements Comparable<Fahrplanhalt>
 	public Fahrplanhalt(Gleisabschnitt gleisabschnitt, double ankunft, double abfahrt, FahrplanhaltEigenschaften eigenschaften)
 	{
 		this.setGleisabschnitt(gleisabschnitt);
-		this.setAnkunft(ankunft);
-		this.setAbfahrt(abfahrt);
+		this.setZeiten(ankunft, abfahrt);
 		this.setEigenschaften(eigenschaften);
 	}
 	protected Fahrplanhalt(Fahrt parent, Gleisabschnitt gleisabschnitt, double ankunft, double abfahrt, FahrplanhaltEigenschaften eigenschaften)
@@ -43,11 +42,20 @@ public class Fahrplanhalt implements Comparable<Fahrplanhalt>
 	{
 		return ankunft;
 	}
+	/**
+	 * Setzt Ankunft und Abfahrt zeitgleich.
+	 * @param ankunft Die Ankunft am Gleisabschnitt.
+	 * @throws IllegalArgumentException Falls eine Zeit kleiner 0 oder die Abfahrt kleiner als (vor der) Ankunft ist.
+	 */
 	public void setAnkunft(double ankunft)
 	{
 		if(ankunft < 0)
 		{
-			throw new IllegalArgumentException("Zeit muss größer als 0 sein.");
+			throw new IllegalArgumentException("Zeit muss größer gleich 0 sein.");
+		}
+		if(ankunft > abfahrt)
+		{
+			throw new IllegalArgumentException("Abfahrt vor Ankunft.");
 		}
 		this.ankunft = ankunft;
 	}
@@ -55,12 +63,40 @@ public class Fahrplanhalt implements Comparable<Fahrplanhalt>
 	{
 		return abfahrt;
 	}
+	/**
+	 * Setzt Ankunft und Abfahrt zeitgleich.
+	 * @param abfahrt Die Abfahrt am Gleisabschnitt.
+	 * @throws IllegalArgumentException Falls eine Zeit kleiner 0 oder die Abfahrt kleiner als (vor der) Ankunft ist.
+	 */
 	public void setAbfahrt(double abfahrt)
 	{
 		if(abfahrt < 0)
 		{
-			throw new IllegalArgumentException("Zeit muss größer als 0 sein.");
+			throw new IllegalArgumentException("Zeit muss größer gleich 0 sein.");
 		}
+		if(ankunft > abfahrt)
+		{
+			throw new IllegalArgumentException("Abfahrt vor Ankunft.");
+		}
+		this.abfahrt = abfahrt;
+	}
+	/**
+	 * Setzt Ankunft und Abfahrt zeitgleich.
+	 * @param ankunft Die Ankunft am Gleisabschnitt.
+	 * @param abfahrt Die Abfahrt am Gleisabschnitt.
+	 * @throws IllegalArgumentException Falls eine Zeit kleiner 0 oder die Abfahrt kleiner als (vor der) Ankunft ist.
+	 */
+	public void setZeiten(double ankunft, double abfahrt)
+	{
+		if(abfahrt < 0 || ankunft < 0)
+		{
+			throw new IllegalArgumentException("Zeit muss größer gleich 0 sein.");
+		}
+		if(ankunft > abfahrt)
+		{
+			throw new IllegalArgumentException("Abfahrt vor Ankunft.");
+		}
+		this.ankunft = ankunft;
 		this.abfahrt = abfahrt;
 	}
 	public FahrplanhaltEigenschaften getEigenschaften()
