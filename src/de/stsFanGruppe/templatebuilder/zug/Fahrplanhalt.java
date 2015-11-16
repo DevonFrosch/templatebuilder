@@ -1,5 +1,6 @@
 package de.stsFanGruppe.templatebuilder.zug;
 
+import java.util.Comparator;
 import de.stsFanGruppe.templatebuilder.strecken.Gleisabschnitt;
 import de.stsFanGruppe.tools.NullTester;
 
@@ -145,10 +146,7 @@ public class Fahrplanhalt implements Comparable<Fahrplanhalt>
 	 */
 	public int compareTo(Fahrplanhalt other)
 	{
-		if(other == null)
-		{
-			throw new NullPointerException();
-		}
+		NullTester.test(other);
 		
 		// Sortiere erst nach Ankunft...
 		if(Double.compare(this.ankunft, other.ankunft) != 0)
@@ -157,5 +155,28 @@ public class Fahrplanhalt implements Comparable<Fahrplanhalt>
 		}
 		// ... dann nach Abfahrt
 		return Double.compare(this.abfahrt, other.abfahrt);
+	}
+	public static class StrictComparator implements Comparator<Fahrplanhalt>
+	{
+		/**
+		 * Vergleicht den Fahrplanhalt mit einem anderen. Sie sind zuerst nach Ankunft, dann nach Abfahrt sortiert.
+		 * @param a der eine Fahrplanhalt.
+		 * @param b der andere Fahrplanhalt.
+		 * @return einen negativen Wert, 0, oder einen positiven Wert, wenn dieser Fahrplanhalt kleiner, gleich
+		 * oder größer als der andere Fahrplanhalt ist.
+		 * @throws NullPointerException falls der andere Fahrplanhalt null ist.
+		 */
+		public int compare(Fahrplanhalt a, Fahrplanhalt b)
+		{
+			int comp = a.compareTo(b);
+			
+			if(comp < 0 && a.abfahrt > b.ankunft
+				|| comp > 0 && a.abfahrt < b.ankunft)
+			{
+				throw new IllegalArgumentException("Abfahrt vor Ankunft.");
+			}
+			
+			return comp;
+		}
 	}
 }

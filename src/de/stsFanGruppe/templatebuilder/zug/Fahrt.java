@@ -9,7 +9,7 @@ public class Fahrt
 {
 	protected String name;
 	protected Linie linie;
-	protected NavigableSet<Fahrplanhalt> fahrplanhalte = new TreeSet<>();
+	protected NavigableSet<Fahrplanhalt> fahrplanhalte = new TreeSet<>(new Fahrplanhalt.StrictComparator());
 	
 	public Fahrt(String name, Linie linie)
 	{
@@ -68,6 +68,15 @@ public class Fahrt
 		else
 			System.out.println("Fahrplanhalt aus Fahrt "+getName()+" löschen: bin nicht parent!");
 		return erfolg;
+	}
+	
+	public double getMinZeit()
+	{
+		return fahrplanhalte.stream().min((a, b) -> Double.compare(a.getAnkunft(), b.getAnkunft())).get().getAnkunft();
+	}
+	public double getMaxZeit()
+	{
+		return fahrplanhalte.stream().max((a, b) -> Double.compare(a.getAbfahrt(), b.getAbfahrt())).get().getAbfahrt();
 	}
 	
 	public String toString()
