@@ -1,20 +1,19 @@
 package de.stsFanGruppe.templatebuilder.gui;
 
-import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.*;
 import java.util.*;
 import javax.swing.JPanel;
+import de.stsFanGruppe.templatebuilder.strecken.*;
 import de.stsFanGruppe.templatebuilder.zug.*;
 import de.stsFanGruppe.tools.NullTester;
 
 public class BildfahrplanZeichner extends JPanel
 {
 	private BildfahrplanConfig config;
+	Streckenabschnitt streckenabschnitt;
 	private Set<Fahrt> fahrten;
 	
-	double startZeit = 0; // 0:00
-	double endeZeit = 1440; // 24:00
-	double diffZeit = endeZeit - startZeit;
+	double diffZeit = 0;
 	
 	double startKm = 0;
 	double endeKm = 3;
@@ -22,23 +21,45 @@ public class BildfahrplanZeichner extends JPanel
 	
 	boolean changed = false;
 	
-	public BildfahrplanZeichner(BildfahrplanConfig config)
+	public BildfahrplanZeichner(BildfahrplanConfig config, Streckenabschnitt streckenabschnitt)
 	{
 		NullTester.test(config);
+		NullTester.test(streckenabschnitt);
 		this.config = config;
+		this.streckenabschnitt = streckenabschnitt;
 		this.fahrten = new HashSet<Fahrt>();
 	}
-	
+
 	public void zeichneFahrt(Fahrt fahrt)
 	{
 		NullTester.test(fahrt);
 		this.fahrten.add(fahrt);
-		changed = true;
+		this.changed = true;
+	}
+	
+	public void zeichneFahrten(Collection<? extends Fahrt> fahrten)
+	{
+		fahrten.forEach((Fahrt f) -> this.zeichneFahrt(f));
 	}
 	
 	protected void paintComponent(Graphics g)
 	{
 		super.paintComponent(g);
+		
+		if(this.fahrten.isEmpty())
+		{
+			changed = false;
+			return;
+		}
+		
+		if(changed)
+		{
+			double minZeit = fahrten.stream().min((a, b) -> Double.compare(a.getMinZeit(), b.getMinZeit())).get().getMinZeit();
+			double maxZeit = fahrten.stream().min((a, b) -> Double.compare(a.getMinZeit(), b.getMinZeit())).get().getMinZeit();
+			this.diffZeit = maxZeit - minZeit;
+			log("diffZeit: "+diffZeit);
+		}
+		
 		Iterator<Fahrt> f = this.fahrten.iterator();
 		while(f.hasNext())
 		{

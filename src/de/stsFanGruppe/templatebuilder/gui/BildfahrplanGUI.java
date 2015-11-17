@@ -1,6 +1,11 @@
 package de.stsFanGruppe.templatebuilder.gui;
 
-import de.stsFanGruppe.templatebuilder.test.TestDaten;
+import java.util.Set;
+import de.stsFanGruppe.templatebuilder.external.ImporterFramework;
+import de.stsFanGruppe.templatebuilder.external.jtraingraph.JTrainGraphImporter;
+import de.stsFanGruppe.templatebuilder.strecken.*;
+import de.stsFanGruppe.templatebuilder.zug.*;
+import de.stsFanGruppe.tools.NullTester;
 
 /**
  *
@@ -8,11 +13,15 @@ import de.stsFanGruppe.templatebuilder.test.TestDaten;
  */
 public class BildfahrplanGUI extends javax.swing.JFrame
 {
+	protected Streckenabschnitt streckenabschnitt;
+	
 	/**
 	 * Creates new form BildfahrplanGUI
 	 */
-	public BildfahrplanGUI()
+	public BildfahrplanGUI(Streckenabschnitt streckenabschnitt)
 	{
+		NullTester.test(streckenabschnitt);
+		this.streckenabschnitt = streckenabschnitt;
 		initComponents();
 	}
 	
@@ -27,7 +36,7 @@ public class BildfahrplanGUI extends javax.swing.JFrame
 		
 		jPanel1 = new javax.swing.JPanel();
 		jScrollPane1 = new javax.swing.JScrollPane();
-		jPanel2 = new BildfahrplanZeichner(new BildfahrplanConfig());
+		jPanel2 = new BildfahrplanZeichner(new BildfahrplanConfig(), streckenabschnitt);
 		
 		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 		setTitle("BildfahrplanGUI");
@@ -111,16 +120,22 @@ public class BildfahrplanGUI extends javax.swing.JFrame
 		
 		/* Create and display the form */
 		java.awt.EventQueue.invokeLater(() -> {
-			BildfahrplanGUI bfp = new BildfahrplanGUI();
-			bfp.setVisible(true);
-			
-			bfp.testPlan();
+			// Daten importieren
+			try
+			{
+				String file = "test.fpl";
+				ImporterFramework imp = new ImporterFramework(new JTrainGraphImporter());
+				Streckenabschnitt sa = imp.importStreckenabschnitt(file);
+				BildfahrplanGUI bfp = new BildfahrplanGUI(sa);
+				bfp.setVisible(true);
+				Set<Fahrt> fa = imp.importFahrten(file, sa, new Linie("1"));
+				bfp.jPanel2.zeichneFahrten(fa);
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
 		});
-	}
-	
-	private void testPlan()
-	{
-		jPanel2.zeichneFahrt(TestDaten.fahrt());
 	}
 	
 	// Variables declaration - do not modify//GEN-BEGIN:variables

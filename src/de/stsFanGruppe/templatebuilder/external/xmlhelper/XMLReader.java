@@ -35,6 +35,7 @@ public class XMLReader
 		
 		while(parser.hasNext())
 		{
+			//log("Stack: "+nesting.toString());
 			XMLEvent event = parser.nextEvent();
 			switch(event.getEventType())
 			{
@@ -44,18 +45,17 @@ public class XMLReader
 					throw new EndOfXMLException("Reached end of document");
 				case XMLStreamConstants.START_ELEMENT:
 					element = new XMLElement(event.asStartElement());
+					//log("<"+element.getName()+">");
 					nesting.push(element);
 					
 					if(tagNames.isEmpty() || tagNames.contains(element.getName()))
 					{
 						return element;
 					}
-					else
-					{
-						continue;
-					}
+					break;
 				case XMLStreamConstants.END_ELEMENT:
-					if(!nesting.isEmpty())
+					//log("</"+event.asEndElement().getName().getLocalPart()+">");
+					if(nesting.isEmpty())
 					{
 						throw new EndOfXMLException("Element stack empty");
 					}
