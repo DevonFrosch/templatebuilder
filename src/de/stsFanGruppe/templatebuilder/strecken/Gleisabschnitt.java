@@ -1,22 +1,19 @@
 package de.stsFanGruppe.templatebuilder.strecken;
 
-import java.util.LinkedList;
 import de.stsFanGruppe.tools.NullTester;
 
 public class Gleisabschnitt implements Comparable<Gleisabschnitt>
 {
 	protected String name;
-	protected double kmAnfang = 0;
-	protected double kmEnde = 0;
+	protected double km = 0;
 	
 	protected Gleis parent = null;
 	
-	public Gleisabschnitt(String name, Gleis parent, double kmAnfang, double kmEnde)
+	public Gleisabschnitt(String name, Gleis parent, double km)
 	{
 		this.setName(name);
 		this.setParent(parent);
-		this.setKmAnfang(kmAnfang);
-		this.setKmEnde(kmEnde);
+		this.setKm(km);
 	}
 	
 	public String getName()
@@ -28,21 +25,13 @@ public class Gleisabschnitt implements Comparable<Gleisabschnitt>
 		NullTester.test(name);
 		this.name = name;
 	}
-	public double getKmAnfang()
+	public double getKm()
 	{
-		return kmAnfang;
+		return km;
 	}
-	public void setKmAnfang(double kmAnfang)
+	public void setKm(double km)
 	{
-		this.kmAnfang = kmAnfang;
-	}
-	public double getKmEnde()
-	{
-		return kmEnde;
-	}
-	public void setKmEnde(double kmEnde)
-	{
-		this.kmEnde = kmEnde;
+		this.km = km;
 	}
 	public Gleis getParent()
 	{
@@ -53,26 +42,9 @@ public class Gleisabschnitt implements Comparable<Gleisabschnitt>
 		this.parent = parent;
 	}
 	
-	public double getMinKm()
-	{
-		return Double.min(kmAnfang, kmEnde);
-	}
-	public double getMaxKm()
-	{
-		return Double.max(kmAnfang, kmEnde);
-	}
-	
 	public String toString()
 	{
-		StringBuilder str = new StringBuilder("Gleisabschnitt "+getName()+" { ");
-		
-		LinkedList<String> opts = new LinkedList<>();
-		opts.add("kmAnfang: "+getKmEnde());
-		opts.add("kmEnde: "+getKmEnde());
-		str.append(String.join(", ", (String[]) opts.toArray()));
-		
-		str.append(" }");
-		return str.toString();
+		return "Gleisabschnitt "+getName()+" { km = "+km+" }";
 	}
 	public String toXML()
 	{
@@ -80,7 +52,7 @@ public class Gleisabschnitt implements Comparable<Gleisabschnitt>
 	}
 	public String toXML(String indent)
 	{
-		return indent+"<gleisabschnitt name=\""+getName()+"\" kmAnfang=\""+getKmAnfang()+"\" kmEnde=\""+getKmEnde()+"\" />";
+		return indent+"<gleisabschnitt name=\""+getName()+"\" km=\""+getKm()+"\" />";
 	}
 	
 	/**
@@ -96,14 +68,6 @@ public class Gleisabschnitt implements Comparable<Gleisabschnitt>
 	public int compareTo(Gleisabschnitt other)
 	{
 		NullTester.test(other);
-		
-		int compared;
-		// Sortiere erst nach Anfang...
-		if((compared = Double.compare(this.kmAnfang, other.kmAnfang)) != 0)
-		{
-			return compared;
-		}
-		// ... dann nach Ende
-		return Double.compare(this.kmEnde, other.kmEnde);
+		return Double.compare(this.km, other.km);
 	}
 }

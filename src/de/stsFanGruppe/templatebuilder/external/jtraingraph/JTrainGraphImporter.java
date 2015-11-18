@@ -41,7 +41,7 @@ public class JTrainGraphImporter implements Importer
 				}
 				
 				double dKm = Double.parseDouble(km);
-				Gleis gleis = new Gleis(stName, dKm, dKm);
+				Gleis gleis = new Gleis(stName, dKm);
 				Gleisabschnitt gleisabschnitt = gleis.getGleisabschnitte().first();
 				
 				betriebsstelle.addGleis(gleis);

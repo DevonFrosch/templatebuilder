@@ -16,10 +16,10 @@ public class Gleis
 	 * Erstellt ein Gleis ohne Gleisabschnitte.
 	 * @param name der Name des Gleises.
 	 */
-	public Gleis(String name, double kmAnfang, double kmEnde)
+	public Gleis(String name, double km)
 	{
 		this.setName(name);
-		this.resetGleisabschnitte(kmAnfang, kmEnde);
+		this.resetGleisabschnitte(km);
 	}
 	/**
 	 * Erstellt ein Gleis mit den gegebenen Gleisabschnitten.
@@ -84,14 +84,14 @@ public class Gleis
 		
 		if(this.gleisabschnitte.isEmpty())
 		{
-			this.resetGleisabschnitte(gleisabschnitt.getKmAnfang(), gleisabschnitt.getKmEnde());
+			this.resetGleisabschnitte(gleisabschnitt.getKm());
 		}
 		return erfolg;
 	}
-	public void resetGleisabschnitte(double kmAnfang, double kmEnde)
+	public void resetGleisabschnitte(double km)
 	{
 		this.gleisabschnitte = new TreeSet<>();
-		this.gleisabschnitte.add(new Gleisabschnitt(name, this, kmAnfang, kmEnde));
+		this.gleisabschnitte.add(new Gleisabschnitt(name, this, km));
 		this.verwendetGleisabschnitte = false;
 	}
 	public Betriebsstelle getParent()
@@ -102,14 +102,14 @@ public class Gleis
 	{
 		this.parent = parent;
 	}
-
+	
 	public double getMinKm()
 	{
-		return gleisabschnitte.stream().min((a,b) -> Double.compare(a.getMinKm(), b.getMinKm())).get().getMinKm();
+		return gleisabschnitte.stream().min((a,b) -> Double.compare(a.getKm(), b.getKm())).get().getKm();
 	}
 	public double getMaxKm()
 	{
-		return gleisabschnitte.stream().min((a,b) -> Double.compare(a.getMaxKm(), b.getMaxKm())).get().getMaxKm();
+		return gleisabschnitte.stream().min((a,b) -> Double.compare(a.getKm(), b.getKm())).get().getKm();
 	}
 	
 	public String toString()
