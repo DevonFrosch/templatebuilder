@@ -5,7 +5,7 @@ import de.stsFanGruppe.templatebuilder.external.ImporterFramework;
 import de.stsFanGruppe.templatebuilder.external.jtraingraph.JTrainGraphImporter;
 import de.stsFanGruppe.templatebuilder.strecken.*;
 import de.stsFanGruppe.templatebuilder.zug.*;
-import de.stsFanGruppe.tools.NullTester;
+import java.awt.SystemColor;
 
 /**
  *
@@ -13,15 +13,11 @@ import de.stsFanGruppe.tools.NullTester;
  */
 public class BildfahrplanGUI extends javax.swing.JFrame
 {
-	protected Streckenabschnitt streckenabschnitt;
-	
 	/**
 	 * Creates new form BildfahrplanGUI
 	 */
-	public BildfahrplanGUI(Streckenabschnitt streckenabschnitt)
+	public BildfahrplanGUI()
 	{
-		NullTester.test(streckenabschnitt);
-		this.streckenabschnitt = streckenabschnitt;
 		initComponents();
 	}
 	
@@ -36,7 +32,7 @@ public class BildfahrplanGUI extends javax.swing.JFrame
 		
 		jPanel1 = new javax.swing.JPanel();
 		jScrollPane1 = new javax.swing.JScrollPane();
-		jPanel2 = new BildfahrplanZeichner(new BildfahrplanConfig(), streckenabschnitt);
+		jPanel2 = new BildfahrplanZeichner(new BildfahrplanConfig());
 		
 		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 		setTitle("BildfahrplanGUI");
@@ -44,7 +40,7 @@ public class BildfahrplanGUI extends javax.swing.JFrame
 		setPreferredSize(new java.awt.Dimension(800, 500));
 		getContentPane().setLayout(new java.awt.GridBagLayout());
 		
-		jPanel1.setBackground(new java.awt.Color(0, 153, 255));
+		jPanel1.setBackground(SystemColor.menu);
 		jPanel1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 		jPanel1.setMaximumSize(new java.awt.Dimension(32767, 100));
 		jPanel1.setMinimumSize(new java.awt.Dimension(500, 100));
@@ -126,7 +122,9 @@ public class BildfahrplanGUI extends javax.swing.JFrame
 				String file = "test.fpl";
 				ImporterFramework imp = new ImporterFramework(new JTrainGraphImporter());
 				Streckenabschnitt sa = imp.importStreckenabschnitt(file);
-				BildfahrplanGUI bfp = new BildfahrplanGUI(sa);
+				System.out.println(sa.toXML());
+				BildfahrplanGUI bfp = new BildfahrplanGUI();
+				bfp.jPanel2.setStreckenabschnitt(sa);
 				bfp.setVisible(true);
 				Set<Fahrt> fa = imp.importFahrten(file, sa, new Linie("1"));
 				bfp.jPanel2.zeichneFahrten(fa);
@@ -142,5 +140,4 @@ public class BildfahrplanGUI extends javax.swing.JFrame
 	private javax.swing.JPanel jPanel1;
 	private BildfahrplanZeichner jPanel2;
 	private javax.swing.JScrollPane jScrollPane1;
-	// End of variables declaration//GEN-END:variables
 }

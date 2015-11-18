@@ -10,33 +10,36 @@ import de.stsFanGruppe.tools.NullTester;
 public class BildfahrplanZeichner extends JPanel
 {
 	private BildfahrplanConfig config;
-	Streckenabschnitt streckenabschnitt;
+	Streckenabschnitt streckenabschnitt = null;
 	private Set<Fahrt> fahrten;
 	
 	double diffZeit = 0;
+	double diffKm = 0;
 	
-	double startKm = 0;
-	double endeKm = 3;
-	double diffKm = endeKm - startKm;
+	boolean changed = true;
 	
-	boolean changed = false;
-	
-	public BildfahrplanZeichner(BildfahrplanConfig config, Streckenabschnitt streckenabschnitt)
+	public BildfahrplanZeichner(BildfahrplanConfig config)
 	{
 		NullTester.test(config);
-		NullTester.test(streckenabschnitt);
 		this.config = config;
-		this.streckenabschnitt = streckenabschnitt;
 		this.fahrten = new HashSet<Fahrt>();
 	}
-
+	
+	public void setStreckenabschnitt(Streckenabschnitt streckenabschnitt)
+	{
+		NullTester.test(streckenabschnitt);
+		this.streckenabschnitt = streckenabschnitt;
+		
+		this.diffKm = streckenabschnitt.getMaxKm() - streckenabschnitt.getMinKm();
+		log("diffKm: "+diffKm);
+		changed = true;
+	}
 	public void zeichneFahrt(Fahrt fahrt)
 	{
 		NullTester.test(fahrt);
 		this.fahrten.add(fahrt);
 		this.changed = true;
 	}
-	
 	public void zeichneFahrten(Collection<? extends Fahrt> fahrten)
 	{
 		fahrten.forEach((Fahrt f) -> this.zeichneFahrt(f));
@@ -46,16 +49,15 @@ public class BildfahrplanZeichner extends JPanel
 	{
 		super.paintComponent(g);
 		
-		if(this.fahrten.isEmpty())
+		if(this.streckenabschnitt == null || this.fahrten.isEmpty())
 		{
-			changed = false;
 			return;
 		}
 		
 		if(changed)
 		{
 			double minZeit = fahrten.stream().min((a, b) -> Double.compare(a.getMinZeit(), b.getMinZeit())).get().getMinZeit();
-			double maxZeit = fahrten.stream().min((a, b) -> Double.compare(a.getMinZeit(), b.getMinZeit())).get().getMinZeit();
+			double maxZeit = fahrten.stream().max((a, b) -> Double.compare(a.getMaxZeit(), b.getMaxZeit())).get().getMaxZeit();
 			this.diffZeit = maxZeit - minZeit;
 			log("diffZeit: "+diffZeit);
 		}
@@ -77,7 +79,7 @@ public class BildfahrplanZeichner extends JPanel
 				if(ab >= 0 && kmAb >= 0)
 				{
 					double an = fh.getAnkunft();
-					double kmAn = getKm(fh.getGleisabschnitt().getKmAnfang(), kmAb+1);
+					double kmAn = fh.getGleisabschnitt().getKmAnfang();
 					log("Fahrplanhalt: an = "+an+", kmAn = "+kmAn);
 					
 					g.setColor(Color.BLACK);
@@ -91,7 +93,7 @@ public class BildfahrplanZeichner extends JPanel
 				
 				// für nächsten Eintrag
 				ab = fh.getAbfahrt();
-				kmAb = getKm(fh.getGleisabschnitt().getKmAnfang(), kmAb+1);
+				kmAb = fh.getGleisabschnitt().getKmEnde();
 				log("Daten: ab = "+ab+", kmAb = "+kmAb);
 			}
 		}
@@ -116,15 +118,6 @@ public class BildfahrplanZeichner extends JPanel
 		return (int) (min + (diff * km / diffKm));
 	}
 	
-	double getKm(OptionalDouble km, double defaultValue)
-	{
-		assert km != null;
-		if(km.isPresent())
-		{
-			return km.getAsDouble();
-		}
-		return defaultValue;
-	}
 	public void log(String text)
 	{
 		if(changed)

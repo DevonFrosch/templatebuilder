@@ -32,24 +32,17 @@ public class JTrainGraphImporter implements Importer
 			{
 				String stName = tSta.getAttribute("name");
 				Betriebsstelle betriebsstelle = new Betriebsstelle(stName);
-				Gleis gleis = new Gleis(stName);
-				Gleisabschnitt gleisabschnitt = gleis.getGleisabschnitte().first();
 				
 				// Ortsangabe
 				String km = tSta.getAttribute("km");
 				if(isEmpty(km))
 				{
-					try
-					{
-						double dKm = Double.parseDouble(km);
-						gleisabschnitt.setKmAnfang(dKm);
-						gleisabschnitt.setKmEnde(dKm);
-					}
-					catch(NumberFormatException e)
-					{
-						log("Formatfehler in km von Station "+stName);
-					}
+					throw new ImportException("Keine Ortsangabe für Station.");
 				}
+				
+				double dKm = Double.parseDouble(km);
+				Gleis gleis = new Gleis(stName, dKm, dKm);
+				Gleisabschnitt gleisabschnitt = gleis.getGleisabschnitte().first();
 				
 				betriebsstelle.addGleis(gleis);
 				betriebsstellen.add(betriebsstelle);
