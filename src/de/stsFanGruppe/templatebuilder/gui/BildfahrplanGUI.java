@@ -124,8 +124,8 @@ public class BildfahrplanGUI extends javax.swing.JFrame
 				Streckenabschnitt sa = imp.importStreckenabschnitt(file);
 				System.out.println(sa.toXML());
 				BildfahrplanGUI bfp = new BildfahrplanGUI();
-				bfp.jPanel2.setStreckenabschnitt(sa);
 				bfp.setVisible(true);
+				bfp.jPanel2.setStreckenabschnitt(sa);
 				Set<Fahrt> fa = imp.importFahrten(file, sa, new Linie("1"));
 				bfp.jPanel2.zeichneFahrten(fa);
 			}

@@ -13,8 +13,8 @@ public class BildfahrplanZeichner extends JPanel
 	Streckenabschnitt streckenabschnitt = null;
 	private Set<Fahrt> fahrten;
 	
-	double diffZeit = 0;
-	double diffKm = 0;
+	double diffZeit = -1;
+	double diffKm = -1;
 	
 	boolean changed = true;
 	
@@ -28,11 +28,14 @@ public class BildfahrplanZeichner extends JPanel
 	public void setStreckenabschnitt(Streckenabschnitt streckenabschnitt)
 	{
 		NullTester.test(streckenabschnitt);
+		changed = true;
 		this.streckenabschnitt = streckenabschnitt;
 		
 		this.diffKm = streckenabschnitt.getMaxKm() - streckenabschnitt.getMinKm();
-		log("diffKm: "+diffKm);
-		changed = true;
+
+		log("x.Breite: "+getWidth());
+		log("y.Höhe: "+getHeight());
+		log("x.diffKm: "+diffKm+" ("+streckenabschnitt.getMaxKm()+" - "+streckenabschnitt.getMinKm()+")");
 	}
 	public void zeichneFahrt(Fahrt fahrt)
 	{
@@ -59,7 +62,7 @@ public class BildfahrplanZeichner extends JPanel
 			double minZeit = fahrten.stream().min((a, b) -> Double.compare(a.getMinZeit(), b.getMinZeit())).get().getMinZeit();
 			double maxZeit = fahrten.stream().max((a, b) -> Double.compare(a.getMaxZeit(), b.getMaxZeit())).get().getMaxZeit();
 			this.diffZeit = maxZeit - minZeit;
-			log("diffZeit: "+diffZeit);
+			log("y.diffZeit: "+diffZeit);
 		}
 		
 		Iterator<Fahrt> f = this.fahrten.iterator();
@@ -79,12 +82,12 @@ public class BildfahrplanZeichner extends JPanel
 				if(ab >= 0 && kmAb >= 0)
 				{
 					double an = fh.getAnkunft();
-					double kmAn = fh.getGleisabschnitt().getKmAnfang();
-					log("Fahrplanhalt: an = "+an+", kmAn = "+kmAn);
+					double kmAn = fh.getGleisabschnitt().getKm();
+					log("Fahrplanhalt: y.an = "+an+", x.kmAn = "+kmAn);
 					
 					g.setColor(Color.BLACK);
 					g.drawLine(getWegPos(kmAb), getZeitPos(ab), getWegPos(kmAn), getZeitPos(an));
-					log("drawLine: "+getWegPos(kmAb)+", "+getZeitPos(an)+", "+getWegPos(kmAn)+", "+getZeitPos(ab));
+					log("drawLine: (x "+getWegPos(kmAb)+", y "+getZeitPos(an)+") -> (x "+getWegPos(kmAn)+", y "+getZeitPos(ab)+")");
 				}
 				else
 				{
@@ -93,7 +96,7 @@ public class BildfahrplanZeichner extends JPanel
 				
 				// für nächsten Eintrag
 				ab = fh.getAbfahrt();
-				kmAb = fh.getGleisabschnitt().getKmEnde();
+				kmAb = fh.getGleisabschnitt().getKm();
 				log("Daten: ab = "+ab+", kmAb = "+kmAb);
 			}
 		}
