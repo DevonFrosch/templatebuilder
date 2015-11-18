@@ -66,7 +66,7 @@ public class Streckenabschnitt
 	}
 	public double getMaxKm()
 	{
-		return strecken.stream().min((a,b) -> Double.compare(a.getMaxKm(), b.getMaxKm())).get().getMaxKm();
+		return strecken.stream().max((a,b) -> Double.compare(a.getMaxKm(), b.getMaxKm())).get().getMaxKm();
 	}
 	
 	// String-Produkte

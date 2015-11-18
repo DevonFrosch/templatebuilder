@@ -92,7 +92,7 @@ public class Strecke
 	}
 	public double getMaxKm()
 	{
-		return Double.min(anfang.getMaxKm(), ende.getMaxKm());
+		return Double.max(anfang.getMaxKm(), ende.getMaxKm());
 	}
 	
 	public String toString()
