@@ -59,6 +59,15 @@ public class Streckenabschnitt
 		NullTester.test(strecke);
 		return this.strecken.remove(strecke);
 	}
+
+	public double getMinKm()
+	{
+		return strecken.stream().min((a,b) -> Double.compare(a.getMinKm(), b.getMinKm())).get().getMinKm();
+	}
+	public double getMaxKm()
+	{
+		return strecken.stream().min((a,b) -> Double.compare(a.getMaxKm(), b.getMaxKm())).get().getMaxKm();
+	}
 	
 	// String-Produkte
 	public String toString()

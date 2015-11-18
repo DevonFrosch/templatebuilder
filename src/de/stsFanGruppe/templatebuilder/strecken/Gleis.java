@@ -16,10 +16,10 @@ public class Gleis
 	 * Erstellt ein Gleis ohne Gleisabschnitte.
 	 * @param name der Name des Gleises.
 	 */
-	public Gleis(String name)
+	public Gleis(String name, double kmAnfang, double kmEnde)
 	{
 		this.setName(name);
-		this.resetGleisabschnitte();
+		this.resetGleisabschnitte(kmAnfang, kmEnde);
 	}
 	/**
 	 * Erstellt ein Gleis mit den gegebenen Gleisabschnitten.
@@ -29,7 +29,7 @@ public class Gleis
 	 */
 	protected Gleis(String name, Collection<? extends Gleisabschnitt> gleisabschnitte)
 	{
-		this(name);
+		this.setName(name);
 		this.addGleisabschnitte(gleisabschnitte);
 	}
 	
@@ -55,7 +55,9 @@ public class Gleis
 		NullTester.test(gleisabschnitt);
 		if(!this.verwendetGleisabschnitte)
 		{
-			this.resetGleisabschnitte();
+			Gleisabschnitt alt = this.gleisabschnitte.first();
+			alt.setParent(null);
+			this.gleisabschnitte.clear();
 		}
 		this.gleisabschnitte.add(gleisabschnitt);
 		gleisabschnitt.setParent(this);
@@ -82,14 +84,14 @@ public class Gleis
 		
 		if(this.gleisabschnitte.isEmpty())
 		{
-			this.resetGleisabschnitte();
+			this.resetGleisabschnitte(gleisabschnitt.getKmAnfang(), gleisabschnitt.getKmEnde());
 		}
 		return erfolg;
 	}
-	public void resetGleisabschnitte()
+	public void resetGleisabschnitte(double kmAnfang, double kmEnde)
 	{
 		this.gleisabschnitte = new TreeSet<>();
-		this.gleisabschnitte.add(new Gleisabschnitt(name, this));
+		this.gleisabschnitte.add(new Gleisabschnitt(name, this, kmAnfang, kmEnde));
 		this.verwendetGleisabschnitte = false;
 	}
 	public Betriebsstelle getParent()
@@ -99,6 +101,15 @@ public class Gleis
 	protected void setParent(Betriebsstelle parent)
 	{
 		this.parent = parent;
+	}
+
+	public double getMinKm()
+	{
+		return gleisabschnitte.stream().min((a,b) -> Double.compare(a.getMinKm(), b.getMinKm())).get().getMinKm();
+	}
+	public double getMaxKm()
+	{
+		return gleisabschnitte.stream().min((a,b) -> Double.compare(a.getMaxKm(), b.getMaxKm())).get().getMaxKm();
 	}
 	
 	public String toString()

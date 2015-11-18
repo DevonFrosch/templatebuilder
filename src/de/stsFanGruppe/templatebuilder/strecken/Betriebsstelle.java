@@ -64,6 +64,15 @@ public class Betriebsstelle
 			System.out.println("Gleis "+gleis.getName()+" aus Betriebsstelle "+getName()+" löschen: bin nicht parent!");
 		return erfolg;
 	}
+
+	public double getMinKm()
+	{
+		return gleise.stream().min((a,b) -> Double.compare(a.getMinKm(), b.getMinKm())).get().getMinKm();
+	}
+	public double getMaxKm()
+	{
+		return gleise.stream().min((a,b) -> Double.compare(a.getMaxKm(), b.getMaxKm())).get().getMaxKm();
+	}
 	
 	public String toString()
 	{

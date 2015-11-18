@@ -1,33 +1,20 @@
 package de.stsFanGruppe.templatebuilder.strecken;
 
 import java.util.LinkedList;
-import java.util.OptionalDouble;
 import de.stsFanGruppe.tools.NullTester;
 
 public class Gleisabschnitt implements Comparable<Gleisabschnitt>
 {
 	protected String name;
-	protected OptionalDouble kmAnfang;
-	protected OptionalDouble kmEnde;
+	protected double kmAnfang = 0;
+	protected double kmEnde = 0;
 	
 	protected Gleis parent = null;
 	
-	public Gleisabschnitt(String name, Gleis parent)
+	public Gleisabschnitt(String name, Gleis parent, double kmAnfang, double kmEnde)
 	{
 		this.setName(name);
 		this.setParent(parent);
-		this.resetKmAnfang();
-		this.resetKmEnde();
-	}
-	public Gleisabschnitt(String name, Gleis parent, double kmAnfang, double kmEnde)
-	{
-		this(name, parent);
-		this.setKmAnfang(kmAnfang);
-		this.setKmEnde(kmEnde);
-	}
-	public Gleisabschnitt(String name, Gleis parent, OptionalDouble kmAnfang, OptionalDouble kmEnde)
-	{
-		this(name, parent);
 		this.setKmAnfang(kmAnfang);
 		this.setKmEnde(kmEnde);
 	}
@@ -41,51 +28,21 @@ public class Gleisabschnitt implements Comparable<Gleisabschnitt>
 		NullTester.test(name);
 		this.name = name;
 	}
-	public OptionalDouble getKmAnfang()
+	public double getKmAnfang()
 	{
 		return kmAnfang;
 	}
-	public void setKmAnfang(OptionalDouble kmAnfang)
-	{
-		if(kmAnfang == null)
-		{
-			this.resetKmAnfang();
-		}
-		else
-		{
-			this.setKmEnde(kmAnfang);
-		}
-	}
 	public void setKmAnfang(double kmAnfang)
 	{
-		this.kmAnfang = OptionalDouble.of(kmAnfang);
+		this.kmAnfang = kmAnfang;
 	}
-	public void resetKmAnfang()
-	{
-		this.kmAnfang = OptionalDouble.empty();
-	}
-	public OptionalDouble getKmEnde()
+	public double getKmEnde()
 	{
 		return kmEnde;
 	}
-	public void setKmEnde(OptionalDouble kmEnde)
-	{
-		if(kmEnde == null)
-		{
-			this.resetKmEnde();
-		}
-		else
-		{
-			this.setKmEnde(kmEnde);
-		}
-	}
 	public void setKmEnde(double kmEnde)
 	{
-		this.kmEnde = OptionalDouble.of(kmEnde);
-	}
-	public void resetKmEnde()
-	{
-		this.kmEnde = OptionalDouble.empty();
+		this.kmEnde = kmEnde;
 	}
 	public Gleis getParent()
 	{
@@ -96,19 +53,22 @@ public class Gleisabschnitt implements Comparable<Gleisabschnitt>
 		this.parent = parent;
 	}
 	
+	public double getMinKm()
+	{
+		return Double.min(kmAnfang, kmEnde);
+	}
+	public double getMaxKm()
+	{
+		return Double.max(kmAnfang, kmEnde);
+	}
+	
 	public String toString()
 	{
 		StringBuilder str = new StringBuilder("Gleisabschnitt "+getName()+" { ");
 		
 		LinkedList<String> opts = new LinkedList<>();
-		if(kmAnfang.isPresent())
-		{
-			opts.add("kmAnfang: "+getKmEnde().getAsDouble());
-		}
-		if(kmEnde.isPresent())
-		{
-			opts.add("kmEnde: "+getKmEnde().getAsDouble());
-		}
+		opts.add("kmAnfang: "+getKmEnde());
+		opts.add("kmEnde: "+getKmEnde());
 		str.append(String.join(", ", (String[]) opts.toArray()));
 		
 		str.append(" }");
@@ -120,19 +80,7 @@ public class Gleisabschnitt implements Comparable<Gleisabschnitt>
 	}
 	public String toXML(String indent)
 	{
-		StringBuilder str = new StringBuilder(indent+"<gleisabschnitt name=\""+getName()+"\"");
-		
-		if(kmAnfang.isPresent())
-		{
-			str.append(" kmAnfang=\""+getKmAnfang().getAsDouble()+"\"");
-		}
-		if(kmEnde.isPresent())
-		{
-			str.append(" kmEnde=\""+getKmEnde().getAsDouble()+"\"");
-		}
-		
-		str.append(" />");
-		return str.toString();
+		return indent+"<gleisabschnitt name=\""+getName()+"\" kmAnfang=\""+getKmAnfang()+"\" kmEnde=\""+getKmEnde()+"\" />";
 	}
 	
 	/**
@@ -147,31 +95,15 @@ public class Gleisabschnitt implements Comparable<Gleisabschnitt>
 	 */
 	public int compareTo(Gleisabschnitt other)
 	{
-		if(other == null)
-		{
-			throw new NullPointerException();
-		}
+		NullTester.test(other);
 		
 		int compared;
 		// Sortiere erst nach Anfang...
-		if(this.kmAnfang.isPresent() && other.kmAnfang.isPresent())
+		if((compared = Double.compare(this.kmAnfang, other.kmAnfang)) != 0)
 		{
-			compared = Double.compare(this.kmAnfang.getAsDouble(), other.kmAnfang.getAsDouble());
-			if(compared != 0)
-			{
-				return compared;
-			}
+			return compared;
 		}
 		// ... dann nach Ende
-		if(this.kmEnde.isPresent() && other.kmEnde.isPresent())
-		{
-			compared = Double.compare(this.kmEnde.getAsDouble(), other.kmEnde.getAsDouble());
-			if(compared != 0)
-			{
-				return compared;
-			}
-		}
-		// Ohne Ortsangabe ist die Reihenfolge undefiniert
-		return 0;
+		return Double.compare(this.kmEnde, other.kmEnde);
 	}
 }

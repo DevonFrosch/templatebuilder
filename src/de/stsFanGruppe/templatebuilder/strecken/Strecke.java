@@ -85,6 +85,15 @@ public class Strecke
 		}
 		this.anzahlGleise = anzahlGleise;
 	}
+
+	public double getMinKm()
+	{
+		return Double.min(anfang.getMinKm(), ende.getMinKm());
+	}
+	public double getMaxKm()
+	{
+		return Double.min(anfang.getMaxKm(), ende.getMaxKm());
+	}
 	
 	public String toString()
 	{
