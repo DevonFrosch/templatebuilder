@@ -98,11 +98,10 @@ public class JTrainGraphImporter implements Importer
 			{
 				XMLElement tTime = null;
 				boolean richtung = train.getName() == "ti";
+				log("Richtung: "+(richtung ? "a" : "i"));
 				NavigableSet<Fahrplanhalt> fahrplanhalte = new TreeSet<>();
 				
-				for(int i=(richtung ? 0 : gleisabschnitte.size()-1);
-					(tTime = xml.findTagUntil(train.getName(), "t")) != null;
-					i = (richtung ? i+1 : i-1))
+				for(int i=0; (tTime = xml.findTagUntil(train.getName(), "t")) != null; i++)
 				{
 					String an = tTime.getAttribute("a");
 					String ab = tTime.getAttribute("d");
@@ -127,6 +126,7 @@ public class JTrainGraphImporter implements Importer
 					{
 						double doubleAn = parseTime(an);
 						double doubleAb = parseTime(ab);
+						log("Fahrplanhalt "+i+": "+gleisabschnitte.get(i).getName()+" ("+doubleAn+" - "+doubleAb+")");
 						Fahrplanhalt f = new Fahrplanhalt(gleisabschnitte.get(i), doubleAn, doubleAb, new FahrplanhaltEigenschaften());
 						fahrplanhalte.add(f);
 					}

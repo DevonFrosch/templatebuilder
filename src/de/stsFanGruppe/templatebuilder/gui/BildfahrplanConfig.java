@@ -9,6 +9,8 @@ public class BildfahrplanConfig
 	int margin_top = 20;
 	int margin_bottom = 20;
 	
+	int hoeheProStunde = 300;
+	
 	public BildfahrplanConfig()
 	{
 		

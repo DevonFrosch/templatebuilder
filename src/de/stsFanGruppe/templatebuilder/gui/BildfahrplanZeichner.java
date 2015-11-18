@@ -11,8 +11,10 @@ public class BildfahrplanZeichner extends JPanel
 {
 	private BildfahrplanConfig config;
 	Streckenabschnitt streckenabschnitt = null;
+	Map<Betriebsstelle, Double> streckenKm = new HashMap<>();
 	private Set<Fahrt> fahrten;
 	
+	double minZeit = -1;
 	double diffZeit = -1;
 	double diffKm = -1;
 	
@@ -31,8 +33,26 @@ public class BildfahrplanZeichner extends JPanel
 		changed = true;
 		this.streckenabschnitt = streckenabschnitt;
 		
-		this.diffKm = streckenabschnitt.getMaxKm() - streckenabschnitt.getMinKm();
-
+		double streckenlaenge = 0;
+		double letzterKm = 0;
+		
+		// km für Betriebsstelle: Mittelwert aus getMinKm und getMaxKm: (max+min)/2
+		Betriebsstelle b = streckenabschnitt.getStrecken().first().getAnfang();
+		streckenKm.put(b, new Double(0.0));
+		letzterKm = (b.getMaxKm() + b.getMinKm()) / 2;
+		
+		// Vorbereitung für unterschiedliche Strecken-km
+		for(Strecke s: streckenabschnitt.getStrecken())
+		{
+			b = s.getEnde();
+			double alterKm = (b.getMaxKm() + b.getMinKm()) / 2;
+			double neuerKm = alterKm - letzterKm;
+			streckenKm.put(b, new Double(neuerKm));
+			letzterKm = alterKm;
+		}
+		
+		this.diffKm = letzterKm;
+		
 		log("x.Breite: "+getWidth());
 		log("y.Höhe: "+getHeight());
 		log("x.diffKm: "+diffKm+" ("+streckenabschnitt.getMaxKm()+" - "+streckenabschnitt.getMinKm()+")");
@@ -59,7 +79,7 @@ public class BildfahrplanZeichner extends JPanel
 		
 		if(changed)
 		{
-			double minZeit = fahrten.stream().min((a, b) -> Double.compare(a.getMinZeit(), b.getMinZeit())).get().getMinZeit();
+			this.minZeit = fahrten.stream().min((a, b) -> Double.compare(a.getMinZeit(), b.getMinZeit())).get().getMinZeit();
 			double maxZeit = fahrten.stream().max((a, b) -> Double.compare(a.getMaxZeit(), b.getMaxZeit())).get().getMaxZeit();
 			this.diffZeit = maxZeit - minZeit;
 			log("y.diffZeit: "+diffZeit);
@@ -103,14 +123,14 @@ public class BildfahrplanZeichner extends JPanel
 		changed = false;
 	}
 	
-	
 	int getZeitPos(double zeit)
 	{
 		assert config != null;
 		int min = config.margin_top;
 		int diff = config.zeichnenHoehe(this);
 		
-		return (int) (min + (diff * zeit / diffZeit));
+		log("y: "+min+" + ("+diff+" * ("+zeit+" - "+minZeit+") / "+diffZeit+") = "+((int) (((zeit - minZeit) * diff / diffZeit) + min)));
+		return (int) (((zeit - minZeit) * diff / diffZeit) + min);
 	}
 	int getWegPos(double km)
 	{
@@ -118,7 +138,8 @@ public class BildfahrplanZeichner extends JPanel
 		int min = config.margin_left;
 		int diff = config.zeichnenBreite(this);
 		
-		return (int) (min + (diff * km / diffKm));
+		log("x: "+min+" + ("+diff+" * "+km+" / "+diffKm+") = "+((km * diff / diffKm) + min));
+		return (int) ((km * diff / diffKm) + min);
 	}
 	
 	public void log(String text)

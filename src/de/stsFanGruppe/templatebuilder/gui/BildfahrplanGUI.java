@@ -121,13 +121,16 @@ public class BildfahrplanGUI extends javax.swing.JFrame
 			{
 				String file = "test.fpl";
 				ImporterFramework imp = new ImporterFramework(new JTrainGraphImporter());
-				Streckenabschnitt sa = imp.importStreckenabschnitt(file);
-				System.out.println(sa.toXML());
+				Streckenabschnitt streckenabschnitt = imp.importStreckenabschnitt(file);
+				//System.out.println(streckenabschnitt.toXML());
 				BildfahrplanGUI bfp = new BildfahrplanGUI();
 				bfp.setVisible(true);
-				bfp.jPanel2.setStreckenabschnitt(sa);
-				Set<Fahrt> fa = imp.importFahrten(file, sa, new Linie("1"));
-				bfp.jPanel2.zeichneFahrten(fa);
+				bfp.jPanel2.setStreckenabschnitt(streckenabschnitt);
+				Set<Fahrt> fahrten = imp.importFahrten(file, streckenabschnitt, new Linie("1"));
+				System.out.println("<fahrten>");
+				fahrten.forEach((Fahrt f) -> System.out.println(f.toXML("  ")));
+				System.out.println("</fahrten>");
+				bfp.jPanel2.zeichneFahrten(fahrten);
 			}
 			catch(Exception e)
 			{
