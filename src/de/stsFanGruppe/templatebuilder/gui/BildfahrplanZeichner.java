@@ -9,53 +9,64 @@ import de.stsFanGruppe.tools.NullTester;
 
 public class BildfahrplanZeichner extends JPanel
 {
-	private BildfahrplanConfig config;
-	Streckenabschnitt streckenabschnitt = null;
-	Map<Betriebsstelle, Double> streckenKm = new HashMap<>();
-	private Set<Fahrt> fahrten;
+	protected BildfahrplanConfig config;
+	protected BildfahrplanGUI parent;
 	
-	double minZeit = -1;
-	double diffZeit = -1;
-	double diffKm = -1;
+	protected Streckenabschnitt streckenabschnitt = null;
+	protected Map<Betriebsstelle, Double> streckenKm = new HashMap<>();
+	protected  Set<Fahrt> fahrten = new HashSet<Fahrt>();
 	
-	boolean changed = true;
+	protected double diffKm = -1;
 	
-	public BildfahrplanZeichner(BildfahrplanConfig config)
+	protected boolean changed = true;
+	protected boolean paint = true;
+	protected boolean firstPaint = true;
+	
+	public BildfahrplanZeichner(BildfahrplanConfig config, BildfahrplanGUI parent)
 	{
 		NullTester.test(config);
+		NullTester.test(parent);
 		this.config = config;
-		this.fahrten = new HashSet<Fahrt>();
+		this.parent = parent;
 	}
 	
-	public void setStreckenabschnitt(Streckenabschnitt streckenabschnitt)
+	/**
+	 * 
+	 * @param streckenabschnitt
+	 * @throws UnsupportedOperationException falls schon ein Streckenabschnitt gesetzt wurde
+	 */
+	public void setStreckenabschnitt(Streckenabschnitt streckenabschnitt) throws UnsupportedOperationException
 	{
 		NullTester.test(streckenabschnitt);
+		if(this.streckenabschnitt != null)
+		{
+			throw new UnsupportedOperationException("Streckenabschnitt schon gesetzt");
+		}
 		changed = true;
 		this.streckenabschnitt = streckenabschnitt;
 		
 		double streckenlaenge = 0;
-		double letzterKm = 0;
+		double letzterAlterKm = 0;
+		double letzterNeuerKm = 0;
 		
 		// km für Betriebsstelle: Mittelwert aus getMinKm und getMaxKm: (max+min)/2
 		Betriebsstelle b = streckenabschnitt.getStrecken().first().getAnfang();
 		streckenKm.put(b, new Double(0.0));
-		letzterKm = (b.getMaxKm() + b.getMinKm()) / 2;
+		letzterAlterKm = (b.getMaxKm() + b.getMinKm()) / 2;
 		
 		// Vorbereitung für unterschiedliche Strecken-km
 		for(Strecke s: streckenabschnitt.getStrecken())
 		{
 			b = s.getEnde();
 			double alterKm = (b.getMaxKm() + b.getMinKm()) / 2;
-			double neuerKm = alterKm - letzterKm;
+			double neuerKm = alterKm - letzterAlterKm + letzterNeuerKm;
 			streckenKm.put(b, new Double(neuerKm));
-			letzterKm = alterKm;
+			letzterAlterKm = alterKm;
+			letzterNeuerKm = neuerKm;
+			this.diffKm = neuerKm;
 		}
 		
-		this.diffKm = letzterKm;
-		
-		log("x.Breite: "+getWidth());
-		log("y.Höhe: "+getHeight());
-		log("x.diffKm: "+diffKm+" ("+streckenabschnitt.getMaxKm()+" - "+streckenabschnitt.getMinKm()+")");
+		parent.setHeight(config.getPanelHeight());
 	}
 	public void zeichneFahrt(Fahrt fahrt)
 	{
@@ -68,83 +79,92 @@ public class BildfahrplanZeichner extends JPanel
 		fahrten.forEach((Fahrt f) -> this.zeichneFahrt(f));
 	}
 	
+	public void optimizeHeight()
+	{
+		double minZeit = fahrten.stream().min((a, b) -> Double.compare(a.getMinZeit(), b.getMinZeit())).get().getMinZeit();
+		double maxZeit = fahrten.stream().max((a, b) -> Double.compare(a.getMaxZeit(), b.getMaxZeit())).get().getMaxZeit();
+		
+		config.setMaxZeit(maxZeit);
+		config.setMinZeit(minZeit);
+	}
+	
 	protected void paintComponent(Graphics g)
 	{
 		super.paintComponent(g);
 		
-		if(this.streckenabschnitt == null || this.fahrten.isEmpty())
+		if(firstPaint)
+		{
+			firstPaint = false;
+			g.setColor(Color.BLACK);
+		}
+		
+		if(!paint) return;
+		
+		if(this.streckenabschnitt == null || this.fahrten.isEmpty() || streckenKm == null)
 		{
 			return;
 		}
 		
 		if(changed)
 		{
-			this.minZeit = fahrten.stream().min((a, b) -> Double.compare(a.getMinZeit(), b.getMinZeit())).get().getMinZeit();
-			double maxZeit = fahrten.stream().max((a, b) -> Double.compare(a.getMaxZeit(), b.getMaxZeit())).get().getMaxZeit();
-			this.diffZeit = maxZeit - minZeit;
-			log("y.diffZeit: "+diffZeit);
+			optimizeHeight();
 		}
 		
-		Iterator<Fahrt> f = this.fahrten.iterator();
-		while(f.hasNext())
+		for(Fahrt fahrt: fahrten)
 		{
-			Fahrt fahrt = f.next();
-			log(fahrt.getFahrplanhalte().size()+" Fahrplanhalte...");
-			Iterator<Fahrplanhalt> it = fahrt.getFahrplanhalte().iterator();
-			
 			double ab = -1;
 			double kmAb = -1;
-			while(it.hasNext())
+			
+			for(Fahrplanhalt fh: fahrt.getFahrplanhalte())
 			{
-				Fahrplanhalt fh = it.next();
-				log("-- Fahrplanhalt "+fh.getGleisabschnitt().getName());
-				
 				if(ab >= 0 && kmAb >= 0)
 				{
 					double an = fh.getAnkunft();
-					double kmAn = fh.getGleisabschnitt().getKm();
-					log("Fahrplanhalt: y.an = "+an+", x.kmAn = "+kmAn);
+					double kmAn = streckenKm.get(fh.getGleisabschnitt().getParent().getParent());
 					
-					g.setColor(Color.BLACK);
-					g.drawLine(getWegPos(kmAb), getZeitPos(ab), getWegPos(kmAn), getZeitPos(an));
-					log("drawLine: (x "+getWegPos(kmAb)+", y "+getZeitPos(an)+") -> (x "+getWegPos(kmAn)+", y "+getZeitPos(ab)+")");
-				}
-				else
-				{
-					log("Erster Fahrplanhalt!");
+					drawLine(g, kmAb, ab, kmAn, an);
 				}
 				
 				// für nächsten Eintrag
 				ab = fh.getAbfahrt();
-				kmAb = fh.getGleisabschnitt().getKm();
-				log("Daten: ab = "+ab+", kmAb = "+kmAb);
+				kmAb = streckenKm.get(fh.getGleisabschnitt().getParent().getParent()).doubleValue();
 			}
 		}
 		changed = false;
 	}
 	
-	int getZeitPos(double zeit)
+	protected void drawLine(Graphics g, double kmAb, double ab, double kmAn, double an)
+	{
+		assert config != null;
+		if(ab < config.getMinZeit() || an > config.getMaxZeit())
+		{
+			return;
+		}
+		
+		g.drawLine(getWegPos(kmAb), getZeitPos(ab), getWegPos(kmAn), getZeitPos(an));
+	}
+	protected int getZeitPos(double zeit)
 	{
 		assert config != null;
 		int min = config.margin_top;
-		int diff = config.zeichnenHoehe(this);
+		int hoehe = config.zeichnenHoehe(this);
+		double diffZeit = config.getMaxZeit() - config.getMinZeit();
 		
-		log("y: "+min+" + ("+diff+" * ("+zeit+" - "+minZeit+") / "+diffZeit+") = "+((int) (((zeit - minZeit) * diff / diffZeit) + min)));
-		return (int) (((zeit - minZeit) * diff / diffZeit) + min);
+		double zeitFaktor = zeit - config.getMinZeit();
+		
+		return (int) ((zeitFaktor / diffZeit * hoehe) + min);
 	}
-	int getWegPos(double km)
+	protected int getWegPos(double km)
 	{
 		assert config != null;
-		int min = config.margin_left;
-		int diff = config.zeichnenBreite(this);
+		int minBreite = config.margin_left;
+		int diffBreite = config.zeichnenBreite(this);
 		
-		log("x: "+min+" + ("+diff+" * "+km+" / "+diffKm+") = "+((km * diff / diffKm) + min));
-		return (int) ((km * diff / diffKm) + min);
+		return (int) ((km / diffKm * diffBreite) + minBreite);
 	}
 	
 	public void log(String text)
 	{
-		if(changed)
-			System.out.println(text);
+		System.out.println(text);
 	}
 }

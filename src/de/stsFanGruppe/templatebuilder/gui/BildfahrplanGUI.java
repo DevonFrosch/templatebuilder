@@ -32,7 +32,7 @@ public class BildfahrplanGUI extends javax.swing.JFrame
 		
 		jPanel1 = new javax.swing.JPanel();
 		jScrollPane1 = new javax.swing.JScrollPane();
-		jPanel2 = new BildfahrplanZeichner(new BildfahrplanConfig());
+		jPanel2 = new BildfahrplanZeichner(new BildfahrplanConfig(300, 600), this);
 		
 		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 		setTitle("BildfahrplanGUI");
@@ -65,7 +65,7 @@ public class BildfahrplanGUI extends javax.swing.JFrame
 		jScrollPane1.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		
 		jPanel2.setBackground(new java.awt.Color(255, 255, 255));
-		jPanel2.setMinimumSize(new java.awt.Dimension(100, 1000));
+		//jPanel2.setMinimumSize(new java.awt.Dimension(100, 200));
 		jPanel2.setName(""); // NOI18N
 		
 		javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -91,6 +91,12 @@ public class BildfahrplanGUI extends javax.swing.JFrame
 		
 		pack();
 	}// </editor-fold>//GEN-END:initComponents
+	
+	public void setHeight(int height)
+	{
+		javax.swing.GroupLayout layout = (javax.swing.GroupLayout) jPanel2.getLayout();
+		layout.setVerticalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGap(0, height, Short.MAX_VALUE));
+	}
 	
 	/**
 	 * @param args the command line arguments
@@ -119,18 +125,22 @@ public class BildfahrplanGUI extends javax.swing.JFrame
 			// Daten importieren
 			try
 			{
-				String file = "test.fpl";
+				String file = "testdaten/2014-02-24_KBS110_AHAR-HC.fpl";
+				//String file = "testdaten/Bildfahrplan_Eifelbahn.fpl";
 				ImporterFramework imp = new ImporterFramework(new JTrainGraphImporter());
 				Streckenabschnitt streckenabschnitt = imp.importStreckenabschnitt(file);
 				//System.out.println(streckenabschnitt.toXML());
 				BildfahrplanGUI bfp = new BildfahrplanGUI();
 				bfp.setVisible(true);
 				bfp.jPanel2.setStreckenabschnitt(streckenabschnitt);
+				
 				Set<Fahrt> fahrten = imp.importFahrten(file, streckenabschnitt, new Linie("1"));
-				System.out.println("<fahrten>");
+				/*System.out.println("<fahrten>");
 				fahrten.forEach((Fahrt f) -> System.out.println(f.toXML("  ")));
 				System.out.println("</fahrten>");
+				//*/
 				bfp.jPanel2.zeichneFahrten(fahrten);
+				bfp.jPanel2.optimizeHeight();
 			}
 			catch(Exception e)
 			{

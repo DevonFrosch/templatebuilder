@@ -98,7 +98,6 @@ public class JTrainGraphImporter implements Importer
 			{
 				XMLElement tTime = null;
 				boolean richtung = train.getName() == "ti";
-				log("Richtung: "+(richtung ? "a" : "i"));
 				NavigableSet<Fahrplanhalt> fahrplanhalte = new TreeSet<>();
 				
 				for(int i=0; (tTime = xml.findTagUntil(train.getName(), "t")) != null; i++)
@@ -126,7 +125,6 @@ public class JTrainGraphImporter implements Importer
 					{
 						double doubleAn = parseTime(an);
 						double doubleAb = parseTime(ab);
-						log("Fahrplanhalt "+i+": "+gleisabschnitte.get(i).getName()+" ("+doubleAn+" - "+doubleAb+")");
 						Fahrplanhalt f = new Fahrplanhalt(gleisabschnitte.get(i), doubleAn, doubleAb, new FahrplanhaltEigenschaften());
 						fahrplanhalte.add(f);
 					}
@@ -136,7 +134,12 @@ public class JTrainGraphImporter implements Importer
 						continue;
 					}
 				}
-				fahrten.add(new Fahrt(train.getAttribute("name"), linie, fahrplanhalte));
+				
+				// leere Fahrten brauchen wir nicht importieren
+				if(!fahrplanhalte.isEmpty())
+				{
+					fahrten.add(new Fahrt(train.getAttribute("name"), linie, fahrplanhalte));
+				}
 			}
 		}
 		catch(XMLStreamException | NumberFormatException | EndOfXMLException e)
@@ -145,23 +148,6 @@ public class JTrainGraphImporter implements Importer
 			throw new ImportException(e);
 		}
 		return fahrten;
-	}
-	
-	public static void main(String[] args) throws Exception
-	{
-		Importer imp = new JTrainGraphImporter();
-		String file = "test.fpl";
-		//String file = "RB_20_Hauptlauf.fpl";
-		
-		InputStream input = new java.io.FileInputStream(file);
-		Streckenabschnitt sa = imp.importStreckenabschnitt(input);
-		System.out.println(sa.toXML());
-		
-		input = new java.io.FileInputStream(file);
-		Set<Fahrt> fahrten = imp.importFahrten(input, sa, new Linie("1", sa.getName()));
-		System.out.println("<fahrten>");
-		fahrten.forEach((Fahrt f) -> System.out.println(f.toXML("  ")));
-		System.out.println("</fahrten>");
 	}
 	
 	private static String makeName(Betriebsstelle anfang, Betriebsstelle ende)

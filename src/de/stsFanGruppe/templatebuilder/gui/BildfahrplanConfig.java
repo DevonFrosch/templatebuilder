@@ -9,13 +9,45 @@ public class BildfahrplanConfig
 	int margin_top = 20;
 	int margin_bottom = 20;
 	
-	int hoeheProStunde = 300;
+	int hoeheProStunde = 1000;
+	double minZeit = 360;
+	double maxZeit = 470;
 	
-	public BildfahrplanConfig()
+	public BildfahrplanConfig(double minZeit, double maxZeit)
 	{
-		
+		this.setMinZeit(minZeit);
+		this.setMaxZeit(maxZeit);
 	}
-
+	
+	public double getMinZeit()
+	{
+		return minZeit;
+	}
+	public void setMinZeit(double zeit)
+	{
+		if(zeit < 0)
+		{
+			throw new IllegalArgumentException("Zeit muss größer gleich 0 sein.");
+		}
+		this.minZeit = zeit;
+	}
+	public double getMaxZeit()
+	{
+		return maxZeit;
+	}
+	public void setMaxZeit(double zeit)
+	{
+		if(zeit < 0)
+		{
+			throw new IllegalArgumentException("Zeit muss größer gleich 0 sein.");
+		}
+		this.maxZeit = zeit;
+	}
+	
+	public int getPanelHeight()
+	{
+		return (int) ((maxZeit - minZeit) / 60 * hoeheProStunde) + margin_top + margin_bottom;
+	}
 	int zeichnenBreite(JPanel p)
 	{
 		assert p != null;
