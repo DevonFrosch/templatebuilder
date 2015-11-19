@@ -2,6 +2,7 @@ package de.stsFanGruppe.templatebuilder.zug;
 
 import java.util.Collection;
 import java.util.NavigableSet;
+import java.util.NoSuchElementException;
 import java.util.TreeSet;
 import de.stsFanGruppe.tools.NullTester;
 
@@ -72,10 +73,18 @@ public class Fahrt
 	
 	public double getMinZeit()
 	{
+		if(fahrplanhalte.isEmpty())
+		{
+			throw new NoSuchElementException("Keine Fahrplanhalte.");
+		}
 		return fahrplanhalte.stream().min((a, b) -> Double.compare(a.getAnkunft(), b.getAnkunft())).get().getAnkunft();
 	}
 	public double getMaxZeit()
 	{
+		if(fahrplanhalte.isEmpty())
+		{
+			throw new NoSuchElementException("Keine Fahrplanhalte.");
+		}
 		return fahrplanhalte.stream().max((a, b) -> Double.compare(a.getAbfahrt(), b.getAbfahrt())).get().getAbfahrt();
 	}
 	
