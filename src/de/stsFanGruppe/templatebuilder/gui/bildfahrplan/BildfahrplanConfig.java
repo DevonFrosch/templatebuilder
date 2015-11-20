@@ -63,6 +63,18 @@ public class BildfahrplanConfig
 	{
 		return "{margin: r="+margin_right+", l="+margin_left+", t="+margin_top+", b="+margin_bottom+"}";
 	}
+	public String toXML()
+	{
+		return toXML("");
+	}
+	public String toXML(String indent)
+	{
+		String newLine = "\n"+indent+"  ";
+		return "<bildfahrplanConfig>"
+				+newLine+"<hoeheProStunde value=\""+hoeheProStunde+"\" />"
+				+newLine+"<zeitBereich min="+minZeit+" max=\""+maxZeit+"\" />"
+				+"\n"+indent+"</bildfahrplanConfig>";
+	}
 	
 	private static void log(String text)
 	{

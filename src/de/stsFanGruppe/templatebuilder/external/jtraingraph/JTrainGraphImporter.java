@@ -63,7 +63,7 @@ public class JTrainGraphImporter implements Importer
 				streckenabschnitt.addStrecke(new Strecke(makeName(anfang, ende), anfang, ende));
 			}
 		}
-		catch(XMLStreamException | NumberFormatException | EndOfXMLException e)
+		catch(XMLStreamException | NumberFormatException e)
 		{
 			log(e.getMessage());
 			throw new ImportException(e);
@@ -97,10 +97,10 @@ public class JTrainGraphImporter implements Importer
 			for(int fahrtCounter = 1; (train = xml.findTagUntil("trains", "ti", "ta")) != null; fahrtCounter++)
 			{
 				XMLElement tTime = null;
-				boolean richtung = train.getName() == "ti";
+				boolean richtung = train.getName().toLowerCase() == "ti";
 				NavigableSet<Fahrplanhalt> fahrplanhalte = new TreeSet<>();
 				
-				for(int i=0; (tTime = xml.findTagUntil(train.getName(), "t")) != null; i++)
+				for(int i=0; (tTime = xml.findTagUntil(train.getName().toLowerCase(), "t")) != null; i++)
 				{
 					String an = tTime.getAttribute("a");
 					String ab = tTime.getAttribute("d");
@@ -131,7 +131,7 @@ public class JTrainGraphImporter implements Importer
 					catch(NumberFormatException e)
 					{
 						log("NumberFormatException");
-						continue;
+						throw new ImportException(e);
 					}
 				}
 				
@@ -142,7 +142,7 @@ public class JTrainGraphImporter implements Importer
 				}
 			}
 		}
-		catch(XMLStreamException | NumberFormatException | EndOfXMLException e)
+		catch(XMLStreamException | NumberFormatException e)
 		{
 			log(e.getMessage());
 			throw new ImportException(e);

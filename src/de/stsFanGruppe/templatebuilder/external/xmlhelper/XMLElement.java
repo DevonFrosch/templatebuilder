@@ -22,7 +22,7 @@ public class XMLElement
 			Attribute attr = (Attribute) it.next();
 			if(attr.isSpecified())
 			{
-				attrs.put(attr.getName().getLocalPart(), attr.getValue());
+				attrs.put(attr.getName().getLocalPart().toLowerCase(), attr.getValue());
 			}
 		}
 	}
@@ -33,7 +33,7 @@ public class XMLElement
 	public String getAttribute(String name)
 	{
 		NullTester.test(name);
-		return attrs.get(name);
+		return attrs.get(name.toLowerCase());
 	}
 	public Map<String, String> getAttributes()
 	{

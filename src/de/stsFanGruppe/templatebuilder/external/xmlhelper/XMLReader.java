@@ -18,11 +18,11 @@ public class XMLReader
 		this.parser = factory.createXMLEventReader(input);
 	}
 	
-	public XMLElement findTag(String... searchNames) throws XMLStreamException, EndOfXMLException
+	public XMLElement findTag(String... searchNames) throws XMLStreamException
 	{
 		return findTagUntil(null, searchNames);
 	}
-	public XMLElement findTagUntil(String untilName, String... searchNames) throws XMLStreamException, EndOfXMLException
+	public XMLElement findTagUntil(String untilName, String... searchNames) throws XMLStreamException
 	{
 		assert parser != null;
 		
@@ -31,38 +31,43 @@ public class XMLReader
 		{
 			throw new NullPointerException();
 		}
+		
+		// alles auf lower case
+		untilName = untilName.toLowerCase();
+		for(int i=0; i<tagNames.size(); i++)
+		{
+			tagNames.set(i, tagNames.get(i).toLowerCase());
+		}
+		
 		XMLElement element = null;
 		
 		while(parser.hasNext())
 		{
-			//log("Stack: "+nesting.toString());
 			XMLEvent event = parser.nextEvent();
 			switch(event.getEventType())
 			{
 				case XMLStreamConstants.END_DOCUMENT:
 					parser.close();
 					log("End of Document");
-					throw new EndOfXMLException("Reached end of document");
+					throw new XMLStreamException("Reached end of document");
 				case XMLStreamConstants.START_ELEMENT:
 					element = new XMLElement(event.asStartElement());
-					//log("<"+element.getName()+">");
 					nesting.push(element);
 					
-					if(tagNames.isEmpty() || tagNames.contains(element.getName()))
+					if(tagNames.isEmpty() || tagNames.contains(element.getName().toLowerCase()))
 					{
 						return element;
 					}
 					break;
 				case XMLStreamConstants.END_ELEMENT:
-					//log("</"+event.asEndElement().getName().getLocalPart()+">");
 					if(nesting.isEmpty())
 					{
-						throw new EndOfXMLException("Element stack empty");
+						throw new XMLStreamException("Element stack empty");
 					}
 					
 					element = nesting.pop();
 					
-					if(untilName != null && event.asEndElement().getName().getLocalPart() == untilName)
+					if(untilName != null && event.asEndElement().getName().getLocalPart().toLowerCase() == untilName)
 					{
 						return null;
 					}
@@ -73,7 +78,7 @@ public class XMLReader
 		}
 		parser.close();
 		log("End of File");
-		throw new EndOfXMLException("Nothing left to parse");
+		throw new XMLStreamException("Nothing left to parse");
 	}
 	
 	public Stack<XMLElement> getNesting()
