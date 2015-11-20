@@ -124,7 +124,7 @@ public class JTrainGraphImportGUI extends JDialog
 				getRootPane().setDefaultButton(okButton);
 			}
 			{
-				JButton cancelButton = new JButton("Cancel");
+				JButton cancelButton = new JButton("Abbrechen");
 				cancelButton.setActionCommand("Cancel");
 				cancelButton.addActionListener((ActionEvent arg0) -> actionButton(arg0));
 				buttonPane.add(cancelButton);
