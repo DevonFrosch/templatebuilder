@@ -11,7 +11,7 @@ import java.awt.SystemColor;
  *
  * @author DevonFrosch
  */
-public class BildfahrplanTestGUI extends javax.swing.JFrame
+public class BildfahrplanTestGUI extends javax.swing.JFrame implements BildfahrplanController
 {
 	/**
 	 * Creates new form BildfahrplanGUI
@@ -92,7 +92,7 @@ public class BildfahrplanTestGUI extends javax.swing.JFrame
 		pack();
 	}// </editor-fold>//GEN-END:initComponents
 	
-	public void setHeight(int height)
+	public void setPanelHeight(int height)
 	{
 		javax.swing.GroupLayout layout = (javax.swing.GroupLayout) jPanel2.getLayout();
 		layout.setVerticalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGap(0, height, Short.MAX_VALUE));
@@ -147,6 +147,11 @@ public class BildfahrplanTestGUI extends javax.swing.JFrame
 				e.printStackTrace();
 			}
 		});
+	}
+	
+	public void setBildfahrplanGUI(BildfahrplanGUI gui)
+	{
+		// tut nichts
 	}
 	
 	// Variables declaration - do not modify//GEN-BEGIN:variables

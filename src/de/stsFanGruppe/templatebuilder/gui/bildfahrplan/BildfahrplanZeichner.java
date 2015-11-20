@@ -10,7 +10,7 @@ import de.stsFanGruppe.tools.NullTester;
 public class BildfahrplanZeichner extends JPanel
 {
 	protected BildfahrplanConfig config;
-	protected BildfahrplanTestGUI parent;
+	protected BildfahrplanController parent;
 	
 	protected Streckenabschnitt streckenabschnitt = null;
 	protected Map<Betriebsstelle, Double> streckenKm = new HashMap<>();
@@ -22,7 +22,7 @@ public class BildfahrplanZeichner extends JPanel
 	protected boolean paint = true;
 	protected boolean firstPaint = true;
 	
-	public BildfahrplanZeichner(BildfahrplanConfig config, BildfahrplanTestGUI parent)
+	public BildfahrplanZeichner(BildfahrplanConfig config, BildfahrplanController parent)
 	{
 		NullTester.test(config);
 		NullTester.test(parent);
@@ -66,7 +66,7 @@ public class BildfahrplanZeichner extends JPanel
 			this.diffKm = neuerKm;
 		}
 		
-		parent.setHeight(config.getPanelHeight());
+		parent.setPanelHeight(config.getPanelHeight());
 	}
 	public void zeichneFahrt(Fahrt fahrt)
 	{
@@ -163,8 +163,8 @@ public class BildfahrplanZeichner extends JPanel
 		return (int) ((km / diffKm * diffBreite) + minBreite);
 	}
 	
-	public void log(String text)
+	private static void log(String text)
 	{
-		System.out.println(text);
+		System.out.println("BildfahrplanZeichner: "+text);
 	}
 }

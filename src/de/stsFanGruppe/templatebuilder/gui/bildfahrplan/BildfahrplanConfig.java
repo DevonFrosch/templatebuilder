@@ -63,4 +63,9 @@ public class BildfahrplanConfig
 	{
 		return "{margin: r="+margin_right+", l="+margin_left+", t="+margin_top+", b="+margin_bottom+"}";
 	}
+	
+	private static void log(String text)
+	{
+		System.out.println("BildfahrplanConfig: "+text);
+	}
 }
