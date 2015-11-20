@@ -1,4 +1,4 @@
-package de.stsFanGruppe.templatebuilder.gui;
+package de.stsFanGruppe.templatebuilder.gui.bildfahrplan;
 
 import javax.swing.JPanel;
 

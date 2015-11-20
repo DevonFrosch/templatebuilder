@@ -1,4 +1,4 @@
-package de.stsFanGruppe.templatebuilder.gui;
+package de.stsFanGruppe.templatebuilder.gui.bildfahrplan;
 
 import java.util.Set;
 import de.stsFanGruppe.templatebuilder.external.ImporterFramework;
@@ -11,12 +11,12 @@ import java.awt.SystemColor;
  *
  * @author DevonFrosch
  */
-public class BildfahrplanGUI extends javax.swing.JFrame
+public class BildfahrplanTestGUI extends javax.swing.JFrame
 {
 	/**
 	 * Creates new form BildfahrplanGUI
 	 */
-	public BildfahrplanGUI()
+	public BildfahrplanTestGUI()
 	{
 		initComponents();
 	}
@@ -114,7 +114,7 @@ public class BildfahrplanGUI extends javax.swing.JFrame
 		}
 		catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex)
 		{
-			java.util.logging.Logger.getLogger(BildfahrplanGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(BildfahrplanTestGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		}
 		//</editor-fold>
 		
@@ -130,7 +130,7 @@ public class BildfahrplanGUI extends javax.swing.JFrame
 				ImporterFramework imp = new ImporterFramework(new JTrainGraphImporter());
 				Streckenabschnitt streckenabschnitt = imp.importStreckenabschnitt(file);
 				//System.out.println(streckenabschnitt.toXML());
-				BildfahrplanGUI bfp = new BildfahrplanGUI();
+				BildfahrplanTestGUI bfp = new BildfahrplanTestGUI();
 				bfp.setVisible(true);
 				bfp.jPanel2.setStreckenabschnitt(streckenabschnitt);
 				
