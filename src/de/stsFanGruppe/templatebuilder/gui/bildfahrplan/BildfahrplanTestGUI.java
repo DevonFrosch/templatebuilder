@@ -92,8 +92,9 @@ public class BildfahrplanTestGUI extends javax.swing.JFrame implements Bildfahrp
 		pack();
 	}// </editor-fold>//GEN-END:initComponents
 	
-	public void setPanelHeight(int height)
+	public void setPanelSize()
 	{
+		int height = jPanel2.config.getPanelHeight();
 		javax.swing.GroupLayout layout = (javax.swing.GroupLayout) jPanel2.getLayout();
 		layout.setVerticalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGap(0, height, Short.MAX_VALUE));
 	}

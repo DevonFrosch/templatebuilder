@@ -10,44 +10,42 @@ import de.stsFanGruppe.tools.NullTester;
 public class BildfahrplanZeichner extends JPanel
 {
 	protected BildfahrplanConfig config;
-	protected BildfahrplanController parent;
+	protected BildfahrplanController controller;
 	
-	protected Streckenabschnitt streckenabschnitt = null;
-	protected Map<Betriebsstelle, Double> streckenKm = new HashMap<>();
-	protected  Set<Fahrt> fahrten = new HashSet<Fahrt>();
+	protected Streckenabschnitt streckenabschnitt;
+	protected Map<Betriebsstelle, Double> streckenKm;
+	protected  Set<Fahrt> fahrten;
 	
-	protected double diffKm = -1;
+	protected double diffKm;
 	
 	protected boolean changed = true;
 	protected boolean paint = true;
 	protected boolean firstPaint = true;
 	
-	public BildfahrplanZeichner(BildfahrplanConfig config, BildfahrplanController parent)
+	public BildfahrplanZeichner(BildfahrplanConfig config, BildfahrplanController controller)
 	{
 		NullTester.test(config);
-		NullTester.test(parent);
 		this.config = config;
-		this.parent = parent;
+		this.controller = controller;
+	}
+	public BildfahrplanZeichner(BildfahrplanConfig config, BildfahrplanController controller, Streckenabschnitt streckenabschnitt)
+	{
+		this(config, controller);
+		setStreckenabschnitt(streckenabschnitt);
 	}
 	
-	/**
-	 * 
-	 * @param streckenabschnitt
-	 * @throws UnsupportedOperationException falls schon ein Streckenabschnitt gesetzt wurde
-	 */
-	public void setStreckenabschnitt(Streckenabschnitt streckenabschnitt) throws UnsupportedOperationException
+	public void setStreckenabschnitt(Streckenabschnitt streckenabschnitt)
 	{
 		NullTester.test(streckenabschnitt);
-		if(this.streckenabschnitt != null)
-		{
-			throw new UnsupportedOperationException("Streckenabschnitt schon gesetzt");
-		}
-		changed = true;
-		this.streckenabschnitt = streckenabschnitt;
 		
 		double streckenlaenge = 0;
 		double letzterAlterKm = 0;
 		double letzterNeuerKm = 0;
+		
+		// Setzte Strecke und Fahrten zurück
+		reset();
+		
+		this.streckenabschnitt = streckenabschnitt;
 		
 		// km für Betriebsstelle: Mittelwert aus getMinKm und getMaxKm: (max+min)/2
 		Betriebsstelle b = streckenabschnitt.getStrecken().first().getAnfang();
@@ -66,11 +64,22 @@ public class BildfahrplanZeichner extends JPanel
 			this.diffKm = neuerKm;
 		}
 		
-		parent.setPanelHeight(config.getPanelHeight());
+		if(controller != null)
+		{
+			controller.setPanelSize();
+		}
+		
+		controller.repaint();
 	}
 	public void zeichneFahrt(Fahrt fahrt)
 	{
 		NullTester.test(fahrt);
+		
+		if(fahrten == null)
+		{
+			fahrten = new HashSet<>();
+		}
+		
 		this.fahrten.add(fahrt);
 		this.changed = true;
 	}
@@ -81,11 +90,18 @@ public class BildfahrplanZeichner extends JPanel
 	
 	public void optimizeHeight()
 	{
+		if(fahrten == null)
+		{
+			return;
+		}
+		
 		double minZeit = fahrten.stream().min((a, b) -> Double.compare(a.getMinZeit(), b.getMinZeit())).get().getMinZeit();
 		double maxZeit = fahrten.stream().max((a, b) -> Double.compare(a.getMaxZeit(), b.getMaxZeit())).get().getMaxZeit();
 		
 		config.setMaxZeit(maxZeit);
 		config.setMinZeit(minZeit);
+		
+		controller.setPanelSize();
 	}
 	
 	protected void paintComponent(Graphics g)
@@ -98,9 +114,7 @@ public class BildfahrplanZeichner extends JPanel
 			g.setColor(Color.BLACK);
 		}
 		
-		if(!paint) return;
-		
-		if(this.streckenabschnitt == null || this.fahrten.isEmpty() || streckenKm == null)
+		if(!paint || this.streckenabschnitt == null || this.fahrten == null || streckenKm == null)
 		{
 			return;
 		}
@@ -161,6 +175,15 @@ public class BildfahrplanZeichner extends JPanel
 		int diffBreite = config.zeichnenBreite(this);
 		
 		return (int) ((km / diffKm * diffBreite) + minBreite);
+	}
+	protected void reset()
+	{
+		streckenabschnitt = null;
+		streckenKm = new HashMap<>();
+		fahrten = null;
+		diffKm = -1;
+		changed = true;
+		firstPaint = true;
 	}
 	
 	private static void log(String text)

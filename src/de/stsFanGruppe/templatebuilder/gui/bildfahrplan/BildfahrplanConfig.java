@@ -9,7 +9,7 @@ public class BildfahrplanConfig
 	int margin_top = 20;
 	int margin_bottom = 20;
 	
-	int hoeheProStunde = 1000;
+	int hoeheProStunde = 600;
 	double minZeit = 360;
 	double maxZeit = 470;
 	

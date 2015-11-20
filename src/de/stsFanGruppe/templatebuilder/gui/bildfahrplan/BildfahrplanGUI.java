@@ -3,22 +3,19 @@ package de.stsFanGruppe.templatebuilder.gui.bildfahrplan;
 import java.awt.EventQueue;
 import javax.swing.*;
 import javax.swing.tree.*;
-import de.stsFanGruppe.templatebuilder.external.ImporterFramework;
-import de.stsFanGruppe.templatebuilder.external.jtraingraph.JTrainGraphImporter;
-import de.stsFanGruppe.templatebuilder.strecken.Streckenabschnitt;
-import de.stsFanGruppe.templatebuilder.zug.Fahrt;
-import de.stsFanGruppe.templatebuilder.zug.Linie;
 import de.stsFanGruppe.tools.NullTester;
 import java.awt.Component;
 import java.awt.event.*;
 import java.awt.BorderLayout;
-import java.util.Set;
 
 public class BildfahrplanGUI
 {
 	protected BildfahrplanGUIController controller;
+	BildfahrplanZeichner bildfahrplanZeichner;
+	private boolean initialized = false;
+	
 	private JFrame frmTemplatebauer;
-	private BildfahrplanZeichner bildfahrplanZeichner;
+	private JScrollPane scrollPane;
 	
 	/**
 	 * Launch the application.
@@ -37,31 +34,9 @@ public class BildfahrplanGUI
 		EventQueue.invokeLater(() -> {
 			try
 			{
-				String file = "testdaten/v0.1m2_Test.fpl";
-				//String file = "testdaten/Bildfahrplan_Eifelbahn.fpl";
-				
-				ImporterFramework imp = new ImporterFramework(new JTrainGraphImporter());
-				Streckenabschnitt streckenabschnitt = imp.importStreckenabschnitt(file);
-				System.out.println(streckenabschnitt.toXML());
-				
-				log("main 1");
 				BildfahrplanGUIController controller = new BildfahrplanGUIController();
-				log("main 2");
 				BildfahrplanGUI window = new BildfahrplanGUI(controller);
-				log("main 3");
 				window.frmTemplatebauer.setVisible(true);
-				
-				log("main 4");
-				controller.ladeStreckenabschnitt(streckenabschnitt);
-
-				log("main 5");
-				Set<Fahrt> fahrten = imp.importFahrten(file, streckenabschnitt, new Linie("1"));
-				/*System.out.println("<fahrten>");
-				fahrten.forEach((Fahrt f) -> System.out.println(f.toXML("  ")));
-				System.out.println("</fahrten>");
-				//*/
-				log("main 6");
-				controller.ladeZüge(fahrten);
 			}
 			catch(Exception e)
 			{
@@ -85,7 +60,6 @@ public class BildfahrplanGUI
 		this.controller = controller;
 		initialize();
 		controller.setBildfahrplanGUI(this);
-		log("BildfahrplanGUI gesetzt");
 	}
 	
 	public BildfahrplanZeichner getBildfahrplanZeichner()
@@ -99,6 +73,9 @@ public class BildfahrplanGUI
 	 */
 	private void initialize()
 	{
+		assert !initialized;
+		assert controller != null;
+		
 		frmTemplatebauer = new JFrame();
 		frmTemplatebauer.setTitle("TemplateBauer");
 		frmTemplatebauer.setBounds(100, 100, 450, 300);
@@ -136,9 +113,7 @@ public class BildfahrplanGUI
 		mnDatei.add(mnImportexport);
 		
 		JMenuItem mntmImportAusJtraingraph = new JMenuItem("Import aus JTrainGraph");
-		mntmImportAusJtraingraph.addActionListener((ActionEvent arg0) -> {
-			
-		});
+		mntmImportAusJtraingraph.addActionListener((ActionEvent arg0) -> controller.menuImportJTG());
 		mnImportexport.add(mntmImportAusJtraingraph);
 		
 		JSeparator separator_1 = new JSeparator();
@@ -200,12 +175,20 @@ public class BildfahrplanGUI
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		splitPane.setRightComponent(tabbedPane);
 		
-		JScrollPane scrollPane = new JScrollPane();
+		scrollPane = new JScrollPane();
 		tabbedPane.addTab("New tab", null, scrollPane, null);
 		
 		bildfahrplanZeichner = new BildfahrplanZeichner(new BildfahrplanConfig(300, 600), this.controller);
-		log("bildfahrplanZeichner initialisiert");
 		scrollPane.setViewportView(bildfahrplanZeichner);
+		bildfahrplanZeichner.setLayout(null);
+		
+		JToolBar toolBar = new JToolBar();
+		frmTemplatebauer.getContentPane().add(toolBar, BorderLayout.NORTH);
+		
+		JButton button = new JButton("");
+		toolBar.add(button);
+		
+		initialized = true;
 	}
 	
 	private static void addPopup(Component component, final JPopupMenu popup) {
@@ -224,6 +207,11 @@ public class BildfahrplanGUI
 				popup.show(e.getComponent(), e.getX(), e.getY());
 			}
 		});
+	}
+	
+	public void errorMessage(String text)
+	{
+		JOptionPane.showMessageDialog(null, text, "Fehler", JOptionPane.ERROR_MESSAGE);
 	}
 	
 	private static void log(String text)
