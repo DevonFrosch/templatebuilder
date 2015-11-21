@@ -65,9 +65,13 @@ public class Fahrt
 		NullTester.test(halt);
 		boolean erfolg = this.fahrplanhalte.remove(halt);
 		if(halt.getParent() == this)
+		{
 			halt.setParent(null);
+		}
 		else
+		{
 			System.out.println("Fahrplanhalt aus Fahrt "+getName()+" löschen: bin nicht parent!");
+		}
 		return erfolg;
 	}
 	
