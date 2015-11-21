@@ -10,6 +10,7 @@ import de.stsFanGruppe.templatebuilder.zug.*;
 import de.stsFanGruppe.tools.FirstLastLinkedList;
 import de.stsFanGruppe.tools.FirstLastList;
 import de.stsFanGruppe.tools.NullTester;
+import de.stsFanGruppe.tools.TimeFormater;
 
 public class JTrainGraphImporter implements Importer
 {
@@ -123,8 +124,8 @@ public class JTrainGraphImporter implements Importer
 					
 					try
 					{
-						double doubleAn = parseTime(an);
-						double doubleAb = parseTime(ab);
+						double doubleAn = TimeFormater.stringToDouble(an);
+						double doubleAb = TimeFormater.stringToDouble(ab);
 						Fahrplanhalt f = new Fahrplanhalt(gleisabschnitte.get(i), doubleAn, doubleAb, new FahrplanhaltEigenschaften());
 						fahrplanhalte.add(f);
 					}
@@ -157,14 +158,6 @@ public class JTrainGraphImporter implements Importer
 		
 		// Anfang - Ende
 		return anfang.getName()+" - "+ende.getName();
-	}
-	private static double parseTime(String time) throws NumberFormatException
-	{
-		if(isEmpty(time) || !time.contains(":") || (time.indexOf(':') != time.lastIndexOf(':')))
-			throw new NumberFormatException();
-		
-		String[] ts = time.split(":");
-		return (Integer.parseInt(ts[0]) * 60) + Integer.parseInt(ts[1]);
 	}
 	private static boolean isEmpty(String str)
 	{

@@ -17,19 +17,17 @@ public class JTrainGraphImportGUI extends JDialog
 	
 	private Callback callback;
 	
-	private Object buttonClickEvent = new Object();
+	final JPanel contentPanel = new JPanel();
+	JTextField pfadInput;
+	JButton pfadButton;
+	JTextField linieInput;
+	JButton linieButton;
+	JLabel lblPfadZurDatei;
+	final JLabel lblLinie = new JLabel("Linie");
+	JCheckBox chckbxStreckenImportieren;
+	JCheckBox chckbxZgeImportieren;
 	
-	private final JPanel contentPanel = new JPanel();
-	private JTextField pfadInput;
-	private JButton pfadButton;
-	private JTextField linieInput;
-	private JButton linieButton;
-	private JLabel lblPfadZurDatei;
-	private final JLabel lblLinie = new JLabel("Linie");
-	private JCheckBox chckbxStreckenImportieren;
-	private JCheckBox chckbxZgeImportieren;
-	
-	private JFileChooser fileChooser = new JFileChooser();
+	JFileChooser fileChooser = new JFileChooser();
 	
 	/**
 	 * Launch the application.

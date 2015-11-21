@@ -33,7 +33,10 @@ public class XMLReader
 		}
 		
 		// alles auf lower case
-		untilName = untilName.toLowerCase();
+		if(untilName != null)
+		{
+			untilName = untilName.toLowerCase();
+		}
 		for(int i=0; i<tagNames.size(); i++)
 		{
 			tagNames.set(i, tagNames.get(i).toLowerCase());

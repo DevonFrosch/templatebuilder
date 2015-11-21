@@ -1,4 +1,4 @@
-package de.stsFanGruppe.templatebuilder.gui.bildfahrplan;
+package de.stsFanGruppe.templatebuilder.gui;
 
 import java.awt.*;
 import java.io.FileNotFoundException;
@@ -6,54 +6,53 @@ import java.io.InputStream;
 import java.util.Set;
 import de.stsFanGruppe.templatebuilder.external.ImportException;
 import de.stsFanGruppe.templatebuilder.external.jtraingraph.JTrainGraphImporter;
+import de.stsFanGruppe.templatebuilder.gui.TemplateBuilderGUI;
+import de.stsFanGruppe.templatebuilder.gui.bildfahrplan.BildfahrplanGUIController;
 import de.stsFanGruppe.templatebuilder.gui.external.JTrainGraphImportGUI;
 import de.stsFanGruppe.templatebuilder.strecken.Streckenabschnitt;
 import de.stsFanGruppe.templatebuilder.zug.Fahrt;
-import de.stsFanGruppe.tools.NullTester;
 
-public class BildfahrplanGUIController
+public class TemplateBuilderGUIController
 {
-	private BildfahrplanGUI gui = null;
+	private TemplateBuilderGUI gui = null;
+	private BildfahrplanGUIController bildfahrplanController = null;
 	
-	public BildfahrplanGUIController()
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args)
+	{
+		try
+		{
+			javax.swing.UIManager.setLookAndFeel( javax.swing.UIManager.getSystemLookAndFeelClassName() );
+		}
+		catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex)
+		{
+			java.util.logging.Logger.getLogger(TemplateBuilderGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+		}
+		
+		EventQueue.invokeLater(() -> {
+			try
+			{
+				TemplateBuilderGUIController controller = new TemplateBuilderGUIController();
+				TemplateBuilderGUI window = new TemplateBuilderGUI(controller);
+				window.setVisible(true);
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+		});
+	}
+	
+	public TemplateBuilderGUIController()
 	{
 		
 	}
 	
-	public void setBildfahrplanGUI(BildfahrplanGUI gui)
+	public void setGUI(TemplateBuilderGUI gui)
 	{
-		NullTester.test(gui);
 		this.gui = gui;
-	}
-	
-	public void setPanelSize()
-	{
-		NullTester.test(gui);
-		
-		BildfahrplanConfig config = gui.config;
-		Dimension size = gui.getMinimumSize();
-		size.setSize(size.getWidth(), config.getPanelHeight());
-		gui.setMinimumSize(size);
-		gui.setPreferredSize(size);
-		gui.revalidate();
-	}
-	
-	public void ladeStreckenabschnitt(Streckenabschnitt streckenabschnitt)
-	{
-		NullTester.test(gui);
-		gui.setStreckenabschnitt(streckenabschnitt);
-		repaint();
-	}
-	public void ladeZüge(Set<Fahrt> fahrten)
-	{
-		NullTester.test(gui);
-		gui.zeichneFahrten(fahrten);
-		gui.optimizeHeight();
-		repaint();
-	}
-	public void repaint()
-	{
-		gui.repaint();
 	}
 	
 	// ActionHandler
@@ -67,11 +66,11 @@ public class BildfahrplanGUIController
 					JTrainGraphImporter importer = new JTrainGraphImporter();
 					InputStream input = new java.io.FileInputStream(ergebnis.getPfad());
 					Streckenabschnitt streckenabschnitt = importer.importStreckenabschnitt(input);
-					ladeStreckenabschnitt(streckenabschnitt);
+					bildfahrplanController.ladeStreckenabschnitt(streckenabschnitt);
 					
 					input = new java.io.FileInputStream(ergebnis.getPfad());
 					Set<Fahrt> fahrten = importer.importFahrten(input, streckenabschnitt, ergebnis.getLinie());
-					ladeZüge(fahrten);
+					bildfahrplanController.ladeZüge(fahrten);
 				}
 				catch(FileNotFoundException e)
 				{

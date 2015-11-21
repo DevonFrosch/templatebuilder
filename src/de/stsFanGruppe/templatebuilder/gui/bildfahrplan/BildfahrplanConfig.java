@@ -27,6 +27,10 @@ public class BildfahrplanConfig
 	{
 		this.readFromXML(xml);
 	}
+	public BildfahrplanConfig()
+	{
+		
+	}
 	
 	public double getMinZeit()
 	{
@@ -51,6 +55,18 @@ public class BildfahrplanConfig
 			throw new IllegalArgumentException("Zeit muss größer gleich 0 sein.");
 		}
 		this.maxZeit = zeit;
+	}
+	public int getHoeheProStunde()
+	{
+		return hoeheProStunde;
+	}
+	public void setHoeheProStunde(int hoeheProStunde)
+	{
+		if(hoeheProStunde < 0)
+		{
+			throw new IllegalArgumentException("Höhe muss größer gleich 0 sein.");
+		}
+		this.hoeheProStunde = hoeheProStunde;
 	}
 	
 	public int getPanelHeight()

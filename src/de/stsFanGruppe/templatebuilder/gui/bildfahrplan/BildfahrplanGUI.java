@@ -1,221 +1,221 @@
 package de.stsFanGruppe.templatebuilder.gui.bildfahrplan;
 
-import java.awt.EventQueue;
-import javax.swing.*;
-import javax.swing.tree.*;
+import java.awt.*;
+import java.util.*;
+import javax.swing.JPanel;
+import de.stsFanGruppe.templatebuilder.gui.TemplateBuilderGUI;
+import de.stsFanGruppe.templatebuilder.strecken.*;
+import de.stsFanGruppe.templatebuilder.zug.*;
 import de.stsFanGruppe.tools.NullTester;
-import java.awt.Component;
-import java.awt.event.*;
-import java.awt.BorderLayout;
 
-public class BildfahrplanGUI
+public class BildfahrplanGUI extends JPanel
 {
+	protected BildfahrplanConfig config;
 	protected BildfahrplanGUIController controller;
-	BildfahrplanZeichner bildfahrplanZeichner;
-	private boolean initialized = false;
+	protected TemplateBuilderGUI parent;
 	
-	private JFrame frmTemplatebauer;
-	private JScrollPane scrollPane;
+	protected Streckenabschnitt streckenabschnitt;
+	protected Map<Betriebsstelle, Double> streckenKm;
+	protected Set<Fahrt> fahrten;
 	
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args)
+	protected double diffKm;
+	
+	protected boolean changed = true;
+	protected boolean paint = true;
+	protected boolean firstPaint = true;
+	
+	public BildfahrplanGUI(BildfahrplanConfig config, BildfahrplanGUIController controller, TemplateBuilderGUI parent)
 	{
-		try
-		{
-			javax.swing.UIManager.setLookAndFeel( javax.swing.UIManager.getSystemLookAndFeelClassName() );
-		}
-		catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex)
-		{
-			java.util.logging.Logger.getLogger(BildfahrplanTestGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-		}
-		
-		EventQueue.invokeLater(() -> {
-			try
-			{
-				BildfahrplanGUIController controller = new BildfahrplanGUIController();
-				BildfahrplanGUI window = new BildfahrplanGUI(controller);
-				window.frmTemplatebauer.setVisible(true);
-			}
-			catch(Exception e)
-			{
-				e.printStackTrace();
-			}
-		});
+		NullTester.test(config);
+		NullTester.test(parent);
+		this.config = config;
+		this.controller = controller;
+		controller.setBildfahrplanGUI(this);
+		this.parent = parent;
 	}
-
 	/**
-	 * Create the application.
-	 * @wbp.parser.entryPoint
+	 *  nur für eclipse-GUI-Bauwerkzeug
+	 *  @wbp.parser.entryPoint
 	 */
 	public BildfahrplanGUI()
 	{
-		this(new BildfahrplanGUIController());
-	}
-	
-	public BildfahrplanGUI(BildfahrplanGUIController controller)
-	{
-		NullTester.test(controller);
-		this.controller = controller;
-		initialize();
+		this.config = new BildfahrplanConfig();
+		this.controller = new BildfahrplanGUIController();
 		controller.setBildfahrplanGUI(this);
+		this.parent = null;
 	}
 	
-	public BildfahrplanZeichner getBildfahrplanZeichner()
+	public void setStreckenabschnitt(Streckenabschnitt streckenabschnitt)
 	{
-		NullTester.test(bildfahrplanZeichner);
-		return bildfahrplanZeichner;
+		NullTester.test(streckenabschnitt);
+		
+		double streckenlaenge = 0;
+		double letzterAlterKm = 0;
+		double letzterNeuerKm = 0;
+		
+		// Setzte Strecke und Fahrten zurück
+		reset();
+		
+		this.streckenabschnitt = streckenabschnitt;
+		
+		// km für Betriebsstelle: Mittelwert aus getMinKm und getMaxKm: (max+min)/2
+		Betriebsstelle b = streckenabschnitt.getStrecken().first().getAnfang();
+		streckenKm.put(b, new Double(0.0));
+		letzterAlterKm = (b.getMaxKm() + b.getMinKm()) / 2;
+		
+		// Vorbereitung für unterschiedliche Strecken-km
+		for(Strecke s: streckenabschnitt.getStrecken())
+		{
+			b = s.getEnde();
+			double alterKm = (b.getMaxKm() + b.getMinKm()) / 2;
+			double neuerKm = alterKm - letzterAlterKm + letzterNeuerKm;
+			streckenKm.put(b, new Double(neuerKm));
+			letzterAlterKm = alterKm;
+			letzterNeuerKm = neuerKm;
+			this.diffKm = neuerKm;
+		}
+		
+		if(controller != null)
+		{
+			controller.setPanelSize();
+		}
+		
+		controller.repaint();
+	}
+	public void zeichneFahrt(Fahrt fahrt)
+	{
+		NullTester.test(fahrt);
+		
+		if(fahrten == null)
+		{
+			fahrten = new HashSet<>();
+		}
+		
+		this.fahrten.add(fahrt);
+		this.changed = true;
+	}
+	public void zeichneFahrten(Collection<? extends Fahrt> fahrten)
+	{
+		fahrten.forEach((Fahrt f) -> this.zeichneFahrt(f));
+	}
+	
+	public void optimizeHeight()
+	{
+		if(fahrten == null)
+		{
+			return;
+		}
+		
+		double minZeit = fahrten.stream().min((a, b) -> Double.compare(a.getMinZeit(), b.getMinZeit())).get().getMinZeit();
+		double maxZeit = fahrten.stream().max((a, b) -> Double.compare(a.getMaxZeit(), b.getMaxZeit())).get().getMaxZeit();
+		
+		config.setMaxZeit(maxZeit);
+		config.setMinZeit(minZeit);
+		
+		controller.setPanelSize();
+	}
+	public void errorMessage(String text)
+	{
+		if(parent == null)
+		{
+			log(text);
+		}
+		parent.errorMessage(text);
+	}
+	
+	@Override
+	protected void paintComponent(Graphics g)
+	{
+		super.paintComponent(g);
+		
+		if(firstPaint)
+		{
+			firstPaint = false;
+			g.setColor(Color.BLACK);
+		}
+		
+		if(!paint || this.streckenabschnitt == null || this.fahrten == null || streckenKm == null)
+		{
+			return;
+		}
+		
+		if(changed)
+		{
+			optimizeHeight();
+		}
+		
+		for(Fahrt fahrt: fahrten)
+		{
+			double ab = -1;
+			double kmAb = -1;
+			
+			for(Fahrplanhalt fh: fahrt.getFahrplanhalte())
+			{
+				if(ab >= 0 && kmAb >= 0)
+				{
+					double an = fh.getAnkunft();
+					double kmAn = streckenKm.get(fh.getGleisabschnitt().getParent().getParent());
+					
+					drawLine(g, kmAb, ab, kmAn, an);
+				}
+				
+				// für nächsten Eintrag
+				ab = fh.getAbfahrt();
+				kmAb = streckenKm.get(fh.getGleisabschnitt().getParent().getParent()).doubleValue();
+			}
+		}
+		changed = false;
+	}
+	
+	protected void drawLine(Graphics g, double kmAb, double ab, double kmAn, double an)
+	{
+		assert config != null;
+		if(ab < config.getMinZeit() || an > config.getMaxZeit())
+		{
+			return;
+		}
+		
+		g.drawLine(getWegPos(kmAb), getZeitPos(ab), getWegPos(kmAn), getZeitPos(an));
+	}
+	protected int getZeitPos(double zeit)
+	{
+		assert config != null;
+		int min = config.margin_top;
+		int hoehe = config.zeichnenHoehe(this);
+		double diffZeit = config.getMaxZeit() - config.getMinZeit();
+		
+		double zeitFaktor = zeit - config.getMinZeit();
+		
+		return (int) ((zeitFaktor / diffZeit * hoehe) + min);
+	}
+	protected int getWegPos(double km)
+	{
+		assert config != null;
+		int minBreite = config.margin_left;
+		int diffBreite = config.zeichnenBreite(this);
+		
+		return (int) ((km / diffKm * diffBreite) + minBreite);
+	}
+	protected void reset()
+	{
+		streckenabschnitt = null;
+		streckenKm = new HashMap<>();
+		fahrten = null;
+		diffKm = -1;
+		changed = true;
+		firstPaint = true;
 	}
 	
 	/**
-	 * Initialize the contents of the frame.
+	 * @wbp.parser.entryPoint
 	 */
-	private void initialize()
+	public static void main(String[] args)
 	{
-		assert !initialized;
-		assert controller != null;
-		
-		frmTemplatebauer = new JFrame();
-		frmTemplatebauer.setTitle("TemplateBauer");
-		frmTemplatebauer.setBounds(100, 100, 450, 300);
-		frmTemplatebauer.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		JMenuBar menuBar = new JMenuBar();
-		frmTemplatebauer.setJMenuBar(menuBar);
-		
-		JMenu mnDatei = new JMenu("Datei");
-		menuBar.add(mnDatei);
-		
-		JMenuItem mntmNeu = new JMenuItem("Neu...");
-		mntmNeu.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_MASK));
-		mnDatei.add(mntmNeu);
-		
-		JMenuItem mntmffnen = new JMenuItem("\u00D6ffnen...");
-		mntmffnen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_MASK));
-		mnDatei.add(mntmffnen);
-		
-		JSeparator separator_2 = new JSeparator();
-		mnDatei.add(separator_2);
-		
-		JMenuItem mntmSpeichern = new JMenuItem("Speichern");
-		mntmSpeichern.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK));
-		mnDatei.add(mntmSpeichern);
-		
-		JMenuItem mntmSpeichernUnter = new JMenuItem("Speichern unter...");
-		mntmSpeichernUnter.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK));
-		mnDatei.add(mntmSpeichernUnter);
-		
-		JSeparator separator = new JSeparator();
-		mnDatei.add(separator);
-		
-		JMenu mnImportexport = new JMenu("Import/Export");
-		mnDatei.add(mnImportexport);
-		
-		JMenuItem mntmImportAusJtraingraph = new JMenuItem("Import aus JTrainGraph");
-		mntmImportAusJtraingraph.addActionListener((ActionEvent arg0) -> controller.menuImportJTG());
-		mnImportexport.add(mntmImportAusJtraingraph);
-		
-		JSeparator separator_1 = new JSeparator();
-		mnDatei.add(separator_1);
-		
-		JMenuItem mntmSchlieen = new JMenuItem("Schlie\u00DFen");
-		mntmSchlieen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F4, InputEvent.ALT_MASK));
-		mnDatei.add(mntmSchlieen);
-		
-		JMenu mnBearbeiten = new JMenu("Bearbeiten");
-		menuBar.add(mnBearbeiten);
-		
-		JMenu mnStrecken = new JMenu("Strecken");
-		menuBar.add(mnStrecken);
-		
-		JMenu mnZge = new JMenu("Z\u00FCge");
-		menuBar.add(mnZge);
-		
-		JMenu mnAnsicht = new JMenu("Ansicht");
-		menuBar.add(mnAnsicht);
-		
-		JMenuItem mntmBildfahrplan = new JMenuItem("Bildfahrplan");
-		mnAnsicht.add(mntmBildfahrplan);
-		
-		JMenu mnEinstellungen = new JMenu("Einstellungen");
-		menuBar.add(mnEinstellungen);
-		
-		JMenuItem mntmOptionen = new JMenuItem("Optionen");
-		mnEinstellungen.add(mntmOptionen);
-		
-		JMenu mnHilfe = new JMenu("?");
-		menuBar.add(mnHilfe);
-		
-		JMenuItem mntmHilfe = new JMenuItem("Hilfe");
-		mntmHilfe.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0));
-		mnHilfe.add(mntmHilfe);
-		
-		JMenuItem mntmber = new JMenuItem("\u00DCber...");
-		mnHilfe.add(mntmber);
-		
-		JSplitPane splitPane = new JSplitPane();
-		frmTemplatebauer.getContentPane().add(splitPane, BorderLayout.CENTER);
-		
-		JTree tree = new JTree();
-		tree.setRootVisible(false);
-		tree.setShowsRootHandles(true);
-		tree.setModel(new DefaultTreeModel(
-			new DefaultMutableTreeNode("Strecken") {
-				{
-					DefaultMutableTreeNode node_1;
-					node_1 = new DefaultMutableTreeNode("Heerlen - D\u00FCren");
-						node_1.add(new DefaultMutableTreeNode("RB 20"));
-					add(node_1);
-				}
-			}
-		));
-		splitPane.setLeftComponent(tree);
-		
-		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		splitPane.setRightComponent(tabbedPane);
-		
-		scrollPane = new JScrollPane();
-		tabbedPane.addTab("New tab", null, scrollPane, null);
-		
-		bildfahrplanZeichner = new BildfahrplanZeichner(new BildfahrplanConfig(300, 600), this.controller);
-		scrollPane.setViewportView(bildfahrplanZeichner);
-		bildfahrplanZeichner.setLayout(null);
-		
-		JToolBar toolBar = new JToolBar();
-		frmTemplatebauer.getContentPane().add(toolBar, BorderLayout.NORTH);
-		
-		JButton button = new JButton("");
-		toolBar.add(button);
-		
-		initialized = true;
-	}
-	
-	private static void addPopup(Component component, final JPopupMenu popup) {
-		component.addMouseListener(new MouseAdapter() {
-			public void mousePressed(MouseEvent e) {
-				if (e.isPopupTrigger()) {
-					showMenu(e);
-				}
-			}
-			public void mouseReleased(MouseEvent e) {
-				if (e.isPopupTrigger()) {
-					showMenu(e);
-				}
-			}
-			private void showMenu(MouseEvent e) {
-				popup.show(e.getComponent(), e.getX(), e.getY());
-			}
-		});
-	}
-	
-	public void errorMessage(String text)
-	{
-		JOptionPane.showMessageDialog(null, text, "Fehler", JOptionPane.ERROR_MESSAGE);
+		new BildfahrplanGUI();
 	}
 	
 	private static void log(String text)
 	{
-		System.out.println("BildfahrplanGUI: "+text);
+		System.out.println("BildfahrplanZeichner: "+text);
 	}
 }
