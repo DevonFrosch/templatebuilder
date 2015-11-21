@@ -6,6 +6,7 @@ import de.stsFanGruppe.templatebuilder.gui.bildfahrplan.BildfahrplanGUIControlle
 import de.stsFanGruppe.templatebuilder.gui.bildfahrplan.BildfahrplanGUI;
 import de.stsFanGruppe.tools.NullTester;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.*;
 import java.awt.BorderLayout;
 
@@ -46,7 +47,10 @@ public class TemplateBuilderGUI
 		
 		frmTemplatebauer = new JFrame();
 		frmTemplatebauer.setTitle("TemplateBauer");
-		frmTemplatebauer.setBounds(100, 100, 450, 300);
+		frmTemplatebauer.setMinimumSize(new Dimension(450, 300));
+		frmTemplatebauer.setBounds(100, 100, 1000, 600);
+		// Fenster maximieren
+		frmTemplatebauer.setExtendedState(frmTemplatebauer.getExtendedState() | JFrame.MAXIMIZED_BOTH);
 		frmTemplatebauer.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		JMenuBar menuBar = new JMenuBar();

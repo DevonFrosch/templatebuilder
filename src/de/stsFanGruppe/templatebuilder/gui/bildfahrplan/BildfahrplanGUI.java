@@ -29,15 +29,20 @@ public class BildfahrplanGUI extends JPanel
 	{
 		NullTester.test(config);
 		NullTester.test(parent);
+		
 		this.config = config;
+		config.registerChangeHandler(() -> repaint());
+		
 		this.controller = controller;
 		controller.setBildfahrplanGUI(this);
+		
 		this.parent = parent;
 	}
 	
 	public void setStreckenabschnitt(Streckenabschnitt streckenabschnitt)
 	{
 		NullTester.test(streckenabschnitt);
+		assert controller != null;
 		
 		double streckenlaenge = 0;
 		double letzterAlterKm = 0;
@@ -65,11 +70,7 @@ public class BildfahrplanGUI extends JPanel
 			this.diffKm = neuerKm;
 		}
 		
-		if(controller != null)
-		{
-			controller.setPanelSize();
-		}
-		
+		controller.setPanelSize();
 		controller.repaint();
 	}
 	public void zeichneFahrt(Fahrt fahrt)
@@ -95,6 +96,7 @@ public class BildfahrplanGUI extends JPanel
 		{
 			return;
 		}
+		assert controller != null;
 		
 		double minZeit = fahrten.stream().min((a, b) -> Double.compare(a.getMinZeit(), b.getMinZeit())).get().getMinZeit();
 		double maxZeit = fahrten.stream().max((a, b) -> Double.compare(a.getMaxZeit(), b.getMaxZeit())).get().getMaxZeit();
@@ -155,7 +157,6 @@ public class BildfahrplanGUI extends JPanel
 	protected void drawLine(Graphics g, double kmAb, double ab, double kmAn, double an)
 	{
 		assert config != null;
-		log("an/ab "+ab+" "+an);
 		if(ab < config.getMinZeit() || an > config.getMaxZeit())
 		{
 			return;
@@ -194,6 +195,6 @@ public class BildfahrplanGUI extends JPanel
 	
 	private static void log(String text)
 	{
-		System.out.println("BildfahrplanZeichner: "+text);
+		System.out.println("BildfahrplanGUI: "+text);
 	}
 }

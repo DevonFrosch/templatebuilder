@@ -92,12 +92,12 @@ public class SettingsGUI extends JDialog
 					{
 						sliderHoeheProStunde = new JSlider();
 						sliderHoeheProStunde.addChangeListener((ChangeEvent arg0) -> { inputHoeheProStunde.setText(sliderHoeheProStunde.getValue()+""); });
-						sliderHoeheProStunde.setValue(controller.getHoeheProStunde());
 						sliderHoeheProStunde.setSnapToTicks(true);
 						sliderHoeheProStunde.setPaintTicks(true);
 						sliderHoeheProStunde.setMinorTickSpacing(50);
 						sliderHoeheProStunde.setMinimum(50);
 						sliderHoeheProStunde.setMaximum(1000);
+						sliderHoeheProStunde.setValue(controller.getHoeheProStunde());
 						panel_1.add(sliderHoeheProStunde, "2, 1, left, top");
 					}
 				}
