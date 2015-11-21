@@ -3,6 +3,7 @@ package de.stsFanGruppe.templatebuilder.gui.bildfahrplan;
 import java.awt.*;
 import java.util.*;
 import javax.swing.JPanel;
+import de.stsFanGruppe.templatebuilder.config.BildfahrplanConfig;
 import de.stsFanGruppe.templatebuilder.gui.TemplateBuilderGUI;
 import de.stsFanGruppe.templatebuilder.strecken.*;
 import de.stsFanGruppe.templatebuilder.zug.*;
@@ -32,17 +33,6 @@ public class BildfahrplanGUI extends JPanel
 		this.controller = controller;
 		controller.setBildfahrplanGUI(this);
 		this.parent = parent;
-	}
-	/**
-	 *  nur für eclipse-GUI-Bauwerkzeug
-	 *  @wbp.parser.entryPoint
-	 */
-	public BildfahrplanGUI()
-	{
-		this.config = new BildfahrplanConfig();
-		this.controller = new BildfahrplanGUIController();
-		controller.setBildfahrplanGUI(this);
-		this.parent = null;
 	}
 	
 	public void setStreckenabschnitt(Streckenabschnitt streckenabschnitt)
@@ -139,11 +129,6 @@ public class BildfahrplanGUI extends JPanel
 			return;
 		}
 		
-		if(changed)
-		{
-			optimizeHeight();
-		}
-		
 		for(Fahrt fahrt: fahrten)
 		{
 			double ab = -1;
@@ -170,6 +155,7 @@ public class BildfahrplanGUI extends JPanel
 	protected void drawLine(Graphics g, double kmAb, double ab, double kmAn, double an)
 	{
 		assert config != null;
+		log("an/ab "+ab+" "+an);
 		if(ab < config.getMinZeit() || an > config.getMaxZeit())
 		{
 			return;
@@ -180,7 +166,7 @@ public class BildfahrplanGUI extends JPanel
 	protected int getZeitPos(double zeit)
 	{
 		assert config != null;
-		int min = config.margin_top;
+		int min = config.getMarginTop();
 		int hoehe = config.zeichnenHoehe(this);
 		double diffZeit = config.getMaxZeit() - config.getMinZeit();
 		
@@ -191,7 +177,7 @@ public class BildfahrplanGUI extends JPanel
 	protected int getWegPos(double km)
 	{
 		assert config != null;
-		int minBreite = config.margin_left;
+		int minBreite = config.getMarginLeft();
 		int diffBreite = config.zeichnenBreite(this);
 		
 		return (int) ((km / diffKm * diffBreite) + minBreite);
@@ -204,14 +190,6 @@ public class BildfahrplanGUI extends JPanel
 		diffKm = -1;
 		changed = true;
 		firstPaint = true;
-	}
-	
-	/**
-	 * @wbp.parser.entryPoint
-	 */
-	public static void main(String[] args)
-	{
-		new BildfahrplanGUI();
 	}
 	
 	private static void log(String text)

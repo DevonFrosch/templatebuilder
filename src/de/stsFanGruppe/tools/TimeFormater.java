@@ -27,13 +27,23 @@ public class TimeFormater
 	}
 	public static String doubleToString(double input)
 	{
-		double stunden = input % 60;
-		double minuten = input - stunden * 60;
+		int stunden = ((int) input) / 60;
+		int minuten = ((int) input) % 60;
+		
+		if(minuten < 10)
+		{
+			return stunden+":0"+minuten;
+		}
 		return stunden+":"+minuten;
 	}
 	
 	private static boolean isEmpty(String str)
 	{
 		return str == null || str.isEmpty();
+	}
+	
+	private static void log(String text)
+	{
+		System.out.println("TimeFormater: "+text);
 	}
 }

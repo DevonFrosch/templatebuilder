@@ -2,7 +2,6 @@ package de.stsFanGruppe.templatebuilder.gui;
 
 import javax.swing.*;
 import javax.swing.tree.*;
-import de.stsFanGruppe.templatebuilder.gui.bildfahrplan.BildfahrplanConfig;
 import de.stsFanGruppe.templatebuilder.gui.bildfahrplan.BildfahrplanGUIController;
 import de.stsFanGruppe.templatebuilder.gui.bildfahrplan.BildfahrplanGUI;
 import de.stsFanGruppe.tools.NullTester;
@@ -27,8 +26,8 @@ public class TemplateBuilderGUI
 	{
 		NullTester.test(controller);
 		this.controller = controller;
-		initialize();
 		controller.setGUI(this);
+		initialize();
 	}
 	
 	public BildfahrplanGUI getBildfahrplanZeichner()
@@ -82,15 +81,18 @@ public class TemplateBuilderGUI
 		mnDatei.add(mnImportexport);
 		
 		JMenuItem mntmImportAusJtraingraph = new JMenuItem("Import aus JTrainGraph");
-		mntmImportAusJtraingraph.addActionListener((ActionEvent arg0) -> controller.menuImportJTG());
+		mntmImportAusJtraingraph.setActionCommand("importFromJTG");
+		mntmImportAusJtraingraph.addActionListener((ActionEvent arg0) -> controller.menuAction(arg0));
 		mnImportexport.add(mntmImportAusJtraingraph);
 		
 		JSeparator separator_1 = new JSeparator();
 		mnDatei.add(separator_1);
 		
-		JMenuItem mntmSchlieen = new JMenuItem("Schlie\u00DFen");
-		mntmSchlieen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F4, InputEvent.ALT_MASK));
-		mnDatei.add(mntmSchlieen);
+		JMenuItem mntmSchliessen = new JMenuItem("Schlie\u00DFen");
+		mntmSchliessen.setActionCommand("close");
+		mntmSchliessen.addActionListener((ActionEvent arg0) -> controller.menuAction(arg0));
+		mntmSchliessen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F4, InputEvent.ALT_MASK));
+		mnDatei.add(mntmSchliessen);
 		
 		JMenu mnBearbeiten = new JMenu("Bearbeiten");
 		menuBar.add(mnBearbeiten);
@@ -111,7 +113,8 @@ public class TemplateBuilderGUI
 		menuBar.add(mnEinstellungen);
 		
 		JMenuItem mntmOptionen = new JMenuItem("Optionen");
-		mntmOptionen.addActionListener((ActionEvent arg0) -> {});
+		mntmOptionen.setActionCommand("options");
+		mntmOptionen.addActionListener((ActionEvent arg0) -> controller.menuAction(arg0));
 		mnEinstellungen.add(mntmOptionen);
 		
 		JMenu mnHilfe = new JMenu("?");
@@ -148,7 +151,10 @@ public class TemplateBuilderGUI
 		scrollPane = new JScrollPane();
 		tabbedPane.addTab("New tab", null, scrollPane, null);
 		
-		bildfahrplanZeichner = new BildfahrplanGUI(new BildfahrplanConfig(), new BildfahrplanGUIController(), this);
+		BildfahrplanGUIController bfpController = new BildfahrplanGUIController();
+		bildfahrplanZeichner = new BildfahrplanGUI(controller.getConfig(), bfpController, this);
+		controller.setBildfahrplanController(bfpController);
+		
 		scrollPane.setViewportView(bildfahrplanZeichner);
 		bildfahrplanZeichner.setLayout(null);
 		

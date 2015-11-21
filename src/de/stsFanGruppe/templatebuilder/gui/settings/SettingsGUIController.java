@@ -1,7 +1,7 @@
 package de.stsFanGruppe.templatebuilder.gui.settings;
 
 import java.awt.event.ActionEvent;
-import de.stsFanGruppe.templatebuilder.gui.bildfahrplan.BildfahrplanConfig;
+import de.stsFanGruppe.templatebuilder.config.BildfahrplanConfig;
 import de.stsFanGruppe.tools.NullTester;
 import de.stsFanGruppe.tools.TimeFormater;
 
@@ -36,7 +36,14 @@ public class SettingsGUIController
 	}
 	public void actionButton(ActionEvent event)
 	{
-		NullTester.test(config);
+		assert config != null;
+		
+		// Ohne GUI können wir nichts machen
+		if(gui == null)
+		{
+			log("actionButton(): Keine GUI gesetzt!");
+			return;
+		}
 		
 		switch(event.getActionCommand())
 		{

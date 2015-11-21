@@ -8,7 +8,7 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
 import com.jgoodies.forms.factories.FormFactory;
-import de.stsFanGruppe.templatebuilder.gui.bildfahrplan.BildfahrplanConfig;
+import de.stsFanGruppe.templatebuilder.config.BildfahrplanConfig;
 import de.stsFanGruppe.tools.NullTester;
 import javax.swing.event.ChangeEvent;
 
@@ -30,8 +30,6 @@ public class SettingsGUI extends JDialog
 		try
 		{
 			SettingsGUI dialog = new SettingsGUI(new SettingsGUIController(new BildfahrplanConfig()));
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
 		}
 		catch(Exception e)
 		{
@@ -46,7 +44,9 @@ public class SettingsGUI extends JDialog
 	{
 		NullTester.test(controller);
 		this.controller = controller;
-		
+		controller.setSettingsGUI(this);
+
+		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -159,6 +159,7 @@ public class SettingsGUI extends JDialog
 				buttonPane.add(applyButton);
 			}
 		}
+		setVisible(true);
 	}
 	
 	public void close()

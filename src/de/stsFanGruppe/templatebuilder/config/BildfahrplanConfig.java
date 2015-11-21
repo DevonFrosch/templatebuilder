@@ -1,22 +1,28 @@
-package de.stsFanGruppe.templatebuilder.gui.bildfahrplan;
+package de.stsFanGruppe.templatebuilder.config;
 
 import java.io.FileNotFoundException;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.JPanel;
 import javax.xml.stream.XMLStreamException;
 import de.stsFanGruppe.templatebuilder.external.ImportException;
 import de.stsFanGruppe.templatebuilder.external.xmlhelper.XMLElement;
 import de.stsFanGruppe.templatebuilder.external.xmlhelper.XMLReader;
+import de.stsFanGruppe.tools.NullTester;
 
 public class BildfahrplanConfig
 {
-	int margin_right = 20;
-	int margin_left = 20;
-	int margin_top = 20;
-	int margin_bottom = 20;
+	private Map<Object, ChangeCallback> callbacks = new HashMap<>();
+	private int callbackCounter = 0;
 	
-	int hoeheProStunde = 600;
-	double minZeit = 360;
-	double maxZeit = 470;
+	protected int marginRight = 20;
+	protected int marginLeft = 20;
+	protected int marginTop = 20;
+	protected int marginBottom = 20;
+	
+	protected int hoeheProStunde = 400;
+	protected double minZeit = 360;
+	protected double maxZeit = 470;
 	
 	public BildfahrplanConfig(double minZeit, double maxZeit)
 	{
@@ -43,6 +49,7 @@ public class BildfahrplanConfig
 			throw new IllegalArgumentException("Zeit muss größer gleich 0 sein.");
 		}
 		this.minZeit = zeit;
+		notifyChange();
 	}
 	public double getMaxZeit()
 	{
@@ -55,6 +62,7 @@ public class BildfahrplanConfig
 			throw new IllegalArgumentException("Zeit muss größer gleich 0 sein.");
 		}
 		this.maxZeit = zeit;
+		notifyChange();
 	}
 	public int getHoeheProStunde()
 	{
@@ -67,26 +75,60 @@ public class BildfahrplanConfig
 			throw new IllegalArgumentException("Höhe muss größer gleich 0 sein.");
 		}
 		this.hoeheProStunde = hoeheProStunde;
+		notifyChange();
+	}
+	public int getMarginTop()
+	{
+		return this.marginTop;
+	}
+	public int getMarginLeft()
+	{
+		return this.marginLeft;
+	}
+	public int getMarginRight()
+	{
+		return this.marginRight;
+	}
+	public int getMarginBottom()
+	{
+		return this.marginBottom;
+	}
+	
+	public Object registerChangeHandler(ChangeCallback callback)
+	{
+		NullTester.test(callback);
+		Object handlerID = Integer.valueOf(callbackCounter++);
+		callbacks.put(handlerID, callback);
+		return handlerID;
+	}
+	public boolean unregisterChangeHandler(Object handlerID)
+	{
+		NullTester.test(handlerID);
+		return callbacks.remove(handlerID) != null;
+	}
+	protected void notifyChange()
+	{
+		callbacks.forEach((k, v) -> v.call());
 	}
 	
 	public int getPanelHeight()
 	{
-		return (int) ((maxZeit - minZeit) / 60 * hoeheProStunde) + margin_top + margin_bottom;
+		return (int) ((maxZeit - minZeit) / 60 * hoeheProStunde) + marginTop + marginBottom;
 	}
-	int zeichnenBreite(JPanel p)
+	public int zeichnenBreite(JPanel p)
 	{
 		assert p != null;
-		return p.getWidth() - margin_left - margin_right;
+		return p.getWidth() - marginLeft - marginRight;
 	}
-	int zeichnenHoehe(JPanel p)
+	public int zeichnenHoehe(JPanel p)
 	{
 		assert p != null;
-		return p.getHeight() - margin_top - margin_bottom;
+		return p.getHeight() - marginTop - marginBottom;
 	}
 	
 	public String toString()
 	{
-		return "{margin: r="+margin_right+", l="+margin_left+", t="+margin_top+", b="+margin_bottom+"}";
+		return "{margin: r="+marginRight+", l="+marginLeft+", t="+marginTop+", b="+marginBottom+"}";
 	}
 	public String toXML()
 	{
@@ -125,10 +167,16 @@ public class BildfahrplanConfig
 		{
 			throw new ImportException(e);
 		}
+		notifyChange();
 	}
 	
 	private static void log(String text)
 	{
 		System.out.println("BildfahrplanConfig: "+text);
+	}
+	
+	public interface ChangeCallback
+	{
+		public void call();
 	}
 }

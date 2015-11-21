@@ -4,6 +4,7 @@ import java.awt.*;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Set;
+import de.stsFanGruppe.templatebuilder.config.BildfahrplanConfig;
 import de.stsFanGruppe.templatebuilder.external.ImportException;
 import de.stsFanGruppe.templatebuilder.external.jtraingraph.JTrainGraphImporter;
 import de.stsFanGruppe.templatebuilder.gui.external.JTrainGraphImportGUI;
