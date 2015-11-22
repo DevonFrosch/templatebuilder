@@ -154,7 +154,7 @@ public class SettingsGUI extends JDialog
 			}
 			{
 				JButton applyButton = new JButton("Anwenden");
-				applyButton.setActionCommand("OK");
+				applyButton.setActionCommand("Apply");
 				applyButton.addActionListener((ActionEvent arg0) -> controller.actionButton(arg0));
 				buttonPane.add(applyButton);
 			}
