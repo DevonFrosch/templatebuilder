@@ -22,6 +22,7 @@ public class SettingsGUI extends JDialog implements GUI
 	JTextField inputMaxZeit;
 	JTextField inputHoeheProStunde;
 	JSlider sliderHoeheProStunde;
+	JCheckBox chckbxAuto;
 	
 	/**
 	 * Launch the application.
@@ -64,6 +65,8 @@ public class SettingsGUI extends JDialog implements GUI
 						FormFactory.DEFAULT_COLSPEC,
 						FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
 						ColumnSpec.decode("default:grow"),
+						FormFactory.RELATED_GAP_COLSPEC,
+						FormFactory.DEFAULT_COLSPEC,
 						FormFactory.UNRELATED_GAP_COLSPEC,},
 					new RowSpec[] {
 						FormFactory.RELATED_GAP_ROWSPEC,
@@ -114,7 +117,9 @@ public class SettingsGUI extends JDialog implements GUI
 							FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
 							FormFactory.DEFAULT_COLSPEC,
 							FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
-							ColumnSpec.decode("default:grow"),},
+							ColumnSpec.decode("default:grow"),
+							FormFactory.RELATED_GAP_COLSPEC,
+							FormFactory.DEFAULT_COLSPEC,},
 						new RowSpec[] {
 							FormFactory.DEFAULT_ROWSPEC,}));
 					{
@@ -132,6 +137,14 @@ public class SettingsGUI extends JDialog implements GUI
 						inputMaxZeit.setText(controller.getMaxZeit());
 						panelZeit.add(inputMaxZeit, "5, 1, fill, top");
 						inputMaxZeit.setColumns(10);
+					}
+					{
+						chckbxAuto = new JCheckBox("auto");
+						chckbxAuto.addActionListener((ActionEvent arg0) -> {
+							inputMinZeit.setEnabled(!chckbxAuto.isSelected());
+							inputMaxZeit.setEnabled(!chckbxAuto.isSelected());
+						});
+						panelZeit.add(chckbxAuto, "7, 1");
 					}
 				}
 			}

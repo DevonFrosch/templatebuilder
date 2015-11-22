@@ -63,10 +63,16 @@ public class SettingsGUIController
 				
 				try
 				{
-					double minZeit = TimeFormater.stringToDouble(gui.inputMinZeit.getText());
-					double maxZeit = TimeFormater.stringToDouble(gui.inputMaxZeit.getText());
-					config.setMinZeit(minZeit);
-					config.setMaxZeit(maxZeit);
+					if(gui.chckbxAuto.isSelected())
+					{
+						config.enableAutoSize();
+					}
+					else
+					{
+						double minZeit = TimeFormater.stringToDouble(gui.inputMinZeit.getText());
+						double maxZeit = TimeFormater.stringToDouble(gui.inputMaxZeit.getText());
+						config.setZeiten(minZeit, maxZeit);
+					}
 				}
 				catch(NumberFormatException e)
 				{

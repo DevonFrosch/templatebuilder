@@ -57,8 +57,7 @@ public class BildfahrplanGUIController
 		double minZeit = gui.fahrten.stream().min((a, b) -> Double.compare(a.getMinZeit(), b.getMinZeit())).get().getMinZeit();
 		double maxZeit = gui.fahrten.stream().max((a, b) -> Double.compare(a.getMaxZeit(), b.getMaxZeit())).get().getMaxZeit();
 		
-		gui.config.setMaxZeit(maxZeit);
-		gui.config.setMinZeit(minZeit);
+		gui.config.setZeiten(minZeit, maxZeit);
 		
 		setPanelSize();
 	}
@@ -67,6 +66,10 @@ public class BildfahrplanGUIController
 		if(gui == null)
 		{
 			return;
+		}
+		if(config.needsAutoSize())
+		{
+			optimizeHeight();
 		}
 		gui.repaint();
 	}

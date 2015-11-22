@@ -22,12 +22,12 @@ public class BildfahrplanConfig
 	
 	protected int hoeheProStunde = 400;
 	protected double minZeit = 360;
-	protected double maxZeit = 470;
+	protected double maxZeit = 1260;
+	protected boolean autoSize = true;
 	
 	public BildfahrplanConfig(double minZeit, double maxZeit)
 	{
-		this.setMinZeit(minZeit);
-		this.setMaxZeit(maxZeit);
+		this.setZeiten(minZeit, maxZeit);
 	}
 	public BildfahrplanConfig(String xml) throws ImportException
 	{
@@ -35,34 +35,35 @@ public class BildfahrplanConfig
 	}
 	public BildfahrplanConfig()
 	{
-		
+		this.enableAutoSize();
 	}
 	
 	public double getMinZeit()
 	{
 		return minZeit;
 	}
-	public void setMinZeit(double zeit)
-	{
-		if(zeit < 0)
-		{
-			throw new IllegalArgumentException("Zeit muss größer gleich 0 sein.");
-		}
-		this.minZeit = zeit;
-		notifyChange();
-	}
 	public double getMaxZeit()
 	{
 		return maxZeit;
 	}
-	public void setMaxZeit(double zeit)
+	public void setZeiten(double min, double max)
 	{
-		if(zeit < 0)
+		if(min < 0 || max < 0)
 		{
 			throw new IllegalArgumentException("Zeit muss größer gleich 0 sein.");
 		}
-		this.maxZeit = zeit;
+		this.minZeit = min;
+		this.maxZeit = max;
+		this.autoSize = false;
 		notifyChange();
+	}
+	public boolean needsAutoSize()
+	{
+		return autoSize;
+	}
+	public void enableAutoSize()
+	{
+		this.autoSize = true;
 	}
 	public int getHoeheProStunde()
 	{
