@@ -37,6 +37,30 @@ public class BildfahrplanGUIController
 		gui.setMinimumSize(size);
 		gui.setPreferredSize(size);
 		gui.revalidate();
+		gui.repaint();
+	}
+	public void optimizeHeight()
+	{
+		if(gui == null || gui.fahrten == null)
+		{
+			return;
+		}
+		
+		double minZeit = gui.fahrten.stream().min((a, b) -> Double.compare(a.getMinZeit(), b.getMinZeit())).get().getMinZeit();
+		double maxZeit = gui.fahrten.stream().max((a, b) -> Double.compare(a.getMaxZeit(), b.getMaxZeit())).get().getMaxZeit();
+		
+		gui.config.setMaxZeit(maxZeit);
+		gui.config.setMinZeit(minZeit);
+		
+		setPanelSize();
+	}
+	public void repaint()
+	{
+		if(gui == null)
+		{
+			return;
+		}
+		gui.repaint();
 	}
 	
 	public void ladeStreckenabschnitt(Streckenabschnitt streckenabschnitt)
@@ -49,12 +73,7 @@ public class BildfahrplanGUIController
 	{
 		NullTester.test(gui);
 		gui.zeichneFahrten(fahrten);
-		gui.optimizeHeight();
-		repaint();
-	}
-	public void repaint()
-	{
-		gui.repaint();
+		optimizeHeight();
 	}
 	
 	// ActionHandler

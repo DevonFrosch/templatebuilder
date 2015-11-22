@@ -90,22 +90,6 @@ public class BildfahrplanGUI extends JPanel
 		fahrten.forEach((Fahrt f) -> this.zeichneFahrt(f));
 	}
 	
-	public void optimizeHeight()
-	{
-		if(fahrten == null)
-		{
-			return;
-		}
-		assert controller != null;
-		
-		double minZeit = fahrten.stream().min((a, b) -> Double.compare(a.getMinZeit(), b.getMinZeit())).get().getMinZeit();
-		double maxZeit = fahrten.stream().max((a, b) -> Double.compare(a.getMaxZeit(), b.getMaxZeit())).get().getMaxZeit();
-		
-		config.setMaxZeit(maxZeit);
-		config.setMinZeit(minZeit);
-		
-		controller.setPanelSize();
-	}
 	public void errorMessage(String text)
 	{
 		if(parent == null)
