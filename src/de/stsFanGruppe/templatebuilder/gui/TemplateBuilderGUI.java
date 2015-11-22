@@ -10,7 +10,7 @@ import java.awt.Dimension;
 import java.awt.event.*;
 import java.awt.BorderLayout;
 
-public class TemplateBuilderGUI
+public class TemplateBuilderGUI implements GUI
 {
 	protected TemplateBuilderGUIController controller;
 	BildfahrplanGUI bildfahrplanZeichner;
@@ -175,12 +175,19 @@ public class TemplateBuilderGUI
 	{
 		this.frmTemplatebauer.setVisible(arg0);
 	}
-	
-	public void errorMessage(String text)
+
+	public void errorMessage(String text, String titel)
 	{
-		JOptionPane.showMessageDialog(null, text, "Fehler", JOptionPane.ERROR_MESSAGE);
+		JOptionPane.showMessageDialog(frmTemplatebauer, text, titel, JOptionPane.ERROR_MESSAGE);
 	}
-	
+	public void warningMessage(String text, String titel)
+	{
+		JOptionPane.showMessageDialog(frmTemplatebauer, text, titel, JOptionPane.WARNING_MESSAGE);
+	}
+	public void infoMessage(String text, String titel)
+	{
+		JOptionPane.showMessageDialog(frmTemplatebauer, text, titel, JOptionPane.INFORMATION_MESSAGE);
+	}
 	
 	private static void addPopup(Component component, final JPopupMenu popup) {
 		component.addMouseListener(new MouseAdapter() {
@@ -199,8 +206,9 @@ public class TemplateBuilderGUI
 			}
 		});
 	}
+	
 	private static void log(String text)
 	{
-		System.out.println("BildfahrplanGUI: "+text);
+		System.out.println("TemplateBuilderGUI: "+text);
 	}
 }

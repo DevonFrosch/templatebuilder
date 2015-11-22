@@ -9,10 +9,11 @@ import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
 import com.jgoodies.forms.factories.FormFactory;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanConfig;
+import de.stsFanGruppe.templatebuilder.gui.GUI;
 import de.stsFanGruppe.tools.NullTester;
 import javax.swing.event.ChangeEvent;
 
-public class SettingsGUI extends JDialog
+public class SettingsGUI extends JDialog implements GUI
 {
 	SettingsGUIController controller;
 	
@@ -169,9 +170,17 @@ public class SettingsGUI extends JDialog
         controller = null;
 	}
 	
-	public void errorMessage(String text)
+	public void errorMessage(String text, String titel)
 	{
-		JOptionPane.showMessageDialog(null, text, "Fehler", JOptionPane.ERROR_MESSAGE);
+		JOptionPane.showMessageDialog(contentPanel, text, titel, JOptionPane.ERROR_MESSAGE);
+	}
+	public void warningMessage(String text, String titel)
+	{
+		JOptionPane.showMessageDialog(contentPanel, text, titel, JOptionPane.WARNING_MESSAGE);
+	}
+	public void infoMessage(String text, String titel)
+	{
+		JOptionPane.showMessageDialog(contentPanel, text, titel, JOptionPane.INFORMATION_MESSAGE);
 	}
 	
 	private static void log(String text)

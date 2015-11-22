@@ -7,10 +7,11 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import com.jgoodies.forms.layout.*;
 import com.jgoodies.forms.factories.FormFactory;
+import de.stsFanGruppe.templatebuilder.gui.GUI;
 import de.stsFanGruppe.templatebuilder.zug.Linie;
 import de.stsFanGruppe.tools.NullTester;
 
-public class JTrainGraphImportGUI extends JDialog
+public class JTrainGraphImportGUI extends JDialog implements GUI
 {
 	public final int CANCEL_OPTION = 0;
 	public final int APPROVE_OPTION = 1;
@@ -235,9 +236,17 @@ public class JTrainGraphImportGUI extends JDialog
 		}
 	}
 	
-	public void errorMessage(String text)
+	public void errorMessage(String text, String titel)
 	{
-		JOptionPane.showMessageDialog(null, text, "Fehler", JOptionPane.ERROR_MESSAGE);
+		JOptionPane.showMessageDialog(contentPanel, text, titel, JOptionPane.ERROR_MESSAGE);
+	}
+	public void warningMessage(String text, String titel)
+	{
+		JOptionPane.showMessageDialog(contentPanel, text, titel, JOptionPane.WARNING_MESSAGE);
+	}
+	public void infoMessage(String text, String titel)
+	{
+		JOptionPane.showMessageDialog(contentPanel, text, titel, JOptionPane.INFORMATION_MESSAGE);
 	}
 	
 	private static void log(String text)
