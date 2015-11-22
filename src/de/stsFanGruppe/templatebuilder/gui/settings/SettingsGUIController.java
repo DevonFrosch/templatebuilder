@@ -66,11 +66,17 @@ public class SettingsGUIController
 					double minZeit = TimeFormater.stringToDouble(gui.inputMinZeit.getText());
 					double maxZeit = TimeFormater.stringToDouble(gui.inputMaxZeit.getText());
 					config.setMinZeit(minZeit);
-					config.setMinZeit(maxZeit);
+					config.setMaxZeit(maxZeit);
 				}
 				catch(NumberFormatException e)
 				{
 					gui.errorMessage("Dargestellte Zeit: "+e.getMessage());
+				}
+				
+				// Apply: Fenster nicht schlieﬂen
+				if(event.getActionCommand() == "Apply")
+				{
+					return;
 				}
 				break;
 			default:
