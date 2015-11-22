@@ -15,16 +15,24 @@ import de.stsFanGruppe.tools.NullTester;
 public class BildfahrplanGUIController
 {
 	private BildfahrplanGUI gui = null;
+	private BildfahrplanConfig config;
 	
-	public BildfahrplanGUIController()
+	public BildfahrplanGUIController(BildfahrplanConfig config)
 	{
-		
+		NullTester.test(config);
+		this.config = config;
+		config.registerChangeHandler(() -> setPanelSize());
 	}
 	
 	public void setBildfahrplanGUI(BildfahrplanGUI gui)
 	{
 		NullTester.test(gui);
 		this.gui = gui;
+	}
+	
+	public BildfahrplanConfig getConfig()
+	{
+		return config;
 	}
 	
 	public void setPanelSize()
@@ -73,7 +81,7 @@ public class BildfahrplanGUIController
 	{
 		NullTester.test(gui);
 		gui.zeichneFahrten(fahrten);
-		optimizeHeight();
+		repaint();
 	}
 	
 	// ActionHandler

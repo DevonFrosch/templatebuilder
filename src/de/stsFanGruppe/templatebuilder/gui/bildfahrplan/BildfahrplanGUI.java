@@ -25,13 +25,11 @@ public class BildfahrplanGUI extends JPanel
 	protected boolean paint = true;
 	protected boolean firstPaint = true;
 	
-	public BildfahrplanGUI(BildfahrplanConfig config, BildfahrplanGUIController controller, TemplateBuilderGUI parent)
+	public BildfahrplanGUI(BildfahrplanGUIController controller, TemplateBuilderGUI parent)
 	{
-		NullTester.test(config);
 		NullTester.test(parent);
 		
-		this.config = config;
-		config.registerChangeHandler(() -> repaint());
+		this.config = controller.getConfig();
 		
 		this.controller = controller;
 		controller.setBildfahrplanGUI(this);
