@@ -17,7 +17,6 @@ public class TemplateBuilderGUI implements GUI
 	private boolean initialized = false;
 	
 	private JFrame frmTemplatebauer;
-	private JScrollPane scrollPane;
 
 	/**
 	 * Create the application.
@@ -111,6 +110,8 @@ public class TemplateBuilderGUI implements GUI
 		menuBar.add(mnAnsicht);
 		
 		JMenuItem mntmBildfahrplan = new JMenuItem("Bildfahrplan");
+		mntmBildfahrplan.setActionCommand("bfpOptions");
+		mntmBildfahrplan.addActionListener((ActionEvent arg0) -> controller.menuAction(arg0));
 		mnAnsicht.add(mntmBildfahrplan);
 		
 		JMenu mnEinstellungen = new JMenu("Einstellungen");
@@ -150,9 +151,10 @@ public class TemplateBuilderGUI implements GUI
 		splitPane.setLeftComponent(tree);
 		
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		controller.setTabbedPane(tabbedPane);
 		splitPane.setRightComponent(tabbedPane);
 		
-		scrollPane = new JScrollPane();
+		JScrollPane scrollPane = new JScrollPane();
 		tabbedPane.addTab("New tab", null, scrollPane, null);
 		
 		BildfahrplanGUIController bfpController = new BildfahrplanGUIController(controller.getConfig());

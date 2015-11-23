@@ -5,14 +5,15 @@ import java.awt.event.ActionEvent;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Set;
+import javax.swing.JTabbedPane;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanConfig;
 import de.stsFanGruppe.templatebuilder.external.ImportException;
 import de.stsFanGruppe.templatebuilder.external.jtraingraph.JTrainGraphImporter;
 import de.stsFanGruppe.templatebuilder.gui.TemplateBuilderGUI;
 import de.stsFanGruppe.templatebuilder.gui.bildfahrplan.BildfahrplanGUIController;
 import de.stsFanGruppe.templatebuilder.gui.external.JTrainGraphImportGUI;
-import de.stsFanGruppe.templatebuilder.gui.settings.SettingsGUI;
-import de.stsFanGruppe.templatebuilder.gui.settings.SettingsGUIController;
+import de.stsFanGruppe.templatebuilder.gui.settings.BildfahrplanSettingsGUI;
+import de.stsFanGruppe.templatebuilder.gui.settings.BildfahrplanSettingsGUIController;
 import de.stsFanGruppe.templatebuilder.strecken.Streckenabschnitt;
 import de.stsFanGruppe.templatebuilder.zug.Fahrt;
 import de.stsFanGruppe.tools.NullTester;
@@ -21,6 +22,7 @@ public class TemplateBuilderGUIController
 {
 	private TemplateBuilderGUI gui = null;
 	private BildfahrplanGUIController bildfahrplanController = null;
+	private JTabbedPane tabs = null;
 	
 	// TODO: allgemeines Config-Objekt
 	protected BildfahrplanConfig config;
@@ -68,6 +70,10 @@ public class TemplateBuilderGUIController
 		NullTester.test(controller);
 		this.bildfahrplanController = controller;
 	}
+	public void setTabbedPane(JTabbedPane tabbedPane)
+	{
+		this.tabs = tabbedPane;
+	}
 	public BildfahrplanConfig getConfig()
 	{
 		return config;
@@ -114,7 +120,7 @@ public class TemplateBuilderGUIController
 				});
 				break;
 			case "options":
-				SettingsGUI sg = new SettingsGUI(new SettingsGUIController(config));
+				BildfahrplanSettingsGUI sg = new BildfahrplanSettingsGUI(new BildfahrplanSettingsGUIController(config));
 				break;
 			default:
 				log("Menü: nicht erkannt");

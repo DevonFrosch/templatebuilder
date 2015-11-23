@@ -13,9 +13,9 @@ import de.stsFanGruppe.templatebuilder.gui.GUI;
 import de.stsFanGruppe.tools.NullTester;
 import javax.swing.event.ChangeEvent;
 
-public class SettingsGUI extends JDialog implements GUI
+public class BildfahrplanSettingsGUI extends JDialog implements GUI
 {
-	SettingsGUIController controller;
+	BildfahrplanSettingsGUIController controller;
 	
 	final JPanel contentPanel = new JPanel();
 	JTextField inputMinZeit;
@@ -31,7 +31,7 @@ public class SettingsGUI extends JDialog implements GUI
 	{
 		try
 		{
-			SettingsGUI dialog = new SettingsGUI(new SettingsGUIController(new BildfahrplanConfig()));
+			BildfahrplanSettingsGUI dialog = new BildfahrplanSettingsGUI(new BildfahrplanSettingsGUIController(new BildfahrplanConfig()));
 		}
 		catch(Exception e)
 		{
@@ -42,7 +42,7 @@ public class SettingsGUI extends JDialog implements GUI
 	/**
 	 * Create the dialog.
 	 */
-	public SettingsGUI(SettingsGUIController controller)
+	public BildfahrplanSettingsGUI(BildfahrplanSettingsGUIController controller)
 	{
 		NullTester.test(controller);
 		this.controller = controller;

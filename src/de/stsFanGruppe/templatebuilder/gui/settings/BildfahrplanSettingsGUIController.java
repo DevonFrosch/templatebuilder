@@ -5,18 +5,18 @@ import de.stsFanGruppe.templatebuilder.config.BildfahrplanConfig;
 import de.stsFanGruppe.tools.NullTester;
 import de.stsFanGruppe.tools.TimeFormater;
 
-public class SettingsGUIController
+public class BildfahrplanSettingsGUIController
 {
-	private SettingsGUI gui;
+	private BildfahrplanSettingsGUI gui;
 	private BildfahrplanConfig config;
 	
-	public SettingsGUIController(BildfahrplanConfig config)
+	public BildfahrplanSettingsGUIController(BildfahrplanConfig config)
 	{
 		NullTester.test(config);
 		this.config = config;
 	}
 	
-	public void setSettingsGUI(SettingsGUI gui)
+	public void setSettingsGUI(BildfahrplanSettingsGUI gui)
 	{
 		NullTester.test(gui);
 		this.gui = gui;
