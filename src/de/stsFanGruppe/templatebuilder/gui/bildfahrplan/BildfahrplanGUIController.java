@@ -67,11 +67,14 @@ public class BildfahrplanGUIController
 		{
 			return;
 		}
+		gui.repaint();
+	}
+	public void guiRepaint()
+	{
 		if(config.needsAutoSize())
 		{
 			optimizeHeight();
 		}
-		gui.repaint();
 	}
 	
 	public void ladeStreckenabschnitt(Streckenabschnitt streckenabschnitt)

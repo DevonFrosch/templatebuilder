@@ -107,6 +107,7 @@ public class BildfahrplanGUI extends JPanel
 			firstPaint = false;
 			g.setColor(Color.BLACK);
 		}
+		controller.guiRepaint();
 		
 		if(!paint || this.streckenabschnitt == null || this.fahrten == null || streckenKm == null)
 		{
