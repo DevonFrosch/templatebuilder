@@ -1,6 +1,7 @@
 package de.stsFanGruppe.templatebuilder.gui.bildfahrplan;
 
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.util.*;
 import javax.swing.JPanel;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanConfig;
@@ -98,9 +99,14 @@ public class BildfahrplanGUI extends JPanel
 	}
 	
 	@Override
-	protected void paintComponent(Graphics g)
+	protected void paintComponent(Graphics graphics)
 	{
-		super.paintComponent(g);
+		super.paintComponent(graphics);
+		// wir nehmen mal an, dass wir Graphics2D haben, sonst wird's schwierig...
+		Graphics2D g = (Graphics2D) graphics;
+		
+		System.setProperty("swing.aatext", "true");
+		System.setProperty("awt.useSystemAAFontSettings", "lcd");
 		
 		if(firstPaint)
 		{
@@ -126,7 +132,7 @@ public class BildfahrplanGUI extends JPanel
 					double an = fh.getAnkunft();
 					double kmAn = streckenKm.get(fh.getGleisabschnitt().getParent().getParent());
 					
-					drawLine(g, kmAb, ab, kmAn, an);
+					drawLine(g, kmAb, ab, kmAn, an, fahrt.getName());
 				}
 				
 				// für nächsten Eintrag
@@ -137,7 +143,7 @@ public class BildfahrplanGUI extends JPanel
 		changed = false;
 	}
 	
-	protected void drawLine(Graphics g, double kmAb, double ab, double kmAn, double an)
+	protected void drawLine(Graphics2D g, double kmAb, double ab, double kmAn, double an, String beschriftung)
 	{
 		assert config != null;
 		if(ab < config.getMinZeit() || an > config.getMaxZeit())
@@ -145,7 +151,31 @@ public class BildfahrplanGUI extends JPanel
 			return;
 		}
 		
-		g.drawLine(getWegPos(kmAb), getZeitPos(ab), getWegPos(kmAn), getZeitPos(an));
+		// Anti-Aliasing an
+		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+		
+		int x1 = getWegPos(kmAb);
+		int y1 = getZeitPos(ab);
+		int x2 = getWegPos(kmAn);
+		int y2 = getZeitPos(an);
+		
+		// Linie zeichnen
+		g.drawLine(x1, y1, x2, y2);
+		
+		// Koordinatensystem drehen
+		AffineTransform neu = g.getTransform();
+		AffineTransform alt = (AffineTransform)neu.clone(); 
+		neu.translate((x1 + x2) / 2, (y2 + y1) / 2);
+		neu.rotate(Math.atan((1.0 * y2 - y1) / (x2 - x1)));
+		g.setTransform(neu);
+		
+		// Text einzeichnen
+		FontMetrics f = g.getFontMetrics();
+		g.drawString(beschriftung, -f.stringWidth(beschriftung) / 2, -2);
+		
+		// Koordinatensystem zurücksetzen
+		g.setTransform(alt);
 	}
 	protected int getZeitPos(double zeit)
 	{
