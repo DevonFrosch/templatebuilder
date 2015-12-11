@@ -1,13 +1,9 @@
 package de.stsFanGruppe.templatebuilder.config;
 
-import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JPanel;
-import javax.xml.stream.XMLStreamException;
-import de.stsFanGruppe.templatebuilder.external.ImportException;
-import de.stsFanGruppe.templatebuilder.external.xmlhelper.XMLElement;
-import de.stsFanGruppe.templatebuilder.external.xmlhelper.XMLReader;
+import de.stsFanGruppe.tools.JSONBuilder;
 import de.stsFanGruppe.tools.NullTester;
 
 public class BildfahrplanConfig
@@ -25,13 +21,11 @@ public class BildfahrplanConfig
 	protected double maxZeit = 1260;
 	protected boolean autoSize = true;
 	
+	protected int schachtelung = 24;
+	
 	public BildfahrplanConfig(double minZeit, double maxZeit)
 	{
 		this.setZeiten(minZeit, maxZeit);
-	}
-	public BildfahrplanConfig(String xml) throws ImportException
-	{
-		this.readFromXML(xml);
 	}
 	public BildfahrplanConfig()
 	{
@@ -95,6 +89,21 @@ public class BildfahrplanConfig
 		return this.marginBottom;
 	}
 	
+	public int getPanelHeight()
+	{
+		return (int) ((maxZeit - minZeit) / 60 * hoeheProStunde) + marginTop + marginBottom;
+	}
+	public int zeichnenBreite(JPanel p)
+	{
+		assert p != null;
+		return p.getWidth() - marginLeft - marginRight;
+	}
+	public int zeichnenHoehe(JPanel p)
+	{
+		assert p != null;
+		return p.getHeight() - marginTop - marginBottom;
+	}
+	
 	public Object registerChangeHandler(ChangeCallback callback)
 	{
 		NullTester.test(callback);
@@ -112,21 +121,27 @@ public class BildfahrplanConfig
 		callbacks.forEach((k, v) -> v.call());
 	}
 	
-	public int getPanelHeight()
+	public void parseJSON(String json)
 	{
-		return (int) ((maxZeit - minZeit) / 60 * hoeheProStunde) + marginTop + marginBottom;
-	}
-	public int zeichnenBreite(JPanel p)
-	{
-		assert p != null;
-		return p.getWidth() - marginLeft - marginRight;
-	}
-	public int zeichnenHoehe(JPanel p)
-	{
-		assert p != null;
-		return p.getHeight() - marginTop - marginBottom;
+		// TODO JSONParser einbauen
 	}
 	
+	public String toJSON()
+	{
+		JSONBuilder json = new JSONBuilder();
+		json.beginObject();
+		json.add("marginRight", marginRight);
+		json.add("marginLeft", marginLeft);
+		json.add("marginTop", marginTop);
+		json.add("marginBottom", marginBottom);
+		json.add("hoeheProStunde", hoeheProStunde);
+		json.add("minZeit", minZeit);
+		json.add("maxZeit", maxZeit);
+		json.add("autoSize", autoSize);
+		json.add("schachtelung", schachtelung);
+		json.endObject();
+		return json.toString();
+	}
 	public String toString()
 	{
 		return "{margin: r="+marginRight+", l="+marginLeft+", t="+marginTop+", b="+marginBottom+"}";
@@ -142,33 +157,6 @@ public class BildfahrplanConfig
 				+newLine+"<hoeheProStunde value=\""+hoeheProStunde+"\" />"
 				+newLine+"<zeitBereich min="+minZeit+" max=\""+maxZeit+"\" />"
 				+"\n"+indent+"</bildfahrplanConfig>";
-	}
-	public void readFromXML(String xml) throws ImportException
-	{
-		try
-		{
-			XMLReader reader = new XMLReader(new java.io.FileInputStream(xml));
-			XMLElement elem;
-			while((elem = reader.findTagUntil("bildfahrplanConfig", "hoeheProStunde", "zeitBereich")) != null)
-			{
-				switch(elem.getName().toLowerCase())
-				{
-					case "hoeheprostunde":
-						this.hoeheProStunde = Integer.parseInt(elem.getAttribute("value"));
-						break;
-					case "zeitbereich":
-						this.minZeit = Double.parseDouble(elem.getAttribute("min"));
-						this.maxZeit = Double.parseDouble(elem.getAttribute("max"));
-					default:
-						break;
-				}
-			}
-		}
-		catch(FileNotFoundException | XMLStreamException | NumberFormatException e)
-		{
-			throw new ImportException(e);
-		}
-		notifyChange();
 	}
 	
 	private static void log(String text)

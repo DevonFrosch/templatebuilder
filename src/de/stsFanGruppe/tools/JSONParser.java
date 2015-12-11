@@ -12,6 +12,7 @@ public class JSONParser
 	public static final int ACTION_OPEN_OBJECT = 2;
 	public static final int ACTION_CLOSE_ARRAY = 3;
 	public static final int ACTION_CLOSE_OBJECT = 4;
+	public static final int ACTION_ENDOFFILE = 5;
 	
 	protected BufferedReader input;
 	protected StringBuilder zeile;
@@ -30,8 +31,13 @@ public class JSONParser
 		
 		while(true)
 		{
-			// TODO End of file?
 			char c = read();
+			
+			// End of File
+			if(c == -1)
+			{
+				return new JSONAction(ACTION_ENDOFFILE);
+			}
 			
 			// Variablen abschließen, wenn nötig
 			switch(c)
@@ -88,17 +94,17 @@ public class JSONParser
 					identifyer = new StringBuilder();
 					break;
 				case '"':
-					if(identifyer.length() > 0)
-					{
-						throw new JSONParserException();
-					}
-					
 					boolean escape = false;
 					boolean breakloop = false;
 					while(!breakloop)
 					{
-						// TODO: End of file?
 						char c2 = read();
+						
+						// End of File
+						if(c == -1)
+						{
+							return new JSONAction(ACTION_ENDOFFILE);
+						}
 						
 						// Escape-Sequences
 						if(escape)
@@ -123,17 +129,12 @@ public class JSONParser
 								case 'n':
 									identifyer.append('\n');
 									break;
-								// unicode
-								case 'u':
-									// TODO Unicode \\uxxxx
-									
-									identifyer.append('\n');
 								default:
 							}
 						}
 						else
 						{
-							// nästes Escape?
+							// nächstes Escape?
 							if(c2 == '\\')
 							{
 								escape = true;
@@ -157,6 +158,10 @@ public class JSONParser
 		if(zeile == null || zeile.length() == 0)
 		{
 			zeile = new StringBuilder(input.readLine());
+			if(zeile == null)
+			{
+				return (char) -1;
+			}
 		}
 		char c = zeile.charAt(0);
 		zeile.delete(0, 1);
@@ -178,26 +183,6 @@ public class JSONParser
 			this.type = type;
 			this.name = name;
 			this.value = value;
-		}
-	}
-	
-	public class JSONParserException extends RuntimeException
-	{
-		public JSONParserException()
-		{
-			super();
-		}
-		public JSONParserException(String message)
-		{
-			super(message);
-		}
-		public JSONParserException(Throwable cause)
-		{
-			super(cause);
-		}
-		public JSONParserException(String message, Throwable cause)
-		{
-			super(message, cause);
 		}
 	}
 }
