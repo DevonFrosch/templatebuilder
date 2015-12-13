@@ -21,6 +21,7 @@ public class BildfahrplanConfig
 	protected double maxZeit = 1260;
 	protected boolean autoSize = true;
 	
+	protected boolean zeigeZugnamen = true;
 	protected int schachtelung = 24;
 	
 	public BildfahrplanConfig(double minZeit, double maxZeit)
@@ -87,6 +88,22 @@ public class BildfahrplanConfig
 	public int getMarginBottom()
 	{
 		return this.marginBottom;
+	}
+	public boolean getZeigeZugnamen()
+	{
+		return zeigeZugnamen;
+	}
+	public void setZeigeZugnamen(boolean zeigeZugnamen)
+	{
+		this.zeigeZugnamen = zeigeZugnamen;
+	}
+	public int getSchachtelung()
+	{
+		return schachtelung;
+	}
+	public void setSchachtelung(int schachtelung)
+	{
+		this.schachtelung = schachtelung;
 	}
 	
 	public int getPanelHeight()
