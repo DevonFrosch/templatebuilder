@@ -6,7 +6,6 @@ import java.io.File;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import com.jgoodies.forms.layout.*;
-import com.jgoodies.forms.factories.FormFactory;
 import de.stsFanGruppe.templatebuilder.gui.GUI;
 import de.stsFanGruppe.templatebuilder.zug.Linie;
 import de.stsFanGruppe.tools.NullTester;
@@ -58,22 +57,22 @@ public class JTrainGraphImportGUI extends JDialog implements GUI
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(new FormLayout(new ColumnSpec[] {
-				FormFactory.RELATED_GAP_COLSPEC,
+				com.jgoodies.forms.layout.FormSpecs.RELATED_GAP_COLSPEC,
 				ColumnSpec.decode("center:default:grow"),
-				FormFactory.UNRELATED_GAP_COLSPEC,
+				com.jgoodies.forms.layout.FormSpecs.UNRELATED_GAP_COLSPEC,
 				ColumnSpec.decode("default:grow"),
-				FormFactory.RELATED_GAP_COLSPEC,
-				FormFactory.DEFAULT_COLSPEC,
-				FormFactory.RELATED_GAP_COLSPEC,},
+				com.jgoodies.forms.layout.FormSpecs.RELATED_GAP_COLSPEC,
+				com.jgoodies.forms.layout.FormSpecs.DEFAULT_COLSPEC,
+				com.jgoodies.forms.layout.FormSpecs.RELATED_GAP_COLSPEC,},
 			new RowSpec[] {
-				FormFactory.LINE_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,
-				FormFactory.PARAGRAPH_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,
-				FormFactory.RELATED_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,
-				FormFactory.RELATED_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,}));
+				com.jgoodies.forms.layout.FormSpecs.LINE_GAP_ROWSPEC,
+				com.jgoodies.forms.layout.FormSpecs.DEFAULT_ROWSPEC,
+				com.jgoodies.forms.layout.FormSpecs.PARAGRAPH_GAP_ROWSPEC,
+				com.jgoodies.forms.layout.FormSpecs.DEFAULT_ROWSPEC,
+				com.jgoodies.forms.layout.FormSpecs.RELATED_GAP_ROWSPEC,
+				com.jgoodies.forms.layout.FormSpecs.DEFAULT_ROWSPEC,
+				com.jgoodies.forms.layout.FormSpecs.RELATED_GAP_ROWSPEC,
+				com.jgoodies.forms.layout.FormSpecs.DEFAULT_ROWSPEC,}));
 		{
 			lblPfadZurDatei = new JLabel("Pfad zur Datei");
 			contentPanel.add(lblPfadZurDatei, "2, 2, fill, fill");

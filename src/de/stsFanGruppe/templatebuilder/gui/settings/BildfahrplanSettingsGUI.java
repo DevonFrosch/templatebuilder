@@ -7,11 +7,11 @@ import javax.swing.border.EmptyBorder;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
-import com.jgoodies.forms.factories.FormFactory;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanConfig;
 import de.stsFanGruppe.templatebuilder.gui.GUI;
 import de.stsFanGruppe.tools.NullTester;
 import javax.swing.event.ChangeEvent;
+import com.jgoodies.forms.layout.FormSpecs;
 
 public class BildfahrplanSettingsGUI extends JDialog implements GUI
 {
@@ -23,7 +23,6 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 	JTextField inputHoeheProStunde;
 	JSlider sliderHoeheProStunde;
 	JCheckBox chckbxAuto;
-	
 	/**
 	 * Launch the application.
 	 */
@@ -61,19 +60,19 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 				JPanel panel = new JPanel();
 				tabbedPane.addTab("Bildfahrplan", null, panel, null);
 				panel.setLayout(new FormLayout(new ColumnSpec[] {
-						FormFactory.UNRELATED_GAP_COLSPEC,
-						FormFactory.DEFAULT_COLSPEC,
-						FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
+						FormSpecs.UNRELATED_GAP_COLSPEC,
+						FormSpecs.DEFAULT_COLSPEC,
+						FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
 						ColumnSpec.decode("default:grow"),
-						FormFactory.RELATED_GAP_COLSPEC,
-						FormFactory.DEFAULT_COLSPEC,
-						FormFactory.UNRELATED_GAP_COLSPEC,},
+						FormSpecs.RELATED_GAP_COLSPEC,
+						FormSpecs.DEFAULT_COLSPEC,
+						FormSpecs.UNRELATED_GAP_COLSPEC,},
 					new RowSpec[] {
-						FormFactory.RELATED_GAP_ROWSPEC,
-						FormFactory.DEFAULT_ROWSPEC,
-						FormFactory.RELATED_GAP_ROWSPEC,
-						FormFactory.DEFAULT_ROWSPEC,
-						FormFactory.RELATED_GAP_ROWSPEC,}));
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						FormSpecs.DEFAULT_ROWSPEC,
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						FormSpecs.DEFAULT_ROWSPEC,
+						FormSpecs.RELATED_GAP_ROWSPEC,}));
 				{
 					JLabel lblHheProStunde = new JLabel("H\u00F6he pro Stunde");
 					panel.add(lblHheProStunde, "2, 2, fill, fill");
@@ -82,12 +81,12 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 					JPanel panel_1 = new JPanel();
 					panel.add(panel_1, "4, 2, fill, fill");
 					panel_1.setLayout(new FormLayout(new ColumnSpec[] {
-							FormFactory.UNRELATED_GAP_COLSPEC,
+							com.jgoodies.forms.layout.FormSpecs.UNRELATED_GAP_COLSPEC,
 							ColumnSpec.decode("default:grow"),
-							FormFactory.RELATED_GAP_COLSPEC,
-							FormFactory.DEFAULT_COLSPEC,},
+							com.jgoodies.forms.layout.FormSpecs.RELATED_GAP_COLSPEC,
+							com.jgoodies.forms.layout.FormSpecs.DEFAULT_COLSPEC,},
 						new RowSpec[] {
-							FormFactory.DEFAULT_ROWSPEC,}));
+							com.jgoodies.forms.layout.FormSpecs.DEFAULT_ROWSPEC,}));
 					{
 						inputHoeheProStunde = new JTextField();
 						panel_1.add(inputHoeheProStunde, "4, 1, left, center");
@@ -114,14 +113,14 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 					panel.add(panelZeit, "4, 4, fill, default");
 					panelZeit.setLayout(new FormLayout(new ColumnSpec[] {
 							ColumnSpec.decode("default:grow"),
-							FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
-							FormFactory.DEFAULT_COLSPEC,
-							FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
+							com.jgoodies.forms.layout.FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
+							com.jgoodies.forms.layout.FormSpecs.DEFAULT_COLSPEC,
+							com.jgoodies.forms.layout.FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
 							ColumnSpec.decode("default:grow"),
-							FormFactory.RELATED_GAP_COLSPEC,
-							FormFactory.DEFAULT_COLSPEC,},
+							com.jgoodies.forms.layout.FormSpecs.RELATED_GAP_COLSPEC,
+							com.jgoodies.forms.layout.FormSpecs.DEFAULT_COLSPEC,},
 						new RowSpec[] {
-							FormFactory.DEFAULT_ROWSPEC,}));
+							com.jgoodies.forms.layout.FormSpecs.DEFAULT_ROWSPEC,}));
 					{
 						inputMinZeit = new JTextField();
 						inputMinZeit.setText(controller.getMinZeit());
