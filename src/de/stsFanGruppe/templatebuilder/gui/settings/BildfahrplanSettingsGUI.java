@@ -23,6 +23,9 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 	JTextField inputHoeheProStunde;
 	JSlider sliderHoeheProStunde;
 	JCheckBox chckbxAuto;
+	JTextField inputSchachtelung;
+	JCheckBox chckbxZeigeZugnamen;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -58,6 +61,12 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 			contentPanel.add(tabbedPane, BorderLayout.CENTER);
 			{
 				JPanel panel = new JPanel();
+				tabbedPane.addTab("Allgemein", null, panel, null);
+				panel.setLayout(new FormLayout(new ColumnSpec[] {},
+					new RowSpec[] {}));
+			}
+			{
+				JPanel panel = new JPanel();
 				tabbedPane.addTab("Bildfahrplan", null, panel, null);
 				panel.setLayout(new FormLayout(new ColumnSpec[] {
 						FormSpecs.UNRELATED_GAP_COLSPEC,
@@ -68,6 +77,12 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 						FormSpecs.DEFAULT_COLSPEC,
 						FormSpecs.UNRELATED_GAP_COLSPEC,},
 					new RowSpec[] {
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						FormSpecs.DEFAULT_ROWSPEC,
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						FormSpecs.DEFAULT_ROWSPEC,
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						FormSpecs.DEFAULT_ROWSPEC,
 						FormSpecs.RELATED_GAP_ROWSPEC,
 						FormSpecs.DEFAULT_ROWSPEC,
 						FormSpecs.RELATED_GAP_ROWSPEC,
@@ -101,7 +116,7 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 						sliderHoeheProStunde.setMinimum(50);
 						sliderHoeheProStunde.setMaximum(1000);
 						sliderHoeheProStunde.setValue(controller.getHoeheProStunde());
-						panel_1.add(sliderHoeheProStunde, "2, 1, left, top");
+						panel_1.add(sliderHoeheProStunde, "2, 1, left, center");
 					}
 				}
 				{
@@ -146,7 +161,50 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 						panelZeit.add(chckbxAuto, "7, 1");
 					}
 				}
+				{
+					JLabel lblSchachtelung = new JLabel("Schachtelung");
+					panel.add(lblSchachtelung, "2, 6, right, default");
+				}
+				{
+					JPanel panel_1 = new JPanel();
+					panel.add(panel_1, "4, 6, fill, fill");
+					panel_1.setLayout(new FormLayout(new ColumnSpec[] {
+							FormSpecs.UNRELATED_GAP_COLSPEC,
+							ColumnSpec.decode("default:grow"),
+							FormSpecs.RELATED_GAP_COLSPEC,
+							FormSpecs.DEFAULT_COLSPEC,},
+						new RowSpec[] {
+							FormSpecs.DEFAULT_ROWSPEC,}));
+					{
+						inputSchachtelung = new JTextField();
+						panel_1.add(inputSchachtelung, "4, 1, center, center");
+						inputSchachtelung.setColumns(10);
+					}
+					{
+						JSlider sliderSchachtelung = new JSlider();
+						sliderSchachtelung.setValue(24);
+						sliderSchachtelung.addChangeListener((ChangeEvent arg0) -> { inputSchachtelung.setText(sliderSchachtelung.getValue()+""); });
+						sliderSchachtelung.setPaintTicks(true);
+						sliderSchachtelung.setSnapToTicks(true);
+						sliderSchachtelung.setMinorTickSpacing(1);
+						sliderSchachtelung.setMinimum(1);
+						sliderSchachtelung.setMaximum(24);
+						sliderSchachtelung.setValue(controller.getSchachtelung());
+						panel_1.add(sliderSchachtelung, "2, 1, left, center");
+					}
+				}
+				{
+					JLabel lblZeigeZugnamen = new JLabel("Zeige Zugnamen");
+					panel.add(lblZeigeZugnamen, "2, 8");
+				}
+				{
+					chckbxZeigeZugnamen = new JCheckBox("");
+					chckbxZeigeZugnamen.setSelected(controller.getZeigeZugnamen());
+					panel.add(chckbxZeigeZugnamen, "4, 8");
+				}
 			}
+			// TODO entfernen, wenn Tab Allgemein vorhanden ist
+			tabbedPane.setSelectedIndex(1);
 		}
 		{
 			JPanel buttonPane = new JPanel();

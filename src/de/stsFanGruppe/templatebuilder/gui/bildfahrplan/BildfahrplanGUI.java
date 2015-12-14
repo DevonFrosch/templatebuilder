@@ -163,19 +163,22 @@ public class BildfahrplanGUI extends JPanel
 		// Linie zeichnen
 		g.drawLine(x1, y1, x2, y2);
 		
-		// Koordinatensystem drehen
-		AffineTransform neu = g.getTransform();
-		AffineTransform alt = (AffineTransform)neu.clone(); 
-		neu.translate((x1 + x2) / 2, (y2 + y1) / 2);
-		neu.rotate(Math.atan((1.0 * y2 - y1) / (x2 - x1)));
-		g.setTransform(neu);
-		
-		// Text einzeichnen
-		FontMetrics f = g.getFontMetrics();
-		g.drawString(beschriftung, -f.stringWidth(beschriftung) / 2, -2);
-		
-		// Koordinatensystem zurücksetzen
-		g.setTransform(alt);
+		if(config.getZeigeZugnamen())
+		{
+			// Koordinatensystem drehen
+			AffineTransform neu = g.getTransform();
+			AffineTransform alt = (AffineTransform)neu.clone(); 
+			neu.translate((x1 + x2) / 2, (y2 + y1) / 2);
+			neu.rotate(Math.atan((1.0 * y2 - y1) / (x2 - x1)));
+			g.setTransform(neu);
+			
+			// Text einzeichnen
+			FontMetrics f = g.getFontMetrics();
+			g.drawString(beschriftung, -f.stringWidth(beschriftung) / 2, -2);
+			
+			// Koordinatensystem zurücksetzen
+			g.setTransform(alt);
+		}
 	}
 	protected int getZeitPos(double zeit)
 	{

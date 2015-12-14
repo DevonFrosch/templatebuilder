@@ -34,6 +34,14 @@ public class BildfahrplanSettingsGUIController
 	{
 		return TimeFormater.doubleToString(config.getMaxZeit());
 	}
+	public int getSchachtelung()
+	{
+		return config.getSchachtelung();
+	}
+	public boolean getZeigeZugnamen()
+	{
+		return config.getZeigeZugnamen();
+	}
 	public void actionButton(ActionEvent event)
 	{
 		assert config != null;
@@ -78,6 +86,18 @@ public class BildfahrplanSettingsGUIController
 				{
 					gui.errorMessage("Dargestellte Zeit: "+e.getMessage());
 				}
+				
+				try
+				{
+					int sch = parseIntField(gui.inputSchachtelung.getText());
+					config.setSchachtelung(sch);
+				}
+				catch(NumberFormatException e)
+				{
+					gui.errorMessage("Schachtelung: "+e.getMessage());
+				}
+				
+				config.setZeigeZugnamen(gui.chckbxZeigeZugnamen.isSelected());
 				
 				// Apply: Fenster nicht schlieﬂen
 				if(event.getActionCommand() == "Apply")
