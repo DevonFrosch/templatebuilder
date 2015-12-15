@@ -83,7 +83,6 @@ public class JTrainGraphImportGUI extends JDialog implements GUI
 			pfadInput = new JTextField();
 			contentPanel.add(pfadInput, "4, 2, fill, default");
 			pfadInput.setColumns(10);
-			//pfadInput.setText("D:\\Dateien\\Informatik\\Eigene_Erzeugnisse\\Java\\templatebuilder");
 		}
 		pfadButton = new JButton("...");
 		pfadButton.addActionListener((ActionEvent arg0) -> dateiChooser(arg0));
@@ -105,6 +104,9 @@ public class JTrainGraphImportGUI extends JDialog implements GUI
 			linieInput = new JTextField();
 			contentPanel.add(linieInput, "4, 8, fill, default");
 			linieInput.setColumns(10);
+			// TODO Testinput entfernen wenn Linienmanagement fertig ist
+			linieInput.setText("1");
+			linieInput.setEnabled(false);
 		}
 		{
 			linieButton = new JButton("...");
