@@ -59,10 +59,12 @@ public class TemplateBuilderGUI implements GUI
 		menuBar.add(mnDatei);
 		
 		JMenuItem mntmNeu = new JMenuItem("Neu...");
+		mntmNeu.setEnabled(false);
 		mntmNeu.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_MASK));
 		mnDatei.add(mntmNeu);
 		
 		JMenuItem mntmffnen = new JMenuItem("\u00D6ffnen...");
+		mntmffnen.setEnabled(false);
 		mntmffnen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_MASK));
 		mnDatei.add(mntmffnen);
 		
@@ -70,10 +72,12 @@ public class TemplateBuilderGUI implements GUI
 		mnDatei.add(separator_2);
 		
 		JMenuItem mntmSpeichern = new JMenuItem("Speichern");
+		mntmSpeichern.setEnabled(false);
 		mntmSpeichern.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK));
 		mnDatei.add(mntmSpeichern);
 		
 		JMenuItem mntmSpeichernUnter = new JMenuItem("Speichern unter...");
+		mntmSpeichernUnter.setEnabled(false);
 		mntmSpeichernUnter.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK));
 		mnDatei.add(mntmSpeichernUnter);
 		
@@ -92,26 +96,30 @@ public class TemplateBuilderGUI implements GUI
 		mnDatei.add(separator_1);
 		
 		JMenuItem mntmSchliessen = new JMenuItem("Schlie\u00DFen");
+		mntmSchliessen.setEnabled(false);
 		mntmSchliessen.setActionCommand("close");
 		mntmSchliessen.addActionListener((ActionEvent arg0) -> controller.menuAction(arg0));
 		mntmSchliessen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F4, InputEvent.ALT_MASK));
 		mnDatei.add(mntmSchliessen);
 		
 		JMenu mnBearbeiten = new JMenu("Bearbeiten");
+		mnBearbeiten.setEnabled(false);
 		menuBar.add(mnBearbeiten);
 		
 		JMenu mnStrecken = new JMenu("Strecken");
+		mnStrecken.setEnabled(false);
 		menuBar.add(mnStrecken);
 		
 		JMenu mnZge = new JMenu("Z\u00FCge");
+		mnZge.setEnabled(false);
 		menuBar.add(mnZge);
 		
 		JMenu mnAnsicht = new JMenu("Ansicht");
 		menuBar.add(mnAnsicht);
 		
-		JMenuItem mntmBildfahrplan = new JMenuItem("Bildfahrplan");
+		JCheckBoxMenuItem mntmBildfahrplan = new JCheckBoxMenuItem("Bildfahrplan");
+		mntmBildfahrplan.setSelected(true);
 		mntmBildfahrplan.setActionCommand("bfpOptions");
-		mntmBildfahrplan.addActionListener((ActionEvent arg0) -> controller.menuAction(arg0));
 		mnAnsicht.add(mntmBildfahrplan);
 		
 		JMenu mnEinstellungen = new JMenu("Einstellungen");
@@ -126,6 +134,7 @@ public class TemplateBuilderGUI implements GUI
 		menuBar.add(mnHilfe);
 		
 		JMenuItem mntmHilfe = new JMenuItem("Hilfe");
+		mntmHilfe.setEnabled(false);
 		mntmHilfe.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0));
 		mnHilfe.add(mntmHilfe);
 		

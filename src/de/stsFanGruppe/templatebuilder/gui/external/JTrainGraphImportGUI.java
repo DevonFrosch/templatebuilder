@@ -111,6 +111,7 @@ public class JTrainGraphImportGUI extends JDialog implements GUI
 		{
 			linieButton = new JButton("...");
 			contentPanel.add(linieButton, "6, 8, right, default");
+			linieButton.setEnabled(false);
 		}
 		{
 			JPanel buttonPane = new JPanel();
