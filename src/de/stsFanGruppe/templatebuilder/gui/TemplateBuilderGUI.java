@@ -5,7 +5,6 @@ import javax.swing.tree.*;
 import de.stsFanGruppe.templatebuilder.gui.bildfahrplan.BildfahrplanGUIController;
 import de.stsFanGruppe.templatebuilder.gui.bildfahrplan.BildfahrplanGUI;
 import de.stsFanGruppe.tools.NullTester;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.*;
 import java.awt.BorderLayout;
@@ -200,24 +199,6 @@ public class TemplateBuilderGUI implements GUI
 	public void infoMessage(String text, String titel)
 	{
 		JOptionPane.showMessageDialog(frmTemplatebauer, text, titel, JOptionPane.INFORMATION_MESSAGE);
-	}
-	
-	private static void addPopup(Component component, final JPopupMenu popup) {
-		component.addMouseListener(new MouseAdapter() {
-			public void mousePressed(MouseEvent e) {
-				if (e.isPopupTrigger()) {
-					showMenu(e);
-				}
-			}
-			public void mouseReleased(MouseEvent e) {
-				if (e.isPopupTrigger()) {
-					showMenu(e);
-				}
-			}
-			private void showMenu(MouseEvent e) {
-				popup.show(e.getComponent(), e.getX(), e.getY());
-			}
-		});
 	}
 	
 	private static void log(String text)
