@@ -166,30 +166,40 @@ public class BildfahrplanGUI extends JPanel
 		// Linie zeichnen
 		g.drawLine(x1, y1, x2, y2);
 		
-		if(config.getZeigeZugnamen())
+		if(config.getZeigeZugnamen() == 0)
 		{
+			// keine Zugnamen
+			return;
+		}
+		
+		FontMetrics f = g.getFontMetrics();
+		int stringWidth = f.stringWidth(beschriftung);
+		
+		if(config.getZeigeZugnamen() == 2)
+		{
+			// Zugnamen nur wenn Platz ist
 			// Textgröße holen
-			FontMetrics f = g.getFontMetrics();
-			int stringWidth = f.stringWidth(beschriftung);
 			double lineLenght = Math.sqrt((x1-x2) * (x1-x2) + (y1-y2) * (y1-y2));
-			
+
 			// Text nur, wenn dieser weniger als doppelt so breit ist
-			if(stringWidth * 0.9 < lineLenght)
+			if(stringWidth * 0.9 > lineLenght)
 			{
-				// Koordinatensystem drehen
-				AffineTransform neu = g.getTransform();
-				AffineTransform alt = (AffineTransform)neu.clone(); 
-				neu.translate((x1 + x2) / 2, (y2 + y1) / 2);
-				neu.rotate(Math.atan((1.0 * y2 - y1) / (x2 - x1)));
-				g.setTransform(neu);
-				
-				// Text einzeichnen
-				g.drawString(beschriftung, -stringWidth / 2, -2);
-				
-				// Koordinatensystem zurücksetzen
-				g.setTransform(alt);
+				return;
 			}
 		}
+		
+		// Koordinatensystem drehen
+		AffineTransform neu = g.getTransform();
+		AffineTransform alt = (AffineTransform)neu.clone(); 
+		neu.translate((x1 + x2) / 2, (y2 + y1) / 2);
+		neu.rotate(Math.atan((1.0 * y2 - y1) / (x2 - x1)));
+		g.setTransform(neu);
+		
+		// Text einzeichnen
+		g.drawString(beschriftung, -stringWidth / 2, -2);
+		
+		// Koordinatensystem zurücksetzen
+		g.setTransform(alt);
 	}
 	protected int getZeitPos(double zeit)
 	{

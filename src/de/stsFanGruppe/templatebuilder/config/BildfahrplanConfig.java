@@ -21,7 +21,7 @@ public class BildfahrplanConfig
 	protected double maxZeit = 1260;
 	protected boolean autoSize = true;
 	
-	protected boolean zeigeZugnamen = true;
+	protected int zeigeZugnamen = 2;
 	protected int schachtelung = 24;
 	
 	public BildfahrplanConfig(double minZeit, double maxZeit)
@@ -89,13 +89,28 @@ public class BildfahrplanConfig
 	{
 		return this.marginBottom;
 	}
-	public boolean getZeigeZugnamen()
+	public int getZeigeZugnamen()
 	{
 		return zeigeZugnamen;
 	}
-	public void setZeigeZugnamen(boolean zeigeZugnamen)
+	public void setZeigeZugnamen(int zeigeZugnamen)
 	{
 		this.zeigeZugnamen = zeigeZugnamen;
+	}
+	public void setZeigeZugnamen(String zeigeZugnamen)
+	{
+		switch(zeigeZugnamen)
+		{
+			case "nie":
+				this.zeigeZugnamen = 0;
+				break;
+			case "immer":
+				this.zeigeZugnamen = 1;
+				break;
+			case "auto":
+			default:
+				this.zeigeZugnamen = 2;
+		}
 	}
 	public int getSchachtelung()
 	{

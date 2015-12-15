@@ -38,7 +38,7 @@ public class BildfahrplanSettingsGUIController
 	{
 		return config.getSchachtelung();
 	}
-	public boolean getZeigeZugnamen()
+	public int getZeigeZugnamen()
 	{
 		return config.getZeigeZugnamen();
 	}
@@ -97,7 +97,7 @@ public class BildfahrplanSettingsGUIController
 					gui.errorMessage("Schachtelung: "+e.getMessage());
 				}
 				
-				config.setZeigeZugnamen(gui.chckbxZeigeZugnamen.isSelected());
+				config.setZeigeZugnamen(gui.rdbtngrpZeigeZugnamen.getSelection().getActionCommand());
 				
 				// Apply: Fenster nicht schlieﬂen
 				if(event.getActionCommand() == "Apply")

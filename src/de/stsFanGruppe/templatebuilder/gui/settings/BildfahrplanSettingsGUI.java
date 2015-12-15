@@ -24,7 +24,7 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 	JSlider sliderHoeheProStunde;
 	JCheckBox chckbxAuto;
 	JTextField inputSchachtelung;
-	JCheckBox chckbxZeigeZugnamen;
+	ButtonGroup rdbtngrpZeigeZugnamen;
 	
 	/**
 	 * Launch the application.
@@ -198,9 +198,27 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 					panel.add(lblZeigeZugnamen, "2, 8");
 				}
 				{
-					chckbxZeigeZugnamen = new JCheckBox("");
-					chckbxZeigeZugnamen.setSelected(controller.getZeigeZugnamen());
-					panel.add(chckbxZeigeZugnamen, "4, 8");
+					JPanel panel_1 = new JPanel();
+					panel.add(panel_1, "4, 8, fill, fill");
+					rdbtngrpZeigeZugnamen = new ButtonGroup();
+					JRadioButton[] rds = new JRadioButton[3];
+					
+					rds[0] = new JRadioButton("nie");
+					rdbtngrpZeigeZugnamen.add(rds[0]);
+					rds[0].setActionCommand("nie");
+					panel_1.add(rds[0]);
+					
+					rds[2] = new JRadioButton("automatisch");
+					rdbtngrpZeigeZugnamen.add(rds[2]);
+					rds[2].setActionCommand("automatisch");
+					panel_1.add(rds[2]);
+					
+					rds[1] = new JRadioButton("immer");
+					rdbtngrpZeigeZugnamen.add(rds[1]);
+					rds[1].setActionCommand("immer");
+					panel_1.add(rds[1]);
+					
+					rdbtngrpZeigeZugnamen.setSelected(rds[controller.getZeigeZugnamen()].getModel(), true);
 				}
 			}
 			// TODO entfernen, wenn Tab Allgemein vorhanden ist
