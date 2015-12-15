@@ -138,8 +138,10 @@ public class TemplateBuilderGUI implements GUI
 		mntmHilfe.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0));
 		mnHilfe.add(mntmHilfe);
 		
-		JMenuItem mntmber = new JMenuItem("\u00DCber...");
-		mnHilfe.add(mntmber);
+		JMenuItem mntmUeber = new JMenuItem("\u00DCber...");
+		mntmUeber.setActionCommand("about");
+		mntmUeber.addActionListener((ActionEvent arg0) -> controller.menuAction(arg0));
+		mnHilfe.add(mntmUeber);
 		
 		JSplitPane splitPane = new JSplitPane();
 		frmTemplatebauer.getContentPane().add(splitPane, BorderLayout.CENTER);

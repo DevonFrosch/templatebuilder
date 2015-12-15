@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Set;
+import java.util.StringJoiner;
 import javax.swing.JTabbedPane;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanConfig;
 import de.stsFanGruppe.templatebuilder.external.ImportException;
@@ -121,6 +122,17 @@ public class TemplateBuilderGUIController
 				break;
 			case "options":
 				BildfahrplanSettingsGUI sg = new BildfahrplanSettingsGUI(new BildfahrplanSettingsGUIController(config));
+				break;
+			case "about":
+				String version = "0.2dev1";
+				boolean dev = true;
+				
+				StringJoiner text = new StringJoiner("\n");
+				text.add("TemplateBuilder "+version);
+				text.add("Copyright DevonFrosch (http://sts-fan-gruppe.de/)");
+				if(dev) text.add("Dies ist eine Testversion, die noch Fehler enthält!");
+				
+				gui.infoMessage(text.toString(), "Über");
 				break;
 			default:
 				log("Menü: nicht erkannt");
