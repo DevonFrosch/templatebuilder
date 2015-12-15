@@ -1,6 +1,7 @@
 package de.stsFanGruppe.templatebuilder.strecken;
 
 import java.util.Collection;
+import java.util.StringJoiner;
 import de.stsFanGruppe.tools.FirstLastLinkedList;
 import de.stsFanGruppe.tools.FirstLastList;
 import de.stsFanGruppe.tools.NullTester;
@@ -84,19 +85,18 @@ public class Betriebsstelle
 	}
 	public String toXML(String indent)
 	{
-		StringBuilder str = new StringBuilder(indent+"<betriebsstelle name=\""+getName()+"\">");
+		StringJoiner xml = new StringJoiner("\n");
+		xml.add(indent+"<betriebsstelle name=\""+getName()+"\">");
 		
 		if(!gleise.isEmpty())
 		{
 			for(Gleis g: gleise)
 			{
-				str.append("\n");
-				str.append(g.toXML(indent+"  "));
+				xml.add(g.toXML(indent+"  "));
 			}
-			str.append("\n"+indent);
 		}
 		
-		str.append("</betriebsstelle>");
-		return str.toString();
+		xml.add(indent+"</betriebsstelle>");
+		return xml.toString();
 	}
 }

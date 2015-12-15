@@ -1,6 +1,7 @@
 package de.stsFanGruppe.templatebuilder.strecken;
 
 import java.util.Collection;
+import java.util.StringJoiner;
 import de.stsFanGruppe.tools.FirstLastLinkedList;
 import de.stsFanGruppe.tools.FirstLastList;
 import de.stsFanGruppe.tools.NullTester;
@@ -79,19 +80,18 @@ public class Kursbuchstrecke
 	}
 	public String toXML(String indent)
 	{
-		StringBuilder str = new StringBuilder(indent+"<kursbuchstrecke name=\""+getName()+"\" nummer=\""+getNummer()+"\">");
+		StringJoiner xml = new StringJoiner("\n");
+		xml.add(indent+"<kursbuchstrecke name=\""+getName()+"\" nummer=\""+getNummer()+"\">");
 		
 		if(!streckenabschnitte.isEmpty())
 		{
 			for(Streckenabschnitt sa: streckenabschnitte)
 			{
-				str.append("\n");
-				str.append(sa.toXML(indent+"  "));
+				xml.add(sa.toXML(indent+"  "));
 			}
-			str.append("\n"+indent);
 		}
 		
-		str.append("</kursbuchstrecke>");
-		return str.toString();
+		xml.add(indent+"</kursbuchstrecke>");
+		return xml.toString();
 	}
 }

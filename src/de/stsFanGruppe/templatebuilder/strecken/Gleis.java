@@ -2,6 +2,7 @@ package de.stsFanGruppe.templatebuilder.strecken;
 
 import java.util.Collection;
 import java.util.NavigableSet;
+import java.util.StringJoiner;
 import java.util.TreeSet;
 import de.stsFanGruppe.tools.NullTester;
 
@@ -129,19 +130,18 @@ public class Gleis
 	}
 	public String toXML(String indent)
 	{
-		StringBuilder str = new StringBuilder(indent+"<gleis name=\""+getName()+"\">");
+		StringJoiner xml = new StringJoiner("\n");
+		xml.add(indent+"<gleis name=\""+getName()+"\">");
 		
 		if(!gleisabschnitte.isEmpty())
 		{
 			for(Gleisabschnitt ga: gleisabschnitte)
 			{
-				str.append("\n");
-				str.append(ga.toXML(indent+"  "));
+				xml.add(ga.toXML(indent+"  "));
 			}
-			str.append("\n"+indent);
 		}
 		
-		str.append("</gleis>");
-		return str.toString();
+		xml.add(indent+"</gleis>");
+		return xml.toString();
 	}
 }

@@ -1,6 +1,7 @@
 package de.stsFanGruppe.templatebuilder.zug;
 
 import java.util.Collection;
+import java.util.StringJoiner;
 import de.stsFanGruppe.templatebuilder.strecken.Streckenabschnitt;
 import de.stsFanGruppe.tools.FirstLastLinkedList;
 import de.stsFanGruppe.tools.FirstLastList;
@@ -60,7 +61,7 @@ public class Laufweg
 	
 	public String toString()
 	{
-		return "Laufweg "+getName()+" { "+streckenabschnitte.size()+" Streckenabschnitte }";
+		return "Laufweg "+getName()+" { von "+streckenabschnitte.first().getName()+" nach "+streckenabschnitte.last().getName()+", "+streckenabschnitte.size()+" Streckenabschnitte }";
 	}
 	public String toXML()
 	{
@@ -68,19 +69,18 @@ public class Laufweg
 	}
 	public String toXML(String indent)
 	{
-		StringBuilder str = new StringBuilder(indent+"<laufweg name=\""+getName()+"\">");
+		StringJoiner xml = new StringJoiner("\n");
+		xml.add(indent+"<laufweg name=\""+getName()+"\">");
 		
 		if(!streckenabschnitte.isEmpty())
 		{
 			for(Streckenabschnitt sa: streckenabschnitte)
 			{
-				str.append("\n");
-				str.append(sa.toXML(indent+"  "));
+				xml.add(sa.toXML(indent+"  "));
 			}
-			str.append("\n"+indent);
 		}
 		
-		str.append("</laufweg>");
-		return str.toString();
+		xml.add(indent+"</laufweg>");
+		return xml.toString();
 	}
 }

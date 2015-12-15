@@ -1,6 +1,7 @@
 package de.stsFanGruppe.templatebuilder.strecken;
 
 import java.util.Collection;
+import java.util.StringJoiner;
 import de.stsFanGruppe.tools.FirstLastLinkedList;
 import de.stsFanGruppe.tools.FirstLastList;
 import de.stsFanGruppe.tools.NullTester;
@@ -80,19 +81,18 @@ public class Streckenabschnitt
 	}
 	public String toXML(String indent)
 	{
-		StringBuilder str = new StringBuilder(indent+"<streckenabschnitt name=\""+getName()+"\">");
+		StringJoiner xml = new StringJoiner("\n");
+		xml.add(indent+"<streckenabschnitt name=\""+getName()+"\">");
 		
 		if(!strecken.isEmpty())
 		{
 			for(Strecke s: strecken)
 			{
-				str.append("\n");
-				str.append(s.toXML(indent+"  "));
+				xml.add(s.toXML(indent+"  "));
 			}
-			str.append("\n"+indent);
 		}
 		
-		str.append("</streckenabschnitt>");
-		return str.toString();
+		xml.add(indent+"</streckenabschnitt>");
+		return xml.toString();
 	}
 }

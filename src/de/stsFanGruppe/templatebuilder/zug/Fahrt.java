@@ -3,6 +3,7 @@ package de.stsFanGruppe.templatebuilder.zug;
 import java.util.Collection;
 import java.util.NavigableSet;
 import java.util.NoSuchElementException;
+import java.util.StringJoiner;
 import java.util.TreeSet;
 import de.stsFanGruppe.tools.NullTester;
 
@@ -102,28 +103,26 @@ public class Fahrt
 	}
 	public String toXML(String indent)
 	{
-		StringBuilder str = new StringBuilder(indent+"<fahrt linie=\""+linie.getName()+"\">");
-		String newLine = "\n"+indent+"  ";
+		StringJoiner xml = new StringJoiner("\n");
+		xml.add(indent+"<fahrt linie=\""+linie.getName()+"\">");
 		
 		if(!fahrplanhalte.isEmpty())
 		{
-			str.append(newLine+"<fahrplanhalte>");
+			xml.add(indent+"  <fahrplanhalte>");
 			
 			for(Fahrplanhalt fh: fahrplanhalte)
 			{
-				str.append("\n");
-				str.append(fh.toXML(indent+"  "+"  "));
+				xml.add(fh.toXML(indent+"  "+"  "));
 			}
 			
-			str.append(newLine+"</fahrplanhalte>");
+			xml.add(indent+"  </fahrplanhalte>");
 		}
 		else
 		{
-			str.append(newLine+"<fahrplanhalte />");
+			xml.add(indent+"  <fahrplanhalte />");
 		}
 		
-		str.append("\n"+indent);
-		str.append("</fahrt>");
-		return str.toString();
+		xml.add(indent+"</fahrt>");
+		return xml.toString();
 	}
 }

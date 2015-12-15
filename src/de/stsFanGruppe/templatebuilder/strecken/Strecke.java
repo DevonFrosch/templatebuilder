@@ -1,5 +1,6 @@
 package de.stsFanGruppe.templatebuilder.strecken;
 
+import java.util.StringJoiner;
 import de.stsFanGruppe.tools.NullTester;
 
 /**
@@ -111,22 +112,24 @@ public class Strecke
 	}
 	public String toXML(String indent)
 	{
-		StringBuilder str = new StringBuilder(indent+"<strecke name=\""+getName()+"\" anzahlGleise=\""+anzahlGleise+"\">");
-		String newLine = "\n"+indent+"  ";
+		StringJoiner xml = new StringJoiner("\n");
+		xml.add(indent+"<strecke name=\""+getName()+"\" anzahlGleise=\""+anzahlGleise+"\">");
 		
 		if(ende != null)
 		{
-			str.append(newLine+"<verbindung typ=\"anfang\">\n"+anfang.toXML(indent+"    ")+newLine+"</verbindung>");
+			xml.add(indent+"  <verbindung typ=\"anfang\">");
+			xml.add(anfang.toXML(indent+"    "));
+			xml.add(indent+"  </verbindung>");
 		}
 		
 		if(ende != null)
 		{
-			str.append(newLine+"<verbindung typ=\"ende\">\n"+ende.toXML(indent+"    ")+newLine+"</verbindung>");
+			xml.add(indent+"  <verbindung typ=\"ende\">");
+			xml.add(ende.toXML(indent+"    "));
+			xml.add(indent+"  </verbindung>");
 		}
 		
-		str.append("\n"+indent);
-		
-		str.append("</strecke>");
-		return str.toString();
+		xml.add(indent+"</strecke>");
+		return xml.toString();
 	}
 }

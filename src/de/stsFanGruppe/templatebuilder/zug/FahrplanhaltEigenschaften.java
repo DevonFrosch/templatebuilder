@@ -1,7 +1,6 @@
 package de.stsFanGruppe.templatebuilder.zug;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.StringJoiner;
 
 public class FahrplanhaltEigenschaften
 {
@@ -70,31 +69,28 @@ public class FahrplanhaltEigenschaften
 	
 	public String toString()
 	{
-		StringBuilder str = new StringBuilder("Fahrplanhalt-Eigenschaften { ");
+		StringJoiner str = new StringJoiner(", ", "Fahrplanhalt-Eigenschaften { ", " }");
 		
-		List<String> opts = new LinkedList<>();
 		if(hasDurchfahrt)
 		{
-			opts.add("fährt durch");
+			str.add("fährt durch");
 		}
 		if(hasRichtungswechsel)
 		{
-			opts.add("ändert Richtung");
+			str.add("ändert Richtung");
 		}
 		if(hasNamenswechsel)
 		{
 			if(namenswechsel != null)
 			{
-				opts.add("ändert Name zu "+namenswechsel.getName());
+				str.add("ändert Name zu "+namenswechsel.getName());
 			}
 			else
 			{
-				opts.add("ändert Name (kein Ziel)");
+				str.add("ändert Name (kein Ziel)");
 			}
 		}
-		str.append(String.join(", ", (String[]) opts.toArray()));
 		
-		str.append(" }");
 		return str.toString();
 	}
 	public String toXML()
@@ -103,29 +99,28 @@ public class FahrplanhaltEigenschaften
 	}
 	public String toXML(String indent)
 	{
-		StringBuilder str = new StringBuilder(indent+"<fahrplanhaltEigenschaften");
+		StringJoiner xml = new StringJoiner(" ", indent+"<fahrplanhaltEigenschaften", " />");
 		
 		if(hasDurchfahrt)
 		{
-			str.append(" durchfahrt=\"true\"");
+			xml.add("durchfahrt=\"true\"");
 		}
 		if(hasRichtungswechsel)
 		{
-			str.append(" richtungswechsel=\"true\"");
+			xml.add("richtungswechsel=\"true\"");
 		}
 		if(hasNamenswechsel)
 		{
 			if(namenswechsel != null)
 			{
-				str.append(" namenswechsel=\""+namenswechsel.getName()+"\"");
+				xml.add("namenswechsel=\""+namenswechsel.getName()+"\"");
 			}
 			else
 			{
-				str.append(" namenswechsel=\"null\"");
+				xml.add("namenswechsel=\"null\"");
 			}
 		}
 		
-		str.append(" />");
-		return str.toString();
+		return xml.toString();
 	}
 }

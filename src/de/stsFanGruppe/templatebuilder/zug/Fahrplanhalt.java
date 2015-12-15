@@ -1,6 +1,7 @@
 package de.stsFanGruppe.templatebuilder.zug;
 
 import java.util.Comparator;
+import java.util.StringJoiner;
 import de.stsFanGruppe.templatebuilder.strecken.Gleisabschnitt;
 import de.stsFanGruppe.tools.NullTester;
 
@@ -128,13 +129,11 @@ public class Fahrplanhalt implements Comparable<Fahrplanhalt>
 	}
 	public String toXML(String indent)
 	{
-		StringBuilder str = new StringBuilder();
-		
-		str.append(indent+"<fahrplanhalt gleisabschnitt=\""+gleisabschnitt.getName()+"\" ankunft=\""+ankunft+"\" abfahrt=\""+abfahrt+"\">\n");
-		str.append(eigenschaften.toXML(indent+"  ")+"\n");
-		str.append(indent+"</fahrplanhalt>");
-		
-		return str.toString();
+		StringJoiner xml = new StringJoiner("\n");
+		xml.add(indent+"<fahrplanhalt gleisabschnitt=\""+gleisabschnitt.getName()+"\" ankunft=\""+ankunft+"\" abfahrt=\""+abfahrt+"\">");
+		xml.add(eigenschaften.toXML(indent+"  "));
+		xml.add(indent+"</fahrplanhalt>");
+		return xml.toString();
 	}
 	
 	/**
