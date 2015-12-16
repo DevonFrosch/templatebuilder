@@ -134,9 +134,9 @@ public class BildfahrplanGUI extends JPanel
 					
 					String name = fahrt.getName();
 					
-					if(!config.getZeigeZugnamenKommentare())
+					if(!config.getZeigeZugnamenKommentare() && name.indexOf('%') >= 0)
 					{
-						// entferne alles ab dem ersten %
+						// entferne alles ab dem ersten %, falls vorhanden
 						name = name.substring(0, name.indexOf('%'));
 					}
 					
