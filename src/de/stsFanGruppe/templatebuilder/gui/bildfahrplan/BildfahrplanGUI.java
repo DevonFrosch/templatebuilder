@@ -132,7 +132,15 @@ public class BildfahrplanGUI extends JPanel
 					double an = fh.getAnkunft();
 					double kmAn = streckenKm.get(fh.getGleisabschnitt().getParent().getParent());
 					
-					drawLine(g, kmAb, ab, kmAn, an, fahrt.getName());
+					String name = fahrt.getName();
+					
+					if(!config.getZeigeZugnamenKommentare())
+					{
+						// entferne alles ab dem ersten %
+						name = name.substring(0, name.indexOf('%'));
+					}
+					
+					drawLine(g, kmAb, ab, kmAn, an, name);
 				}
 				
 				// für nächsten Eintrag
