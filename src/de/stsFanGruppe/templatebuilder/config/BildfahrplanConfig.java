@@ -113,11 +113,11 @@ public class BildfahrplanConfig
 				this.zeigeZugnamen = 2;
 		}
 	}
-	public void setZugnamenKommentare(boolean zeigeZugnamenKommentare)
+	public void setZeigeZugnamenKommentare(boolean zeigeZugnamenKommentare)
 	{
 		this.zeigeZugnamenKommentare = zeigeZugnamenKommentare;
 	}
-	public boolean getZugnamenKommentare()
+	public boolean getZeigeZugnamenKommentare()
 	{
 		return zeigeZugnamenKommentare;
 	}

@@ -42,6 +42,11 @@ public class BildfahrplanSettingsGUIController
 	{
 		return config.getZeigeZugnamen();
 	}
+	public boolean getZeigeZugnamenKommentare()
+	{
+		return config.getZeigeZugnamenKommentare();
+	}
+	
 	public void actionButton(ActionEvent event)
 	{
 		assert config != null;
@@ -98,6 +103,9 @@ public class BildfahrplanSettingsGUIController
 				}
 				
 				config.setZeigeZugnamen(gui.rdbtngrpZeigeZugnamen.getSelection().getActionCommand());
+				
+				// ZugnamenKommentare
+				config.setZeigeZugnamenKommentare(gui.chckbxZugnamenKommentare.isSelected());
 				
 				// Apply: Fenster nicht schlieﬂen
 				if(event.getActionCommand() == "Apply")

@@ -224,7 +224,7 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 				{
 					chckbxZugnamenKommentare = new JCheckBox("Ignoriere Kommentare in Zugnamen");
 					chckbxZugnamenKommentare.setToolTipText("Kommentare sind alles ab dem ersten %-Zeichen");
-					chckbxZugnamenKommentare.setSelected(true);
+					chckbxZugnamenKommentare.setSelected(controller.getZeigeZugnamenKommentare());
 					panel.add(chckbxZugnamenKommentare, "4, 10");
 				}
 			}
