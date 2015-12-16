@@ -222,7 +222,7 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 					rdbtngrpZeigeZugnamen.setSelected(rds[controller.getZeigeZugnamen()].getModel(), true);
 				}
 				{
-					chckbxZugnamenKommentare = new JCheckBox("Ignoriere Kommentare in Zugnamen");
+					chckbxZugnamenKommentare = new JCheckBox("Zeige Kommentare in Zugnamen");
 					chckbxZugnamenKommentare.setToolTipText("Kommentare sind alles ab dem ersten %-Zeichen");
 					chckbxZugnamenKommentare.setSelected(controller.getZeigeZugnamenKommentare());
 					panel.add(chckbxZugnamenKommentare, "4, 10");
