@@ -22,7 +22,6 @@ public class BildfahrplanGUI extends JPanel
 	
 	protected double diffKm;
 	
-	protected boolean changed = true;
 	protected boolean paint = true;
 	protected boolean firstPaint = true;
 	
@@ -82,7 +81,6 @@ public class BildfahrplanGUI extends JPanel
 		}
 		
 		this.fahrten.add(fahrt);
-		this.changed = true;
 	}
 	public void zeichneFahrten(Collection<? extends Fahrt> fahrten)
 	{
@@ -105,11 +103,13 @@ public class BildfahrplanGUI extends JPanel
 		// wir nehmen mal an, dass wir Graphics2D haben, sonst wird's schwierig...
 		Graphics2D g = (Graphics2D) graphics;
 		
+		// Antialiasing für Texte an
 		System.setProperty("swing.aatext", "true");
 		System.setProperty("awt.useSystemAAFontSettings", "lcd");
 		
 		if(firstPaint)
 		{
+			// Farbe setzten
 			firstPaint = false;
 			g.setColor(Color.BLACK);
 		}
@@ -117,6 +117,7 @@ public class BildfahrplanGUI extends JPanel
 		
 		if(!paint || this.streckenabschnitt == null || this.fahrten == null || streckenKm == null)
 		{
+			// nichts zu tun
 			return;
 		}
 		
@@ -140,7 +141,6 @@ public class BildfahrplanGUI extends JPanel
 				kmAb = streckenKm.get(fh.getGleisabschnitt().getParent().getParent()).doubleValue();
 			}
 		}
-		changed = false;
 	}
 	
 	protected void drawLine(Graphics2D g, double kmAb, double ab, double kmAn, double an, String beschriftung)
@@ -226,7 +226,6 @@ public class BildfahrplanGUI extends JPanel
 		streckenKm = new HashMap<>();
 		fahrten = null;
 		diffKm = -1;
-		changed = true;
 		firstPaint = true;
 	}
 	
