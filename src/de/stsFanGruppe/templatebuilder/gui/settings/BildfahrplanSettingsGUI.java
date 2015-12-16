@@ -25,6 +25,7 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 	JCheckBox chckbxAuto;
 	JTextField inputSchachtelung;
 	ButtonGroup rdbtngrpZeigeZugnamen;
+	JCheckBox chckbxZugnamenKommentare;
 	
 	/**
 	 * Launch the application.
@@ -219,6 +220,12 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 					panel_1.add(rds[1]);
 					
 					rdbtngrpZeigeZugnamen.setSelected(rds[controller.getZeigeZugnamen()].getModel(), true);
+				}
+				{
+					chckbxZugnamenKommentare = new JCheckBox("Zeige Kommentare in Zugnamen");
+					chckbxZugnamenKommentare.setToolTipText("Kommentare sind alles ab dem ersten %-Zeichen");
+					chckbxZugnamenKommentare.setSelected(controller.getZeigeZugnamenKommentare());
+					panel.add(chckbxZugnamenKommentare, "4, 10");
 				}
 			}
 			// TODO entfernen, wenn Tab Allgemein vorhanden ist
