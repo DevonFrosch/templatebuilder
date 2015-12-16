@@ -20,9 +20,10 @@ public class BildfahrplanConfig
 	protected double minZeit = 360;
 	protected double maxZeit = 1260;
 	protected boolean autoSize = true;
+	protected int schachtelung = 24;
 	
 	protected int zeigeZugnamen = 2;
-	protected int schachtelung = 24;
+	protected boolean zeigeZugnamenKommentare = true;
 	
 	public BildfahrplanConfig(double minZeit, double maxZeit)
 	{
@@ -111,6 +112,14 @@ public class BildfahrplanConfig
 			default:
 				this.zeigeZugnamen = 2;
 		}
+	}
+	public void setZugnamenKommentare(boolean zeigeZugnamenKommentare)
+	{
+		this.zeigeZugnamenKommentare = zeigeZugnamenKommentare;
+	}
+	public boolean getZugnamenKommentare()
+	{
+		return zeigeZugnamenKommentare;
 	}
 	public int getSchachtelung()
 	{
