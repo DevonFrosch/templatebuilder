@@ -122,7 +122,7 @@ public class BildfahrplanGUI extends JPanel
 		
 		/**
 		 * Zeichnet die Senkrechten Linien bei jeder Betriebstelle. Beide X-Koordinaten einer Betriebsstelle sind identisch.
-		 * Der 1. Y-Koordinat entspricht BildfahrplanConfig.minZeit.
+		 * Die 1. Y-Koordinat entspricht BildfahrplanConfig.minZeit.
 		 * Der 2. Y-Koordinat entspricht BildfahrplanConfig.maxZeit.
 		 */
 		for(Betriebsstelle bs: streckenabschnitt.getBetriebsstellen())
@@ -214,7 +214,7 @@ public class BildfahrplanGUI extends JPanel
 		
 		// Koordinatensystem zurücksetzen
 		g.setTransform(alt);
-	}
+	}	
 	protected int getZeitPos(double zeit)
 	{
 		assert config != null;
