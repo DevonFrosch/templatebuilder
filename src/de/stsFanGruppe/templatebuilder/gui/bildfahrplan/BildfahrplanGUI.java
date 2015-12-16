@@ -120,6 +120,21 @@ public class BildfahrplanGUI extends JPanel
 			return;
 		}
 		
+		/**
+		 * Zeichnet die Senkrechten Linien bei jeder Betriebstelle. Beide X-Koordinaten einer Betriebsstelle sind identisch.
+		 * Der 1. Y-Koordinat entspricht BildfahrplanConfig.minZeit.
+		 * Der 2. Y-Koordinat entspricht BildfahrplanConfig.maxZeit.
+		 */
+		for(Betriebsstelle bs: streckenabschnitt.getBetriebsstellen())
+		{
+			double minZeit = config.getMinZeit();
+			double maxZeit = config.getMaxZeit();
+			
+			double km = bs.getMaxKm();
+			
+			drawLine(g, km, minZeit, km, maxZeit, null);
+		}			
+		
 		for(Fahrt fahrt: fahrten)
 		{
 			double ab = -1;
@@ -147,7 +162,6 @@ public class BildfahrplanGUI extends JPanel
 	{
 		assert config != null;
 		assert g != null;
-		assert beschriftung != null;
 		
 		if(ab < config.getMinZeit() || an > config.getMaxZeit())
 		{
@@ -166,7 +180,7 @@ public class BildfahrplanGUI extends JPanel
 		// Linie zeichnen
 		g.drawLine(x1, y1, x2, y2);
 		
-		if(config.getZeigeZugnamen() == 0)
+		if(config.getZeigeZugnamen() == 0 && beschriftung == null)
 		{
 			// keine Zugnamen
 			return;
