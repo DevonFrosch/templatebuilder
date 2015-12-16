@@ -12,7 +12,7 @@ import de.stsFanGruppe.tools.FirstLastList;
 import de.stsFanGruppe.tools.NullTester;
 import de.stsFanGruppe.tools.TimeFormater;
 
-public class JTrainGraphImporter implements Importer
+public class JTrainGraphImporter
 {
 	public Streckenabschnitt importStreckenabschnitt(InputStream input) throws ImportException
 	{

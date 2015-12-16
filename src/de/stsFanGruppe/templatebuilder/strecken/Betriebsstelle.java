@@ -9,18 +9,30 @@ import de.stsFanGruppe.tools.NullTester;
 public class Betriebsstelle
 {	
 	protected String name;
+	protected String ds100;
 	protected FirstLastList<Gleis> gleise = new FirstLastLinkedList<>();
-	
+
+	public Betriebsstelle(String name, String ds100, Collection<? extends Gleis> gleise)
+	{
+		this(name, ds100);
+		this.addGleise(gleise);
+	}
 	public Betriebsstelle(String name, Collection<? extends Gleis> gleise)
 	{
 		this(name);
 		this.addGleise(gleise);
 	}
+	public Betriebsstelle(String name, String ds100)
+	{
+		this(name);
+		this.ds100 = ds100;
+	}
 	public Betriebsstelle(String name)
 	{
 		this.setName(name);
+		this.ds100 = null;
 	}
-	
+
 	public String getName()
 	{
 		return name;
@@ -29,6 +41,20 @@ public class Betriebsstelle
 	{
 		NullTester.test(name);
 		this.name = name;
+	}
+	/**
+	 * Kann null sein.
+	 */
+	public String getDS100()
+	{
+		return ds100;
+	}
+	/**
+	 * Darf null sein.
+	 */
+	public void setDS100(String ds100)
+	{
+		this.ds100 = ds100;
 	}
 	public boolean hasGleise()
 	{
@@ -68,16 +94,24 @@ public class Betriebsstelle
 
 	public double getMinKm()
 	{
+		if(gleise.isEmpty())
+		{
+			throw new IllegalStateException("Keine Gleise vorhanden.");
+		}
 		return gleise.stream().min((a,b) -> Double.compare(a.getMinKm(), b.getMinKm())).get().getMinKm();
 	}
 	public double getMaxKm()
 	{
+		if(gleise.isEmpty())
+		{
+			throw new IllegalStateException("Keine Gleise vorhanden.");
+		}
 		return gleise.stream().min((a,b) -> Double.compare(a.getMaxKm(), b.getMaxKm())).get().getMaxKm();
 	}
 	
 	public String toString()
 	{
-		return "Betriebsstelle "+getName()+" { "+gleise.size()+" Gleise }";
+		return "Betriebsstelle "+getName()+" ("+getDS100()+" { "+gleise.size()+" Gleise }";
 	}
 	public String toXML()
 	{
@@ -86,7 +120,14 @@ public class Betriebsstelle
 	public String toXML(String indent)
 	{
 		StringJoiner xml = new StringJoiner("\n");
-		xml.add(indent+"<betriebsstelle name=\""+getName()+"\">");
+		if(ds100 != null)
+		{
+			xml.add(indent+"<betriebsstelle name=\""+getName()+"\" ds100=\""+getDS100()+"\">");	
+		}
+		else
+		{
+			xml.add(indent+"<betriebsstelle name=\""+getName()+"\">");	
+		}
 		
 		if(!gleise.isEmpty())
 		{
@@ -98,5 +139,18 @@ public class Betriebsstelle
 		
 		xml.add(indent+"</betriebsstelle>");
 		return xml.toString();
+	}
+	public boolean equals(Object other)
+	{
+		if(other == null)
+		{
+			return false;
+		}
+		Betriebsstelle o = (Betriebsstelle) other;
+		if(this.ds100 != null && o.ds100 != null)
+		{
+			return this.ds100 == o.ds100;
+		}
+		return this.name == o.name;
 	}
 }

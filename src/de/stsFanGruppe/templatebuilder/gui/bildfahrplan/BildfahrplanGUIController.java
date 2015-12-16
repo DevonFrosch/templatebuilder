@@ -90,6 +90,15 @@ public class BildfahrplanGUIController
 		repaint();
 	}
 	
+	public Streckenabschnitt getStreckenabschnitt()
+	{
+		return gui.streckenabschnitt;
+	}
+	public Set<Fahrt> getFahrten()
+	{
+		return gui.fahrten;
+	}
+	
 	// ActionHandler
 	public void menuImportJTG()
 	{

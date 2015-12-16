@@ -6,21 +6,19 @@ import de.stsFanGruppe.tools.FirstLastLinkedList;
 import de.stsFanGruppe.tools.FirstLastList;
 import de.stsFanGruppe.tools.NullTester;
 
-public class Kursbuchstrecke
+public class Bildfahrplanstrecke
 {	
 	protected String name;
-	protected String nummer;
 	protected FirstLastList<Streckenabschnitt> streckenabschnitte = new FirstLastLinkedList<>();
 	
-	public Kursbuchstrecke(String name, String nummer, Collection<Streckenabschnitt> streckenabschnitte)
+	public Bildfahrplanstrecke(String name, Collection<Streckenabschnitt> streckenabschnitte)
 	{
-		this(name, nummer);
+		this(name);
 		this.setStreckenabschnitte(streckenabschnitte);
 	}
-	public Kursbuchstrecke(String name, String nummer)
+	public Bildfahrplanstrecke(String name)
 	{
 		this.setName(name);
-		this.setNummer(nummer);
 	}
 	
 	public String getName()
@@ -31,15 +29,6 @@ public class Kursbuchstrecke
 	{
 		NullTester.test(name);
 		this.name = name;
-	}
-	public String getNummer()
-	{
-		return nummer;
-	}
-	public void setNummer(String nummer)
-	{
-		NullTester.test(nummer);
-		this.nummer = nummer;
 	}
 	public boolean hasStreckenabschnitte()
 	{
@@ -72,7 +61,7 @@ public class Kursbuchstrecke
 	
 	public String toString()
 	{
-		return "Kursbuchstrecke "+getName()+" ("+getNummer()+") { "+streckenabschnitte.size()+" Gleise }";
+		return "Bildfahrplanstrecke "+getName()+" { "+streckenabschnitte.size()+" Gleise }";
 	}
 	public String toXML()
 	{
@@ -81,7 +70,7 @@ public class Kursbuchstrecke
 	public String toXML(String indent)
 	{
 		StringJoiner xml = new StringJoiner("\n");
-		xml.add(indent+"<kursbuchstrecke name=\""+getName()+"\" nummer=\""+getNummer()+"\">");
+		xml.add(indent+"<bildfahrplanstrecke name=\""+getName()+"\">");
 		
 		if(!streckenabschnitte.isEmpty())
 		{
@@ -91,7 +80,7 @@ public class Kursbuchstrecke
 			}
 		}
 		
-		xml.add(indent+"</kursbuchstrecke>");
+		xml.add(indent+"</bildfahrplanstrecke>");
 		return xml.toString();
 	}
 }

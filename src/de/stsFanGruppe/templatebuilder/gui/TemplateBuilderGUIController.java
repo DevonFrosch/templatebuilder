@@ -4,17 +4,17 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Set;
 import java.util.StringJoiner;
 import javax.swing.JTabbedPane;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanConfig;
-import de.stsFanGruppe.templatebuilder.external.ImportException;
-import de.stsFanGruppe.templatebuilder.external.jtraingraph.JTrainGraphImporter;
+import de.stsFanGruppe.templatebuilder.external.*;
+import de.stsFanGruppe.templatebuilder.external.jtraingraph.*;
 import de.stsFanGruppe.templatebuilder.gui.TemplateBuilderGUI;
 import de.stsFanGruppe.templatebuilder.gui.bildfahrplan.BildfahrplanGUIController;
-import de.stsFanGruppe.templatebuilder.gui.external.JTrainGraphImportGUI;
-import de.stsFanGruppe.templatebuilder.gui.settings.BildfahrplanSettingsGUI;
-import de.stsFanGruppe.templatebuilder.gui.settings.BildfahrplanSettingsGUIController;
+import de.stsFanGruppe.templatebuilder.gui.external.*;
+import de.stsFanGruppe.templatebuilder.gui.settings.*;
 import de.stsFanGruppe.templatebuilder.strecken.Streckenabschnitt;
 import de.stsFanGruppe.templatebuilder.zug.Fahrt;
 import de.stsFanGruppe.tools.NullTester;
@@ -95,18 +95,21 @@ public class TemplateBuilderGUIController
 						try
 						{
 							JTrainGraphImporter importer = new JTrainGraphImporter();
+							
 							InputStream input = new java.io.FileInputStream(ergebnis.getPfad());
 							Streckenabschnitt streckenabschnitt = importer.importStreckenabschnitt(input);
 							assert streckenabschnitt != null;
 							assert bildfahrplanController != null;
 							
-							
 							bildfahrplanController.ladeStreckenabschnitt(streckenabschnitt);
 							
-							assert ergebnis.getPfad() != null;
-							input = new java.io.FileInputStream(ergebnis.getPfad());
-							Set<Fahrt> fahrten = importer.importFahrten(input, streckenabschnitt, ergebnis.getLinie());
-							bildfahrplanController.ladeZüge(fahrten);
+							if(ergebnis.importZuege())
+							{
+								assert ergebnis.getPfad() != null;
+								input = new java.io.FileInputStream(ergebnis.getPfad());
+								Set<Fahrt> fahrten = importer.importFahrten(input, streckenabschnitt, ergebnis.getLinie());
+								bildfahrplanController.ladeZüge(fahrten);
+							}
 						}
 						catch(FileNotFoundException e)
 						{
@@ -115,6 +118,46 @@ public class TemplateBuilderGUIController
 						catch(ImportException e)
 						{
 							gui.errorMessage("Fehler beim Import!");
+							e.printStackTrace();
+						}
+					}
+				});
+				break;
+			case "exportToJTG":
+				JTrainGraphExportGUI jtge = new JTrainGraphExportGUI((ergebnis) -> {
+					assert bildfahrplanController != null;
+					assert ergebnis != null;
+					
+					if(ergebnis.success())
+					{
+						try
+						{
+							JTrainGraphExporter exporter = new JTrainGraphExporter(ergebnis.useDS100());
+							OutputStream output = new java.io.FileOutputStream(ergebnis.getPfad());
+							
+							Streckenabschnitt streckenabschnitt = bildfahrplanController.getStreckenabschnitt();
+							
+							assert streckenabschnitt != null;
+							
+							Set<Fahrt> fahrten = null;
+							if(ergebnis.exportZuege())
+							{
+								fahrten = bildfahrplanController.getFahrten();
+								exporter.exportFahrten(output, streckenabschnitt, fahrten);
+							}
+							else
+							{
+								exporter.exportStreckenabschnitt(output, streckenabschnitt);
+							}
+							
+						}
+						catch(FileNotFoundException e)
+						{
+							gui.errorMessage("Datei nicht gefunden!");
+						}
+						catch(ExportException e)
+						{
+							gui.errorMessage("Fehler beim Export!");
 							e.printStackTrace();
 						}
 					}

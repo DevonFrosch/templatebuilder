@@ -6,6 +6,13 @@ import de.stsFanGruppe.tools.FirstLastLinkedList;
 import de.stsFanGruppe.tools.FirstLastList;
 import de.stsFanGruppe.tools.NullTester;
 
+/**
+ * Eine Sammlung von Strecken ohne Abzweige.
+ * 
+ * Ein Streckenabschnitt darf an den Zwischenpunkten an keine anderen Strecken grenzen. Ist dies der Fall, muss der Streckenabschnitt an der Stelle geteilt werden.
+ * 
+ * Weiterhin dürfen keine Sprünge enthalten sein. Sind Sprünge vorhanden, verhalten sich einige Funktionen undefiniert.
+ */
 public class Streckenabschnitt
 {	
 	protected String name;
@@ -60,7 +67,7 @@ public class Streckenabschnitt
 		NullTester.test(strecke);
 		return this.strecken.remove(strecke);
 	}
-
+	
 	public double getMinKm()
 	{
 		return strecken.stream().min((a,b) -> Double.compare(a.getMinKm(), b.getMinKm())).get().getMinKm();
@@ -68,6 +75,23 @@ public class Streckenabschnitt
 	public double getMaxKm()
 	{
 		return strecken.stream().max((a,b) -> Double.compare(a.getMaxKm(), b.getMaxKm())).get().getMaxKm();
+	}
+	public FirstLastList<Betriebsstelle> getBetriebsstellen()
+	{
+		FirstLastList<Betriebsstelle> bs = new FirstLastLinkedList<>();
+		
+		if(strecken.isEmpty())
+		{
+			return bs;
+		}
+		
+		bs.add(strecken.first().anfang);
+		for(Strecke s: strecken)
+		{
+			bs.add(s.ende);
+		}
+		
+		return bs;
 	}
 	
 	// String-Produkte

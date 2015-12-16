@@ -96,6 +96,20 @@ public class Strecke
 		return Double.max(anfang.getMaxKm(), ende.getMaxKm());
 	}
 	
+	/**
+	 * Vergleicht diese Strecke mit einer anderen Strecke anhand ihrer Namen.
+	 * @param other Die andere Strecke.
+	 * @return true, wenn other nicht null ist und den selben Namen hat.
+	 */
+	public boolean equals(Object other)
+	{
+		if(other == null)
+		{
+			return false;
+		}
+		Strecke o = (Strecke) other;
+		return this.name == o.name; 
+	}
 	public String toString()
 	{
 		StringBuilder str = new StringBuilder("Strecke "+getName()+" { Anfang: ");

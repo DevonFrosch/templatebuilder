@@ -24,7 +24,6 @@ public class JTrainGraphImportGUI extends JDialog implements GUI
 	JButton linieButton;
 	JLabel lblPfadZurDatei;
 	final JLabel lblLinie = new JLabel("Linie");
-	JCheckBox chckbxStreckenImportieren;
 	JCheckBox chckbxZgeImportieren;
 	
 	JFileChooser fileChooser = new JFileChooser();
@@ -88,21 +87,14 @@ public class JTrainGraphImportGUI extends JDialog implements GUI
 		pfadButton.addActionListener((ActionEvent arg0) -> dateiChooser(arg0));
 		contentPanel.add(pfadButton, "6, 2, right, default");
 		{
-			chckbxStreckenImportieren = new JCheckBox("Strecken importieren");
-			chckbxStreckenImportieren.setEnabled(false);
-			chckbxStreckenImportieren.setSelected(true);
-			contentPanel.add(chckbxStreckenImportieren, "2, 4, left, default");
-		}
-		{
 			chckbxZgeImportieren = new JCheckBox("Z\u00FCge importieren");
-			chckbxZgeImportieren.setEnabled(false);
 			chckbxZgeImportieren.setSelected(true);
-			contentPanel.add(chckbxZgeImportieren, "2, 6, left, default");
+			contentPanel.add(chckbxZgeImportieren, "2, 4, left, default");
 		}
-		contentPanel.add(lblLinie, "2, 8, fill, fill");
+		contentPanel.add(lblLinie, "2, 6, fill, fill");
 		{
 			linieInput = new JTextField();
-			contentPanel.add(linieInput, "4, 8, fill, default");
+			contentPanel.add(linieInput, "4, 6, fill, default");
 			linieInput.setColumns(10);
 			// TODO Testinput entfernen wenn Linienmanagement fertig ist
 			linieInput.setText("1");
@@ -110,7 +102,7 @@ public class JTrainGraphImportGUI extends JDialog implements GUI
 		}
 		{
 			linieButton = new JButton("...");
-			contentPanel.add(linieButton, "6, 8, right, default");
+			contentPanel.add(linieButton, "6, 6, right, default");
 			linieButton.setEnabled(false);
 		}
 		{
@@ -168,13 +160,21 @@ public class JTrainGraphImportGUI extends JDialog implements GUI
 					errorMessage("Pfad ist leer!");
 					return;
 				}
-				if(linie.trim().isEmpty() && chckbxZgeImportieren.isSelected())
+				
+				if(chckbxZgeImportieren.isSelected())
 				{
-					errorMessage("Linie ist leer!");
-					return;
+					if(linie.trim().isEmpty())
+					{
+						errorMessage("Linie ist leer!");
+						return;
+					}
+					callback.call(new DoneFuture(pfad, new Linie(linie)));
+				}
+				else
+				{
+					callback.call(new DoneFuture(pfad));
 				}
 				
-				callback.call(new DoneFuture(pfad, new Linie(linie)));
 				break;
 			default:
 		}
@@ -189,36 +189,36 @@ public class JTrainGraphImportGUI extends JDialog implements GUI
 	public class DoneFuture
 	{
 		private boolean success;
-		private boolean importStrecke = true;
-		private boolean importZuege = true;
 		
-		private String pfad;
-		private Linie linie;
+		private String pfad = null;
+		private Linie linie = null;
+		private boolean importZuege = false;
 
 		private DoneFuture()
 		{
 			this.success = false;
-			this.pfad = null;
-			this.linie = null;
+		}
+		private DoneFuture(String pfad)
+		{
+			this.success = true;
+			this.pfad = pfad;
+			this.importZuege = false;
 		}
 		private DoneFuture(String pfad, Linie linie)
 		{
 			this.success = true;
 			this.pfad = pfad;
 			this.linie = linie;
+			this.importZuege = true;
 		}
 		
 		public boolean success()
 		{
 			return success;
 		}
-		public boolean importStrecke()
-		{
-			return success && importStrecke;
-		}
 		public boolean importZuege()
 		{
-			return success && importZuege;
+			return importZuege;
 		}
 		public String getPfad()
 		{
