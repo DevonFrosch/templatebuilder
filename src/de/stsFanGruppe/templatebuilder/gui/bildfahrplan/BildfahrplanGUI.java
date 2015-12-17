@@ -180,7 +180,7 @@ public class BildfahrplanGUI extends JPanel
 		// Linie zeichnen
 		g.drawLine(x1, y1, x2, y2);
 		
-		if(config.getZeigeZugnamen() == 0 && beschriftung == null)
+		if(config.getZeigeZugnamen() == 0 || beschriftung == null)
 		{
 			// keine Zugnamen
 			return;
