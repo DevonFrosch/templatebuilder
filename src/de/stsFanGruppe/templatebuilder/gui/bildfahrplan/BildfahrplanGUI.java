@@ -35,7 +35,7 @@ public class BildfahrplanGUI extends JPanel
 		this.controller = controller;
 		controller.setBildfahrplanGUI(this);
 		
-		this.parent = parent;
+		this.parent = parent;		
 	}
 	
 	public void setStreckenabschnitt(Streckenabschnitt streckenabschnitt)
