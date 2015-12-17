@@ -177,9 +177,8 @@ public class TemplateBuilderGUI implements GUI
 		bildfahrplanZeichner = new BildfahrplanGUI(bfpController, this);
 		controller.setBildfahrplanController(bfpController);
 		
-		scrollPane.setColumnHeaderView(new BildfahrplanSpaltenheaderGUI(bfpController));
-		
 		scrollPane.setViewportView(bildfahrplanZeichner);
+		scrollPane.setColumnHeaderView(new BildfahrplanSpaltenheaderGUI(bildfahrplanZeichner));
 		bildfahrplanZeichner.setLayout(null);
 		
 		JToolBar toolBar = new JToolBar();

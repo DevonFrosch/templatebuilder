@@ -3,6 +3,8 @@ package de.stsFanGruppe.templatebuilder.gui.bildfahrplan;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.util.*;
+
+import javax.swing.JComponent;
 import javax.swing.JPanel;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanConfig;
 import de.stsFanGruppe.templatebuilder.gui.TemplateBuilderGUI;
@@ -10,7 +12,7 @@ import de.stsFanGruppe.templatebuilder.strecken.*;
 import de.stsFanGruppe.templatebuilder.zug.*;
 import de.stsFanGruppe.tools.NullTester;
 
-public class BildfahrplanGUI extends JPanel
+public class BildfahrplanGUI extends JComponent
 {
 	protected BildfahrplanConfig config;
 	protected BildfahrplanGUIController controller;
@@ -105,6 +107,9 @@ public class BildfahrplanGUI extends JPanel
 		// wir nehmen mal an, dass wir Graphics2D haben, sonst wird's schwierig...
 		Graphics2D g = (Graphics2D) graphics;
 		
+		// Anti-Aliasing an
+		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		System.setProperty("swing.aatext", "true");
 		System.setProperty("awt.useSystemAAFontSettings", "lcd");
 		
@@ -181,10 +186,6 @@ public class BildfahrplanGUI extends JPanel
 		{
 			return;
 		}
-		
-		// Anti-Aliasing an
-		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		
 		int x1 = getWegPos(kmAb);
 		int y1 = getZeitPos(ab);

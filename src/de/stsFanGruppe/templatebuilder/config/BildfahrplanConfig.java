@@ -2,6 +2,8 @@ package de.stsFanGruppe.templatebuilder.config;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.swing.JComponent;
 import javax.swing.JPanel;
 import de.stsFanGruppe.tools.JSONBuilder;
 import de.stsFanGruppe.tools.NullTester;
@@ -125,12 +127,12 @@ public class BildfahrplanConfig
 	{
 		return (int) ((maxZeit - minZeit) / 60 * hoeheProStunde) + marginTop + marginBottom;
 	}
-	public int zeichnenBreite(JPanel p)
+	public int zeichnenBreite(JComponent p)
 	{
 		assert p != null;
 		return p.getWidth() - marginLeft - marginRight;
 	}
-	public int zeichnenHoehe(JPanel p)
+	public int zeichnenHoehe(JComponent p)
 	{
 		assert p != null;
 		return p.getHeight() - marginTop - marginBottom;

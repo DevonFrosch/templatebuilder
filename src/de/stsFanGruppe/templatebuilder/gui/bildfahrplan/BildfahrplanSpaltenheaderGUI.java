@@ -1,6 +1,7 @@
 package de.stsFanGruppe.templatebuilder.gui.bildfahrplan;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -10,8 +11,6 @@ import java.util.Map;
 
 import javax.swing.JComponent;
 
-import de.stsFanGruppe.templatebuilder.config.BildfahrplanConfig;
-import de.stsFanGruppe.templatebuilder.gui.TemplateBuilderGUI;
 import de.stsFanGruppe.templatebuilder.strecken.Betriebsstelle;
 import de.stsFanGruppe.templatebuilder.strecken.Streckenabschnitt;
 
@@ -20,9 +19,6 @@ import de.stsFanGruppe.templatebuilder.strecken.Streckenabschnitt;
 public class BildfahrplanSpaltenheaderGUI extends JComponent {
 	
 	protected BildfahrplanGUI gui;
-	protected BildfahrplanConfig config;
-	protected BildfahrplanGUIController controller;
-	protected TemplateBuilderGUI parent;
 	
 	protected Streckenabschnitt streckenabschnitt;
 	protected Map<Betriebsstelle, Double> streckenKm;
@@ -36,12 +32,12 @@ public class BildfahrplanSpaltenheaderGUI extends JComponent {
 
 	/**
 	 * Anzeigen der GUI mit einer festen Spaltenanzahl
-	 * @param component
-	 * @param columns
+	 * @param gui
 	 */
-	public BildfahrplanSpaltenheaderGUI(JComponent component)
+	public BildfahrplanSpaltenheaderGUI(BildfahrplanGUI gui)
 	{
-		this.component = component;
+		this.gui = gui;
+		this.setPreferredSize(new Dimension(100, 40));
 	}
 	
 	public void paintComponent(Graphics graphics)
@@ -50,8 +46,13 @@ public class BildfahrplanSpaltenheaderGUI extends JComponent {
 		// wir nehmen mal an, dass wir Graphics2D haben, sonst wird's schwierig...
 		Graphics2D g = (Graphics2D) graphics;
 		
+		// Anti-Aliasing an
+		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		System.setProperty("swing.aatext", "true");
 		System.setProperty("awt.useSystemAAFontSettings", "lcd");
+		
+		g.setBackground(Color.GREEN);
 		
 		if(!paint || this.streckenabschnitt == null || this.streckenKm == null )
 		{
@@ -60,10 +61,11 @@ public class BildfahrplanSpaltenheaderGUI extends JComponent {
 		
 		Boolean ersteLinie = true;
 		double linienVerschiebung = 0;
+		double km = 0; 
 		
 		for(Betriebsstelle bs: streckenabschnitt.getBetriebsstellen())
 		{
-			double km = bs.getMaxKm();
+			km = bs.getMaxKm();
 			
 			if(km != 0 && ersteLinie)
 			{
@@ -71,11 +73,12 @@ public class BildfahrplanSpaltenheaderGUI extends JComponent {
 			}
 			km = km + linienVerschiebung;
 			
-			writeBetriebsstelle(g, km, bs.getName());
+			paintBetriebsstelle(g, km, bs.getName());
 			
 			ersteLinie = false;
-		}	
-		
+		}
+		g.drawLine(0, getHeight() - 1, getWidth(), getHeight() - 1);
+		System.out.println("Höhe: " + getHeight() + "Breite: " + getWidth());
 	}
 	/**
 	 * "Schreibt" den Text in den Header
@@ -83,22 +86,17 @@ public class BildfahrplanSpaltenheaderGUI extends JComponent {
 	 * @param km Die x-Koordinaten, wo der Text hingeschrieben werden soll.
 	 * @param bs Die Bezeichnung der Betriebsstelle.
 	 */
-	protected void writeBetriebsstelle(Graphics2D g, double km, String bs)
+	protected void paintBetriebsstelle(Graphics2D g, double km, String bs)
 	{
-		assert config != null;
+		assert gui != null;
 		assert g != null;
 		
-		// Anti-Aliasing an
-		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-		
-		int x1 = gui.getWegPos(km);
-		int x2 = x1;
-		int y1 = gui.getZeitPos(0);
-		int y2 = y1+5;
+		int x = gui.getWegPos(km);
+		int y1 = this.getHeight();
+		int y2 = y1-5;
 		
 		// Linie zeichnen
-		g.drawLine(x1, y1, x2, y2);
+		g.drawLine(x, y1, x, y2);
 		
 		// Schriftbreite erkennen
 		FontMetrics f = g.getFontMetrics();
@@ -107,11 +105,13 @@ public class BildfahrplanSpaltenheaderGUI extends JComponent {
 		// Koordinatensystem drehen
 		AffineTransform neu = g.getTransform();
 		AffineTransform alt = (AffineTransform)neu.clone(); 
-		neu.translate((x1 + x2) / 2, (y2 + y1) / 2);
-		neu.rotate(Math.atan((1.0 * y2 - y1) / (x2 - x1)));
+		neu.translate(x, (y2 + y1) / 2);
 		g.setTransform(neu);
 		
 		// Text einzeichnen
 		g.drawString(bs, stringWidth / 2, 10);
+		
+		// Koordinatensystem zurücksetzen
+		g.setTransform(alt);
 	}
 }
