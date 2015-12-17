@@ -120,19 +120,33 @@ public class BildfahrplanGUI extends JPanel
 			return;
 		}
 		
-		/**
+		/*
 		 * Zeichnet die Senkrechten Linien bei jeder Betriebstelle. Beide X-Koordinaten einer Betriebsstelle sind identisch.
 		 * Die 1. Y-Koordinat entspricht BildfahrplanConfig.minZeit.
 		 * Der 2. Y-Koordinat entspricht BildfahrplanConfig.maxZeit.
 		 */
+		/**
+		 * @param ersteLinie Nur bei der ersten senkrechten Linie, darf der Wert true sein.
+		 * @param linienVerschiebung Verschiebung der senkrechten Linie zum 0, falls bei der 1. Abfrage bs.getMaxKm() > 0 ist.
+		 */
+		Boolean ersteLinie = true;
+		double linienVerschiebung = 0;
+		
 		for(Betriebsstelle bs: streckenabschnitt.getBetriebsstellen())
 		{
 			double minZeit = config.getMinZeit();
-			double maxZeit = config.getMaxZeit();
-			
+			double maxZeit = config.getMaxZeit();	
 			double km = bs.getMaxKm();
 			
+			if(km != 0 && ersteLinie)
+			{
+				linienVerschiebung = linienVerschiebung - km;	
+			}
+			km = km + linienVerschiebung;
+			
 			drawLine(g, km, minZeit, km, maxZeit, null);
+			
+			ersteLinie = false;
 		}			
 		
 		for(Fahrt fahrt: fahrten)
@@ -153,6 +167,7 @@ public class BildfahrplanGUI extends JPanel
 				// für nächsten Eintrag
 				ab = fh.getAbfahrt();
 				kmAb = streckenKm.get(fh.getGleisabschnitt().getParent().getParent()).doubleValue();
+				System.out.println(kmAb);
 			}
 		}
 		changed = false;
