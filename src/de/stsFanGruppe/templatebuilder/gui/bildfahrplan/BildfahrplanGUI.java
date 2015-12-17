@@ -167,7 +167,6 @@ public class BildfahrplanGUI extends JPanel
 				// für nächsten Eintrag
 				ab = fh.getAbfahrt();
 				kmAb = streckenKm.get(fh.getGleisabschnitt().getParent().getParent()).doubleValue();
-				System.out.println(kmAb);
 			}
 		}
 		changed = false;
