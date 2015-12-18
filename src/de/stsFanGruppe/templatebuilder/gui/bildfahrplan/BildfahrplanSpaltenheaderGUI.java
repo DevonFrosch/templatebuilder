@@ -13,8 +13,6 @@ import de.stsFanGruppe.templatebuilder.config.BildfahrplanConfig;
 import de.stsFanGruppe.templatebuilder.strecken.Betriebsstelle;
 import de.stsFanGruppe.templatebuilder.strecken.Streckenabschnitt;
 
-
-
 public class BildfahrplanSpaltenheaderGUI extends JComponent {
 	
 	protected BildfahrplanGUI gui;
@@ -27,9 +25,6 @@ public class BildfahrplanSpaltenheaderGUI extends JComponent {
 	protected boolean firstPaint = true;
 	protected int stringHeight = 0;
 	
-	JComponent component;
-	int        columns;
-
 	/**
 	 * Anzeigen der GUI mit einer festen Spaltenanzahl
 	 * @param gui
@@ -128,7 +123,6 @@ public class BildfahrplanSpaltenheaderGUI extends JComponent {
 		if(x < stringWidth)
 		{
 			g.drawString(bs, x - offsetX, textY);
-			System.out.println(textY);
 		}
 		else if((stringWidth + x) > gui.getWidth()) 
 		{
