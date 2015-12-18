@@ -75,7 +75,7 @@ public class BildfahrplanZeilenheaderGUI extends JComponent {
 			paintZeiten(g, minZeit);
 			minZeit = minZeit + zeitIntervall;
 		}
-		System.out.println(zeitBreite);
+		System.out.println(minZeit);
 	}
 	/**
 	 * Die Breite wird an Hand der Schriftbreite errechnet in der Methode paintZeiten.
@@ -83,7 +83,7 @@ public class BildfahrplanZeilenheaderGUI extends JComponent {
 	 */
 	public Dimension getPreferredSize()
 	{
-		return new Dimension(zeitBreite, (int) gui.getPreferredSize().getHeight());
+		return new Dimension( 30, (int) gui.getPreferredSize().getHeight());
 	}
 	/**
 	 * "Schreibt" den Text in den Header
@@ -122,6 +122,6 @@ public class BildfahrplanZeilenheaderGUI extends JComponent {
 		g.setTransform(alt);
 		
 		// Text einzeichnen
-		g.drawString(zeitAngabe, x1 , y + stringHeight/2);	
+		g.drawString(zeitAngabe, x1 , y);	
 	}
 }

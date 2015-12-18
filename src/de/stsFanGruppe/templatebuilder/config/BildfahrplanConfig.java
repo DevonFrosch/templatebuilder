@@ -26,7 +26,8 @@ public class BildfahrplanConfig
 	int zeilenAnzahl = 2;
 	
 	//Einstellung für den Bildfahrplanzeilenheader
-	int zeilenHeaderBreite = 100;
+	int zeilenHeaderBreite = 30;
+	int zeitIntervall = 10;
 	
 	protected int hoeheProStunde = 400;
 	protected double minZeit = 360;
@@ -114,6 +115,12 @@ public class BildfahrplanConfig
 	}
 	public int getZeilenHeaderBreite() {
 		return zeilenHeaderBreite;
+	}
+	public int getZeitIntervall() {
+		return zeitIntervall;
+	}
+	public void setZeitIntervall(int zeitIntervall) {
+		this.zeitIntervall = zeitIntervall;
 	}
 	public void setZeilenHeaderBreite(int zeilenHeaderBreite) {
 		this.zeilenHeaderBreite = zeilenHeaderBreite;

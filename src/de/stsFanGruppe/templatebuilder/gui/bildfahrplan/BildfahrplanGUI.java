@@ -135,10 +135,12 @@ public class BildfahrplanGUI extends JComponent
 		Boolean ersteLinie = true;
 		double linienVerschiebung = 0;
 		
+		double minZeit = config.getMinZeit();
+		double maxZeit = config.getMaxZeit();	
+		
+		
 		for(Betriebsstelle bs: streckenabschnitt.getBetriebsstellen())
 		{
-			double minZeit = config.getMinZeit();
-			double maxZeit = config.getMaxZeit();	
 			double km = bs.getMaxKm();
 			
 			if(km != 0 && ersteLinie)
@@ -152,6 +154,24 @@ public class BildfahrplanGUI extends JComponent
 			ersteLinie = false;
 		}			
 		
+		// Waagerechte Linien zeichnen bei den einzelnen Zeiten
+		int zeitIntervall = config.getZeitIntervall();
+
+		int x1 = 5;
+		int x2 = getWidth();
+		int zeit = (int) minZeit;
+
+		if (zeit % 10 != 0) 
+		{
+			zeit = zeit - (zeit % 10);
+		}
+		while (zeit <= maxZeit) 
+		{
+			g.drawLine(x1, getZeitPos(zeit), x2, getZeitPos(zeit));
+			//System.out.println(x1 + ", " + zeit + ", " + x2 + ", " + zeit);
+			zeit = zeit + zeitIntervall;
+		}
+
 		for(Fahrt fahrt: fahrten)
 		{
 			double ab = -1;
@@ -171,7 +191,6 @@ public class BildfahrplanGUI extends JComponent
 						// entferne alles ab dem ersten %, falls vorhanden
 						name = name.substring(0, name.indexOf('%'));
 					}
-					
 					drawLine(g, kmAb, ab, kmAn, an, name);
 				}
 				
