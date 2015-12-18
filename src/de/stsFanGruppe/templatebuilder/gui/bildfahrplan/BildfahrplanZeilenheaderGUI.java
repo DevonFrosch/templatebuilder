@@ -69,7 +69,7 @@ public class BildfahrplanZeilenheaderGUI extends JComponent {
 		int minZeit = (int) config.getMinZeit();
 		int maxZeit = (int) config.getMaxZeit();
 		int zeitIntervall = config.getZeitIntervall();
-		int zeit = (int) minZeit;
+		int zeit = minZeit;
 		
 		if(zeit % 10 != 0){
 			zeit = zeit - (zeit % 10);
@@ -81,12 +81,12 @@ public class BildfahrplanZeilenheaderGUI extends JComponent {
 		}
 	}
 	/**
-	 * Die Breite wird an Hand der Schriftbreite errechnet in der Methode paintZeiten. 
+	 * Die Breite wird aus der Config-Klasse ausgelesen. 
 	 * Die Höhe ist die Höhe der GUI. 
 	 */
 	public Dimension getPreferredSize()
 	{
-		return new Dimension( 32, (int) gui.getPreferredSize().getHeight());
+		return new Dimension( config.getZeilenHeaderBreite(), (int) gui.getPreferredSize().getHeight());
 	}
 	/**
 	 * "Schreibt" den Text in den Header
@@ -103,12 +103,6 @@ public class BildfahrplanZeilenheaderGUI extends JComponent {
 		int x2 = gui.getWidth();
 		int y = gui.getZeitPos(zeit);
 					
-		// Koordinatensystem drehen
-		AffineTransform neu = g.getTransform();
-		AffineTransform alt = (AffineTransform)neu.clone(); 
-		neu.translate((x1 + x2) / 2, (y) / 2);
-		g.setTransform(neu);
-		
 		// Schriftbreite und -höhe erkennen
 		String zeitAngabe = timeFormat.doubleToString(zeit);
 		FontMetrics f = g.getFontMetrics();
@@ -119,10 +113,10 @@ public class BildfahrplanZeilenheaderGUI extends JComponent {
 		stringHeight = f.getHeight();
 		
 		// Linie zeichnen
-		g.drawLine(x1 + stringWidth, y, x2, y);
+		//g.drawLine(x1 + stringWidth, y, x2, y);
 		
 		// Koordinatensystem zurücksetzen
-		g.setTransform(alt);
+		//g.setTransform(alt);
 		
 		// Text einzeichnen
 		g.drawString(zeitAngabe, x1 , y + (stringHeight/3));	
