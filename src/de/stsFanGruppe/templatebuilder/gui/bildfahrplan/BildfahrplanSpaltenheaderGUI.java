@@ -123,11 +123,11 @@ public class BildfahrplanSpaltenheaderGUI extends JComponent {
 				+ (stringHeight/2);
 		
 		// Text einzeichnen
-		/*if(x < stringWidth)
+		if(x < stringWidth)
 		{
 			g.drawString(bs, x - offsetX, textY);
 		}
-		else*/ if((stringWidth + x) > gui.getWidth()) 
+		else if((stringWidth + x) > gui.getWidth()) 
 		{
 			g.drawString(bs, x + offsetX - stringWidth , textY);
 		}

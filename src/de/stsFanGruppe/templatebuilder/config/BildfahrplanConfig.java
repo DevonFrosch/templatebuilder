@@ -27,7 +27,7 @@ public class BildfahrplanConfig
 	int zeilenAnzahl = 2;
 	
 	//Einstellung für den Bildfahrplanzeilenheader
-	int zeilenHeaderBreite = 30;
+	int zeilenHeaderBreite = 32;
 	int zeitIntervall = 10;
 	
 	//Farbeinstellungen

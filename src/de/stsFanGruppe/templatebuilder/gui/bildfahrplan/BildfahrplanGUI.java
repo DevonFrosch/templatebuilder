@@ -155,7 +155,9 @@ public class BildfahrplanGUI extends JComponent
 			ersteLinie = false;
 		}			
 		
-		// Waagerechte Linien zeichnen bei den einzelnen Zeiten
+		/*
+		 *  Zeichnet die waagerechte Linie bei jeder angegebenen Zeit.
+		 */
 		int zeitIntervall = config.getZeitIntervall();
 
 		int x1 = 5;
