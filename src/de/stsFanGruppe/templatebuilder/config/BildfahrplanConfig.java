@@ -25,6 +25,9 @@ public class BildfahrplanConfig
 	int textMarginBottom = 5;
 	int zeilenAnzahl = 2;
 	
+	//Einstellung für den Bildfahrplanzeilenheader
+	int zeilenHeaderBreite = 100;
+	
 	protected int hoeheProStunde = 400;
 	protected double minZeit = 360;
 	protected double maxZeit = 1260;
@@ -108,6 +111,12 @@ public class BildfahrplanConfig
 	public void setZeigeZugnamen(int zeigeZugnamen)
 	{
 		this.zeigeZugnamen = zeigeZugnamen;
+	}
+	public int getZeilenHeaderBreite() {
+		return zeilenHeaderBreite;
+	}
+	public void setZeilenHeaderBreite(int zeilenHeaderBreite) {
+		this.zeilenHeaderBreite = zeilenHeaderBreite;
 	}
 	public void setZeigeZugnamen(String zeigeZugnamen)
 	{
