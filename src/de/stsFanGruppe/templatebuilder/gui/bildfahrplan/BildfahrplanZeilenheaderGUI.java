@@ -1,5 +1,6 @@
 package de.stsFanGruppe.templatebuilder.gui.bildfahrplan;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
@@ -111,12 +112,6 @@ public class BildfahrplanZeilenheaderGUI extends JComponent {
 			zeitBreite = stringWidth;
 		}
 		stringHeight = f.getHeight();
-		
-		// Linie zeichnen
-		//g.drawLine(x1 + stringWidth, y, x2, y);
-		
-		// Koordinatensystem zurücksetzen
-		//g.setTransform(alt);
 		
 		// Text einzeichnen
 		g.drawString(zeitAngabe, x1 , y + (stringHeight/3));	

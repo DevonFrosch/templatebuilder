@@ -171,13 +171,22 @@ public class BildfahrplanGUI extends JComponent
 			zeit = zeit - (zeit % 10);
 		}
 		while (zeit <= maxZeit) 
-		{
+		{	
+			if(zeit % 60 == 0)
+			{
+				g.setStroke(new BasicStroke(3));
+				System.out.println("Breite 3");
+			} else {
+				g.setStroke(new BasicStroke(1));
+				System.out.println("Breite 1");
+			}
 			g.drawLine(x1, getZeitPos(zeit), x2, getZeitPos(zeit));
 			zeit = zeit + zeitIntervall;
 		}
+		//Dicke des Strichs wieder auf 1 setzen
+		g.setStroke(new BasicStroke(1));
 		
 		//Fahrten im Bildfahrplan malen
-		
 		g.setColor(config.getFahrtenFarbe());
 		
 		for(Fahrt fahrt: fahrten)
