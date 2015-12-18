@@ -160,6 +160,8 @@ public class BildfahrplanGUI extends JComponent
 		int x1 = 5;
 		int x2 = getWidth();
 		int zeit = (int) minZeit;
+		
+		g.setColor(config.getZeitFarbe());
 
 		if (zeit % 10 != 0) 
 		{
@@ -168,10 +170,13 @@ public class BildfahrplanGUI extends JComponent
 		while (zeit <= maxZeit) 
 		{
 			g.drawLine(x1, getZeitPos(zeit), x2, getZeitPos(zeit));
-			//System.out.println(x1 + ", " + zeit + ", " + x2 + ", " + zeit);
 			zeit = zeit + zeitIntervall;
 		}
-
+		
+		//Fahrten im Bildfahrplan malen
+		
+		g.setColor(config.getFahrtenFarbe());
+		
 		for(Fahrt fahrt: fahrten)
 		{
 			double ab = -1;

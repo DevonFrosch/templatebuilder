@@ -1,5 +1,6 @@
 package de.stsFanGruppe.templatebuilder.gui.bildfahrplan;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
@@ -59,23 +60,25 @@ public class BildfahrplanZeilenheaderGUI extends JComponent {
 		System.setProperty("swing.aatext", "true");
 		System.setProperty("awt.useSystemAAFontSettings", "lcd");
 		
+		g.setColor(config.getZeitFarbe());
+		
 		if(!paint || gui.streckenabschnitt == null)
 		{
 			return;
 		}
 		int minZeit = (int) config.getMinZeit();
 		int maxZeit = (int) config.getMaxZeit();
-		int zeitIntervall = config.getZeitIntervall();		
+		int zeitIntervall = config.getZeitIntervall();
+		int zeit = (int) minZeit;
 		
-		if(minZeit%10 != 0){
-			minZeit = minZeit - (minZeit%10);
+		if(zeit % 10 != 0){
+			zeit = zeit - (zeit % 10);
 		}
-		while(minZeit <= maxZeit)
+		while(zeit <= maxZeit)
 		{
-			paintZeiten(g, minZeit);
-			minZeit = minZeit + zeitIntervall;
+			paintZeiten(g, zeit);
+			zeit = zeit + zeitIntervall;
 		}
-		System.out.println(minZeit);
 	}
 	/**
 	 * Die Breite wird an Hand der Schriftbreite errechnet in der Methode paintZeiten.
