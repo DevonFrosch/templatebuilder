@@ -16,6 +16,7 @@ public class BildfahrplanGUIController
 {
 	private BildfahrplanGUI gui = null;
 	private BildfahrplanSpaltenheaderGUI spaltenGui = null;
+	private BildfahrplanZeilenheaderGUI zeilenGui = null;
 	private BildfahrplanConfig config;
 	
 	public BildfahrplanGUIController(BildfahrplanConfig config)
@@ -35,6 +36,12 @@ public class BildfahrplanGUIController
 	{
 		assert spaltenGui != null;
 		this.spaltenGui = spaltenGui;
+	}
+	
+	public void setBildfahrplanZeilenheaderGUI(BildfahrplanZeilenheaderGUI zeilenGui)
+	{
+		assert zeilenGui != null;
+		this.zeilenGui = zeilenGui;
 	}
 	
 	public BildfahrplanConfig getConfig()
@@ -76,6 +83,7 @@ public class BildfahrplanGUIController
 		}
 		gui.repaint();
 		spaltenGui.repaint();
+		zeilenGui.repaint();
 	}
 	public void guiRepaint()
 	{
