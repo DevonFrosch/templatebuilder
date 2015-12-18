@@ -49,11 +49,13 @@ public class BildfahrplanSpaltenheaderGUI extends JComponent {
 		System.setProperty("swing.aatext", "true");
 		System.setProperty("awt.useSystemAAFontSettings", "lcd");
 		
+		//Prüft, ob Werte den Wert null haben
 		if(!paint || gui.streckenabschnitt == null)
 		{
 			return;
 		}
 		
+		//
 		Boolean ersteLinie = true;
 		double linienVerschiebung = 0;
 		double km = 0;
@@ -120,11 +122,11 @@ public class BildfahrplanSpaltenheaderGUI extends JComponent {
 				+ (stringHeight/2);
 		
 		// Text einzeichnen
-		if(x < stringWidth)
+		/*if(x < stringWidth)
 		{
 			g.drawString(bs, x - offsetX, textY);
 		}
-		else if((stringWidth + x) > gui.getWidth()) 
+		else*/ if((stringWidth + x) > gui.getWidth()) 
 		{
 			g.drawString(bs, x + offsetX - stringWidth , textY);
 		}
