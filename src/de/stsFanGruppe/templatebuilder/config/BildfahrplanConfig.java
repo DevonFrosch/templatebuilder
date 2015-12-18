@@ -15,7 +15,7 @@ public class BildfahrplanConfig
 	
 	protected int marginRight = 20;
 	protected int marginLeft = 20;
-	protected int marginTop = 20;
+	protected int marginTop = 0;
 	protected int marginBottom = 20;
 	
 	protected int hoeheProStunde = 400;

@@ -21,7 +21,6 @@ public class BildfahrplanSpaltenheaderGUI extends JComponent {
 	protected BildfahrplanGUI gui;
 	
 	protected Streckenabschnitt streckenabschnitt;
-	protected Map<Betriebsstelle, Double> streckenKm;
 	
 	protected boolean changed = true;
 	protected boolean paint = true;
@@ -37,12 +36,12 @@ public class BildfahrplanSpaltenheaderGUI extends JComponent {
 	public BildfahrplanSpaltenheaderGUI(BildfahrplanGUI gui)
 	{
 		this.gui = gui;
-		this.setPreferredSize(new Dimension(100, 40));
 	}
 	
 	public void paintComponent(Graphics graphics)
 	{
 		super.paintComponent(graphics);
+		
 		// wir nehmen mal an, dass wir Graphics2D haben, sonst wird's schwierig...
 		Graphics2D g = (Graphics2D) graphics;
 		
@@ -52,9 +51,7 @@ public class BildfahrplanSpaltenheaderGUI extends JComponent {
 		System.setProperty("swing.aatext", "true");
 		System.setProperty("awt.useSystemAAFontSettings", "lcd");
 		
-		g.setBackground(Color.GREEN);
-		
-		if(!paint || this.streckenabschnitt == null || this.streckenKm == null )
+		if(!paint || gui.streckenabschnitt == null)
 		{
 			return;
 		}
@@ -63,7 +60,7 @@ public class BildfahrplanSpaltenheaderGUI extends JComponent {
 		double linienVerschiebung = 0;
 		double km = 0; 
 		
-		for(Betriebsstelle bs: streckenabschnitt.getBetriebsstellen())
+		for(Betriebsstelle bs: gui.streckenabschnitt.getBetriebsstellen())
 		{
 			km = bs.getMaxKm();
 			
@@ -80,6 +77,12 @@ public class BildfahrplanSpaltenheaderGUI extends JComponent {
 		g.drawLine(0, getHeight() - 1, getWidth(), getHeight() - 1);
 		System.out.println("Höhe: " + getHeight() + "Breite: " + getWidth());
 	}
+	
+	public Dimension getPreferredSize()
+	{
+		return new Dimension((int) gui.getPreferredSize().getWidth(), 40);
+	}
+	
 	/**
 	 * "Schreibt" den Text in den Header
 	 * @param g Variable für die Grafik.
@@ -108,10 +111,11 @@ public class BildfahrplanSpaltenheaderGUI extends JComponent {
 		neu.translate(x, (y2 + y1) / 2);
 		g.setTransform(neu);
 		
-		// Text einzeichnen
-		g.drawString(bs, stringWidth / 2, 10);
-		
 		// Koordinatensystem zurücksetzen
 		g.setTransform(alt);
+		
+		// Text einzeichnen
+		System.out.println("Zeichne String("+bs+", "+(x - (stringWidth / 2))+", "+10+")");
+		g.drawString(bs, x - (stringWidth / 2), 20);
 	}
 }
