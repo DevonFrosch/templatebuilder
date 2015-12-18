@@ -54,8 +54,9 @@ public class BildfahrplanSpaltenheaderGUI extends JComponent {
 		{
 			return;
 		}
+		//Holt sich die Farbe für die Schrift und der Linie
+		g.setColor(config.getBetriebsstelleFarbe());
 		
-		//
 		Boolean ersteLinie = true;
 		double linienVerschiebung = 0;
 		double km = 0;
@@ -76,7 +77,7 @@ public class BildfahrplanSpaltenheaderGUI extends JComponent {
 			ersteLinie = false;
 			bsZaehler++;
 		}
-		g.drawLine(0, getHeight() - 1, getWidth(), getHeight() - 1);
+		//g.drawLine(0, getHeight() - 1, getWidth(), getHeight() - 1);
 	}
 	public Dimension getPreferredSize()
 	{

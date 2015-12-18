@@ -29,10 +29,11 @@ public class BildfahrplanConfig
 	//Einstellung für den Bildfahrplanzeilenheader
 	int zeilenHeaderBreite = 30;
 	int zeitIntervall = 10;
-	Color zeitFarbe = Color.RED;
 	
-	//Standardeinstellungen für die Fahrten
-	Color fahrtenFarbe = Color.BLUE;
+	//Farbeinstellungen
+	Color zeitFarbe = Color.RED;
+	Color fahrtenFarbe = Color.BLACK;
+	Color betriebsstelleFarbe = Color.BLUE;
 	
 	protected int hoeheProStunde = 400;
 	protected double minZeit = 360;
@@ -141,6 +142,12 @@ public class BildfahrplanConfig
 	}
 	public void setFahrtenFarbe(Color fahrtenFarbe) {
 		this.fahrtenFarbe = fahrtenFarbe;
+	}
+	public Color getBetriebsstelleFarbe() {
+		return betriebsstelleFarbe;
+	}
+	public void setBetriebsstelleFarbe(Color betriebsstelleFarbe) {
+		this.betriebsstelleFarbe = betriebsstelleFarbe;
 	}
 	public void setZeigeZugnamen(String zeigeZugnamen)
 	{

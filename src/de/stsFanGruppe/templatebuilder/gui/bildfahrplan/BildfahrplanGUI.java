@@ -138,6 +138,7 @@ public class BildfahrplanGUI extends JComponent
 		double minZeit = config.getMinZeit();
 		double maxZeit = config.getMaxZeit();	
 		
+		g.setColor(config.getBetriebsstelleFarbe());
 		
 		for(Betriebsstelle bs: streckenabschnitt.getBetriebsstellen())
 		{
