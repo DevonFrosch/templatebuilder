@@ -3,14 +3,14 @@ package de.stsFanGruppe.templatebuilder.gui.bildfahrplan;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.util.*;
-import javax.swing.JPanel;
+import javax.swing.JComponent;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanConfig;
 import de.stsFanGruppe.templatebuilder.gui.TemplateBuilderGUI;
 import de.stsFanGruppe.templatebuilder.strecken.*;
 import de.stsFanGruppe.templatebuilder.zug.*;
 import de.stsFanGruppe.tools.NullTester;
 
-public class BildfahrplanGUI extends JPanel
+public class BildfahrplanGUI extends JComponent
 {
 	protected BildfahrplanConfig config;
 	protected BildfahrplanGUIController controller;
@@ -34,7 +34,7 @@ public class BildfahrplanGUI extends JPanel
 		this.controller = controller;
 		controller.setBildfahrplanGUI(this);
 		
-		this.parent = parent;
+		this.parent = parent;		
 	}
 	
 	public void setStreckenabschnitt(Streckenabschnitt streckenabschnitt)
@@ -103,7 +103,9 @@ public class BildfahrplanGUI extends JPanel
 		// wir nehmen mal an, dass wir Graphics2D haben, sonst wird's schwierig...
 		Graphics2D g = (Graphics2D) graphics;
 		
-		// Antialiasing für Texte an
+		// Anti-Aliasing an
+		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		System.setProperty("swing.aatext", "true");
 		System.setProperty("awt.useSystemAAFontSettings", "lcd");
 		
@@ -120,6 +122,35 @@ public class BildfahrplanGUI extends JPanel
 			// nichts zu tun
 			return;
 		}
+		
+		/*
+		 * Zeichnet die Senkrechten Linien bei jeder Betriebstelle. Beide X-Koordinaten einer Betriebsstelle sind identisch.
+		 * Die 1. Y-Koordinat entspricht BildfahrplanConfig.minZeit.
+		 * Der 2. Y-Koordinat entspricht BildfahrplanConfig.maxZeit.
+		 */
+		/**
+		 * @param ersteLinie Nur bei der ersten senkrechten Linie, darf der Wert true sein.
+		 * @param linienVerschiebung Verschiebung der senkrechten Linie zum 0, falls bei der 1. Abfrage bs.getMaxKm() > 0 ist.
+		 */
+		Boolean ersteLinie = true;
+		double linienVerschiebung = 0;
+		
+		for(Betriebsstelle bs: streckenabschnitt.getBetriebsstellen())
+		{
+			double minZeit = config.getMinZeit();
+			double maxZeit = config.getMaxZeit();	
+			double km = bs.getMaxKm();
+			
+			if(km != 0 && ersteLinie)
+			{
+				linienVerschiebung = linienVerschiebung - km;	
+			}
+			km = km + linienVerschiebung;
+			
+			drawLine(g, km, minZeit, km, maxZeit, null);
+			
+			ersteLinie = false;
+		}			
 		
 		for(Fahrt fahrt: fahrten)
 		{
@@ -155,16 +186,11 @@ public class BildfahrplanGUI extends JPanel
 	{
 		assert config != null;
 		assert g != null;
-		assert beschriftung != null;
 		
 		if(ab < config.getMinZeit() || an > config.getMaxZeit())
 		{
 			return;
 		}
-		
-		// Anti-Aliasing an
-		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		
 		int x1 = getWegPos(kmAb);
 		int y1 = getZeitPos(ab);
@@ -174,7 +200,7 @@ public class BildfahrplanGUI extends JPanel
 		// Linie zeichnen
 		g.drawLine(x1, y1, x2, y2);
 		
-		if(config.getZeigeZugnamen() == 0)
+		if(config.getZeigeZugnamen() == 0 || beschriftung == null)
 		{
 			// keine Zugnamen
 			return;
