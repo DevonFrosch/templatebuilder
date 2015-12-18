@@ -5,7 +5,6 @@ import java.awt.geom.AffineTransform;
 import java.util.*;
 
 import javax.swing.JComponent;
-import javax.swing.JPanel;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanConfig;
 import de.stsFanGruppe.templatebuilder.gui.TemplateBuilderGUI;
 import de.stsFanGruppe.templatebuilder.strecken.*;

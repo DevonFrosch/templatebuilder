@@ -77,6 +77,6 @@ public class Fahrzeit
 	}
 	public String toXML(String indent)
 	{
-		return "<fahrzeit name=\""+getName()+"\" tempo=\""+getTempo()+"\" dauer=\""+getDauer()+"\" streckenabschnitt=\""+streckenabschnitt.getName()+"\" />";
+		return indent+"<fahrzeit name=\""+getName()+"\" tempo=\""+getTempo()+"\" dauer=\""+getDauer()+"\" streckenabschnitt=\""+streckenabschnitt.getName()+"\" />";
 	}
 }

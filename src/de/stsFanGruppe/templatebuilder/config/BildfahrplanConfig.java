@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.JComponent;
-import javax.swing.JPanel;
 import de.stsFanGruppe.tools.JSONBuilder;
 import de.stsFanGruppe.tools.NullTester;
 
