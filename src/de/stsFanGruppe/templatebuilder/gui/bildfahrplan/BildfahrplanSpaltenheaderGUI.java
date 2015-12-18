@@ -9,6 +9,7 @@ import java.awt.geom.AffineTransform;
 
 import javax.swing.JComponent;
 
+import de.stsFanGruppe.templatebuilder.config.BildfahrplanConfig;
 import de.stsFanGruppe.templatebuilder.strecken.Betriebsstelle;
 import de.stsFanGruppe.templatebuilder.strecken.Streckenabschnitt;
 
@@ -17,12 +18,14 @@ import de.stsFanGruppe.templatebuilder.strecken.Streckenabschnitt;
 public class BildfahrplanSpaltenheaderGUI extends JComponent {
 	
 	protected BildfahrplanGUI gui;
+	protected BildfahrplanConfig config;
 	
 	protected Streckenabschnitt streckenabschnitt;
 	
 	protected boolean changed = true;
 	protected boolean paint = true;
 	protected boolean firstPaint = true;
+	protected int stringHeight = 0;
 	
 	JComponent component;
 	int        columns;
@@ -31,9 +34,11 @@ public class BildfahrplanSpaltenheaderGUI extends JComponent {
 	 * Anzeigen der GUI mit einer festen Spaltenanzahl
 	 * @param gui
 	 */
-	public BildfahrplanSpaltenheaderGUI(BildfahrplanGUI gui)
+	public BildfahrplanSpaltenheaderGUI(BildfahrplanGUI gui, BildfahrplanGUIController controller)
 	{
 		this.gui = gui;
+		this.config = controller.getConfig();
+		controller.setBildfahrplanSpaltenHeaderGUI(this);
 	}
 	
 	public void paintComponent(Graphics graphics)
@@ -56,7 +61,8 @@ public class BildfahrplanSpaltenheaderGUI extends JComponent {
 		
 		Boolean ersteLinie = true;
 		double linienVerschiebung = 0;
-		double km = 0; 
+		double km = 0;
+		int bsZaehler = 0;
 		
 		for(Betriebsstelle bs: gui.streckenabschnitt.getBetriebsstellen())
 		{
@@ -68,50 +74,70 @@ public class BildfahrplanSpaltenheaderGUI extends JComponent {
 			}
 			km = km + linienVerschiebung;
 			
-			paintBetriebsstelle(g, km, bs.getName());
+			paintBetriebsstelle(g, km, bs.getName(), bsZaehler);
 			
 			ersteLinie = false;
+			bsZaehler++;
 		}
 		g.drawLine(0, getHeight() - 1, getWidth(), getHeight() - 1);
 	}
-	
 	public Dimension getPreferredSize()
 	{
-		return new Dimension((int) gui.getPreferredSize().getWidth(), 40);
+		return new Dimension((int) gui.getPreferredSize().getWidth(), config.spaltenHeaderHoehe(stringHeight));
 	}
-	
 	/**
 	 * "Schreibt" den Text in den Header
 	 * @param g Variable für die Grafik.
 	 * @param km Die x-Koordinaten, wo der Text hingeschrieben werden soll.
 	 * @param bs Die Bezeichnung der Betriebsstelle.
 	 */
-	protected void paintBetriebsstelle(Graphics2D g, double km, String bs)
+	protected void paintBetriebsstelle(Graphics2D g, double km, String bs, int zaehler)
 	{
 		assert gui != null;
 		assert g != null;
 		
 		int x = gui.getWegPos(km);
 		int y1 = this.getHeight();
-		int y2 = y1-5;
+		int y2 = y1 - config.getLineHeight();
 		
 		// Linie zeichnen
 		g.drawLine(x, y1, x, y2);
-		
-		// Schriftbreite erkennen
-		FontMetrics f = g.getFontMetrics();
-		int stringWidth = f.stringWidth(bs);
-		
+					
 		// Koordinatensystem drehen
 		AffineTransform neu = g.getTransform();
 		AffineTransform alt = (AffineTransform)neu.clone(); 
 		neu.translate(x, (y2 + y1) / 2);
 		g.setTransform(neu);
 		
+		// Schriftbreite und -höhe erkennen
+		FontMetrics f = g.getFontMetrics();
+		int stringWidth = f.stringWidth(bs);
+		stringHeight = f.getHeight();
+		
 		// Koordinatensystem zurücksetzen
 		g.setTransform(alt);
 		
+		//weitere Variablen
+		int offsetX = config.getOffsetX();
+		
+		int textY = (config.getTextMarginTop()
+				+ (stringHeight + config.getOffsetY()) * (zaehler % config.getZeilenAnzahl()))
+				+ (stringHeight/2);
+		
 		// Text einzeichnen
-		g.drawString(bs, x - (stringWidth / 2), 20);
+		if(x < stringWidth)
+		{
+			g.drawString(bs, x - offsetX, textY);
+			System.out.println(textY);
+		}
+		else if((stringWidth + x) > gui.getWidth()) 
+		{
+			g.drawString(bs, x + offsetX - stringWidth , textY);
+		}
+		else 
+		{
+			g.drawString(bs, x - (stringWidth / 2), textY);
+		}
+		
 	}
 }

@@ -1,5 +1,6 @@
 package de.stsFanGruppe.templatebuilder.config;
 
+import java.awt.Dimension;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JComponent;
@@ -16,6 +17,14 @@ public class BildfahrplanConfig
 	protected int marginTop = 0;
 	protected int marginBottom = 20;
 	
+	//Einstellung für den Bildfahrplanspaltenheader
+	int lineHeight = 10;
+	int offsetX = 10;
+	int offsetY = 5;
+	int textMarginTop = 5;
+	int textMarginBottom = 5;
+	int zeilenAnzahl = 2;
+	
 	protected int hoeheProStunde = 400;
 	protected double minZeit = 360;
 	protected double maxZeit = 1260;
@@ -24,6 +33,8 @@ public class BildfahrplanConfig
 	
 	protected int zeigeZugnamen = 2;
 	protected boolean zeigeZugnamenKommentare = true;
+	
+
 	
 	public BildfahrplanConfig(double minZeit, double maxZeit)
 	{
@@ -129,7 +140,42 @@ public class BildfahrplanConfig
 	{
 		this.schachtelung = schachtelung;
 	}
-	
+	public int getLineHeight() {
+		return lineHeight;
+	}
+	public void setLineHeight(int lineHeight) {
+		this.lineHeight = lineHeight;
+	}
+	public int getOffsetX() {
+		return offsetX;
+	}
+	public void setOffsetX(int offsetX) {
+		this.offsetX = offsetX;
+	}
+	public int getOffsetY() {
+		return offsetY;
+	}
+	public void setOffsetY(int offsetY) {
+		this.offsetY = offsetY;
+	}
+	public int getTextMarginTop() {
+		return textMarginTop;
+	}
+	public void setTextMarginTop(int textMarginTop) {
+		this.textMarginTop = textMarginTop;
+	}
+	public int getTextMarginBottom() {
+		return textMarginBottom;
+	}
+	public void setTextMarginBottom(int textMarginBottom) {
+		this.textMarginBottom = textMarginBottom;
+	}
+	public int getZeilenAnzahl() {
+		return zeilenAnzahl;
+	}
+	public void setZeilenAnzahl(int zeilenAnzahl) {
+		this.zeilenAnzahl = zeilenAnzahl;
+	}
 	public int getPanelHeight()
 	{
 		return (int) ((maxZeit - minZeit) / 60 * hoeheProStunde) + marginTop + marginBottom;
@@ -143,6 +189,9 @@ public class BildfahrplanConfig
 	{
 		assert p != null;
 		return p.getHeight() - marginTop - marginBottom;
+	}
+	public int spaltenHeaderHoehe(int textHeight){
+		return textMarginTop + (textHeight + offsetY) * zeilenAnzahl + textMarginBottom;  
 	}
 	
 	public Object registerChangeHandler(ChangeCallback callback)
