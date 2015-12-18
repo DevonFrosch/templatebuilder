@@ -1,5 +1,6 @@
 package de.stsFanGruppe.templatebuilder.config;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,6 +29,10 @@ public class BildfahrplanConfig
 	//Einstellung für den Bildfahrplanzeilenheader
 	int zeilenHeaderBreite = 30;
 	int zeitIntervall = 10;
+	Color zeitFarbe = Color.RED;
+	
+	//Standardeinstellungen für die Fahrten
+	Color fahrtenFarbe = Color.BLUE;
 	
 	protected int hoeheProStunde = 400;
 	protected double minZeit = 360;
@@ -124,6 +129,18 @@ public class BildfahrplanConfig
 	}
 	public void setZeilenHeaderBreite(int zeilenHeaderBreite) {
 		this.zeilenHeaderBreite = zeilenHeaderBreite;
+	}
+	public Color getZeitFarbe() {
+		return zeitFarbe;
+	}
+	public void setZeitFarbe(Color zeitFarbe) {
+		this.zeitFarbe = zeitFarbe;
+	}
+	public Color getFahrtenFarbe() {
+		return fahrtenFarbe;
+	}
+	public void setFahrtenFarbe(Color fahrtenFarbe) {
+		this.fahrtenFarbe = fahrtenFarbe;
 	}
 	public void setZeigeZugnamen(String zeigeZugnamen)
 	{
