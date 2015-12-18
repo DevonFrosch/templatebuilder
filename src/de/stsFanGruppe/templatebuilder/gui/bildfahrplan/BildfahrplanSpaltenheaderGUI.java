@@ -73,7 +73,6 @@ public class BildfahrplanSpaltenheaderGUI extends JComponent {
 			ersteLinie = false;
 		}
 		g.drawLine(0, getHeight() - 1, getWidth(), getHeight() - 1);
-		System.out.println("Höhe: " + getHeight() + "Breite: " + getWidth());
 	}
 	
 	public Dimension getPreferredSize()
@@ -113,7 +112,6 @@ public class BildfahrplanSpaltenheaderGUI extends JComponent {
 		g.setTransform(alt);
 		
 		// Text einzeichnen
-		System.out.println("Zeichne String("+bs+", "+(x - (stringWidth / 2))+", "+10+")");
 		g.drawString(bs, x - (stringWidth / 2), 20);
 	}
 }
