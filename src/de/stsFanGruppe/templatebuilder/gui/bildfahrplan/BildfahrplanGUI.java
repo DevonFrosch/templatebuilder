@@ -16,7 +16,6 @@ public class BildfahrplanGUI extends JComponent
 	protected BildfahrplanConfig config;
 	protected BildfahrplanGUIController controller;
 	protected TemplateBuilderGUI parent;
-	protected TimeFormater timeFormat;
 	
 	protected Streckenabschnitt streckenabschnitt;
 	protected Map<Betriebsstelle, Double> streckenKm;
@@ -37,8 +36,6 @@ public class BildfahrplanGUI extends JComponent
 		controller.setBildfahrplanGUI(this);
 		
 		this.parent = parent;
-		
-		this.timeFormat = new TimeFormater();
 	}
 	
 	public void setStreckenabschnitt(Streckenabschnitt streckenabschnitt)
@@ -244,8 +241,8 @@ public class BildfahrplanGUI extends JComponent
 		if(config.getZeichneZeiten())
 			{
 			// Minuten aus den Zeiten auslesen
-			String abMinute = timeFormat.doubleToString(ab).substring(Math.max(timeFormat.doubleToString(ab).length() - 2, 0));
-			String anMinute = timeFormat.doubleToString(an).substring(Math.max(timeFormat.doubleToString(an).length() - 2, 0));
+			String abMinute = TimeFormater.doubleToString(ab).substring(Math.max(TimeFormater.doubleToString(ab).length() - 2, 0));
+			String anMinute = TimeFormater.doubleToString(an).substring(Math.max(TimeFormater.doubleToString(an).length() - 2, 0));
 			int verschiebungX = 13;
 			
 			// Dreieckberechnung für eine bessere Darstellung der Minutenanzeige
