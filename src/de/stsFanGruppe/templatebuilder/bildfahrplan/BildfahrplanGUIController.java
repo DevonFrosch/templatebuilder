@@ -66,15 +66,17 @@ public class BildfahrplanGUIController
 	}
 	public void optimizeHeight()
 	{
-		if(gui == null || gui.fahrten == null)
+		if(gui == null || gui.fahrten == null || gui.fahrten.isEmpty())
 		{
 			return;
 		}
 		
 		double minZeit = gui.fahrten.stream().min((a, b) -> Double.compare(a.getMinZeit(), b.getMinZeit())).get().getMinZeit();
 		double maxZeit = gui.fahrten.stream().max((a, b) -> Double.compare(a.getMaxZeit(), b.getMaxZeit())).get().getMaxZeit();
+		assert minZeit <= maxZeit;
+		log.info("optimizeHeight ({}, {})", minZeit, maxZeit);
 		
-		gui.config.setZeiten(minZeit - 5, maxZeit);
+		gui.config.setZeiten(minZeit, maxZeit);
 		
 		setPanelSize();
 	}

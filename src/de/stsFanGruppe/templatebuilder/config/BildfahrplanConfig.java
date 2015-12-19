@@ -14,17 +14,17 @@ public class BildfahrplanConfig
 	private Map<Object, Runnable> callbacks = new HashMap<>();
 	private int callbackCounter = 0;
 	
-	protected int marginRight = 20;
-	protected int marginLeft = 20;
-	protected int marginTop = 0;
-	protected int marginBottom = 20;
+	protected int marginRight = 20; // Pixel
+	protected int marginLeft = 20; // Pixel
+	protected int marginTop = 0; // Pixel
+	protected int marginBottom = 10; // Pixel
 	
 	//Einstellung für den Bildfahrplanspaltenheader
-	int lineHeight = 10;
-	int offsetX = 10;
-	int offsetY = 5;
-	int textMarginTop = 5;
-	int textMarginBottom = 5;
+	int lineHeight = 10; // Pixel
+	int offsetX = 10; // Pixel
+	int offsetY = 5; // Pixel
+	int textMarginTop = 5; // Pixel
+	int textMarginBottom = 5; // Pixel
 	int zeilenAnzahl = 2;
 	
 	//Einstellung für den Bildfahrplanzeilenheader
@@ -32,11 +32,11 @@ public class BildfahrplanConfig
 	int zeitIntervall = 10;
 	
 	// Darstellung der Linien
-	protected int hoeheProStunde = 400;
-	protected double minZeit = 360;
-	protected double maxZeit = 1260;
+	protected int hoeheProStunde = 400; // Minuten
+	protected double minZeit = 360; // Minuten
+	protected double maxZeit = 1260; // Minuten
 	protected boolean autoSize = true;
-	protected int schachtelung = 24;
+	protected int schachtelung = 24; // Stunden
 	
 	// Darstellung von Texten
 	protected boolean zeichneZeiten = true; 
