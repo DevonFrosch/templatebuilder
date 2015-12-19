@@ -1,10 +1,7 @@
 package de.stsFanGruppe.templatebuilder.strecken;
 
-import java.util.Collection;
-import java.util.StringJoiner;
-import de.stsFanGruppe.tools.FirstLastLinkedList;
-import de.stsFanGruppe.tools.FirstLastList;
-import de.stsFanGruppe.tools.NullTester;
+import java.util.*;
+import de.stsFanGruppe.tools.*;
 
 public class Bildfahrplanstrecke
 {	

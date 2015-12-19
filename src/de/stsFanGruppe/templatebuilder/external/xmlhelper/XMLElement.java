@@ -3,6 +3,7 @@ package de.stsFanGruppe.templatebuilder.external.xmlhelper;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.StringJoiner;
 import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.StartElement;
 import de.stsFanGruppe.tools.NullTester;
@@ -42,8 +43,8 @@ public class XMLElement
 	
 	public String toString()
 	{
-		StringBuilder str = new StringBuilder("<"+getName());
-		attrs.forEach((String key, String value) -> str.append(" "+key+"='"+value+"'"));
-		return str.append(">").toString();
+		StringJoiner str = new StringJoiner(", ");
+		attrs.forEach((String key, String value) -> str.add(key+"='"+value+"'"));
+		return "XMLElement "+getName()+" {"+str.toString()+"}";
 	}
 }

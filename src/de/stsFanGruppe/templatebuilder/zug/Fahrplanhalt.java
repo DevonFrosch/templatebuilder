@@ -1,7 +1,6 @@
 package de.stsFanGruppe.templatebuilder.zug;
 
-import java.util.Comparator;
-import java.util.StringJoiner;
+import java.util.*;
 import de.stsFanGruppe.templatebuilder.strecken.Gleisabschnitt;
 import de.stsFanGruppe.tools.NullTester;
 
@@ -53,11 +52,11 @@ public class Fahrplanhalt implements Comparable<Fahrplanhalt>
 	{
 		if(ankunft < 0)
 		{
-			throw new IllegalArgumentException("Zeit muss größer gleich 0 sein.");
+			throw new IllegalArgumentException("Zeit muss größer gleich 0 sein");
 		}
 		if(ankunft > abfahrt)
 		{
-			throw new IllegalArgumentException("Abfahrt vor Ankunft.");
+			throw new IllegalArgumentException("Abfahrt vor Ankunft");
 		}
 		this.ankunft = ankunft;
 	}
@@ -74,11 +73,11 @@ public class Fahrplanhalt implements Comparable<Fahrplanhalt>
 	{
 		if(abfahrt < 0)
 		{
-			throw new IllegalArgumentException("Zeit muss größer gleich 0 sein.");
+			throw new IllegalArgumentException("Zeit muss größer gleich 0 sein");
 		}
 		if(ankunft > abfahrt)
 		{
-			throw new IllegalArgumentException("Abfahrt vor Ankunft.");
+			throw new IllegalArgumentException("Abfahrt vor Ankunft");
 		}
 		this.abfahrt = abfahrt;
 	}
@@ -92,11 +91,11 @@ public class Fahrplanhalt implements Comparable<Fahrplanhalt>
 	{
 		if(abfahrt < 0 || ankunft < 0)
 		{
-			throw new IllegalArgumentException("Zeit muss größer gleich 0 sein.");
+			throw new IllegalArgumentException("Zeit muss größer gleich 0 sein");
 		}
 		if(ankunft > abfahrt)
 		{
-			throw new IllegalArgumentException("Abfahrt vor Ankunft.");
+			throw new IllegalArgumentException("Abfahrt vor Ankunft");
 		}
 		this.ankunft = ankunft;
 		this.abfahrt = abfahrt;
@@ -164,15 +163,16 @@ public class Fahrplanhalt implements Comparable<Fahrplanhalt>
 		 * @return einen negativen Wert, 0, oder einen positiven Wert, wenn dieser Fahrplanhalt kleiner, gleich
 		 * oder größer als der andere Fahrplanhalt ist.
 		 * @throws NullPointerException falls der andere Fahrplanhalt null ist.
+		 * @throws IllegalStateException falls bei mindestens einem Objekt Abfahrt < Ankunft ist.
 		 */
-		public int compare(Fahrplanhalt a, Fahrplanhalt b)
+		public int compare(Fahrplanhalt a, Fahrplanhalt b) throws IllegalStateException
 		{
 			int comp = a.compareTo(b);
 			
 			if(comp < 0 && a.abfahrt > b.ankunft
 				|| comp > 0 && a.abfahrt < b.ankunft)
 			{
-				throw new IllegalArgumentException("Abfahrt vor Ankunft.");
+				throw new IllegalStateException("Abfahrt vor Ankunft");
 			}
 			
 			return comp;

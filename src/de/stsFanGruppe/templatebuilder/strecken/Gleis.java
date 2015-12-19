@@ -1,13 +1,12 @@
 package de.stsFanGruppe.templatebuilder.strecken;
 
-import java.util.Collection;
-import java.util.NavigableSet;
-import java.util.StringJoiner;
-import java.util.TreeSet;
+import java.util.*;
 import de.stsFanGruppe.tools.NullTester;
 
 public class Gleis
 {
+	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Gleis.class);
+	
 	protected String name;
 	protected NavigableSet<Gleisabschnitt> gleisabschnitte;
 	protected boolean verwendetGleisabschnitte;
@@ -54,12 +53,29 @@ public class Gleis
 	public void addGleisabschnitt(Gleisabschnitt gleisabschnitt)
 	{
 		NullTester.test(gleisabschnitt);
+		
 		if(!this.verwendetGleisabschnitte)
 		{
+			// Aufräumen
 			Gleisabschnitt alt = this.gleisabschnitte.first();
+			
+			if(alt.getParent() != this)
+			{
+				log.error("Dummy-Gleisabschnitt {} aus Gleis {} löschen: bin nicht parent!", alt.getName(), getName());
+				throw new IllegalStateException("Interner Gleisabschnitt asynchron!");
+			}
+			
 			alt.setParent(null);
 			this.gleisabschnitte.clear();
 		}
+		
+		// Parent prüfen und setzten
+		if(gleisabschnitt.getParent() != null)
+		{
+			log.error("addGleisabschnitt: Gleisabschnitt hat schon parent: "+gleisabschnitt.getParent().getName());
+			throw new IllegalStateException("Gleisabschnitt wird schon verwendet!");
+		}
+		
 		this.gleisabschnitte.add(gleisabschnitt);
 		gleisabschnitt.setParent(this);
 		this.verwendetGleisabschnitte = true;
@@ -72,16 +88,21 @@ public class Gleis
 	public boolean removeGleisabschnitt(Gleisabschnitt gleisabschnitt)
 	{
 		NullTester.test(gleisabschnitt);
-		if(!this.verwendetGleisabschnitte)
+		if(!this.verwendetGleisabschnitte || !gleisabschnitte.contains(gleisabschnitt))
 		{
 			return false;
 		}
 		
-		boolean erfolg = this.gleisabschnitte.remove(gleisabschnitt);
 		if(gleisabschnitt.getParent() == this)
+		{
 			gleisabschnitt.setParent(null);
+		}
 		else
-			System.out.println("Gleisabschnitt "+gleisabschnitt.getName()+" aus Gleis "+getName()+" löschen: bin nicht parent!");
+		{
+			log.error("Gleisabschnitt {} aus Gleis {} löschen: bin nicht parent!", gleisabschnitt.getName(), getName());
+			throw new IllegalStateException("Gleisabschnitt asynchron!");
+		}
+		boolean erfolg = this.gleisabschnitte.remove(gleisabschnitt);
 		
 		if(this.gleisabschnitte.isEmpty())
 		{
@@ -99,7 +120,7 @@ public class Gleis
 	{
 		return parent;
 	}
-	protected void setParent(Betriebsstelle parent)
+	void setParent(Betriebsstelle parent)
 	{
 		this.parent = parent;
 	}

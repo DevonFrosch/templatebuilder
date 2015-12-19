@@ -8,7 +8,9 @@ import de.stsFanGruppe.tools.NullTester;
 
 public class BildfahrplanConfig
 {
-	private Map<Object, ChangeCallback> callbacks = new HashMap<>();
+	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(BildfahrplanConfig.class);
+	
+	private Map<Object, Runnable> callbacks = new HashMap<>();
 	private int callbackCounter = 0;
 	
 	protected int marginRight = 20;
@@ -48,6 +50,7 @@ public class BildfahrplanConfig
 		{
 			throw new IllegalArgumentException("Zeit muss größer gleich 0 sein.");
 		}
+		log.trace("setZeiten({}, {})", min, max);
 		this.minZeit = min;
 		this.maxZeit = max;
 		this.autoSize = false;
@@ -59,6 +62,7 @@ public class BildfahrplanConfig
 	}
 	public void enableAutoSize()
 	{
+		log.trace("enableAutoSize()");
 		this.autoSize = true;
 	}
 	public int getHoeheProStunde()
@@ -71,6 +75,7 @@ public class BildfahrplanConfig
 		{
 			throw new IllegalArgumentException("Höhe muss größer gleich 0 sein.");
 		}
+		log.trace("setHoeheProStunde({})", hoeheProStunde);
 		this.hoeheProStunde = hoeheProStunde;
 		notifyChange();
 	}
@@ -96,10 +101,12 @@ public class BildfahrplanConfig
 	}
 	public void setZeigeZugnamen(int zeigeZugnamen)
 	{
+		log.trace("setZeigeZugnamen({}", zeigeZugnamen);
 		this.zeigeZugnamen = zeigeZugnamen;
 	}
 	public void setZeigeZugnamen(String zeigeZugnamen)
 	{
+		log.trace("setZeigeZugnamen({}", zeigeZugnamen);
 		switch(zeigeZugnamen)
 		{
 			case "nie":
@@ -113,13 +120,14 @@ public class BildfahrplanConfig
 				this.zeigeZugnamen = 2;
 		}
 	}
-	public void setZeigeZugnamenKommentare(boolean zeigeZugnamenKommentare)
-	{
-		this.zeigeZugnamenKommentare = zeigeZugnamenKommentare;
-	}
 	public boolean getZeigeZugnamenKommentare()
 	{
 		return zeigeZugnamenKommentare;
+	}
+	public void setZeigeZugnamenKommentare(boolean zeigeZugnamenKommentare)
+	{
+		log.trace("setZeigeZugnamenKommentare({}", zeigeZugnamenKommentare);
+		this.zeigeZugnamenKommentare = zeigeZugnamenKommentare;
 	}
 	public int getSchachtelung()
 	{
@@ -127,6 +135,7 @@ public class BildfahrplanConfig
 	}
 	public void setSchachtelung(int schachtelung)
 	{
+		log.trace("setSchachtelung({}", schachtelung);
 		this.schachtelung = schachtelung;
 	}
 	
@@ -145,26 +154,31 @@ public class BildfahrplanConfig
 		return p.getHeight() - marginTop - marginBottom;
 	}
 	
-	public Object registerChangeHandler(ChangeCallback callback)
+	public Object registerChangeHandler(Runnable callback)
 	{
 		NullTester.test(callback);
 		Object handlerID = Integer.valueOf(callbackCounter++);
+		log.debug("registerChangeHandler (ID {})", handlerID);
 		callbacks.put(handlerID, callback);
 		return handlerID;
 	}
 	public boolean unregisterChangeHandler(Object handlerID)
 	{
 		NullTester.test(handlerID);
+		log.debug("unregisterChangeHandler (ID {})", handlerID);
 		return callbacks.remove(handlerID) != null;
 	}
 	protected void notifyChange()
 	{
-		callbacks.forEach((k, v) -> v.call());
+		log.debug("Config geändert");
+		callbacks.forEach((k, v) -> v.run());
 	}
 	
 	public void parseJSON(String json)
 	{
+		log.debug("parseJSON(json)");
 		// TODO JSONParser einbauen
+		log.error("Funktion noch nicht implementiert!");
 	}
 	
 	public String toJSON()
@@ -198,15 +212,5 @@ public class BildfahrplanConfig
 				+newLine+"<hoeheProStunde value=\""+hoeheProStunde+"\" />"
 				+newLine+"<zeitBereich min="+minZeit+" max=\""+maxZeit+"\" />"
 				+"\n"+indent+"</bildfahrplanConfig>";
-	}
-	
-	private static void log(String text)
-	{
-		System.out.println("BildfahrplanConfig: "+text);
-	}
-	
-	public interface ChangeCallback
-	{
-		public void call();
 	}
 }

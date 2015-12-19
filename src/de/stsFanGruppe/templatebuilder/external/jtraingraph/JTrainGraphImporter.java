@@ -14,9 +14,13 @@ import de.stsFanGruppe.tools.TimeFormater;
 
 public class JTrainGraphImporter
 {
+	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(JTrainGraphImporter.class);
+	
 	public Streckenabschnitt importStreckenabschnitt(InputStream input) throws ImportException
 	{
+		log.info("JTrainGraphImport Streckenabschnitt");
 		NullTester.test(input);
+		
 		Streckenabschnitt streckenabschnitt = null;
 		
 		try
@@ -29,6 +33,7 @@ public class JTrainGraphImporter
 			FirstLastList<Betriebsstelle> betriebsstellen = new FirstLastLinkedList<>();
 			XMLElement tSta = null;
 			
+			// suche alle sta (Betriebsstellen)
 			while((tSta = xml.findTagUntil("stations", "sta")) != null)
 			{
 				String stName = tSta.getAttribute("name");
@@ -38,11 +43,10 @@ public class JTrainGraphImporter
 				String km = tSta.getAttribute("km");
 				if(isEmpty(km))
 				{
-					throw new ImportException("Keine Ortsangabe für Station.");
+					throw new ImportException("Keine Ortsangabe für Station "+stName);
 				}
 				
-				double dKm = Double.parseDouble(km);
-				Gleis gleis = new Gleis(stName, dKm);
+				Gleis gleis = new Gleis(stName, Double.parseDouble(km));
 				Gleisabschnitt gleisabschnitt = gleis.getGleisabschnitte().first();
 				
 				betriebsstelle.addGleis(gleis);
@@ -64,19 +68,27 @@ public class JTrainGraphImporter
 				streckenabschnitt.addStrecke(new Strecke(makeName(anfang, ende), anfang, ende));
 			}
 		}
-		catch(XMLStreamException | NumberFormatException e)
+		catch(XMLStreamException e)
 		{
-			log(e.getMessage());
-			throw new ImportException(e);
+			log.error("XML-Exception: {}", e.getMessage());
+			throw new ImportException("Fehler im XML", e);
 		}
+		catch(NumberFormatException e)
+		{
+			log.error("NumberFormatException: {}", e.getMessage());
+			throw new ImportException("Numerischer Wert nicht erkannt", e);
+		}
+		
 		return streckenabschnitt;
 	}
 	
 	public Set<Fahrt> importFahrten(InputStream input, Streckenabschnitt streckenabschnitt, Linie linie) throws ImportException
 	{
+		log.info("JTrainGraphImport Fahrten");
 		NullTester.test(input);
 		NullTester.test(streckenabschnitt);
 		NullTester.test(linie);
+		
 		Set<Fahrt> fahrten = new HashSet<Fahrt>();
 		
 		// Erstelle eine Liste der Gleisabschnitte
@@ -131,7 +143,7 @@ public class JTrainGraphImporter
 					}
 					catch(NumberFormatException e)
 					{
-						log("NumberFormatException");
+						log.error("NumberFormatException");
 						throw new ImportException(e);
 					}
 				}
@@ -145,7 +157,7 @@ public class JTrainGraphImporter
 		}
 		catch(XMLStreamException | NumberFormatException e)
 		{
-			log(e.getMessage());
+			log.error(e.getMessage());
 			throw new ImportException(e);
 		}
 		return fahrten;
@@ -168,9 +180,5 @@ public class JTrainGraphImporter
 		assert betriebsstelle != null;
 		
 		return betriebsstelle.getGleise().get(0).getGleisabschnitte().first();
-	}
-	private void log(String text)
-	{
-		System.out.println("JTG-Import: "+text);
 	}
 }

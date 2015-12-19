@@ -1,14 +1,12 @@
 package de.stsFanGruppe.templatebuilder.zug;
 
-import java.util.Collection;
-import java.util.NavigableSet;
-import java.util.NoSuchElementException;
-import java.util.StringJoiner;
-import java.util.TreeSet;
+import java.util.*;
 import de.stsFanGruppe.tools.NullTester;
 
 public class Fahrt
 {
+	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Fahrt.class);
+	
 	protected String name;
 	protected Linie linie;
 	protected NavigableSet<Fahrplanhalt> fahrplanhalte = new TreeSet<>(new Fahrplanhalt.StrictComparator());
@@ -54,6 +52,11 @@ public class Fahrt
 	{
 		NullTester.test(halt);
 		this.fahrplanhalte.add(halt);
+		if(halt.getParent() != null)
+		{
+			log.error("addFahrplanhalt: Fahrplanhalt hat schon parent: "+halt.getParent().getName());
+			throw new IllegalStateException("Fahrplanhalt wird schon verwendet!");
+		}
 		halt.setParent(this);
 	}
 	protected void addFahrplanhalte(Collection<? extends Fahrplanhalt> fahrplanhalte)
@@ -64,32 +67,29 @@ public class Fahrt
 	public boolean removeFahrplanhalt(Fahrplanhalt halt)
 	{
 		NullTester.test(halt);
-		boolean erfolg = this.fahrplanhalte.remove(halt);
+		if(!fahrplanhalte.contains(halt))
+		{
+			return false;
+		}
+		
 		if(halt.getParent() == this)
 		{
 			halt.setParent(null);
 		}
 		else
 		{
-			System.out.println("Fahrplanhalt aus Fahrt "+getName()+" löschen: bin nicht parent!");
+			log.error("Fahrplanhalt bei {} aus Fahrt {} löschen: bin nicht parent!", halt.getGleisabschnitt().getName(), getName());
+			throw new IllegalStateException("Fahrplanhalte asynchron!");
 		}
-		return erfolg;
+		return this.fahrplanhalte.remove(halt);
 	}
 	
 	public double getMinZeit()
 	{
-		if(fahrplanhalte.isEmpty())
-		{
-			throw new NoSuchElementException("Keine Fahrplanhalte.");
-		}
 		return fahrplanhalte.stream().min((a, b) -> Double.compare(a.getAnkunft(), b.getAnkunft())).get().getAnkunft();
 	}
 	public double getMaxZeit()
 	{
-		if(fahrplanhalte.isEmpty())
-		{
-			throw new NoSuchElementException("Keine Fahrplanhalte.");
-		}
 		return fahrplanhalte.stream().max((a, b) -> Double.compare(a.getAbfahrt(), b.getAbfahrt())).get().getAbfahrt();
 	}
 	

@@ -8,8 +8,9 @@ import de.stsFanGruppe.tools.NullTester;
 
 public class XMLReader
 {
-	private XMLEventReader parser;
-	private Stack<XMLElement> nesting = new Stack<>();
+	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(XMLReader.class);
+	
+	protected XMLEventReader parser;
 	
 	public XMLReader(InputStream input) throws XMLStreamException
 	{
@@ -22,10 +23,17 @@ public class XMLReader
 	{
 		return findTagUntil(null, searchNames);
 	}
+	/**
+	 * Sucht nach Tags, bis es auf das Dateiende oder untilName stößt
+	 * @param untilName Tag-Name, bei dem die Suche abgebrochen wird (als öffnender oder schließender Tag).
+	 * @param searchNames Beliebig viele Namen von Tags, die gefunden werden sollen. Wird kein Name angegeben, ist jeder Tag-Name außer untilName ein Treffer.
+	 * @return Der gefundene Tag mit einem Namen aus searchNames oder null, falls untilName oder das Ende des XML erreicht wurden.
+	 * @throws XMLStreamException Bei Fehlern des XML-Lesers
+	 */
 	public XMLElement findTagUntil(String untilName, String... searchNames) throws XMLStreamException
 	{
-		assert parser != null;
-		
+		NullTester.test(parser);
+		assert searchNames != null;
 		List<String> tagNames = Arrays.asList(searchNames);
 		if(tagNames.contains(null))
 		{
@@ -43,54 +51,43 @@ public class XMLReader
 		}
 		
 		XMLElement element = null;
+		String elementName;
 		
 		while(parser.hasNext())
 		{
 			XMLEvent event = parser.nextEvent();
 			switch(event.getEventType())
 			{
-				case XMLStreamConstants.END_DOCUMENT:
-					parser.close();
-					log("End of Document");
-					throw new XMLStreamException("Reached end of document");
 				case XMLStreamConstants.START_ELEMENT:
 					element = new XMLElement(event.asStartElement());
-					nesting.push(element);
+					elementName =  element.getName().toLowerCase();
 					
-					if(tagNames.isEmpty() || tagNames.contains(element.getName().toLowerCase()))
+					if(untilName != null && elementName == untilName)
+					{
+						return null;
+					}
+					
+					if(tagNames.isEmpty() || tagNames.contains(elementName))
 					{
 						return element;
 					}
 					break;
 				case XMLStreamConstants.END_ELEMENT:
-					if(nesting.isEmpty())
-					{
-						throw new XMLStreamException("Element stack empty");
-					}
-					
-					element = nesting.pop();
-					
-					if(untilName != null && event.asEndElement().getName().getLocalPart().toLowerCase() == untilName)
+					elementName =  event.asEndElement().getName().getLocalPart().toLowerCase();
+					if(untilName != null && elementName == untilName)
 					{
 						return null;
 					}
 					break;
-				default:
+				case XMLStreamConstants.END_DOCUMENT:
+					// nichts tun, beim nächsten parser.hasNext() kommt eh false raus
+					assert !parser.hasNext();
 					break;
 			}
 		}
+		
 		parser.close();
-		log("End of File");
-		throw new XMLStreamException("Nothing left to parse");
-	}
-	
-	public Stack<XMLElement> getNesting()
-	{
-		return nesting;
-	}
-
-	private void log(String text)
-	{
-		System.out.println("XMLReader: "+text);
+		log.trace("End of Document");
+		return null;
 	}
 }

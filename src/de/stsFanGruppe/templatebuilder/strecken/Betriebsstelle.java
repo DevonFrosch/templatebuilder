@@ -1,13 +1,12 @@
 package de.stsFanGruppe.templatebuilder.strecken;
 
-import java.util.Collection;
-import java.util.StringJoiner;
-import de.stsFanGruppe.tools.FirstLastLinkedList;
-import de.stsFanGruppe.tools.FirstLastList;
-import de.stsFanGruppe.tools.NullTester;
+import java.util.*;
+import de.stsFanGruppe.tools.*;
 
 public class Betriebsstelle
-{	
+{
+	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Betriebsstelle.class);
+	
 	protected String name;
 	protected String ds100;
 	protected FirstLastList<Gleis> gleise = new FirstLastLinkedList<>();
@@ -42,16 +41,10 @@ public class Betriebsstelle
 		NullTester.test(name);
 		this.name = name;
 	}
-	/**
-	 * Kann null sein.
-	 */
 	public String getDS100()
 	{
 		return ds100;
 	}
-	/**
-	 * Darf null sein.
-	 */
 	public void setDS100(String ds100)
 	{
 		this.ds100 = ds100;
@@ -68,13 +61,23 @@ public class Betriebsstelle
 	{
 		NullTester.test(gleis);
 		this.gleise.add(gleis);
+		if(gleis.getParent() != null)
+		{
+			log.error("addGleis: Gleis hat schon parent: "+gleis.getParent().getName());
+			throw new IllegalStateException("Gleis wird schon verwendet!");
+		}
 		gleis.setParent(this);
 	}
 	public void addGleis(int index, Gleis gleis)
 	{
 		NullTester.test(gleis);
-		this.gleise.add(index, gleis);
+		if(gleis.getParent() != null)
+		{
+			log.error("addGleis: Gleis hat schon parent: "+gleis.getParent().getName());
+			throw new IllegalStateException("Gleis wird schon verwendet!");
+		}
 		gleis.setParent(this);
+		this.gleise.add(index, gleis);
 	}
 	protected void addGleise(Collection<? extends Gleis> gleise)
 	{
@@ -84,34 +87,40 @@ public class Betriebsstelle
 	public boolean removeGleis(Gleis gleis)
 	{
 		NullTester.test(gleis);
-		boolean erfolg = this.gleise.remove(gleis);
-		if(gleis.getParent() == this)
-			gleis.setParent(null);
-		else
-			System.out.println("Gleis "+gleis.getName()+" aus Betriebsstelle "+getName()+" löschen: bin nicht parent!");
-		return erfolg;
-	}
-
-	public double getMinKm()
-	{
-		if(gleise.isEmpty())
+		if(!gleise.contains(gleis))
 		{
-			throw new IllegalStateException("Keine Gleise vorhanden.");
+			return false;
 		}
+		
+		if(gleis.getParent() == this)
+		{
+			gleis.setParent(null);
+		}
+		else
+		{
+			log.error("Gleis {} aus Betriebsstelle {} löschen: bin nicht parent!", gleis.getName(), getName());
+			throw new IllegalStateException("Gleise asynchron!");
+		}
+		return this.gleise.remove(gleis);
+	}
+	
+	public double getMinKm() throws NoSuchElementException
+	{
 		return gleise.stream().min((a,b) -> Double.compare(a.getMinKm(), b.getMinKm())).get().getMinKm();
 	}
-	public double getMaxKm()
+	public double getMaxKm() throws NoSuchElementException
 	{
-		if(gleise.isEmpty())
-		{
-			throw new IllegalStateException("Keine Gleise vorhanden.");
-		}
 		return gleise.stream().min((a,b) -> Double.compare(a.getMaxKm(), b.getMaxKm())).get().getMaxKm();
 	}
 	
 	public String toString()
 	{
-		return "Betriebsstelle "+getName()+" ("+getDS100()+" { "+gleise.size()+" Gleise }";
+		if(getDS100() != null)
+		{
+			return "Betriebsstelle "+getDS100()+" { "+gleise.size()+" Gleise }";
+		}
+		return "Betriebsstelle "+getName()+" { "+gleise.size()+" Gleise }";
+		
 	}
 	public String toXML()
 	{

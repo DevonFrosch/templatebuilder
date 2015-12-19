@@ -37,7 +37,7 @@ public class Gleisabschnitt implements Comparable<Gleisabschnitt>
 	{
 		return parent;
 	}
-	protected void setParent(Gleis parent)
+	void setParent(Gleis parent)
 	{
 		this.parent = parent;
 	}

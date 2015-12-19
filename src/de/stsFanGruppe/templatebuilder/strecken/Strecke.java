@@ -1,6 +1,7 @@
 package de.stsFanGruppe.templatebuilder.strecken;
 
-import java.util.StringJoiner;
+import java.util.*;
+import java.util.function.DoubleSupplier;
 import de.stsFanGruppe.tools.NullTester;
 
 /**
@@ -14,7 +15,9 @@ import de.stsFanGruppe.tools.NullTester;
  * @author DevonFrosch
  */
 public class Strecke
-{	
+{
+	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Strecke.class);
+	
 	protected String name;
 	protected Betriebsstelle anfang;
 	protected Betriebsstelle ende;
@@ -89,11 +92,29 @@ public class Strecke
 
 	public double getMinKm()
 	{
-		return Double.min(anfang.getMinKm(), ende.getMinKm());
+		double anfangKm = getOrDefault(() -> anfang.getMinKm(), Double.MAX_VALUE);
+		double endeKm = getOrDefault(() -> ende.getMinKm(), Double.MAX_VALUE);
+		
+		return Double.min(anfangKm, endeKm);
 	}
 	public double getMaxKm()
 	{
-		return Double.max(anfang.getMaxKm(), ende.getMaxKm());
+		double anfangKm = getOrDefault(() -> anfang.getMaxKm(), Double.MIN_VALUE);
+		double endeKm = getOrDefault(() -> ende.getMaxKm(), Double.MIN_VALUE);
+		
+		return Double.max(anfangKm, endeKm);
+	}
+	protected double getOrDefault(DoubleSupplier func, double defaultValue)
+	{
+		try
+		{
+			return func.getAsDouble();
+		}
+		catch(Exception e)
+		{
+			log.debug("getOrDefault: Exception", e);
+			return defaultValue;
+		}
 	}
 	
 	/**
@@ -112,13 +133,7 @@ public class Strecke
 	}
 	public String toString()
 	{
-		StringBuilder str = new StringBuilder("Strecke "+getName()+" { Anfang: ");
-		
-		str.append((anfang != null) ? anfang.getName() : "Undefiniert");
-		str.append(", Ende: ");
-		str.append((ende != null) ? ende.getName() : "Undefiniert");
-		str.append(", Anzahl Gleise: "+anzahlGleise+" }");
-		return str.toString();
+		return "Strecke "+getName()+" { Anfang: "+anfang.getName()+", Ende: "+ende.getName()+", Anzahl Gleise: "+anzahlGleise+" }";
 	}
 	public String toXML()
 	{
