@@ -241,7 +241,7 @@ public class BildfahrplanGUI extends JComponent
 		g.drawLine(x1, y1, x2, y2);
 		
 		//Zeiten zeichnen, wenn in der Config, dies aktiv ist.
-		if(config.isZeichneZeiten())
+		if(config.getZeichneZeiten())
 			{
 			// Minuten aus den Zeiten auslesen
 			String abMinute = timeFormat.doubleToString(ab).substring(Math.max(timeFormat.doubleToString(ab).length() - 2, 0));

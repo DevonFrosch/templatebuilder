@@ -1,7 +1,6 @@
 package de.stsFanGruppe.templatebuilder.config;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JComponent;
@@ -30,23 +29,24 @@ public class BildfahrplanConfig
 	int zeilenHeaderBreite = 32;
 	int zeitIntervall = 10;
 	
-	//Farbeinstellungen
-	Color zeitFarbe = Color.RED;
-	Color fahrtenFarbe = Color.BLACK;
-	Color betriebsstelleFarbe = Color.BLUE;
-	
+	// Darstellung der Linien
 	protected int hoeheProStunde = 400;
 	protected double minZeit = 360;
 	protected double maxZeit = 1260;
 	protected boolean autoSize = true;
 	protected int schachtelung = 24;
-	protected boolean zeichneZeiten = true; 
 	
+	// Darstellung von Texten
+	protected boolean zeichneZeiten = true; 
 	protected int zeigeZugnamen = 2;
 	protected boolean zeigeZugnamenKommentare = true;
 	
-
+	//Farbeinstellungen
+	protected Color zeitFarbe = Color.RED;
+	protected Color fahrtenFarbe = Color.BLACK;
+	protected Color betriebsstelleFarbe = Color.BLUE;
 	
+	// Konstruktoren
 	public BildfahrplanConfig(double minZeit, double maxZeit)
 	{
 		this.setZeiten(minZeit, maxZeit);
@@ -56,39 +56,98 @@ public class BildfahrplanConfig
 		this.enableAutoSize();
 	}
 	
-	public double getMinZeit()
+	// Getter / Setter
+	public int getMarginRight()
 	{
-		return minZeit;
+		return this.marginRight;
 	}
-	public double getMaxZeit()
+	public int getMarginLeft()
 	{
-		return maxZeit;
+		return this.marginLeft;
 	}
-	public void setZeiten(double min, double max)
+	public int getMarginTop()
 	{
-		if(min < 0 || max < 0)
-		{
-			throw new IllegalArgumentException("Zeit muss größer gleich 0 sein.");
-		}
-		this.minZeit = min;
-		this.maxZeit = max;
-		this.autoSize = false;
+		return this.marginTop;
+	}
+	public int getMarginBottom()
+	{
+		return this.marginBottom;
+	}
+	
+	public int getLineHeight()
+	{
+		return lineHeight;
+	}
+	public void setLineHeight(int lineHeight)
+	{
+		this.lineHeight = lineHeight;
 		notifyChange();
 	}
-	public boolean needsAutoSize()
+	public int getOffsetX()
 	{
-		return autoSize;
+		return offsetX;
 	}
-	public void enableAutoSize()
+	public void setOffsetX(int offsetX)
 	{
-		this.autoSize = true;
+		this.offsetX = offsetX;
+		notifyChange();
 	}
-	public boolean isZeichneZeiten() {
-		return zeichneZeiten;
+	public int getOffsetY()
+	{
+		return offsetY;
 	}
-	public void setZeichneZeiten(boolean zeichneZeiten) {
-		this.zeichneZeiten = zeichneZeiten;
+	public void setOffsetY(int offsetY)
+	{
+		this.offsetY = offsetY;
+		notifyChange();
 	}
+	public int getTextMarginTop()
+	{
+		return textMarginTop;
+	}
+	public void setTextMarginTop(int textMarginTop)
+	{
+		this.textMarginTop = textMarginTop;
+		notifyChange();
+	}
+	public int getTextMarginBottom()
+	{
+		return textMarginBottom;
+	}
+	public void setTextMarginBottom(int textMarginBottom)
+	{
+		this.textMarginBottom = textMarginBottom;
+		notifyChange();
+	}
+	public int getZeilenAnzahl()
+	{
+		return zeilenAnzahl;
+	}
+	public void setZeilenAnzahl(int zeilenAnzahl)
+	{
+		this.zeilenAnzahl = zeilenAnzahl;
+		notifyChange();
+	}
+	
+	public int getZeilenHeaderBreite()
+	{
+		return zeilenHeaderBreite;
+	}
+	public void setZeilenHeaderBreite(int zeilenHeaderBreite)
+	{
+		this.zeilenHeaderBreite = zeilenHeaderBreite;
+		notifyChange();
+	}
+	public int getZeitIntervall()
+	{
+		return zeitIntervall;
+	}
+	public void setZeitIntervall(int zeitIntervall)
+	{
+		this.zeitIntervall = zeitIntervall;
+		notifyChange();
+	}
+	
 	public int getHoeheProStunde()
 	{
 		return hoeheProStunde;
@@ -102,21 +161,54 @@ public class BildfahrplanConfig
 		this.hoeheProStunde = hoeheProStunde;
 		notifyChange();
 	}
-	public int getMarginTop()
+	
+	public double getMinZeit()
 	{
-		return this.marginTop;
+		return minZeit;
 	}
-	public int getMarginLeft()
+	public double getMaxZeit()
 	{
-		return this.marginLeft;
+		return maxZeit;
 	}
-	public int getMarginRight()
+	public boolean needsAutoSize()
 	{
-		return this.marginRight;
+		return autoSize;
 	}
-	public int getMarginBottom()
+	public void setZeiten(double min, double max)
 	{
-		return this.marginBottom;
+		if(min < 0 || max < 0)
+		{
+			throw new IllegalArgumentException("Zeit muss größer gleich 0 sein.");
+		}
+		this.minZeit = min;
+		this.maxZeit = max;
+		this.autoSize = false;
+		notifyChange();
+	}
+	public void enableAutoSize()
+	{
+		this.autoSize = true;
+		notifyChange();
+	}
+	
+	public int getSchachtelung()
+	{
+		return schachtelung;
+	}
+	public void setSchachtelung(int schachtelung)
+	{
+		this.schachtelung = schachtelung;
+		notifyChange();
+	}
+	
+	public boolean getZeichneZeiten()
+	{
+		return zeichneZeiten;
+	}
+	public void setZeichneZeiten(boolean zeichneZeiten)
+	{
+		this.zeichneZeiten = zeichneZeiten;
+		notifyChange();
 	}
 	public int getZeigeZugnamen()
 	{
@@ -125,36 +217,7 @@ public class BildfahrplanConfig
 	public void setZeigeZugnamen(int zeigeZugnamen)
 	{
 		this.zeigeZugnamen = zeigeZugnamen;
-	}
-	public int getZeilenHeaderBreite() {
-		return zeilenHeaderBreite;
-	}
-	public int getZeitIntervall() {
-		return zeitIntervall;
-	}
-	public void setZeitIntervall(int zeitIntervall) {
-		this.zeitIntervall = zeitIntervall;
-	}
-	public void setZeilenHeaderBreite(int zeilenHeaderBreite) {
-		this.zeilenHeaderBreite = zeilenHeaderBreite;
-	}
-	public Color getZeitFarbe() {
-		return zeitFarbe;
-	}
-	public void setZeitFarbe(Color zeitFarbe) {
-		this.zeitFarbe = zeitFarbe;
-	}
-	public Color getFahrtenFarbe() {
-		return fahrtenFarbe;
-	}
-	public void setFahrtenFarbe(Color fahrtenFarbe) {
-		this.fahrtenFarbe = fahrtenFarbe;
-	}
-	public Color getBetriebsstelleFarbe() {
-		return betriebsstelleFarbe;
-	}
-	public void setBetriebsstelleFarbe(Color betriebsstelleFarbe) {
-		this.betriebsstelleFarbe = betriebsstelleFarbe;
+		notifyChange();
 	}
 	public void setZeigeZugnamen(String zeigeZugnamen)
 	{
@@ -170,77 +233,67 @@ public class BildfahrplanConfig
 			default:
 				this.zeigeZugnamen = 2;
 		}
-	}
-	public void setZeigeZugnamenKommentare(boolean zeigeZugnamenKommentare)
-	{
-		this.zeigeZugnamenKommentare = zeigeZugnamenKommentare;
+		notifyChange();
 	}
 	public boolean getZeigeZugnamenKommentare()
 	{
 		return zeigeZugnamenKommentare;
 	}
-	public int getSchachtelung()
+	public void setZeigeZugnamenKommentare(boolean zeigeZugnamenKommentare)
 	{
-		return schachtelung;
+		this.zeigeZugnamenKommentare = zeigeZugnamenKommentare;
+		notifyChange();
 	}
-	public void setSchachtelung(int schachtelung)
+	
+	public Color getZeitFarbe()
 	{
-		this.schachtelung = schachtelung;
+		return zeitFarbe;
 	}
-	public int getLineHeight() {
-		return lineHeight;
+	public void setZeitFarbe(Color zeitFarbe)
+	{
+		this.zeitFarbe = zeitFarbe;
+		notifyChange();
 	}
-	public void setLineHeight(int lineHeight) {
-		this.lineHeight = lineHeight;
+	public Color getFahrtenFarbe()
+	{
+		return fahrtenFarbe;
 	}
-	public int getOffsetX() {
-		return offsetX;
+	public void setFahrtenFarbe(Color fahrtenFarbe)
+	{
+		this.fahrtenFarbe = fahrtenFarbe;
+		notifyChange();
 	}
-	public void setOffsetX(int offsetX) {
-		this.offsetX = offsetX;
+	public Color getBetriebsstelleFarbe()
+	{
+		return betriebsstelleFarbe;
 	}
-	public int getOffsetY() {
-		return offsetY;
+	public void setBetriebsstelleFarbe(Color betriebsstelleFarbe)
+	{
+		this.betriebsstelleFarbe = betriebsstelleFarbe;
+		notifyChange();
 	}
-	public void setOffsetY(int offsetY) {
-		this.offsetY = offsetY;
-	}
-	public int getTextMarginTop() {
-		return textMarginTop;
-	}
-	public void setTextMarginTop(int textMarginTop) {
-		this.textMarginTop = textMarginTop;
-	}
-	public int getTextMarginBottom() {
-		return textMarginBottom;
-	}
-	public void setTextMarginBottom(int textMarginBottom) {
-		this.textMarginBottom = textMarginBottom;
-	}
-	public int getZeilenAnzahl() {
-		return zeilenAnzahl;
-	}
-	public void setZeilenAnzahl(int zeilenAnzahl) {
-		this.zeilenAnzahl = zeilenAnzahl;
-	}
+	
+	// Rechnende Funktionen
 	public int getPanelHeight()
 	{
 		return (int) ((maxZeit - minZeit) / 60 * hoeheProStunde) + marginTop + marginBottom;
 	}
 	public int zeichnenBreite(JComponent p)
 	{
-		assert p != null;
+		NullTester.test(p);
 		return p.getWidth() - marginLeft - marginRight;
 	}
 	public int zeichnenHoehe(JComponent p)
 	{
-		assert p != null;
+		NullTester.test(p);
 		return p.getHeight() - marginTop - marginBottom;
 	}
-	public int spaltenHeaderHoehe(int textHeight){
+	public int spaltenHeaderHoehe(int textHeight)
+	{
 		return textMarginTop + (textHeight + offsetY) * zeilenAnzahl + textMarginBottom;  
 	}
 	
+	// Change-Handler
 	public Object registerChangeHandler(ChangeCallback callback)
 	{
 		NullTester.test(callback);
@@ -258,6 +311,7 @@ public class BildfahrplanConfig
 		callbacks.forEach((k, v) -> v.call());
 	}
 	
+	// Import/Export
 	public void parseJSON(String json)
 	{
 		// TODO JSONParser einbauen
@@ -279,6 +333,7 @@ public class BildfahrplanConfig
 		json.endObject();
 		return json.toString();
 	}
+	
 	public String toString()
 	{
 		return "{margin: r="+marginRight+", l="+marginLeft+", t="+marginTop+", b="+marginBottom+"}";
