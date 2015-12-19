@@ -83,6 +83,7 @@ public class BildfahrplanConfig
 	public void setLineHeight(int lineHeight)
 	{
 		this.lineHeight = lineHeight;
+		log.debug("Config: lineHeight = {}", lineHeight);
 		notifyChange();
 	}
 	public int getOffsetX()
@@ -92,6 +93,7 @@ public class BildfahrplanConfig
 	public void setOffsetX(int offsetX)
 	{
 		this.offsetX = offsetX;
+		log.debug("Config: offsetX = {}", offsetX);
 		notifyChange();
 	}
 	public int getOffsetY()
@@ -101,6 +103,7 @@ public class BildfahrplanConfig
 	public void setOffsetY(int offsetY)
 	{
 		this.offsetY = offsetY;
+		log.debug("Config: offsetY = {}", offsetY);
 		notifyChange();
 	}
 	public int getTextMarginTop()
@@ -110,6 +113,7 @@ public class BildfahrplanConfig
 	public void setTextMarginTop(int textMarginTop)
 	{
 		this.textMarginTop = textMarginTop;
+		log.debug("Config: textMarginTop = {}", textMarginTop);
 		notifyChange();
 	}
 	public int getTextMarginBottom()
@@ -119,6 +123,7 @@ public class BildfahrplanConfig
 	public void setTextMarginBottom(int textMarginBottom)
 	{
 		this.textMarginBottom = textMarginBottom;
+		log.debug("Config: textMarginBottom = {}", textMarginBottom);
 		notifyChange();
 	}
 	public int getZeilenAnzahl()
@@ -128,6 +133,7 @@ public class BildfahrplanConfig
 	public void setZeilenAnzahl(int zeilenAnzahl)
 	{
 		this.zeilenAnzahl = zeilenAnzahl;
+		log.debug("Config: zeilenAnzahl = {}", zeilenAnzahl);
 		notifyChange();
 	}
 	
@@ -138,6 +144,7 @@ public class BildfahrplanConfig
 	public void setZeilenHeaderBreite(int zeilenHeaderBreite)
 	{
 		this.zeilenHeaderBreite = zeilenHeaderBreite;
+		log.debug("Config: zeilenHeaderBreite = {}", zeilenHeaderBreite);
 		notifyChange();
 	}
 	public int getZeitIntervall()
@@ -147,6 +154,7 @@ public class BildfahrplanConfig
 	public void setZeitIntervall(int zeitIntervall)
 	{
 		this.zeitIntervall = zeitIntervall;
+		log.debug("Config: zeitIntervall = {}", zeitIntervall);
 		notifyChange();
 	}
 	
@@ -161,6 +169,7 @@ public class BildfahrplanConfig
 			throw new IllegalArgumentException("Höhe muss größer gleich 0 sein.");
 		}
 		this.hoeheProStunde = hoeheProStunde;
+		log.debug("Config: hoeheProStunde = {}", hoeheProStunde);
 		notifyChange();
 	}
 	
@@ -182,16 +191,16 @@ public class BildfahrplanConfig
 		{
 			throw new IllegalArgumentException("Zeit muss größer gleich 0 sein.");
 		}
-		log.trace("setZeiten({}, {})", min, max);
 		this.minZeit = min;
 		this.maxZeit = max;
 		this.autoSize = false;
+		log.debug("Config: minZeit = {}, maxZeit = {}, autoSize = false", min, max);
 		notifyChange();
 	}
 	public void enableAutoSize()
 	{
-		log.trace("enableAutoSize()");
 		this.autoSize = true;
+		log.debug("Config: autoSize = true");
 		notifyChange();
 	}
 	
@@ -202,6 +211,7 @@ public class BildfahrplanConfig
 	public void setSchachtelung(int schachtelung)
 	{
 		this.schachtelung = schachtelung;
+		log.debug("Config: schachtelung = {}", schachtelung);
 		notifyChange();
 	}
 	
@@ -212,6 +222,7 @@ public class BildfahrplanConfig
 	public void setZeichneZeiten(boolean zeichneZeiten)
 	{
 		this.zeichneZeiten = zeichneZeiten;
+		log.debug("Config: zeichneZeiten = {}", zeichneZeiten);
 		notifyChange();
 	}
 	public int getZeigeZugnamen()
@@ -220,25 +231,27 @@ public class BildfahrplanConfig
 	}
 	public void setZeigeZugnamen(int zeigeZugnamen)
 	{
-		log.trace("setZeigeZugnamen({}", zeigeZugnamen);
 		this.zeigeZugnamen = zeigeZugnamen;
+		log.debug("Config: zeigeZugnamen = {}", zeigeZugnamen);
 		notifyChange();
 	}
 	public void setZeigeZugnamen(String zeigeZugnamen)
 	{
-		log.trace("setZeigeZugnamen({}", zeigeZugnamen);
+		int zz = 0;
 		switch(zeigeZugnamen)
 		{
 			case "nie":
-				this.zeigeZugnamen = 0;
+				zz = 0;
 				break;
 			case "immer":
-				this.zeigeZugnamen = 1;
+				zz = 1;
 				break;
 			case "auto":
 			default:
-				this.zeigeZugnamen = 2;
+				zz = 2;
 		}
+		this.zeigeZugnamen = zz;
+		log.debug("Config: zeigeZugnamen = {}", zz);
 		notifyChange();
 	}
 	public boolean getZeigeZugnamenKommentare()
@@ -247,8 +260,8 @@ public class BildfahrplanConfig
 	}
 	public void setZeigeZugnamenKommentare(boolean zeigeZugnamenKommentare)
 	{
-		log.trace("setZeigeZugnamenKommentare({}", zeigeZugnamenKommentare);
 		this.zeigeZugnamenKommentare = zeigeZugnamenKommentare;
+		log.debug("Config: zeigeZugnamenKommentare = {}", zeigeZugnamenKommentare);
 		notifyChange();
 	}
 	
@@ -259,6 +272,7 @@ public class BildfahrplanConfig
 	public void setZeitFarbe(Color zeitFarbe)
 	{
 		this.zeitFarbe = zeitFarbe;
+		log.debug("Config: zeitFarbe = {}", zeitFarbe);
 		notifyChange();
 	}
 	public Color getFahrtenFarbe()
@@ -267,6 +281,7 @@ public class BildfahrplanConfig
 	public void setFahrtenFarbe(Color fahrtenFarbe)
 	{
 		this.fahrtenFarbe = fahrtenFarbe;
+		log.debug("Config: fahrtenFarbe = {}", fahrtenFarbe);
 		notifyChange();
 	}
 	public Color getBetriebsstelleFarbe()
@@ -276,6 +291,7 @@ public class BildfahrplanConfig
 	public void setBetriebsstelleFarbe(Color betriebsstelleFarbe)
 	{
 		this.betriebsstelleFarbe = betriebsstelleFarbe;
+		log.debug("Config: betriebsstelleFarbe = {}", betriebsstelleFarbe);
 		notifyChange();
 	}
 	
@@ -300,7 +316,8 @@ public class BildfahrplanConfig
 	}
 	
 	// Change-Handler
-	public Object registerChangeHandler(Runnable callback)	{
+	public Object registerChangeHandler(Runnable callback)
+	{
 		NullTester.test(callback);
 		Object handlerID = Integer.valueOf(callbackCounter++);
 		log.debug("registerChangeHandler (ID {})", handlerID);
@@ -315,7 +332,6 @@ public class BildfahrplanConfig
 	}
 	protected void notifyChange()
 	{
-		log.debug("Config geändert");
 		callbacks.forEach((k, v) -> v.run());
 	}
 	
