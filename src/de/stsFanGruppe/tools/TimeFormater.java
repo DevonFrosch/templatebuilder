@@ -36,13 +36,19 @@ public class TimeFormater
 	public static String doubleToString(double input)
 	{
 		int stunden = ((int) input) / 60;
+		
+		return stunden+":"+doubleToMinute(input);
+	}
+	
+	public static String doubleToMinute(double input)
+	{
 		int minuten = ((int) input) % 60;
 		
 		if(minuten < 10)
 		{
-			return stunden+":0"+minuten;
+			return "0" + minuten;
 		}
-		return stunden+":"+minuten;
+		return String.valueOf(minuten);
 	}
 	
 	private static boolean isEmpty(String str)
