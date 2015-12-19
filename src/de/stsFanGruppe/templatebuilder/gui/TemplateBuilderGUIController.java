@@ -1,6 +1,5 @@
 package de.stsFanGruppe.templatebuilder.gui;
 
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -23,6 +22,9 @@ public class TemplateBuilderGUIController
 {
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(TemplateBuilderGUIController.class);
 	
+	public final String version;
+	public final boolean dev;
+	
 	private TemplateBuilderGUI gui = null;
 	private BildfahrplanGUIController bildfahrplanController = null;
 	private JTabbedPane tabs = null;
@@ -30,38 +32,12 @@ public class TemplateBuilderGUIController
 	// TODO: allgemeines Config-Objekt
 	protected BildfahrplanConfig config;
 	
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args)
-	{
-		try
-		{
-			javax.swing.UIManager.setLookAndFeel( javax.swing.UIManager.getSystemLookAndFeelClassName() );
-		}
-		catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex)
-		{
-			java.util.logging.Logger.getLogger(TemplateBuilderGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-		}
-		
-		EventQueue.invokeLater(() -> {
-			try
-			{
-				TemplateBuilderGUIController controller = new TemplateBuilderGUIController(new BildfahrplanConfig());
-				TemplateBuilderGUI window = new TemplateBuilderGUI(controller);
-				window.setVisible(true);
-			}
-			catch(Exception e)
-			{
-				log.error("Nicht abgefangene Exception", e);
-			}
-		});
-	}
-	
-	public TemplateBuilderGUIController(BildfahrplanConfig config)
+	public TemplateBuilderGUIController(BildfahrplanConfig config, String version, boolean dev)
 	{
 		NullTester.test(config);
 		this.config = config;
+		this.version = version;
+		this.dev = dev;
 	}
 	
 	public void setGUI(TemplateBuilderGUI gui)
@@ -172,14 +148,11 @@ public class TemplateBuilderGUIController
 				BildfahrplanSettingsGUI sg = new BildfahrplanSettingsGUI(new BildfahrplanSettingsGUIController(config));
 				break;
 			case "about":
-				String version = "0.2dev2";
-				boolean dev = true;
-				
 				StringJoiner text = new StringJoiner("\n");
 				text.add("TemplateBuilder "+version);
-				text.add("Copyright DevonFrosch (http://sts-fan-gruppe.de/)");
-				text.add("Mitarbeit: Koschi");
-				if(dev) text.add("Dies ist eine Testversion, die noch Fehler enthält!");
+				text.add("Copyright DevonFrosch, Koschi (http://sts-fan-gruppe.de/)");
+				text.add("Tester: petero");
+				if(dev) text.add("Dies ist eine Entwicklungsversion, die noch Fehler enthält!");
 				
 				gui.infoMessage(text.toString(), "Über");
 				break;
