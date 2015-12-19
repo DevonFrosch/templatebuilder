@@ -251,9 +251,4 @@ public class JTrainGraphExportGUI extends JDialog implements GUI
 	{
 		JOptionPane.showMessageDialog(contentPanel, text, titel, JOptionPane.INFORMATION_MESSAGE);
 	}
-	
-	private static void log(String text)
-	{
-		System.out.println("JTrainGraphExportGUI: "+text);
-	}
 }

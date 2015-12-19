@@ -184,13 +184,8 @@ public class TemplateBuilderGUIController
 				gui.infoMessage(text.toString(), "Über");
 				break;
 			default:
-				log("Menü: nicht erkannt");
+				log.error("Menü: nicht erkannt");
 				break;
 		}
-	}
-	
-	private static void log(String text)
-	{
-		System.out.println("TemplateBuilderGUIController: "+text);
 	}
 }
