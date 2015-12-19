@@ -156,6 +156,9 @@ public class TemplateBuilderGUIController
 				
 				gui.infoMessage(text.toString(), "Über");
 				break;
+			case "exit":
+				log.info("Programm beendet");
+				System.exit(0);
 			default:
 				log.error("Menü: nicht erkannt");
 				break;

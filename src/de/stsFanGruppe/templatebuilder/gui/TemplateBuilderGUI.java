@@ -108,8 +108,7 @@ public class TemplateBuilderGUI implements GUI
 		mnDatei.add(separator_1);
 		
 		JMenuItem mntmSchliessen = new JMenuItem("Schlie\u00DFen");
-		mntmSchliessen.setEnabled(false);
-		mntmSchliessen.setActionCommand("close");
+		mntmSchliessen.setActionCommand("exit");
 		mntmSchliessen.addActionListener((ActionEvent arg0) -> controller.menuAction(arg0));
 		mntmSchliessen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F4, InputEvent.ALT_MASK));
 		mnDatei.add(mntmSchliessen);
