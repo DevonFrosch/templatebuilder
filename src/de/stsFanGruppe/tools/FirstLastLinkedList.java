@@ -17,13 +17,13 @@ public class FirstLastLinkedList<E> extends LinkedList<E> implements
 	}
 	
 	@Override
-	public E first()
+	public E first() throws IndexOutOfBoundsException
 	{
 		return this.get(0);
 	}
 	
 	@Override
-	public E last()
+	public E last() throws IndexOutOfBoundsException
 	{
 		return this.get(this.size()-1);
 	}

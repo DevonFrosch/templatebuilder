@@ -2,10 +2,16 @@ package de.stsFanGruppe.tools;
 
 public class TimeFormater
 {
+	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(TimeFormater.class);
+	
 	public static double stringToDouble(String input) throws NumberFormatException
 	{
+		// String vorhanden und hat genau ein :
 		if(isEmpty(input) || !input.contains(":") || (input.indexOf(':') != input.lastIndexOf(':')))
-			throw new NumberFormatException("Zeit falsch formatiert.");
+		{
+			log.error("strinToDouble: String leer oder nicht genau ein Doppelpunkt");
+			throw new NumberFormatException("Zeit falsch formatiert");
+		}
 		
 		String[] ts = input.split(":");
 		double output;
@@ -13,15 +19,17 @@ public class TimeFormater
 		{
 			int stunden = Integer.parseInt(ts[0]);
 			int minuten = Integer.parseInt(ts[1]);
-			if(stunden < 0 || minuten < 0)
+			if(stunden < 0 || minuten < 0 || minuten >= 60)
 			{
-				throw new NumberFormatException("Zeit falsch formatiert.");
+				log.error("strinToDouble: Stunde- oder Minutenwert auﬂerhalb des zul‰ssigen Bereichs");
+				throw new NumberFormatException("Zeit falsch formatiert");
 			}
 			output = (stunden * 60) + minuten;
 		}
 		catch(NumberFormatException e)
 		{
-			throw new NumberFormatException("Zeit falsch formatiert.");
+			log.error("strinToDouble: NumberFormatException", e);
+			throw new NumberFormatException("Zeit falsch formatiert");
 		}
 		return output;
 	}
@@ -40,10 +48,5 @@ public class TimeFormater
 	private static boolean isEmpty(String str)
 	{
 		return str == null || str.isEmpty();
-	}
-	
-	private static void log(String text)
-	{
-		System.out.println("TimeFormater: "+text);
 	}
 }
