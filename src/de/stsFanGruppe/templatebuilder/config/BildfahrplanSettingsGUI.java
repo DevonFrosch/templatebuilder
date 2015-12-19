@@ -1,4 +1,4 @@
-package de.stsFanGruppe.templatebuilder.gui.settings;
+package de.stsFanGruppe.templatebuilder.config;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -7,7 +7,6 @@ import javax.swing.border.EmptyBorder;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
-import de.stsFanGruppe.templatebuilder.config.BildfahrplanConfig;
 import de.stsFanGruppe.templatebuilder.gui.GUI;
 import de.stsFanGruppe.tools.NullTester;
 import javax.swing.event.ChangeEvent;

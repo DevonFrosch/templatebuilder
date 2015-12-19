@@ -1,4 +1,4 @@
-package de.stsFanGruppe.templatebuilder.gui.bildfahrplan;
+package de.stsFanGruppe.templatebuilder.bildfahrplan;
 
 import java.awt.*;
 import java.util.Set;

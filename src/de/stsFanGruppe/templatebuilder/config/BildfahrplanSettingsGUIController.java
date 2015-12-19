@@ -1,7 +1,6 @@
-package de.stsFanGruppe.templatebuilder.gui.settings;
+package de.stsFanGruppe.templatebuilder.config;
 
 import java.awt.event.ActionEvent;
-import de.stsFanGruppe.templatebuilder.config.BildfahrplanConfig;
 import de.stsFanGruppe.tools.NullTester;
 import de.stsFanGruppe.tools.TimeFormater;
 

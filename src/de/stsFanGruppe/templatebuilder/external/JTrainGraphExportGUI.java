@@ -1,4 +1,4 @@
-package de.stsFanGruppe.templatebuilder.gui.external;
+package de.stsFanGruppe.templatebuilder.external;
 
 import java.awt.*;
 import java.awt.event.*;
