@@ -1,20 +1,15 @@
 package de.stsFanGruppe.templatebuilder.gui.bildfahrplan;
 
-import java.awt.Dimension;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
+import java.awt.*;
 import java.awt.geom.AffineTransform;
-
 import javax.swing.JComponent;
-
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanConfig;
 import de.stsFanGruppe.templatebuilder.strecken.Betriebsstelle;
 import de.stsFanGruppe.templatebuilder.strecken.Streckenabschnitt;
+import de.stsFanGruppe.tools.NullTester;
 
-public class BildfahrplanSpaltenheaderGUI extends JComponent {
-	
+public class BildfahrplanSpaltenheaderGUI extends JComponent
+{
 	protected BildfahrplanGUI gui;
 	protected BildfahrplanConfig config;
 	
@@ -31,6 +26,9 @@ public class BildfahrplanSpaltenheaderGUI extends JComponent {
 	 */
 	public BildfahrplanSpaltenheaderGUI(BildfahrplanGUI gui, BildfahrplanGUIController controller)
 	{
+		NullTester.test(gui);
+		NullTester.test(controller);
+		
 		this.gui = gui;
 		this.config = controller.getConfig();
 		controller.setBildfahrplanSpaltenHeaderGUI(this);
@@ -49,15 +47,16 @@ public class BildfahrplanSpaltenheaderGUI extends JComponent {
 		System.setProperty("swing.aatext", "true");
 		System.setProperty("awt.useSystemAAFontSettings", "lcd");
 		
-		//Prüft, ob Werte den Wert null haben
+		// Prüft, ob Werte den Wert null haben
 		if(!paint || gui.streckenabschnitt == null)
 		{
 			return;
 		}
-		//Holt sich die Farbe für die Schrift und der Linie
+		
+		// Holt sich die Farbe für die Schrift und der Linie
 		g.setColor(config.getBetriebsstelleFarbe());
 		
-		Boolean ersteLinie = true;
+		boolean ersteLinie = true;
 		double linienVerschiebung = 0;
 		double km = 0;
 		int bsZaehler = 0;
@@ -68,16 +67,15 @@ public class BildfahrplanSpaltenheaderGUI extends JComponent {
 			
 			if(km != 0 && ersteLinie)
 			{
-				linienVerschiebung = linienVerschiebung - km;	
+				linienVerschiebung -= km;	
 			}
-			km = km + linienVerschiebung;
+			km += linienVerschiebung;
 			
 			paintBetriebsstelle(g, km, bs.getName(), bsZaehler);
 			
 			ersteLinie = false;
 			bsZaehler++;
 		}
-		//g.drawLine(0, getHeight() - 1, getWidth(), getHeight() - 1);
 	}
 	public Dimension getPreferredSize()
 	{
@@ -100,10 +98,10 @@ public class BildfahrplanSpaltenheaderGUI extends JComponent {
 		
 		// Linie zeichnen
 		g.drawLine(x, y1, x, y2);
-					
+		
 		// Koordinatensystem drehen
 		AffineTransform neu = g.getTransform();
-		AffineTransform alt = (AffineTransform)neu.clone(); 
+		AffineTransform alt = (AffineTransform)neu.clone();
 		neu.translate(x, (y2 + y1) / 2);
 		g.setTransform(neu);
 		
@@ -127,11 +125,11 @@ public class BildfahrplanSpaltenheaderGUI extends JComponent {
 		{
 			g.drawString(bs, x - offsetX, textY);
 		}
-		else if((stringWidth + x) > gui.getWidth()) 
+		else if((stringWidth + x) > gui.getWidth())
 		{
 			g.drawString(bs, x + offsetX - stringWidth , textY);
 		}
-		else 
+		else
 		{
 			g.drawString(bs, x - (stringWidth / 2), textY);
 		}
