@@ -1,29 +1,20 @@
 package de.stsFanGruppe.templatebuilder.gui.bildfahrplan;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.awt.geom.AffineTransform;
+import java.awt.*;
 import java.util.Set;
 
 import javax.swing.JComponent;
 
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanConfig;
-import de.stsFanGruppe.templatebuilder.strecken.Betriebsstelle;
 import de.stsFanGruppe.templatebuilder.strecken.Streckenabschnitt;
-import de.stsFanGruppe.templatebuilder.zug.Fahrplanhalt;
 import de.stsFanGruppe.templatebuilder.zug.Fahrt;
+import de.stsFanGruppe.tools.NullTester;
 import de.stsFanGruppe.tools.TimeFormater;
-import sun.awt.TimedWindowEvent;
 
-public class BildfahrplanZeilenheaderGUI extends JComponent {
+public class BildfahrplanZeilenheaderGUI extends JComponent
+{
 	protected BildfahrplanGUI gui;
 	protected BildfahrplanConfig config;
-	protected TimeFormater timeFormat;
 	
 	protected Streckenabschnitt streckenabschnitt;
 	protected Set<Fahrt> fahrten;
@@ -42,9 +33,11 @@ public class BildfahrplanZeilenheaderGUI extends JComponent {
 	 */
 	public BildfahrplanZeilenheaderGUI(BildfahrplanGUI gui, BildfahrplanGUIController controller)
 	{
+		NullTester.test(gui);
+		NullTester.test(controller);
+		
 		this.gui = gui;
 		this.config = controller.getConfig();
-		this.timeFormat = new TimeFormater();
 		controller.setBildfahrplanZeilenheaderGUI(this);
 	}
 	
@@ -78,7 +71,7 @@ public class BildfahrplanZeilenheaderGUI extends JComponent {
 		while(zeit <= maxZeit)
 		{
 			paintZeiten(g, zeit);
-			zeit = zeit + zeitIntervall;
+			zeit += zeitIntervall;
 		}
 	}
 	/**
@@ -105,7 +98,7 @@ public class BildfahrplanZeilenheaderGUI extends JComponent {
 		int y = gui.getZeitPos(zeit);
 					
 		// Schriftbreite und -höhe erkennen
-		String zeitAngabe = timeFormat.doubleToString(zeit);
+		String zeitAngabe = TimeFormater.doubleToString(zeit);
 		FontMetrics f = g.getFontMetrics();
 		int stringWidth = f.stringWidth(zeitAngabe);
 		if(stringWidth < zeitBreite){
