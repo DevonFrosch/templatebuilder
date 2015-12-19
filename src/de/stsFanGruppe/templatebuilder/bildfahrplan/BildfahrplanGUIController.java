@@ -59,7 +59,10 @@ public class BildfahrplanGUIController
 		gui.setMinimumSize(size);
 		gui.setPreferredSize(size);
 		gui.revalidate();
+		
 		gui.repaint();
+		spaltenGui.repaint();
+		zeilenGui.repaint();
 	}
 	public void optimizeHeight()
 	{
