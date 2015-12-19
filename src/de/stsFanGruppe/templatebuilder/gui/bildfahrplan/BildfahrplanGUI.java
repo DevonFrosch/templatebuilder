@@ -9,6 +9,7 @@ import de.stsFanGruppe.templatebuilder.gui.TemplateBuilderGUI;
 import de.stsFanGruppe.templatebuilder.strecken.*;
 import de.stsFanGruppe.templatebuilder.zug.*;
 import de.stsFanGruppe.tools.NullTester;
+import de.stsFanGruppe.tools.TimeFormater;
 
 public class BildfahrplanGUI extends JComponent
 {
@@ -34,7 +35,7 @@ public class BildfahrplanGUI extends JComponent
 		this.controller = controller;
 		controller.setBildfahrplanGUI(this);
 		
-		this.parent = parent;		
+		this.parent = parent;
 	}
 	
 	public void setStreckenabschnitt(Streckenabschnitt streckenabschnitt)
@@ -124,7 +125,7 @@ public class BildfahrplanGUI extends JComponent
 		}
 		
 		/*
-		 * Zeichnet die Senkrechten Linien bei jeder Betriebstelle. Beide X-Koordinaten einer Betriebsstelle sind identisch.
+		 * Zeichnet die senkrechten Linien bei jeder Betriebstelle. Beide X-Koordinaten einer Betriebsstelle sind identisch.
 		 * Die 1. Y-Koordinat entspricht BildfahrplanConfig.minZeit.
 		 * Der 2. Y-Koordinat entspricht BildfahrplanConfig.maxZeit.
 		 */
@@ -135,10 +136,13 @@ public class BildfahrplanGUI extends JComponent
 		Boolean ersteLinie = true;
 		double linienVerschiebung = 0;
 		
+		double minZeit = config.getMinZeit();
+		double maxZeit = config.getMaxZeit();	
+		
+		g.setColor(config.getBetriebsstelleFarbe());
+		
 		for(Betriebsstelle bs: streckenabschnitt.getBetriebsstellen())
 		{
-			double minZeit = config.getMinZeit();
-			double maxZeit = config.getMaxZeit();	
 			double km = bs.getMaxKm();
 			
 			if(km != 0 && ersteLinie)
@@ -151,6 +155,40 @@ public class BildfahrplanGUI extends JComponent
 			
 			ersteLinie = false;
 		}			
+		
+		/*
+		 *  Zeichnet die waagerechte Linie bei jeder angegebenen Zeit.
+		 */
+		int zeitIntervall = config.getZeitIntervall();
+
+		int x1 = 5;
+		int x2 = getWidth();
+		int zeit = (int) minZeit;
+		
+		g.setColor(config.getZeitFarbe());
+
+		if (zeit % 10 != 0) 
+		{
+			zeit = zeit - (zeit % 10);
+		}
+		while (zeit <= maxZeit) 
+		{	
+			if(zeit % 60 == 0)
+			{
+				g.setStroke(new BasicStroke(3));
+			} else {
+				g.setStroke(new BasicStroke(1));
+			}
+			g.drawLine(x1, getZeitPos(zeit), x2, getZeitPos(zeit));
+			zeit = zeit + zeitIntervall;
+		}
+		//Dicke des Strichs wieder auf 1 setzen
+		g.setStroke(new BasicStroke(1));
+		
+		/*
+		 * Fahrten im Bildfahrplan malen
+		 */
+		g.setColor(config.getFahrtenFarbe());
 		
 		for(Fahrt fahrt: fahrten)
 		{
@@ -171,7 +209,6 @@ public class BildfahrplanGUI extends JComponent
 						// entferne alles ab dem ersten %, falls vorhanden
 						name = name.substring(0, name.indexOf('%'));
 					}
-					
 					drawLine(g, kmAb, ab, kmAn, an, name);
 				}
 				
@@ -199,6 +236,34 @@ public class BildfahrplanGUI extends JComponent
 		
 		// Linie zeichnen
 		g.drawLine(x1, y1, x2, y2);
+		
+		//Zeiten zeichnen, wenn in der Config, dies aktiv ist.
+		if(config.getZeichneZeiten())
+			{
+			// Minuten aus den Zeiten auslesen
+			String abMinute = TimeFormater.doubleToString(ab).substring(Math.max(TimeFormater.doubleToString(ab).length() - 2, 0));
+			String anMinute = TimeFormater.doubleToString(an).substring(Math.max(TimeFormater.doubleToString(an).length() - 2, 0));
+			int verschiebungX = 13;
+			
+			// Dreieckberechnung für eine bessere Darstellung der Minutenanzeige
+			double ankathete = x2 - x1;
+			double gegenkathete = y2 - y1;
+			double hoeheAnkunft = gegenkathete / ankathete * verschiebungX;
+			
+			//Zeiten "zeichnen"
+			if(x1 < x2)
+			{ 
+				//Wenn die Linie von Links nach Rechts gezeichnet wird. 
+				g.drawString(abMinute, x1 + 2 , y1);
+				g.drawString(anMinute, x2 - verschiebungX , y2 - (int) hoeheAnkunft); 
+			}
+			else
+			{
+				// 	Wenn die Linievon Rechts nach Links gezeichnet wird.
+				g.drawString(abMinute, x1 - verschiebungX , y1);
+				g.drawString(anMinute, x2 + 2 , y2 + (int) hoeheAnkunft); 
+			}
+		}
 		
 		if(config.getZeigeZugnamen() == 0 || beschriftung == null)
 		{
@@ -228,7 +293,7 @@ public class BildfahrplanGUI extends JComponent
 		neu.translate((x1 + x2) / 2, (y2 + y1) / 2);
 		neu.rotate(Math.atan((1.0 * y2 - y1) / (x2 - x1)));
 		g.setTransform(neu);
-		
+			
 		// Text einzeichnen
 		g.drawString(beschriftung, -stringWidth / 2, -2);
 		

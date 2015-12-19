@@ -1,5 +1,6 @@
 package de.stsFanGruppe.templatebuilder.config;
 
+import java.awt.Color;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JComponent;
@@ -18,15 +19,36 @@ public class BildfahrplanConfig
 	protected int marginTop = 0;
 	protected int marginBottom = 20;
 	
+	//Einstellung für den Bildfahrplanspaltenheader
+	int lineHeight = 10;
+	int offsetX = 10;
+	int offsetY = 5;
+	int textMarginTop = 5;
+	int textMarginBottom = 5;
+	int zeilenAnzahl = 2;
+	
+	//Einstellung für den Bildfahrplanzeilenheader
+	int zeilenHeaderBreite = 32;
+	int zeitIntervall = 10;
+	
+	// Darstellung der Linien
 	protected int hoeheProStunde = 400;
 	protected double minZeit = 360;
 	protected double maxZeit = 1260;
 	protected boolean autoSize = true;
 	protected int schachtelung = 24;
 	
+	// Darstellung von Texten
+	protected boolean zeichneZeiten = true; 
 	protected int zeigeZugnamen = 2;
 	protected boolean zeigeZugnamenKommentare = true;
 	
+	//Farbeinstellungen
+	protected Color zeitFarbe = Color.RED;
+	protected Color fahrtenFarbe = Color.BLACK;
+	protected Color betriebsstelleFarbe = Color.BLUE;
+	
+	// Konstruktoren
 	public BildfahrplanConfig(double minZeit, double maxZeit)
 	{
 		this.setZeiten(minZeit, maxZeit);
@@ -36,6 +58,112 @@ public class BildfahrplanConfig
 		this.enableAutoSize();
 	}
 	
+	// Getter / Setter
+	public int getMarginRight()
+	{
+		return this.marginRight;
+	}
+	public int getMarginLeft()
+	{
+		return this.marginLeft;
+	}
+	public int getMarginTop()
+	{
+		return this.marginTop;
+	}
+	public int getMarginBottom()
+	{
+		return this.marginBottom;
+	}
+	
+	public int getLineHeight()
+	{
+		return lineHeight;
+	}
+	public void setLineHeight(int lineHeight)
+	{
+		this.lineHeight = lineHeight;
+		notifyChange();
+	}
+	public int getOffsetX()
+	{
+		return offsetX;
+	}
+	public void setOffsetX(int offsetX)
+	{
+		this.offsetX = offsetX;
+		notifyChange();
+	}
+	public int getOffsetY()
+	{
+		return offsetY;
+	}
+	public void setOffsetY(int offsetY)
+	{
+		this.offsetY = offsetY;
+		notifyChange();
+	}
+	public int getTextMarginTop()
+	{
+		return textMarginTop;
+	}
+	public void setTextMarginTop(int textMarginTop)
+	{
+		this.textMarginTop = textMarginTop;
+		notifyChange();
+	}
+	public int getTextMarginBottom()
+	{
+		return textMarginBottom;
+	}
+	public void setTextMarginBottom(int textMarginBottom)
+	{
+		this.textMarginBottom = textMarginBottom;
+		notifyChange();
+	}
+	public int getZeilenAnzahl()
+	{
+		return zeilenAnzahl;
+	}
+	public void setZeilenAnzahl(int zeilenAnzahl)
+	{
+		this.zeilenAnzahl = zeilenAnzahl;
+		notifyChange();
+	}
+	
+	public int getZeilenHeaderBreite()
+	{
+		return zeilenHeaderBreite;
+	}
+	public void setZeilenHeaderBreite(int zeilenHeaderBreite)
+	{
+		this.zeilenHeaderBreite = zeilenHeaderBreite;
+		notifyChange();
+	}
+	public int getZeitIntervall()
+	{
+		return zeitIntervall;
+	}
+	public void setZeitIntervall(int zeitIntervall)
+	{
+		this.zeitIntervall = zeitIntervall;
+		notifyChange();
+	}
+	
+	public int getHoeheProStunde()
+	{
+		return hoeheProStunde;
+	}
+	public void setHoeheProStunde(int hoeheProStunde)
+	{
+		if(hoeheProStunde < 0)
+		{
+			throw new IllegalArgumentException("Höhe muss größer gleich 0 sein.");
+		}
+		this.hoeheProStunde = hoeheProStunde;
+		notifyChange();
+	}
+	
 	public double getMinZeit()
 	{
 		return minZeit;
@@ -43,6 +171,10 @@ public class BildfahrplanConfig
 	public double getMaxZeit()
 	{
 		return maxZeit;
+	}
+	public boolean needsAutoSize()
+	{
+		return autoSize;
 	}
 	public void setZeiten(double min, double max)
 	{
@@ -56,44 +188,31 @@ public class BildfahrplanConfig
 		this.autoSize = false;
 		notifyChange();
 	}
-	public boolean needsAutoSize()
-	{
-		return autoSize;
-	}
 	public void enableAutoSize()
 	{
 		log.trace("enableAutoSize()");
 		this.autoSize = true;
-	}
-	public int getHoeheProStunde()
-	{
-		return hoeheProStunde;
-	}
-	public void setHoeheProStunde(int hoeheProStunde)
-	{
-		if(hoeheProStunde < 0)
-		{
-			throw new IllegalArgumentException("Höhe muss größer gleich 0 sein.");
-		}
-		log.trace("setHoeheProStunde({})", hoeheProStunde);
-		this.hoeheProStunde = hoeheProStunde;
 		notifyChange();
 	}
-	public int getMarginTop()
+	
+	public int getSchachtelung()
 	{
-		return this.marginTop;
+		return schachtelung;
 	}
-	public int getMarginLeft()
+	public void setSchachtelung(int schachtelung)
 	{
-		return this.marginLeft;
+		this.schachtelung = schachtelung;
+		notifyChange();
 	}
-	public int getMarginRight()
+	
+	public boolean getZeichneZeiten()
 	{
-		return this.marginRight;
+		return zeichneZeiten;
 	}
-	public int getMarginBottom()
+	public void setZeichneZeiten(boolean zeichneZeiten)
 	{
-		return this.marginBottom;
+		this.zeichneZeiten = zeichneZeiten;
+		notifyChange();
 	}
 	public int getZeigeZugnamen()
 	{
@@ -103,6 +222,7 @@ public class BildfahrplanConfig
 	{
 		log.trace("setZeigeZugnamen({}", zeigeZugnamen);
 		this.zeigeZugnamen = zeigeZugnamen;
+		notifyChange();
 	}
 	public void setZeigeZugnamen(String zeigeZugnamen)
 	{
@@ -119,6 +239,7 @@ public class BildfahrplanConfig
 			default:
 				this.zeigeZugnamen = 2;
 		}
+		notifyChange();
 	}
 	public boolean getZeigeZugnamenKommentare()
 	{
@@ -128,34 +249,58 @@ public class BildfahrplanConfig
 	{
 		log.trace("setZeigeZugnamenKommentare({}", zeigeZugnamenKommentare);
 		this.zeigeZugnamenKommentare = zeigeZugnamenKommentare;
-	}
-	public int getSchachtelung()
-	{
-		return schachtelung;
-	}
-	public void setSchachtelung(int schachtelung)
-	{
-		log.trace("setSchachtelung({}", schachtelung);
-		this.schachtelung = schachtelung;
+		notifyChange();
 	}
 	
+	public Color getZeitFarbe()
+	{
+		return zeitFarbe;
+	}
+	public void setZeitFarbe(Color zeitFarbe)
+	{
+		this.zeitFarbe = zeitFarbe;
+		notifyChange();
+	}
+	public Color getFahrtenFarbe()
+	{
+		return fahrtenFarbe;	}
+	public void setFahrtenFarbe(Color fahrtenFarbe)
+	{
+		this.fahrtenFarbe = fahrtenFarbe;
+		notifyChange();
+	}
+	public Color getBetriebsstelleFarbe()
+	{
+		return betriebsstelleFarbe;
+	}
+	public void setBetriebsstelleFarbe(Color betriebsstelleFarbe)
+	{
+		this.betriebsstelleFarbe = betriebsstelleFarbe;
+		notifyChange();
+	}
+	
+	// Rechnende Funktionen
 	public int getPanelHeight()
 	{
 		return (int) ((maxZeit - minZeit) / 60 * hoeheProStunde) + marginTop + marginBottom;
 	}
 	public int zeichnenBreite(JComponent p)
 	{
-		assert p != null;
+		NullTester.test(p);
 		return p.getWidth() - marginLeft - marginRight;
 	}
 	public int zeichnenHoehe(JComponent p)
 	{
-		assert p != null;
+		NullTester.test(p);
 		return p.getHeight() - marginTop - marginBottom;
 	}
-	
-	public Object registerChangeHandler(Runnable callback)
+	public int spaltenHeaderHoehe(int textHeight)
 	{
+		return textMarginTop + (textHeight + offsetY) * zeilenAnzahl + textMarginBottom;  
+	}
+	
+	// Change-Handler
+	public Object registerChangeHandler(Runnable callback)	{
 		NullTester.test(callback);
 		Object handlerID = Integer.valueOf(callbackCounter++);
 		log.debug("registerChangeHandler (ID {})", handlerID);
@@ -174,6 +319,7 @@ public class BildfahrplanConfig
 		callbacks.forEach((k, v) -> v.run());
 	}
 	
+	// Import/Export
 	public void parseJSON(String json)
 	{
 		log.debug("parseJSON(json)");
@@ -197,6 +343,7 @@ public class BildfahrplanConfig
 		json.endObject();
 		return json.toString();
 	}
+	
 	public String toString()
 	{
 		return "{margin: r="+marginRight+", l="+marginLeft+", t="+marginTop+", b="+marginBottom+"}";

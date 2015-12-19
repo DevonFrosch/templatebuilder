@@ -15,6 +15,8 @@ import de.stsFanGruppe.tools.NullTester;
 public class BildfahrplanGUIController
 {
 	private BildfahrplanGUI gui = null;
+	private BildfahrplanSpaltenheaderGUI spaltenGui = null;
+	private BildfahrplanZeilenheaderGUI zeilenGui = null;
 	private BildfahrplanConfig config;
 	
 	public BildfahrplanGUIController(BildfahrplanConfig config)
@@ -30,6 +32,18 @@ public class BildfahrplanGUIController
 		this.gui = gui;
 	}
 	
+	public void setBildfahrplanSpaltenHeaderGUI(BildfahrplanSpaltenheaderGUI spaltenGui)
+	{
+		NullTester.test(spaltenGui);
+		this.spaltenGui = spaltenGui;
+	}
+	
+	public void setBildfahrplanZeilenheaderGUI(BildfahrplanZeilenheaderGUI zeilenGui)
+	{
+		NullTester.test(zeilenGui);
+		this.zeilenGui = zeilenGui;
+	}
+	
 	public BildfahrplanConfig getConfig()
 	{
 		return config;
@@ -37,7 +51,7 @@ public class BildfahrplanGUIController
 	
 	public void setPanelSize()
 	{
-		NullTester.test(gui);
+		assert gui != null;
 		
 		BildfahrplanConfig config = gui.config;
 		Dimension size = gui.getMinimumSize();
@@ -57,7 +71,7 @@ public class BildfahrplanGUIController
 		double minZeit = gui.fahrten.stream().min((a, b) -> Double.compare(a.getMinZeit(), b.getMinZeit())).get().getMinZeit();
 		double maxZeit = gui.fahrten.stream().max((a, b) -> Double.compare(a.getMaxZeit(), b.getMaxZeit())).get().getMaxZeit();
 		
-		gui.config.setZeiten(minZeit, maxZeit);
+		gui.config.setZeiten(minZeit - 5, maxZeit);
 		
 		setPanelSize();
 	}
@@ -68,6 +82,8 @@ public class BildfahrplanGUIController
 			return;
 		}
 		gui.repaint();
+		spaltenGui.repaint();
+		zeilenGui.repaint();
 	}
 	public void guiRepaint()
 	{

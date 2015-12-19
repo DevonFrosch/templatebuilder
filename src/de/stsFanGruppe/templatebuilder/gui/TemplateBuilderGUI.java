@@ -2,9 +2,7 @@ package de.stsFanGruppe.templatebuilder.gui;
 
 import javax.swing.*;
 import javax.swing.tree.*;
-import de.stsFanGruppe.templatebuilder.gui.bildfahrplan.BildfahrplanGUIController;
-import de.stsFanGruppe.templatebuilder.gui.bildfahrplan.BildfahrplanSpaltenheaderGUI;
-import de.stsFanGruppe.templatebuilder.gui.bildfahrplan.BildfahrplanGUI;
+import de.stsFanGruppe.templatebuilder.gui.bildfahrplan.*;
 import de.stsFanGruppe.tools.NullTester;
 import java.awt.Dimension;
 import java.awt.event.*;
@@ -178,7 +176,8 @@ public class TemplateBuilderGUI implements GUI
 		controller.setBildfahrplanController(bfpController);
 		
 		scrollPane.setViewportView(bildfahrplanZeichner);
-		scrollPane.setColumnHeaderView(new BildfahrplanSpaltenheaderGUI(bildfahrplanZeichner));
+		scrollPane.setColumnHeaderView(new BildfahrplanSpaltenheaderGUI(bildfahrplanZeichner, bfpController));
+		scrollPane.setRowHeaderView(new BildfahrplanZeilenheaderGUI(bildfahrplanZeichner, bfpController));
 		bildfahrplanZeichner.setLayout(null);
 		
 		JToolBar toolBar = new JToolBar();
