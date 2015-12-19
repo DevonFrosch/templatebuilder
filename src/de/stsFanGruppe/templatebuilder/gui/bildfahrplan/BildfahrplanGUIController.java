@@ -28,19 +28,19 @@ public class BildfahrplanGUIController
 	
 	public void setBildfahrplanGUI(BildfahrplanGUI gui)
 	{
-		assert gui != null;
+		NullTester.test(gui);
 		this.gui = gui;
 	}
 	
 	public void setBildfahrplanSpaltenHeaderGUI(BildfahrplanSpaltenheaderGUI spaltenGui)
 	{
-		assert spaltenGui != null;
+		NullTester.test(spaltenGui);
 		this.spaltenGui = spaltenGui;
 	}
 	
 	public void setBildfahrplanZeilenheaderGUI(BildfahrplanZeilenheaderGUI zeilenGui)
 	{
-		assert zeilenGui != null;
+		NullTester.test(zeilenGui);
 		this.zeilenGui = zeilenGui;
 	}
 	
