@@ -40,6 +40,7 @@ public class BildfahrplanConfig
 	protected double maxZeit = 1260;
 	protected boolean autoSize = true;
 	protected int schachtelung = 24;
+	protected boolean zeichneZeiten = true; 
 	
 	protected int zeigeZugnamen = 2;
 	protected boolean zeigeZugnamenKommentare = true;
@@ -81,6 +82,12 @@ public class BildfahrplanConfig
 	public void enableAutoSize()
 	{
 		this.autoSize = true;
+	}
+	public boolean isZeichneZeiten() {
+		return zeichneZeiten;
+	}
+	public void setZeichneZeiten(boolean zeichneZeiten) {
+		this.zeichneZeiten = zeichneZeiten;
 	}
 	public int getHoeheProStunde()
 	{
