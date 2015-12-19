@@ -46,7 +46,7 @@ public class TemplateBuilderGUI implements GUI
 	{
 		assert controller != null;
 		
-		if(!initialized)
+		if(initialized)
 		{
 			throw new IllegalStateException("GUI bereits initialisiert!");
 		}

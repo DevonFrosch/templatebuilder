@@ -232,8 +232,8 @@ public class BildfahrplanGUI extends JComponent
 		if(config.getZeichneZeiten())
 		{
 			// Minuten aus den Zeiten auslesen
-			String abMinute = String.valueOf(ab % 60);
-			String anMinute = String.valueOf(an % 60);
+			String abMinute = String.valueOf((int) (ab % 60));
+			String anMinute = String.valueOf((int) (an % 60));
 			int verschiebungX = 13;
 			
 			// Dreieckberechnung für eine bessere Darstellung der Minutenanzeige
