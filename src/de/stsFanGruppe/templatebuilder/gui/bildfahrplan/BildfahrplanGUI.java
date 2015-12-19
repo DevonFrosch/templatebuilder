@@ -239,30 +239,28 @@ public class BildfahrplanGUI extends JComponent
 		g.drawLine(x1, y1, x2, y2);
 		
 		//Zeiten zeichnen, wenn in der Config, dies aktiv ist.
-		if(config.isZeichneZeiten()){
+		if(config.isZeichneZeiten())
+			{
 			// Minuten aus den Zeiten auslesen
 			String abMinute = timeFormat.doubleToString(ab).substring(Math.max(timeFormat.doubleToString(ab).length() - 2, 0));
 			String anMinute = timeFormat.doubleToString(an).substring(Math.max(timeFormat.doubleToString(an).length() - 2, 0));
-			int verschiebungLinieLinks = 12;
+			int verschiebungX = 13;
 			
 			// Dreieckberechnung
-			double ankathete = x2 - x1;
-			double gegenkathete = y2 - y1;
-			double hoeheAnkunft = gegenkathete / ankathete * verschiebungLinieLinks;
-			double hoeheAnkunft2 = gegenkathete / ankathete * (gegenkathete - verschiebungLinieLinks);
+			double hoeheAnkunft = (y2 - y1) / (x2 - x1) * verschiebungX;
 			
 			// Zeiten hinschreiben 
 			if(x1 < x2)
 			{ 
 				//RWenn die Linie von Links nach Rechts gezeichnet wird. 
-				//g.drawString(abMinute, x1 + 2 , y1);
-				//g.drawString(anMinute, x2 - verschiebungAnX , y2 - (int) hoeheAnkunft); 
+				g.drawString(abMinute, x1 + 2 , y1);
+				g.drawString(anMinute, x2 - verschiebungX , y2 - (int) hoeheAnkunft); 
 			}
 			else
 			{
 				// 	Wenn die Linievon Rechts nach Links gezeichnet wird.
-				g.drawString(abMinute, x1 - verschiebungLinieLinks , y1 - (int) hoeheAnkunft2);
-				//g.drawString(anMinute, x2 + verschiebungAnX , y2 + (int) hoeheAnkunft); 
+				g.drawString(abMinute, x1 - verschiebungX , y1);
+				g.drawString(anMinute, x2 + 2 , y2 + (int) hoeheAnkunft); 
 			}
 		}
 		if(config.getZeigeZugnamen() == 0 || beschriftung == null)
