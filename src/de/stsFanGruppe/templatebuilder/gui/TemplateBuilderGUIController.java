@@ -21,6 +21,8 @@ import de.stsFanGruppe.tools.NullTester;
 
 public class TemplateBuilderGUIController
 {
+	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(TemplateBuilderGUIController.class);
+	
 	private TemplateBuilderGUI gui = null;
 	private BildfahrplanGUIController bildfahrplanController = null;
 	private JTabbedPane tabs = null;
@@ -51,7 +53,7 @@ public class TemplateBuilderGUIController
 			}
 			catch(Exception e)
 			{
-				e.printStackTrace();
+				log.error("Nicht abgefangene Exception", e);
 			}
 		});
 	}
@@ -86,12 +88,13 @@ public class TemplateBuilderGUIController
 		switch(event.getActionCommand())
 		{
 			case "importFromJTG":
-				JTrainGraphImportGUI jtgi = new JTrainGraphImportGUI((ergebnis) -> {
+				JTrainGraphImportGUI jtgi = new JTrainGraphImportGUI(gui.getFrame(), (ergebnis) -> {
 					assert bildfahrplanController != null;
 					assert ergebnis != null;
 					
 					if(ergebnis.success())
 					{
+						log.info("JTG-Import von {}", ergebnis.getPfad());
 						try
 						{
 							JTrainGraphImporter importer = new JTrainGraphImporter();
@@ -113,23 +116,25 @@ public class TemplateBuilderGUIController
 						}
 						catch(FileNotFoundException e)
 						{
+							log.error("JTG-Import", e);
 							gui.errorMessage("Datei nicht gefunden!");
 						}
 						catch(ImportException e)
 						{
+							log.error("JTG-Import", e);
 							gui.errorMessage("Fehler beim Import!");
-							e.printStackTrace();
 						}
 					}
 				});
 				break;
 			case "exportToJTG":
-				JTrainGraphExportGUI jtge = new JTrainGraphExportGUI((ergebnis) -> {
+				JTrainGraphExportGUI jtge = new JTrainGraphExportGUI(gui.getFrame(), (ergebnis) -> {
 					assert bildfahrplanController != null;
 					assert ergebnis != null;
 					
 					if(ergebnis.success())
 					{
+						log.info("JTG-Export von {}", ergebnis.getPfad());
 						try
 						{
 							JTrainGraphExporter exporter = new JTrainGraphExporter(ergebnis.useDS100());
@@ -149,16 +154,16 @@ public class TemplateBuilderGUIController
 							{
 								exporter.exportStreckenabschnitt(output, streckenabschnitt);
 							}
-							
 						}
 						catch(FileNotFoundException e)
 						{
+							log.error("JTG-Export", e);
 							gui.errorMessage("Datei nicht gefunden!");
 						}
 						catch(ExportException e)
 						{
+							log.error("JTG-Export", e);
 							gui.errorMessage("Fehler beim Export!");
-							e.printStackTrace();
 						}
 					}
 				});
@@ -167,12 +172,13 @@ public class TemplateBuilderGUIController
 				BildfahrplanSettingsGUI sg = new BildfahrplanSettingsGUI(new BildfahrplanSettingsGUIController(config));
 				break;
 			case "about":
-				String version = "0.2dev1";
+				String version = "0.2dev2";
 				boolean dev = true;
 				
 				StringJoiner text = new StringJoiner("\n");
 				text.add("TemplateBuilder "+version);
 				text.add("Copyright DevonFrosch (http://sts-fan-gruppe.de/)");
+				text.add("Mitarbeit: Koschi");
 				if(dev) text.add("Dies ist eine Testversion, die noch Fehler enthält!");
 				
 				gui.infoMessage(text.toString(), "Über");

@@ -9,10 +9,11 @@ import de.stsFanGruppe.templatebuilder.gui.TemplateBuilderGUI;
 import de.stsFanGruppe.templatebuilder.strecken.*;
 import de.stsFanGruppe.templatebuilder.zug.*;
 import de.stsFanGruppe.tools.NullTester;
-import de.stsFanGruppe.tools.TimeFormater;
 
 public class BildfahrplanGUI extends JComponent
 {
+	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(BildfahrplanGUI.class);
+	
 	protected BildfahrplanConfig config;
 	protected BildfahrplanGUIController controller;
 	protected TemplateBuilderGUI parent;
@@ -92,7 +93,7 @@ public class BildfahrplanGUI extends JComponent
 	{
 		if(parent == null)
 		{
-			log(text);
+			log.error(text);
 		}
 		parent.errorMessage(text);
 	}
@@ -124,16 +125,8 @@ public class BildfahrplanGUI extends JComponent
 			return;
 		}
 		
-		/*
-		 * Zeichnet die senkrechten Linien bei jeder Betriebstelle. Beide X-Koordinaten einer Betriebsstelle sind identisch.
-		 * Die 1. Y-Koordinat entspricht BildfahrplanConfig.minZeit.
-		 * Der 2. Y-Koordinat entspricht BildfahrplanConfig.maxZeit.
-		 */
-		/**
-		 * @param ersteLinie Nur bei der ersten senkrechten Linie, darf der Wert true sein.
-		 * @param linienVerschiebung Verschiebung der senkrechten Linie zum 0, falls bei der 1. Abfrage bs.getMaxKm() > 0 ist.
-		 */
-		Boolean ersteLinie = true;
+		boolean ersteLinie = true;
+		// Verschiebung der senkrechten Linie zum 0, falls bei der 1. Abfrage bs.getMaxKm() > 0 ist
 		double linienVerschiebung = 0;
 		
 		double minZeit = config.getMinZeit();
@@ -145,38 +138,38 @@ public class BildfahrplanGUI extends JComponent
 		{
 			double km = bs.getMaxKm();
 			
-			if(km != 0 && ersteLinie)
+			if(ersteLinie)
 			{
-				linienVerschiebung = linienVerschiebung - km;	
+				linienVerschiebung -= km;
 			}
-			km = km + linienVerschiebung;
+			km += linienVerschiebung;
 			
 			drawLine(g, km, minZeit, km, maxZeit, null);
 			
 			ersteLinie = false;
-		}			
+		}
 		
-		/*
-		 *  Zeichnet die waagerechte Linie bei jeder angegebenen Zeit.
-		 */
+		// Zeichnet die waagerechte Linie bei jeder angegebenen Zeit
 		int zeitIntervall = config.getZeitIntervall();
-
+		
 		int x1 = 5;
 		int x2 = getWidth();
 		int zeit = (int) minZeit;
 		
 		g.setColor(config.getZeitFarbe());
-
+		
 		if (zeit % 10 != 0) 
 		{
-			zeit = zeit - (zeit % 10);
+			zeit -= (zeit % 10);
 		}
 		while (zeit <= maxZeit) 
 		{	
 			if(zeit % 60 == 0)
 			{
 				g.setStroke(new BasicStroke(3));
-			} else {
+			}
+			else
+			{
 				g.setStroke(new BasicStroke(1));
 			}
 			g.drawLine(x1, getZeitPos(zeit), x2, getZeitPos(zeit));
@@ -185,9 +178,7 @@ public class BildfahrplanGUI extends JComponent
 		//Dicke des Strichs wieder auf 1 setzen
 		g.setStroke(new BasicStroke(1));
 		
-		/*
-		 * Fahrten im Bildfahrplan malen
-		 */
+		// Fahrten im Bildfahrplan malen
 		g.setColor(config.getFahrtenFarbe());
 		
 		for(Fahrt fahrt: fahrten)
@@ -239,10 +230,10 @@ public class BildfahrplanGUI extends JComponent
 		
 		//Zeiten zeichnen, wenn in der Config, dies aktiv ist.
 		if(config.getZeichneZeiten())
-			{
+		{
 			// Minuten aus den Zeiten auslesen
-			String abMinute = TimeFormater.doubleToString(ab).substring(Math.max(TimeFormater.doubleToString(ab).length() - 2, 0));
-			String anMinute = TimeFormater.doubleToString(an).substring(Math.max(TimeFormater.doubleToString(an).length() - 2, 0));
+			String abMinute = String.valueOf(ab % 60);
+			String anMinute = String.valueOf(an % 60);
 			int verschiebungX = 13;
 			
 			// Dreieckberechnung für eine bessere Darstellung der Minutenanzeige
@@ -250,7 +241,7 @@ public class BildfahrplanGUI extends JComponent
 			double gegenkathete = y2 - y1;
 			double hoeheAnkunft = gegenkathete / ankathete * verschiebungX;
 			
-			//Zeiten "zeichnen"
+			// Zeiten zeichnen
 			if(x1 < x2)
 			{ 
 				//Wenn die Linie von Links nach Rechts gezeichnet wird. 
@@ -259,46 +250,43 @@ public class BildfahrplanGUI extends JComponent
 			}
 			else
 			{
-				// 	Wenn die Linievon Rechts nach Links gezeichnet wird.
+				// Wenn die Linie von Rechts nach Links gezeichnet wird.
 				g.drawString(abMinute, x1 - verschiebungX , y1);
 				g.drawString(anMinute, x2 + 2 , y2 + (int) hoeheAnkunft); 
 			}
 		}
 		
-		if(config.getZeigeZugnamen() == 0 || beschriftung == null)
+		if(config.getZeigeZugnamen() != 0 && beschriftung != null)
 		{
-			// keine Zugnamen
-			return;
-		}
-		
-		FontMetrics f = g.getFontMetrics();
-		int stringWidth = f.stringWidth(beschriftung);
-		
-		if(config.getZeigeZugnamen() == 2)
-		{
-			// Zugnamen nur wenn Platz ist
-			// Textgröße holen
-			double lineLenght = Math.sqrt((x1-x2) * (x1-x2) + (y1-y2) * (y1-y2));
-
-			// Text nur, wenn dieser weniger als doppelt so breit ist
-			if(stringWidth * 0.9 > lineLenght)
-			{
-				return;
-			}
-		}
-		
-		// Koordinatensystem drehen
-		AffineTransform neu = g.getTransform();
-		AffineTransform alt = (AffineTransform)neu.clone(); 
-		neu.translate((x1 + x2) / 2, (y2 + y1) / 2);
-		neu.rotate(Math.atan((1.0 * y2 - y1) / (x2 - x1)));
-		g.setTransform(neu);
+			FontMetrics f = g.getFontMetrics();
+			int stringWidth = f.stringWidth(beschriftung);
 			
-		// Text einzeichnen
-		g.drawString(beschriftung, -stringWidth / 2, -2);
-		
-		// Koordinatensystem zurücksetzen
-		g.setTransform(alt);
+			if(config.getZeigeZugnamen() == 2)
+			{
+				// Zugnamen nur wenn Platz ist
+				// Textgröße holen
+				double lineLenght = Math.sqrt((x1-x2) * (x1-x2) + (y1-y2) * (y1-y2));
+	
+				// Text nur, wenn dieser weniger als doppelt so breit ist
+				if(stringWidth * 0.9 > lineLenght)
+				{
+					return;
+				}
+			}
+			
+			// Koordinatensystem drehen
+			AffineTransform neu = g.getTransform();
+			AffineTransform alt = (AffineTransform)neu.clone(); 
+			neu.translate((x1 + x2) / 2, (y2 + y1) / 2);
+			neu.rotate(Math.atan((1.0 * y2 - y1) / (x2 - x1)));
+			g.setTransform(neu);
+				
+			// Text einzeichnen
+			g.drawString(beschriftung, -stringWidth / 2, -2);
+			
+			// Koordinatensystem zurücksetzen
+			g.setTransform(alt);
+		}
 	}
 	protected int getZeitPos(double zeit)
 	{
@@ -326,10 +314,5 @@ public class BildfahrplanGUI extends JComponent
 		fahrten = null;
 		diffKm = -1;
 		firstPaint = true;
-	}
-	
-	private static void log(String text)
-	{
-		System.out.println("BildfahrplanGUI: "+text);
 	}
 }

@@ -1,23 +1,20 @@
 package de.stsFanGruppe.templatebuilder.gui.bildfahrplan;
 
 import java.awt.*;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.util.Set;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanConfig;
-import de.stsFanGruppe.templatebuilder.external.ImportException;
-import de.stsFanGruppe.templatebuilder.external.jtraingraph.JTrainGraphImporter;
-import de.stsFanGruppe.templatebuilder.gui.external.JTrainGraphImportGUI;
 import de.stsFanGruppe.templatebuilder.strecken.Streckenabschnitt;
 import de.stsFanGruppe.templatebuilder.zug.Fahrt;
 import de.stsFanGruppe.tools.NullTester;
 
 public class BildfahrplanGUIController
 {
-	private BildfahrplanGUI gui = null;
-	private BildfahrplanSpaltenheaderGUI spaltenGui = null;
-	private BildfahrplanZeilenheaderGUI zeilenGui = null;
-	private BildfahrplanConfig config;
+	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(BildfahrplanGUIController.class);
+	
+	protected BildfahrplanGUI gui = null;
+	protected BildfahrplanSpaltenheaderGUI spaltenGui = null;
+	protected BildfahrplanZeilenheaderGUI zeilenGui = null;
+	protected BildfahrplanConfig config;
 	
 	public BildfahrplanGUIController(BildfahrplanConfig config)
 	{
@@ -51,7 +48,10 @@ public class BildfahrplanGUIController
 	
 	public void setPanelSize()
 	{
-		assert gui != null;
+		if(gui == null)
+		{
+			return;
+		}
 		
 		BildfahrplanConfig config = gui.config;
 		Dimension size = gui.getMinimumSize();
@@ -85,6 +85,9 @@ public class BildfahrplanGUIController
 		spaltenGui.repaint();
 		zeilenGui.repaint();
 	}
+	/**
+	 * Nachricht von der GUI, dass sie gerade am repainten ist
+	 */
 	public void guiRepaint()
 	{
 		if(config.needsAutoSize())
@@ -113,40 +116,5 @@ public class BildfahrplanGUIController
 	public Set<Fahrt> getFahrten()
 	{
 		return gui.fahrten;
-	}
-	
-	// ActionHandler
-	public void menuImportJTG()
-	{
-		JTrainGraphImportGUI jtgi = new JTrainGraphImportGUI((ergebnis) -> {
-			if(ergebnis.success())
-			{
-				try
-				{
-					JTrainGraphImporter importer = new JTrainGraphImporter();
-					InputStream input = new java.io.FileInputStream(ergebnis.getPfad());
-					Streckenabschnitt streckenabschnitt = importer.importStreckenabschnitt(input);
-					ladeStreckenabschnitt(streckenabschnitt);
-					
-					input = new java.io.FileInputStream(ergebnis.getPfad());
-					Set<Fahrt> fahrten = importer.importFahrten(input, streckenabschnitt, ergebnis.getLinie());
-					ladeZüge(fahrten);
-				}
-				catch(FileNotFoundException e)
-				{
-					gui.errorMessage("Datei nicht gefunden!");
-				}
-				catch(ImportException e)
-				{
-					gui.errorMessage("Fehler beim Import!");
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-	
-	private static void log(String text)
-	{
-		System.out.println("BildfahrplanGUIController: "+text);
 	}
 }

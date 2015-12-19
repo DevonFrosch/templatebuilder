@@ -35,7 +35,7 @@ public class JTrainGraphImportGUI extends JDialog implements GUI
 	{
 		try
 		{
-			JTrainGraphImportGUI dialog = new JTrainGraphImportGUI((a) -> {});
+			JTrainGraphImportGUI dialog = new JTrainGraphImportGUI(null, (a) -> {});
 		}
 		catch(Exception e)
 		{
@@ -46,8 +46,9 @@ public class JTrainGraphImportGUI extends JDialog implements GUI
 	/**
 	 * Create the dialog.
 	 */
-	public JTrainGraphImportGUI(Callback callback)
+	public JTrainGraphImportGUI(JFrame parent, Callback callback)
 	{
+		super(parent, "JTrainGraph-Import");
 		this.callback = callback;
 		
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);

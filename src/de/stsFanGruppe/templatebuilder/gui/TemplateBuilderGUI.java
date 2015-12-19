@@ -10,8 +10,10 @@ import java.awt.BorderLayout;
 
 public class TemplateBuilderGUI implements GUI
 {
+	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(TemplateBuilderGUI.class);
+	
 	protected TemplateBuilderGUIController controller;
-	BildfahrplanGUI bildfahrplanZeichner;
+	protected BildfahrplanGUI bildfahrplanZeichner;
 	private boolean initialized = false;
 	
 	private JFrame frmTemplatebauer;
@@ -39,8 +41,12 @@ public class TemplateBuilderGUI implements GUI
 	 */
 	private void initialize()
 	{
-		assert !initialized;
 		assert controller != null;
+		
+		if(!initialized)
+		{
+			throw new IllegalStateException("GUI bereits initialisiert!");
+		}
 		
 		frmTemplatebauer = new JFrame();
 		frmTemplatebauer.setTitle("TemplateBauer");
@@ -189,6 +195,11 @@ public class TemplateBuilderGUI implements GUI
 		initialized = true;
 	}
 	
+	public JFrame getFrame()
+	{
+		return frmTemplatebauer;
+	}
+	
 	public void setVisible(boolean arg0)
 	{
 		this.frmTemplatebauer.setVisible(arg0);
@@ -205,10 +216,5 @@ public class TemplateBuilderGUI implements GUI
 	public void infoMessage(String text, String titel)
 	{
 		JOptionPane.showMessageDialog(frmTemplatebauer, text, titel, JOptionPane.INFORMATION_MESSAGE);
-	}
-	
-	private static void log(String text)
-	{
-		System.out.println("TemplateBuilderGUI: "+text);
 	}
 }

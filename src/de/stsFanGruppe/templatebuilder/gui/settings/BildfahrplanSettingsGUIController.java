@@ -7,6 +7,8 @@ import de.stsFanGruppe.tools.TimeFormater;
 
 public class BildfahrplanSettingsGUIController
 {
+	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(BildfahrplanSettingsGUIController.class);
+	
 	private BildfahrplanSettingsGUI gui;
 	private BildfahrplanConfig config;
 	
@@ -54,7 +56,7 @@ public class BildfahrplanSettingsGUIController
 		// Ohne GUI können wir nichts machen
 		if(gui == null)
 		{
-			log("actionButton(): Keine GUI gesetzt!");
+			log.error("actionButton(): Keine GUI gesetzt!");
 			return;
 		}
 		
@@ -71,6 +73,7 @@ public class BildfahrplanSettingsGUIController
 				}
 				catch(NumberFormatException e)
 				{
+					log.error("HöheProStunde / Exception", e);
 					gui.errorMessage("Hoehe pro Stunde: "+e.getMessage());
 				}
 				
@@ -89,6 +92,7 @@ public class BildfahrplanSettingsGUIController
 				}
 				catch(NumberFormatException e)
 				{
+					log.error("Dargestellte Zeit / Exception", e);
 					gui.errorMessage("Dargestellte Zeit: "+e.getMessage());
 				}
 				
@@ -99,6 +103,7 @@ public class BildfahrplanSettingsGUIController
 				}
 				catch(NumberFormatException e)
 				{
+					log.error("Schachtelung / Exception", e);
 					gui.errorMessage("Schachtelung: "+e.getMessage());
 				}
 				
@@ -123,6 +128,7 @@ public class BildfahrplanSettingsGUIController
 	{
 		if(input.trim().isEmpty())
 		{
+			log.error("IntField: Leerer String");
 			throw new NumberFormatException("Feld ist leer.");
 		}
 		try
@@ -130,18 +136,15 @@ public class BildfahrplanSettingsGUIController
 			int hpsInt = Integer.parseInt(input);
 			if(hpsInt < 0)
 			{
+				log.error("IntField: Wert kleiner 0");
 				throw new NumberFormatException("Nur positive ganze Zahlen erlaubt.");
 			}
 			return hpsInt;
 		}
 		catch(NumberFormatException e)
 		{
+			log.error("IntField: NumberformatException", e);
 			throw new NumberFormatException("Nur positive ganze Zahlen erlaubt.");
 		}
-	}
-	
-	private static void log(String text)
-	{
-		System.out.println("SettingsGUIController: "+text);
 	}
 }
