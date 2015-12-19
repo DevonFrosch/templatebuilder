@@ -128,7 +128,7 @@ public class BildfahrplanGUI extends JComponent
 		}
 		
 		/*
-		 * Zeichnet die Senkrechten Linien bei jeder Betriebstelle. Beide X-Koordinaten einer Betriebsstelle sind identisch.
+		 * Zeichnet die senkrechten Linien bei jeder Betriebstelle. Beide X-Koordinaten einer Betriebsstelle sind identisch.
 		 * Die 1. Y-Koordinat entspricht BildfahrplanConfig.minZeit.
 		 * Der 2. Y-Koordinat entspricht BildfahrplanConfig.maxZeit.
 		 */
@@ -188,7 +188,9 @@ public class BildfahrplanGUI extends JComponent
 		//Dicke des Strichs wieder auf 1 setzen
 		g.setStroke(new BasicStroke(1));
 		
-		//Fahrten im Bildfahrplan malen
+		/*
+		 * Fahrten im Bildfahrplan malen
+		 */
 		g.setColor(config.getFahrtenFarbe());
 		
 		for(Fahrt fahrt: fahrten)
@@ -246,13 +248,15 @@ public class BildfahrplanGUI extends JComponent
 			String anMinute = timeFormat.doubleToString(an).substring(Math.max(timeFormat.doubleToString(an).length() - 2, 0));
 			int verschiebungX = 13;
 			
-			// Dreieckberechnung
-			double hoeheAnkunft = (y2 - y1) / (x2 - x1) * verschiebungX;
+			// Dreieckberechnung für eine bessere Darstellung der Minutenanzeige
+			double ankathete = x2 - x1;
+			double gegenkathete = y2 - y1;
+			double hoeheAnkunft = gegenkathete / ankathete * verschiebungX;
 			
-			// Zeiten hinschreiben 
+			//Zeiten "zeichnen"
 			if(x1 < x2)
 			{ 
-				//RWenn die Linie von Links nach Rechts gezeichnet wird. 
+				//Wenn die Linie von Links nach Rechts gezeichnet wird. 
 				g.drawString(abMinute, x1 + 2 , y1);
 				g.drawString(anMinute, x2 - verschiebungX , y2 - (int) hoeheAnkunft); 
 			}
@@ -263,6 +267,7 @@ public class BildfahrplanGUI extends JComponent
 				g.drawString(anMinute, x2 + 2 , y2 + (int) hoeheAnkunft); 
 			}
 		}
+		
 		if(config.getZeigeZugnamen() == 0 || beschriftung == null)
 		{
 			// keine Zugnamen
