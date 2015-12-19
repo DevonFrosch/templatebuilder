@@ -9,12 +9,14 @@ import de.stsFanGruppe.templatebuilder.gui.TemplateBuilderGUI;
 import de.stsFanGruppe.templatebuilder.strecken.*;
 import de.stsFanGruppe.templatebuilder.zug.*;
 import de.stsFanGruppe.tools.NullTester;
+import de.stsFanGruppe.tools.TimeFormater;
 
 public class BildfahrplanGUI extends JComponent
 {
 	protected BildfahrplanConfig config;
 	protected BildfahrplanGUIController controller;
 	protected TemplateBuilderGUI parent;
+	protected TimeFormater timeFormat;
 	
 	protected Streckenabschnitt streckenabschnitt;
 	protected Map<Betriebsstelle, Double> streckenKm;
@@ -34,7 +36,9 @@ public class BildfahrplanGUI extends JComponent
 		this.controller = controller;
 		controller.setBildfahrplanGUI(this);
 		
-		this.parent = parent;		
+		this.parent = parent;
+		
+		this.timeFormat = new TimeFormater();
 	}
 	
 	public void setStreckenabschnitt(Streckenabschnitt streckenabschnitt)
@@ -175,10 +179,8 @@ public class BildfahrplanGUI extends JComponent
 			if(zeit % 60 == 0)
 			{
 				g.setStroke(new BasicStroke(3));
-				System.out.println("Breite 3");
 			} else {
 				g.setStroke(new BasicStroke(1));
-				System.out.println("Breite 1");
 			}
 			g.drawLine(x1, getZeitPos(zeit), x2, getZeitPos(zeit));
 			zeit = zeit + zeitIntervall;
@@ -236,6 +238,24 @@ public class BildfahrplanGUI extends JComponent
 		// Linie zeichnen
 		g.drawLine(x1, y1, x2, y2);
 		
+		// Minuten aus den Zeiten auslesen
+		String abZeit = timeFormat.doubleToString(ab);
+		String abMinute = abZeit.substring(Math.max(abZeit.length() - 2, 0));
+		String anZeit = timeFormat.doubleToString(an);
+		String anMinute = anZeit.substring(Math.max(anZeit.length() - 2, 0));
+		
+		// Zeiten hinschreiben 
+		if(x1 < x2)
+		{ 
+			//RWenn die Linie von Links nach Rechts gezeichnet wird. 
+			//g.drawString(abMinute, x1 + 2 , y1);
+			g.drawString(anMinute, x2 - 12 , y2); 
+		}
+		else
+		{
+			// 	Wenn die Linievon Rechts nach Links gezeichnet wird.
+		}
+
 		if(config.getZeigeZugnamen() == 0 || beschriftung == null)
 		{
 			// keine Zugnamen
@@ -264,7 +284,7 @@ public class BildfahrplanGUI extends JComponent
 		neu.translate((x1 + x2) / 2, (y2 + y1) / 2);
 		neu.rotate(Math.atan((1.0 * y2 - y1) / (x2 - x1)));
 		g.setTransform(neu);
-		
+			
 		// Text einzeichnen
 		g.drawString(beschriftung, -stringWidth / 2, -2);
 		
