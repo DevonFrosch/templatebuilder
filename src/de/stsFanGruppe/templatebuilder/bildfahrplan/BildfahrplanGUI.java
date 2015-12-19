@@ -9,6 +9,7 @@ import de.stsFanGruppe.templatebuilder.gui.TemplateBuilderGUI;
 import de.stsFanGruppe.templatebuilder.strecken.*;
 import de.stsFanGruppe.templatebuilder.zug.*;
 import de.stsFanGruppe.tools.NullTester;
+import de.stsFanGruppe.tools.TimeFormater;
 
 public class BildfahrplanGUI extends JComponent
 {
@@ -232,27 +233,22 @@ public class BildfahrplanGUI extends JComponent
 		if(config.getZeichneZeiten())
 		{
 			// Minuten aus den Zeiten auslesen
-			String abMinute = String.valueOf((int) (ab % 60));
-			String anMinute = String.valueOf((int) (an % 60));
+			String abMinute = TimeFormater.doubleToMinute(ab);
+			String anMinute = TimeFormater.doubleToMinute(an);
 			int verschiebungX = 13;
-			
-			// Dreieckberechnung für eine bessere Darstellung der Minutenanzeige
-			double ankathete = x2 - x1;
-			double gegenkathete = y2 - y1;
-			double hoeheAnkunft = gegenkathete / ankathete * verschiebungX;
-			
+				
 			// Zeiten zeichnen
 			if(x1 < x2)
 			{ 
 				//Wenn die Linie von Links nach Rechts gezeichnet wird. 
 				g.drawString(abMinute, x1 + 2 , y1);
-				g.drawString(anMinute, x2 - verschiebungX , y2 - (int) hoeheAnkunft); 
+				g.drawString(anMinute, x2 - verschiebungX , y2 + g.getFontMetrics().getHeight() - 2); 
 			}
 			else
 			{
 				// Wenn die Linie von Rechts nach Links gezeichnet wird.
 				g.drawString(abMinute, x1 - verschiebungX , y1);
-				g.drawString(anMinute, x2 + 2 , y2 + (int) hoeheAnkunft); 
+				g.drawString(anMinute, x2 + 2 , y2 + g.getFontMetrics().getHeight() - 2); 
 			}
 		}
 		
