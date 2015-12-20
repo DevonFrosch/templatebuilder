@@ -39,14 +39,14 @@ public class BildfahrplanConfig
 	protected int schachtelung = 24; // Stunden
 	
 	// Darstellung von Texten
-	protected boolean zeichneZeiten = true; 
+	protected boolean zeigeZeiten = true; 
 	protected int zeigeZugnamen = 2;
 	protected boolean zeigeZugnamenKommentare = true;
 	
 	//Farbeinstellungen
-	protected Color zeitFarbe = Color.RED;
-	protected Color fahrtenFarbe = Color.BLACK;
-	protected Color betriebsstelleFarbe = Color.BLUE;
+	protected Color bfpZeitenFarbe = Color.RED;
+	protected Color bfpFahrtenFarbe = Color.BLACK;
+	protected Color bfpBetriebsstellenFarbe = Color.BLUE;
 	
 	// Konstruktoren
 	public BildfahrplanConfig(double minZeit, double maxZeit)
@@ -215,14 +215,14 @@ public class BildfahrplanConfig
 		notifyChange();
 	}
 	
-	public boolean getZeichneZeiten()
+	public boolean getZeigeZeiten()
 	{
-		return zeichneZeiten;
+		return zeigeZeiten;
 	}
-	public void setZeichneZeiten(boolean zeichneZeiten)
+	public void setZeigeZeiten(boolean zeigeZeiten)
 	{
-		this.zeichneZeiten = zeichneZeiten;
-		log.debug("Config: zeichneZeiten = {}", zeichneZeiten);
+		this.zeigeZeiten = zeigeZeiten;
+		log.debug("Config: zeigeZeiten = {}", zeigeZeiten);
 		notifyChange();
 	}
 	public int getZeigeZugnamen()
@@ -265,33 +265,34 @@ public class BildfahrplanConfig
 		notifyChange();
 	}
 	
-	public Color getZeitFarbe()
+	public Color getBfpZeitenFarbe()
 	{
-		return zeitFarbe;
+		return bfpZeitenFarbe;
 	}
-	public void setZeitFarbe(Color zeitFarbe)
+	public void setBfpZeitenFarbe(Color bfpZeitenFarbe)
 	{
-		this.zeitFarbe = zeitFarbe;
-		log.debug("Config: zeitFarbe = {}", zeitFarbe);
+		this.bfpZeitenFarbe = bfpZeitenFarbe;
+		log.debug("Config: bfpZeitenFarbe = {}", bfpZeitenFarbe);
 		notifyChange();
 	}
-	public Color getFahrtenFarbe()
+	public Color getBfpFahrtenFarbe()
 	{
-		return fahrtenFarbe;	}
-	public void setFahrtenFarbe(Color fahrtenFarbe)
+		return bfpFahrtenFarbe;
+	}
+	public void setBfpFahrtenFarbe(Color bfpFahrtenFarbe)
 	{
-		this.fahrtenFarbe = fahrtenFarbe;
-		log.debug("Config: fahrtenFarbe = {}", fahrtenFarbe);
+		this.bfpFahrtenFarbe = bfpFahrtenFarbe;
+		log.debug("Config: bfpFahrtenFarbe = {}", bfpFahrtenFarbe);
 		notifyChange();
 	}
-	public Color getBetriebsstelleFarbe()
+	public Color getBfpBetriebsstellenFarbe()
 	{
-		return betriebsstelleFarbe;
+		return bfpBetriebsstellenFarbe;
 	}
-	public void setBetriebsstelleFarbe(Color betriebsstelleFarbe)
+	public void setBfpBetriebsstellenFarbe(Color bfpBetriebsstellenFarbe)
 	{
-		this.betriebsstelleFarbe = betriebsstelleFarbe;
-		log.debug("Config: betriebsstelleFarbe = {}", betriebsstelleFarbe);
+		this.bfpBetriebsstellenFarbe = bfpBetriebsstellenFarbe;
+		log.debug("Config: bfpBetriebsstellenFarbe = {}", bfpBetriebsstellenFarbe);
 		notifyChange();
 	}
 	

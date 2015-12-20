@@ -54,7 +54,7 @@ public class BildfahrplanSpaltenheaderGUI extends JComponent
 		}
 		
 		// Holt sich die Farbe für die Schrift und der Linie
-		g.setColor(config.getBetriebsstelleFarbe());
+		g.setColor(config.getBfpBetriebsstellenFarbe());
 		
 		boolean ersteLinie = true;
 		double linienVerschiebung = 0;

@@ -1,6 +1,7 @@
 package de.stsFanGruppe.templatebuilder.config;
 
 import java.awt.event.ActionEvent;
+import javax.swing.JColorChooser;
 import de.stsFanGruppe.tools.NullTester;
 import de.stsFanGruppe.tools.TimeFormater;
 
@@ -23,10 +24,11 @@ public class BildfahrplanSettingsGUIController
 		this.gui = gui;
 	}
 	
-	public int getHoeheProStunde()
+	public BildfahrplanConfig getConfig()
 	{
-		return config.getHoeheProStunde();
+		return config;
 	}
+	
 	public String getMinZeit()
 	{
 		return TimeFormater.doubleToString(config.getMinZeit());
@@ -35,19 +37,33 @@ public class BildfahrplanSettingsGUIController
 	{
 		return TimeFormater.doubleToString(config.getMaxZeit());
 	}
-	public int getSchachtelung()
-	{
-		return config.getSchachtelung();
-	}
-	public int getZeigeZugnamen()
-	{
-		return config.getZeigeZugnamen();
-	}
-	public boolean getZeigeZugnamenKommentare()
-	{
-		return config.getZeigeZugnamenKommentare();
-	}
 	
+	public void farbButton(ActionEvent event)
+	{
+		assert config != null;
+		
+		// Ohne GUI können wir nichts machen
+		if(gui == null)
+		{
+			log.error("farbButton(): Keine GUI gesetzt!");
+			return;
+		}
+		
+		switch(event.getActionCommand())
+		{
+			case "zeitenFarbe":
+				gui.panelBfpZeitenFarbeVorschau.setBackground(JColorChooser.showDialog(gui, "Farbe wählen", gui.panelBfpZeitenFarbeVorschau.getBackground()));
+				break;
+			case "betriebsstellenFarbe":
+				gui.panelBfpBetriebsstellenFarbeVorschau.setBackground(JColorChooser.showDialog(gui, "Farbe wählen", gui.panelBfpBetriebsstellenFarbeVorschau.getBackground()));
+				break;
+			case "fahrtenFarbe":
+				gui.panelBfpFahrtenFarbeVorschau.setBackground(JColorChooser.showDialog(gui, "Farbe wählen", gui.panelBfpFahrtenFarbeVorschau.getBackground()));
+				break;
+			default:
+				log.error("farbButton: actionCommand nicht erkannt: {}", event.getActionCommand());
+		}
+	}
 	public void actionButton(ActionEvent event)
 	{
 		assert config != null;
@@ -67,49 +83,16 @@ public class BildfahrplanSettingsGUIController
 			case "OK":
 				try
 				{
-					int hps = parseIntField(gui.inputHoeheProStunde.getText());
-					config.setHoeheProStunde(hps);
+					speichereTabAllgemein();
+					speichereTabStreckeneditor();
+					speichereTabZugeditor();
+					speichereTabBildfahrplan();
+					speichereTabFarben();
 				}
 				catch(NumberFormatException e)
 				{
-					log.error("HöheProStunde / Exception", e);
-					gui.errorMessage("Hoehe pro Stunde: "+e.getMessage());
+					return;
 				}
-				
-				try
-				{
-					if(gui.chckbxAuto.isSelected())
-					{
-						config.enableAutoSize();
-					}
-					else
-					{
-						double minZeit = TimeFormater.stringToDouble(gui.inputMinZeit.getText());
-						double maxZeit = TimeFormater.stringToDouble(gui.inputMaxZeit.getText());
-						config.setZeiten(minZeit, maxZeit);
-					}
-				}
-				catch(NumberFormatException e)
-				{
-					log.error("Dargestellte Zeit / Exception", e);
-					gui.errorMessage("Dargestellte Zeit: "+e.getMessage());
-				}
-				
-				try
-				{
-					int sch = parseIntField(gui.inputSchachtelung.getText());
-					config.setSchachtelung(sch);
-				}
-				catch(NumberFormatException e)
-				{
-					log.error("Schachtelung / Exception", e);
-					gui.errorMessage("Schachtelung: "+e.getMessage());
-				}
-				
-				config.setZeigeZugnamen(gui.rdbtngrpZeigeZugnamen.getSelection().getActionCommand());
-				
-				// ZugnamenKommentare
-				config.setZeigeZugnamenKommentare(gui.chckbxZugnamenKommentare.isSelected());
 				
 				// Apply: Fenster nicht schließen
 				if(event.getActionCommand() == "Apply")
@@ -118,32 +101,99 @@ public class BildfahrplanSettingsGUIController
 				}
 				break;
 			default:
+				log.error("actionButton: actionCommand nicht erkannt: {}", event.getActionCommand());
 		}
         gui.close();
         gui = null;
 	}
-	
-	protected int parseIntField(String input) throws NumberFormatException
+	protected void speichereTabAllgemein()
 	{
-		if(input.trim().isEmpty())
+		
+	}
+	protected void speichereTabStreckeneditor()
+	{
+		
+	}
+	protected void speichereTabZugeditor()
+	{
+		
+	}
+	protected void speichereTabBildfahrplan()
+	{
+		// Höhe pro Stunde
+		config.setHoeheProStunde(parseIntField("Höhe pro Stunde", gui.inputHoeheProStunde.getText()));
+		
+		// Dargestellte Zeit + Autosizing
+		if(gui.chckbxAuto.isSelected())
 		{
-			log.error("IntField: Leerer String");
-			throw new NumberFormatException("Feld ist leer.");
+			config.enableAutoSize();
+		}
+		else
+		{
+			double minZeit, maxZeit;
+			try
+			{
+				minZeit = TimeFormater.stringToDouble(gui.inputMinZeit.getText());
+				maxZeit = TimeFormater.stringToDouble(gui.inputMaxZeit.getText());
+			}
+			catch(NumberFormatException e)
+			{
+				log.error("Dargestellte Zeit: NumberformatException", e);
+				gui.errorMessage("Dargestellte Zeit: Nur positive ganze Zahlen erlaubt.");
+				// Ball weiterwerfen
+				throw e;
+			}
+			config.setZeiten(minZeit, maxZeit);
+		}
+		
+		// Schachtelung
+		config.setSchachtelung(parseIntField("Schachtelung", gui.inputSchachtelung.getText()));
+		
+		// ZeigeZugnamen
+		config.setZeigeZugnamen(gui.rdbtngrpZeigeZugnamen.getSelection().getActionCommand());
+		
+		// ZeigeZugnamenKommentare
+		config.setZeigeZugnamenKommentare(gui.chckbxZugnamenKommentare.isSelected());
+		
+		// ZeigeZugnamenKommentare
+		config.setZeigeZeiten(gui.chckbxZeigeZeiten.isSelected());
+	}
+	protected void speichereTabFarben()
+	{
+		// BfpZeiten
+		config.setBfpZeitenFarbe(gui.panelBfpZeitenFarbeVorschau.getBackground());
+		
+		// BfpZeiten
+		config.setBfpBetriebsstellenFarbe(gui.panelBfpBetriebsstellenFarbeVorschau.getBackground());
+		
+		// BfpZeiten
+		config.setBfpFahrtenFarbe(gui.panelBfpFahrtenFarbeVorschau.getBackground());
+	}
+	
+	protected int parseIntField(String name, String input)
+	{
+		if(input == null || input.trim().isEmpty())
+		{
+			log.error("{}: Leerer String", name);
+			gui.errorMessage(name+": Dargestellte Zeit: Feld ist leer");
+			throw new NumberFormatException();
 		}
 		try
 		{
 			int hpsInt = Integer.parseInt(input);
 			if(hpsInt < 0)
 			{
-				log.error("IntField: Wert kleiner 0");
-				throw new NumberFormatException("Nur positive ganze Zahlen erlaubt.");
+				log.error("{}: Wert kleiner 0", name);
+				gui.errorMessage(name+": Nur positive ganze Zahlen erlaubt.");
+				throw new NumberFormatException();
 			}
 			return hpsInt;
 		}
 		catch(NumberFormatException e)
 		{
-			log.error("IntField: NumberformatException", e);
-			throw new NumberFormatException("Nur positive ganze Zahlen erlaubt.");
+			log.error(name+": NumberformatException", e);
+			gui.errorMessage(name+": Nur positive ganze Zahlen erlaubt.");
+			throw new NumberFormatException();
 		}
 	}
 }

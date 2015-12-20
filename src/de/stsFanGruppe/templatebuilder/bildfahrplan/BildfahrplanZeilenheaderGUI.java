@@ -54,7 +54,7 @@ public class BildfahrplanZeilenheaderGUI extends JComponent
 		System.setProperty("swing.aatext", "true");
 		System.setProperty("awt.useSystemAAFontSettings", "lcd");
 		
-		g.setColor(config.getZeitFarbe());
+		g.setColor(config.getBfpZeitenFarbe());
 		
 		if(!paint || gui.streckenabschnitt == null)
 		{
