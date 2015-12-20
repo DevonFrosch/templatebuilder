@@ -82,15 +82,15 @@ public class JTrainGraphExportGUI extends JDialog implements GUI
 			contentPanel.add(lblPfadZurDatei, "2, 2, default, fill");
 		}
 		{
-		}
-		{
 			pfadInput = new JTextField();
 			contentPanel.add(pfadInput, "4, 2, fill, default");
 			pfadInput.setColumns(10);
 		}
-		pfadButton = new JButton("...");
-		pfadButton.addActionListener((ActionEvent arg0) -> dateiChooser(arg0));
-		contentPanel.add(pfadButton, "6, 2, right, default");
+		{
+			pfadButton = new JButton("...");
+			pfadButton.addActionListener((ActionEvent arg0) -> dateiChooser(arg0));
+			contentPanel.add(pfadButton, "6, 2, right, default");
+		}
 		{
 			chckbxDs100 = new JCheckBox("DS100 verwenden wo m\u00F6glich");
 			contentPanel.add(chckbxDs100, "2, 4");
@@ -145,7 +145,7 @@ public class JTrainGraphExportGUI extends JDialog implements GUI
 			fileChooser.setCurrentDirectory(file);
 		}
 		
-		if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION)
+		if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION)
 		{
 			pfadInput.setText(fileChooser.getSelectedFile().getPath());
 		}

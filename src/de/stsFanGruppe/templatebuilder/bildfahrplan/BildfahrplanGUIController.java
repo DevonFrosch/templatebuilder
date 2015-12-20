@@ -1,6 +1,6 @@
 package de.stsFanGruppe.templatebuilder.bildfahrplan;
 
-import java.awt.*;
+import java.awt.Dimension;
 import java.util.Set;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanConfig;
 import de.stsFanGruppe.templatebuilder.strecken.Streckenabschnitt;

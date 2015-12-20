@@ -132,7 +132,7 @@ public class BildfahrplanGUI extends JComponent
 		double minZeit = config.getMinZeit();
 		double maxZeit = config.getMaxZeit();	
 		
-		g.setColor(config.getBfpBetriebsstellenFarbe());
+		g.setColor(config.getBetriebsstellenFarbe());
 		
 		for(Betriebsstelle bs: streckenabschnitt.getBetriebsstellen())
 		{
@@ -156,7 +156,7 @@ public class BildfahrplanGUI extends JComponent
 		int x2 = getWidth();
 		int zeit = (int) minZeit;
 		
-		g.setColor(config.getBfpZeitenFarbe());
+		g.setColor(config.getZeitenFarbe());
 		
 		if (zeit % 10 != 0) 
 		{
@@ -179,7 +179,7 @@ public class BildfahrplanGUI extends JComponent
 		g.setStroke(new BasicStroke(1));
 		
 		// Fahrten im Bildfahrplan malen
-		g.setColor(config.getBfpFahrtenFarbe());
+		g.setColor(config.getFahrtenFarbe());
 		
 		for(Fahrt fahrt: fahrten)
 		{

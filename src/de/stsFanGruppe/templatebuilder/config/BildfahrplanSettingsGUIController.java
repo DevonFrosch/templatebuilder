@@ -1,7 +1,13 @@
 package de.stsFanGruppe.templatebuilder.config;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import javax.swing.JColorChooser;
+import javax.swing.JFileChooser;
 import de.stsFanGruppe.tools.NullTester;
 import de.stsFanGruppe.tools.TimeFormater;
 
@@ -22,6 +28,7 @@ public class BildfahrplanSettingsGUIController
 	{
 		NullTester.test(gui);
 		this.gui = gui;
+		gui.saveEnabled = config.schreibTest();
 	}
 	
 	public BildfahrplanConfig getConfig()
@@ -49,16 +56,29 @@ public class BildfahrplanSettingsGUIController
 			return;
 		}
 		
+		Color c = null;
 		switch(event.getActionCommand())
 		{
 			case "zeitenFarbe":
-				gui.panelBfpZeitenFarbeVorschau.setBackground(JColorChooser.showDialog(gui, "Farbe w‰hlen", gui.panelBfpZeitenFarbeVorschau.getBackground()));
+				c = JColorChooser.showDialog(gui, "Farbe w‰hlen", gui.panelBfpZeitenFarbeVorschau.getBackground());
+				if(c != null)
+				{
+					gui.panelBfpZeitenFarbeVorschau.setBackground(c);
+				}
 				break;
 			case "betriebsstellenFarbe":
-				gui.panelBfpBetriebsstellenFarbeVorschau.setBackground(JColorChooser.showDialog(gui, "Farbe w‰hlen", gui.panelBfpBetriebsstellenFarbeVorschau.getBackground()));
+				c = JColorChooser.showDialog(gui, "Farbe w‰hlen", gui.panelBfpBetriebsstellenFarbeVorschau.getBackground());
+				if(c != null)
+				{
+					gui.panelBfpBetriebsstellenFarbeVorschau.setBackground(c);
+				}
 				break;
 			case "fahrtenFarbe":
-				gui.panelBfpFahrtenFarbeVorschau.setBackground(JColorChooser.showDialog(gui, "Farbe w‰hlen", gui.panelBfpFahrtenFarbeVorschau.getBackground()));
+				c = JColorChooser.showDialog(gui, "Farbe w‰hlen", gui.panelBfpFahrtenFarbeVorschau.getBackground());
+				if(c != null)
+				{
+					gui.panelBfpFahrtenFarbeVorschau.setBackground(c);
+				}
 				break;
 			default:
 				log.error("farbButton: actionCommand nicht erkannt: {}", event.getActionCommand());
@@ -77,10 +97,52 @@ public class BildfahrplanSettingsGUIController
 		
 		switch(event.getActionCommand())
 		{
-			case "Cancel":
+			case "save":
+				JFileChooser saveFileChooser = new JFileChooser();
+				saveFileChooser.setDialogTitle("Einstellungen speichern");
+				
+				if (saveFileChooser.showSaveDialog(gui) == JFileChooser.APPROVE_OPTION)
+				{
+					try
+					{
+						if(!config.exportXML(new FileOutputStream(new File(saveFileChooser.getSelectedFile().getPath()))))
+						{
+							gui.infoMessage("Fehler beim Speichern der Einstellungen!");
+						}
+					}
+					catch(FileNotFoundException e)
+					{
+						log.error("Einstellungen exportieren", e);
+						gui.infoMessage("Fehler beim Speichern der Einstellungen!");
+					}
+				}
 				break;
-			case "Apply":
-			case "OK":
+			case "load":
+				JFileChooser loadFileChooser = new JFileChooser();
+				loadFileChooser.setDialogTitle("Einstellungen laden");
+				
+				if (loadFileChooser.showOpenDialog(gui) == JFileChooser.APPROVE_OPTION)
+				{
+					try
+					{
+						if(!config.importXML(new FileInputStream(new File(loadFileChooser.getSelectedFile().getPath()))))
+						{
+							gui.infoMessage("Fehler beim Laden der Einstellungen!");
+						}
+					}
+					catch(FileNotFoundException e)
+					{
+						log.error("Einstellungen importieren", e);
+						gui.infoMessage("Fehler beim Laden der Einstellungen!");
+					}
+				}
+				break;
+			case "cancel":
+				gui.close();
+		        gui = null;
+		        return;
+			case "apply":
+			case "ok":
 				try
 				{
 					speichereTabAllgemein();
@@ -91,20 +153,28 @@ public class BildfahrplanSettingsGUIController
 				}
 				catch(NumberFormatException e)
 				{
+					gui.errorMessage("Fehler beim Speichern der Einstellungen");
 					return;
 				}
 				
-				// Apply: Fenster nicht schlieﬂen
-				if(event.getActionCommand() == "Apply")
+				if(!config.schreibeEinstellungen())
 				{
+					log.error("Fehler beim Speichern der Einstellungen");
+					gui.errorMessage("Fehler beim Speichern der Einstellungen");
 					return;
+				}
+				
+				// OK: Fenster schlieﬂen
+				if(event.getActionCommand() == "ok")
+				{
+					gui.close();
+			        gui = null;
+			        return;
 				}
 				break;
 			default:
 				log.error("actionButton: actionCommand nicht erkannt: {}", event.getActionCommand());
 		}
-        gui.close();
-        gui = null;
 	}
 	protected void speichereTabAllgemein()
 	{
@@ -161,13 +231,13 @@ public class BildfahrplanSettingsGUIController
 	protected void speichereTabFarben()
 	{
 		// BfpZeiten
-		config.setBfpZeitenFarbe(gui.panelBfpZeitenFarbeVorschau.getBackground());
+		config.setZeitenFarbe(gui.panelBfpZeitenFarbeVorschau.getBackground());
 		
 		// BfpZeiten
-		config.setBfpBetriebsstellenFarbe(gui.panelBfpBetriebsstellenFarbeVorschau.getBackground());
+		config.setBetriebsstellenFarbe(gui.panelBfpBetriebsstellenFarbeVorschau.getBackground());
 		
 		// BfpZeiten
-		config.setBfpFahrtenFarbe(gui.panelBfpFahrtenFarbeVorschau.getBackground());
+		config.setFahrtenFarbe(gui.panelBfpFahrtenFarbeVorschau.getBackground());
 	}
 	
 	protected int parseIntField(String name, String input)

@@ -18,6 +18,7 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 	
 	BildfahrplanSettingsGUIController controller;
 	BildfahrplanConfig config;
+	boolean saveEnabled = false;
 	
 	final JPanel contentPanel = new JPanel();
 	// Bildfahrplan
@@ -327,7 +328,7 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 							panelFarbenBfp.add(panelBfpZeitenFarbe, "4, 2");
 							{
 								panelBfpZeitenFarbeVorschau = new JPanel();
-								panelBfpZeitenFarbeVorschau.setBackground(config.getBfpFahrtenFarbe());
+								panelBfpZeitenFarbeVorschau.setBackground(config.getZeitenFarbe());
 								FlowLayout fl_panelBfpZeitenFarbeVorschau = (FlowLayout) panelBfpZeitenFarbeVorschau.getLayout();
 								fl_panelBfpZeitenFarbeVorschau.setVgap(10);
 								fl_panelBfpZeitenFarbeVorschau.setHgap(10);
@@ -349,7 +350,7 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 							panelFarbenBfp.add(panelBfpBetriebsstellenFarbe, "4, 4");
 							{
 								panelBfpBetriebsstellenFarbeVorschau = new JPanel();
-								panelBfpBetriebsstellenFarbeVorschau.setBackground(config.getBfpBetriebsstellenFarbe());
+								panelBfpBetriebsstellenFarbeVorschau.setBackground(config.getBetriebsstellenFarbe());
 								FlowLayout flowLayout = (FlowLayout) panelBfpBetriebsstellenFarbeVorschau.getLayout();
 								flowLayout.setHgap(10);
 								flowLayout.setVgap(10);
@@ -371,7 +372,7 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 							panelFarbenBfp.add(panelBfpFahrtenFarbe, "4, 6");
 							{
 								panelBfpFahrtenFarbeVorschau = new JPanel();
-								panelBfpFahrtenFarbeVorschau.setBackground(config.getBfpFahrtenFarbe());
+								panelBfpFahrtenFarbeVorschau.setBackground(config.getFahrtenFarbe());
 								FlowLayout flowLayout = (FlowLayout) panelBfpFahrtenFarbeVorschau.getLayout();
 								flowLayout.setHgap(10);
 								flowLayout.setVgap(10);
@@ -409,26 +410,58 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 		}
 		{
 			JPanel buttonPane = new JPanel();
-			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
-				JButton okButton = new JButton("OK");
-				okButton.setActionCommand("OK");
-				okButton.addActionListener((ActionEvent arg0) -> controller.actionButton(arg0));
-				buttonPane.add(okButton);
-				getRootPane().setDefaultButton(okButton);
-			}
-			{
-				JButton cancelButton = new JButton("Abbrechen");
-				cancelButton.setActionCommand("Cancel");
-				cancelButton.addActionListener((ActionEvent arg0) -> controller.actionButton(arg0));
-				buttonPane.add(cancelButton);
-			}
-			{
-				JButton applyButton = new JButton("Anwenden");
-				applyButton.setActionCommand("Apply");
-				applyButton.addActionListener((ActionEvent arg0) -> controller.actionButton(arg0));
-				buttonPane.add(applyButton);
+				buttonPane.setLayout(new FormLayout(new ColumnSpec[] {
+						FormSpecs.UNRELATED_GAP_COLSPEC,
+						FormSpecs.DEFAULT_COLSPEC,
+						FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
+						FormSpecs.DEFAULT_COLSPEC,
+						ColumnSpec.decode("3dlu:grow"),
+						FormSpecs.DEFAULT_COLSPEC,
+						FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
+						FormSpecs.DEFAULT_COLSPEC,
+						FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
+						FormSpecs.DEFAULT_COLSPEC,
+						FormSpecs.UNRELATED_GAP_COLSPEC,},
+					new RowSpec[] {
+						FormSpecs.LINE_GAP_ROWSPEC,
+						FormSpecs.DEFAULT_ROWSPEC,
+						FormSpecs.UNRELATED_GAP_ROWSPEC,}));
+				{
+					JButton speichernButton = new JButton("Speichern");
+					speichernButton.setActionCommand("save");
+					speichernButton.addActionListener((ActionEvent arg0) -> controller.actionButton(arg0));
+					buttonPane.add(speichernButton, "2, 2, left, top");
+				}
+				{
+					JButton ladenButton = new JButton("Laden");
+					ladenButton.setActionCommand("load");
+					ladenButton.addActionListener((ActionEvent arg0) -> controller.actionButton(arg0));
+					buttonPane.add(ladenButton, "4, 2, left, top");
+				}
+				{
+					JButton okButton = new JButton("OK");
+					okButton.setEnabled(saveEnabled);
+					okButton.setActionCommand("ok");
+					okButton.addActionListener((ActionEvent arg0) -> controller.actionButton(arg0));
+					buttonPane.add(okButton, "6, 2, left, top");
+					getRootPane().setDefaultButton(okButton);
+				}
+				{
+					JButton cancelButton = new JButton("Abbrechen");
+					cancelButton.setEnabled(saveEnabled);
+					cancelButton.setActionCommand("cancel");
+					cancelButton.addActionListener((ActionEvent arg0) -> controller.actionButton(arg0));
+					buttonPane.add(cancelButton, "8, 2, left, top");
+				}
+				{
+					JButton applyButton = new JButton("Anwenden");
+					applyButton.setEnabled(saveEnabled);
+					applyButton.setActionCommand("apply");
+					applyButton.addActionListener((ActionEvent arg0) -> controller.actionButton(arg0));
+					buttonPane.add(applyButton, "10, 2, left, top");
+				}
 			}
 		}
 		setVisible(true);

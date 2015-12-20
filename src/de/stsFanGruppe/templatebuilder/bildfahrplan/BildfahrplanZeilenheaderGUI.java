@@ -2,9 +2,7 @@ package de.stsFanGruppe.templatebuilder.bildfahrplan;
 
 import java.awt.*;
 import java.util.Set;
-
 import javax.swing.JComponent;
-
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanConfig;
 import de.stsFanGruppe.templatebuilder.strecken.Streckenabschnitt;
 import de.stsFanGruppe.templatebuilder.zug.Fahrt;
@@ -54,7 +52,7 @@ public class BildfahrplanZeilenheaderGUI extends JComponent
 		System.setProperty("swing.aatext", "true");
 		System.setProperty("awt.useSystemAAFontSettings", "lcd");
 		
-		g.setColor(config.getBfpZeitenFarbe());
+		g.setColor(config.getZeitenFarbe());
 		
 		if(!paint || gui.streckenabschnitt == null)
 		{

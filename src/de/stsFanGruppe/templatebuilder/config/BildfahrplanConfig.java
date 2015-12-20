@@ -1,166 +1,207 @@
 package de.stsFanGruppe.templatebuilder.config;
 
 import java.awt.Color;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JComponent;
-import de.stsFanGruppe.tools.JSONBuilder;
 import de.stsFanGruppe.tools.NullTester;
+import de.stsFanGruppe.tools.PreferenceHandler;
 
 public class BildfahrplanConfig
 {
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(BildfahrplanConfig.class);
 	
+	private PreferenceHandler prefs;
 	private Map<Object, Runnable> callbacks = new HashMap<>();
 	private int callbackCounter = 0;
 	
-	protected int marginRight = 20; // Pixel
-	protected int marginLeft = 20; // Pixel
-	protected int marginTop = 0; // Pixel
-	protected int marginBottom = 10; // Pixel
+	// Bildfahrplan-Ränder
+	public static final String CONFIG_MAR_RIGHT = "bildfahrplan/darstellung/margin/right";
+	public static final String CONFIG_MAR_LEFT = "bildfahrplan/darstellung/margin/left";
+	public static final String CONFIG_MAR_TOP = "bildfahrplan/darstellung/margin/top";
+	public static final String CONFIG_MAR_BOTTOM = "bildfahrplan/darstellung/margin/bottom";
+
+	private static final int DEFAULT_MAR_RIGHT = 20; // Pixel
+	private static final int DEFAULT_MAR_LEFT = 20; // Pixel
+	private static final int DEFAULT_MAR_TOP = 0; // Pixel
+	private static final int DEFAULT_MAR_BOTTOM = 10; // Pixel
 	
-	//Einstellung für den Bildfahrplanspaltenheader
-	int lineHeight = 10; // Pixel
-	int offsetX = 10; // Pixel
-	int offsetY = 5; // Pixel
-	int textMarginTop = 5; // Pixel
-	int textMarginBottom = 5; // Pixel
-	int zeilenAnzahl = 2;
+	// Bildfahrplanspaltenheader
+	public static final String CONFIG_SH_LINEHEIGHT = "bildfahrplan/darstellung/spaltenheader/lineHeight";
+	public static final String CONFIG_SH_OFFSETX = "bildfahrplan/darstellung/spaltenheader/offsetX";
+	public static final String CONFIG_SH_OFFSETY = "bildfahrplan/darstellung/spaltenheader/offsetY";
+	public static final String CONFIG_SH_TEXTMARGINTOP = "bildfahrplan/darstellung/spaltenheader/textMarginTop";
+	public static final String CONFIG_SH_TEXTMARGINBOTTOM = "bildfahrplan/darstellung/spaltenheader/textMarginBottom";
+	public static final String CONFIG_SH_ZEILENANZAHL = "bildfahrplan/darstellung/spaltenheader/zeilenAnzahl";
+
+	private static final int DEFAULT_SH_LINEHEIGHT = 10; // Pixel
+	private static final int DEFAULT_SH_OFFSETX = 10; // Pixel
+	private static final int DEFAULT_SH_OFFSETY = 5; // Pixel
+	private static final int DEFAULT_SH_TEXTMARGINTOP = 5; // Pixel
+	private static final int DEFAULT_SH_TEXTMARGINBOTTOM = 5; // Pixel
+	private static final int DEFAULT_SH_ZEILENANZAHL = 2;
 	
-	//Einstellung für den Bildfahrplanzeilenheader
-	int zeilenHeaderBreite = 32;
-	int zeitIntervall = 10;
+	// Bildfahrplanzeilenheader
+	public static final String CONFIG_ZH_BREITE = "bildfahrplan/darstellung/zeilenheader/breite";
+	public static final String CONFIG_ZH_ZEITINTERVALL = "bildfahrplan/darstellung/zeilenheader/zeitIntervall";
+	
+	private static final int DEFAULT_ZH_BREITE = 32; // Pixel
+	private static final int DEFAULT_ZH_ZEITINTERVALL = 10; // Minuten
 	
 	// Darstellung der Linien
-	protected int hoeheProStunde = 400; // Minuten
-	protected double minZeit = 360; // Minuten
-	protected double maxZeit = 1260; // Minuten
-	protected boolean autoSize = true;
-	protected int schachtelung = 24; // Stunden
+	public static final String CONFIG_F_HOEHEPROSTUNDE = "bildfahrplan/darstellung/fahrten/hoeheProStunde";
+	public static final String CONFIG_F_MINZEIT = "bildfahrplan/darstellung/fahrten/minZeit";
+	public static final String CONFIG_F_MAXZEIT = "bildfahrplan/darstellung/fahrten/maxZeit";
+	public static final String CONFIG_F_AUTOSIZE = "bildfahrplan/darstellung/fahrten/autoSize";
+	public static final String CONFIG_F_SCHACHTELUNG = "bildfahrplan/darstellung/fahrten/schachtelung";
+	
+	private static final int DEFAULT_F_HOEHEPROSTUNDE = 400; // Minuten
+	private static final double DEFAULT_F_MINZEIT = 360; // Minuten
+	private static final double DEFAULT_F_MAXZEIT = 1260; // Minuten
+	private static final boolean DEFAULT_F_AUTOSIZE = true;
+	private static final int DEFAULT_F_SCHACHTELUNG = 24; // Stunden
 	
 	// Darstellung von Texten
-	protected boolean zeigeZeiten = true; 
-	protected int zeigeZugnamen = 2;
-	protected boolean zeigeZugnamenKommentare = true;
+	public static final String CONFIG_TEXT_ZEIGEZEITEN = "bildfahrplan/darstellung/text/zeigeZeiten";
+	public static final String CONFIG_TEXT_ZEIGEZUGNAMEN = "bildfahrplan/darstellung/text/zeigeZugnamen";
+	public static final String CONFIG_TEXT_ZEIGEKOMMENTARE = "bildfahrplan/darstellung/text/zeigeZugnamenKommentare";
+	
+	private static final boolean DEFAULT_TEXT_ZEIGEZEITEN = true; 
+	private static final int DEFAULT_TEXT_ZEIGEZUGNAMEN = 2;
+	private static final boolean DEFAULT_TEXT_ZEIGEKOMMENTARE = true;
 	
 	//Farbeinstellungen
-	protected Color bfpZeitenFarbe = Color.RED;
-	protected Color bfpFahrtenFarbe = Color.BLACK;
-	protected Color bfpBetriebsstellenFarbe = Color.BLUE;
+	public static final String CONFIG_FARBEN_ZEITEN = "bildfahrplan/darstellung/farben/zeiten";
+	public static final String CONFIG_FARBEN_FAHRTEN = "bildfahrplan/darstellung/farben/fahrten";
+	public static final String CONFIG_FARBEN_BETRIEBSS = "bildfahrplan/darstellung/farben/betriebsstellen";
+	public static final String CONFIG_FARBEN_HINTERGR = "bildfahrplan/darstellung/farben/hintergrund";
+
+	private static final Color DEFAULT_FARBEN_ZEITEN = Color.RED;
+	private static final Color DEFAULT_FARBEN_FAHRTEN = Color.BLACK;
+	private static final Color DEFAULT_FARBEN_BETRIEBSS = Color.BLUE;
+	private static final Color DEFAULT_FARBEN_HINTERGR = Color.WHITE;
 	
 	// Konstruktoren
 	public BildfahrplanConfig(double minZeit, double maxZeit)
 	{
+		log.debug("Neue BildfahrplanConfig(double, double)");
+		this.prefs = new PreferenceHandler(BildfahrplanConfig.class, () -> notifyChange());
 		this.setZeiten(minZeit, maxZeit);
+		assert prefs != null;
 	}
 	public BildfahrplanConfig()
 	{
+		log.debug("Neue BildfahrplanConfig()");
+		this.prefs = new PreferenceHandler(BildfahrplanConfig.class, () -> notifyChange());
 		this.enableAutoSize();
+		assert prefs != null;
 	}
 	
 	// Getter / Setter
 	public int getMarginRight()
 	{
-		return this.marginRight;
+		return prefs.getInt(CONFIG_MAR_RIGHT, DEFAULT_MAR_RIGHT);
+	}
+	public void setMarginRight(int marginRight)
+	{
+		prefs.setInt("marginRight", CONFIG_MAR_RIGHT, marginRight);
 	}
 	public int getMarginLeft()
 	{
-		return this.marginLeft;
+		return prefs.getInt(CONFIG_MAR_LEFT, DEFAULT_MAR_LEFT);
+	}
+	public void setMarginLeft(int marginLeft)
+	{
+		prefs.setInt("marginLeft", CONFIG_MAR_LEFT, marginLeft);
 	}
 	public int getMarginTop()
 	{
-		return this.marginTop;
+		return prefs.getInt(CONFIG_MAR_TOP, DEFAULT_MAR_TOP);
+	}
+	public void setMarginTop(int marginTop)
+	{
+		prefs.setInt("marginTop", CONFIG_MAR_TOP, marginTop);
 	}
 	public int getMarginBottom()
 	{
-		return this.marginBottom;
+		return prefs.getInt(CONFIG_MAR_BOTTOM, DEFAULT_MAR_BOTTOM);
+	}
+	public void setMarginBottom(int marginBottom)
+	{
+		prefs.setInt("marginBottom", CONFIG_MAR_BOTTOM, marginBottom);
 	}
 	
 	public int getLineHeight()
 	{
-		return lineHeight;
+		return prefs.getInt(CONFIG_SH_LINEHEIGHT, DEFAULT_SH_LINEHEIGHT);
 	}
 	public void setLineHeight(int lineHeight)
 	{
-		this.lineHeight = lineHeight;
-		log.debug("Config: lineHeight = {}", lineHeight);
-		notifyChange();
+		prefs.setInt("lineHeight", CONFIG_SH_LINEHEIGHT, lineHeight);
 	}
 	public int getOffsetX()
 	{
-		return offsetX;
+		return prefs.getInt(CONFIG_SH_OFFSETX, DEFAULT_SH_OFFSETX);
 	}
 	public void setOffsetX(int offsetX)
 	{
-		this.offsetX = offsetX;
-		log.debug("Config: offsetX = {}", offsetX);
-		notifyChange();
+		prefs.setInt("offsetX", CONFIG_SH_OFFSETX, offsetX);
 	}
 	public int getOffsetY()
 	{
-		return offsetY;
+		return prefs.getInt(CONFIG_SH_OFFSETY, DEFAULT_SH_OFFSETY);
 	}
 	public void setOffsetY(int offsetY)
 	{
-		this.offsetY = offsetY;
-		log.debug("Config: offsetY = {}", offsetY);
-		notifyChange();
+		prefs.setInt("offsetY", CONFIG_SH_OFFSETY, offsetY);
 	}
 	public int getTextMarginTop()
 	{
-		return textMarginTop;
+		return prefs.getInt(CONFIG_SH_TEXTMARGINTOP, DEFAULT_SH_TEXTMARGINTOP);
 	}
 	public void setTextMarginTop(int textMarginTop)
 	{
-		this.textMarginTop = textMarginTop;
-		log.debug("Config: textMarginTop = {}", textMarginTop);
-		notifyChange();
+		prefs.setInt("textMarginTop", CONFIG_SH_TEXTMARGINTOP, textMarginTop);
 	}
 	public int getTextMarginBottom()
 	{
-		return textMarginBottom;
+		return prefs.getInt(CONFIG_SH_TEXTMARGINBOTTOM, DEFAULT_SH_TEXTMARGINBOTTOM);
 	}
 	public void setTextMarginBottom(int textMarginBottom)
 	{
-		this.textMarginBottom = textMarginBottom;
-		log.debug("Config: textMarginBottom = {}", textMarginBottom);
-		notifyChange();
+		prefs.setInt("textMarginBottom", CONFIG_SH_TEXTMARGINBOTTOM, textMarginBottom);
 	}
 	public int getZeilenAnzahl()
 	{
-		return zeilenAnzahl;
+		return prefs.getInt(CONFIG_SH_ZEILENANZAHL, DEFAULT_SH_ZEILENANZAHL);
 	}
 	public void setZeilenAnzahl(int zeilenAnzahl)
 	{
-		this.zeilenAnzahl = zeilenAnzahl;
-		log.debug("Config: zeilenAnzahl = {}", zeilenAnzahl);
-		notifyChange();
+		prefs.setInt("zeilenAnzahl", CONFIG_SH_ZEILENANZAHL, zeilenAnzahl);
 	}
 	
 	public int getZeilenHeaderBreite()
 	{
-		return zeilenHeaderBreite;
+		return prefs.getInt(CONFIG_ZH_BREITE, DEFAULT_ZH_BREITE);
 	}
 	public void setZeilenHeaderBreite(int zeilenHeaderBreite)
 	{
-		this.zeilenHeaderBreite = zeilenHeaderBreite;
-		log.debug("Config: zeilenHeaderBreite = {}", zeilenHeaderBreite);
-		notifyChange();
+		prefs.setInt("zeilenHeaderBreite", CONFIG_ZH_BREITE, zeilenHeaderBreite);
 	}
 	public int getZeitIntervall()
 	{
-		return zeitIntervall;
+		return prefs.getInt(CONFIG_ZH_ZEITINTERVALL, DEFAULT_ZH_ZEITINTERVALL);
 	}
 	public void setZeitIntervall(int zeitIntervall)
 	{
-		this.zeitIntervall = zeitIntervall;
-		log.debug("Config: zeitIntervall = {}", zeitIntervall);
-		notifyChange();
+		prefs.setInt("zeitIntervall", CONFIG_ZH_ZEITINTERVALL, zeitIntervall);
 	}
 	
 	public int getHoeheProStunde()
 	{
-		return hoeheProStunde;
+		return prefs.getInt(CONFIG_F_HOEHEPROSTUNDE, DEFAULT_F_HOEHEPROSTUNDE);
 	}
 	public void setHoeheProStunde(int hoeheProStunde)
 	{
@@ -168,22 +209,20 @@ public class BildfahrplanConfig
 		{
 			throw new IllegalArgumentException("Höhe muss größer gleich 0 sein.");
 		}
-		this.hoeheProStunde = hoeheProStunde;
-		log.debug("Config: hoeheProStunde = {}", hoeheProStunde);
-		notifyChange();
+		prefs.setInt("hoeheProStunde", CONFIG_F_HOEHEPROSTUNDE, hoeheProStunde);
 	}
 	
 	public double getMinZeit()
 	{
-		return minZeit;
+		return prefs.getDouble(CONFIG_F_MINZEIT, DEFAULT_F_MINZEIT);
 	}
 	public double getMaxZeit()
 	{
-		return maxZeit;
+		return prefs.getDouble(CONFIG_F_MAXZEIT, DEFAULT_F_MAXZEIT);
 	}
 	public boolean needsAutoSize()
 	{
-		return autoSize;
+		return prefs.getBoolean(CONFIG_F_AUTOSIZE, DEFAULT_F_AUTOSIZE);
 	}
 	public void setZeiten(double min, double max)
 	{
@@ -191,49 +230,39 @@ public class BildfahrplanConfig
 		{
 			throw new IllegalArgumentException("Zeit muss größer gleich 0 sein.");
 		}
-		this.minZeit = min;
-		this.maxZeit = max;
-		this.autoSize = false;
-		log.debug("Config: minZeit = {}, maxZeit = {}, autoSize = false", min, max);
-		notifyChange();
+		prefs.setDouble("minZeit", CONFIG_F_MINZEIT, min);
+		prefs.setDouble("maxZeit", CONFIG_F_MAXZEIT, max);
+		prefs.setBoolean("autoSize", CONFIG_F_AUTOSIZE, false);
 	}
 	public void enableAutoSize()
 	{
-		this.autoSize = true;
-		log.debug("Config: autoSize = true");
-		notifyChange();
+		prefs.setBoolean("autoSize", CONFIG_F_AUTOSIZE, true);
 	}
 	
 	public int getSchachtelung()
 	{
-		return schachtelung;
+		return prefs.getInt(CONFIG_F_SCHACHTELUNG, DEFAULT_F_SCHACHTELUNG);
 	}
 	public void setSchachtelung(int schachtelung)
 	{
-		this.schachtelung = schachtelung;
-		log.debug("Config: schachtelung = {}", schachtelung);
-		notifyChange();
+		prefs.setInt("schachtelung", CONFIG_F_SCHACHTELUNG, schachtelung);
 	}
 	
 	public boolean getZeigeZeiten()
 	{
-		return zeigeZeiten;
+		return prefs.getBoolean(CONFIG_TEXT_ZEIGEZEITEN, DEFAULT_TEXT_ZEIGEZEITEN);
 	}
 	public void setZeigeZeiten(boolean zeigeZeiten)
 	{
-		this.zeigeZeiten = zeigeZeiten;
-		log.debug("Config: zeigeZeiten = {}", zeigeZeiten);
-		notifyChange();
+		prefs.setBoolean("zeigeZeiten", CONFIG_TEXT_ZEIGEZEITEN, zeigeZeiten);
 	}
 	public int getZeigeZugnamen()
 	{
-		return zeigeZugnamen;
+		return prefs.getInt(CONFIG_TEXT_ZEIGEZUGNAMEN, DEFAULT_TEXT_ZEIGEZUGNAMEN);
 	}
 	public void setZeigeZugnamen(int zeigeZugnamen)
 	{
-		this.zeigeZugnamen = zeigeZugnamen;
-		log.debug("Config: zeigeZugnamen = {}", zeigeZugnamen);
-		notifyChange();
+		prefs.setInt("zeigeZugnamen", CONFIG_TEXT_ZEIGEZUGNAMEN, zeigeZugnamen);
 	}
 	public void setZeigeZugnamen(String zeigeZugnamen)
 	{
@@ -250,70 +279,68 @@ public class BildfahrplanConfig
 			default:
 				zz = 2;
 		}
-		this.zeigeZugnamen = zz;
-		log.debug("Config: zeigeZugnamen = {}", zz);
-		notifyChange();
+		prefs.setInt("zeigeZugnamen", CONFIG_TEXT_ZEIGEZUGNAMEN, zz);
 	}
 	public boolean getZeigeZugnamenKommentare()
 	{
-		return zeigeZugnamenKommentare;
+		return prefs.getBoolean(CONFIG_TEXT_ZEIGEKOMMENTARE, DEFAULT_TEXT_ZEIGEKOMMENTARE);
 	}
 	public void setZeigeZugnamenKommentare(boolean zeigeZugnamenKommentare)
 	{
-		this.zeigeZugnamenKommentare = zeigeZugnamenKommentare;
-		log.debug("Config: zeigeZugnamenKommentare = {}", zeigeZugnamenKommentare);
-		notifyChange();
+		prefs.setBoolean("zeigeZugnamenKommentare", CONFIG_TEXT_ZEIGEKOMMENTARE, zeigeZugnamenKommentare);
 	}
 	
-	public Color getBfpZeitenFarbe()
+	public Color getZeitenFarbe()
 	{
-		return bfpZeitenFarbe;
+		return prefs.getColor(CONFIG_FARBEN_ZEITEN, DEFAULT_FARBEN_ZEITEN);
 	}
-	public void setBfpZeitenFarbe(Color bfpZeitenFarbe)
+	public void setZeitenFarbe(Color zeitenFarbe)
 	{
-		this.bfpZeitenFarbe = bfpZeitenFarbe;
-		log.debug("Config: bfpZeitenFarbe = {}", bfpZeitenFarbe);
-		notifyChange();
+		prefs.setColor("zeitenFarbe", CONFIG_FARBEN_ZEITEN, zeitenFarbe);
 	}
-	public Color getBfpFahrtenFarbe()
+	public Color getFahrtenFarbe()
 	{
-		return bfpFahrtenFarbe;
+		return prefs.getColor(CONFIG_FARBEN_FAHRTEN, DEFAULT_FARBEN_FAHRTEN);
 	}
-	public void setBfpFahrtenFarbe(Color bfpFahrtenFarbe)
+	public void setFahrtenFarbe(Color fahrtenFarbe)
 	{
-		this.bfpFahrtenFarbe = bfpFahrtenFarbe;
-		log.debug("Config: bfpFahrtenFarbe = {}", bfpFahrtenFarbe);
-		notifyChange();
+		prefs.setColor("fahrtenFarbe", CONFIG_FARBEN_FAHRTEN, fahrtenFarbe);
 	}
-	public Color getBfpBetriebsstellenFarbe()
+	public Color getBetriebsstellenFarbe()
 	{
-		return bfpBetriebsstellenFarbe;
+		return prefs.getColor(CONFIG_FARBEN_BETRIEBSS, DEFAULT_FARBEN_BETRIEBSS);
 	}
-	public void setBfpBetriebsstellenFarbe(Color bfpBetriebsstellenFarbe)
+	public void setBetriebsstellenFarbe(Color betriebsstellenFarbe)
 	{
-		this.bfpBetriebsstellenFarbe = bfpBetriebsstellenFarbe;
-		log.debug("Config: bfpBetriebsstellenFarbe = {}", bfpBetriebsstellenFarbe);
-		notifyChange();
+		prefs.setColor("betriebsstellenFarbe", CONFIG_FARBEN_BETRIEBSS, betriebsstellenFarbe);
+	}
+	public Color getHintergrundFarbe()
+	{
+		return prefs.getColor(CONFIG_FARBEN_HINTERGR, DEFAULT_FARBEN_HINTERGR);
+	}
+	public void setHintergrundFarbe(Color hintergrundFarbe)
+	{
+		prefs.setColor("hintergrundFarbe", CONFIG_FARBEN_HINTERGR, hintergrundFarbe);
 	}
 	
 	// Rechnende Funktionen
 	public int getPanelHeight()
 	{
-		return (int) ((maxZeit - minZeit) / 60 * hoeheProStunde) + marginTop + marginBottom;
+		return (int) ((getMaxZeit() - getMinZeit()) / 60 * getHoeheProStunde()) + getMarginTop() + getMarginBottom();
 	}
 	public int zeichnenBreite(JComponent p)
 	{
 		NullTester.test(p);
-		return p.getWidth() - marginLeft - marginRight;
+		return p.getWidth() - getMarginLeft() - getMarginRight();
 	}
 	public int zeichnenHoehe(JComponent p)
 	{
 		NullTester.test(p);
-		return p.getHeight() - marginTop - marginBottom;
+		return p.getHeight() - getMarginTop() - getMarginBottom();
 	}
 	public int spaltenHeaderHoehe(int textHeight)
 	{
-		return textMarginTop + (textHeight + offsetY) * zeilenAnzahl + textMarginBottom;  
+		return getTextMarginTop() + (textHeight + getOffsetY()) * getZeilenAnzahl() + getTextMarginBottom();  
 	}
 	
 	// Change-Handler
@@ -336,34 +363,26 @@ public class BildfahrplanConfig
 		callbacks.forEach((k, v) -> v.run());
 	}
 	
-	// Import/Export
-	public void parseJSON(String json)
+	public boolean schreibTest()
 	{
-		log.debug("parseJSON(json)");
-		// TODO JSONParser einbauen
-		log.error("Funktion noch nicht implementiert!");
+		return prefs.speichertest();
 	}
-	
-	public String toJSON()
+	public boolean schreibeEinstellungen()
 	{
-		JSONBuilder json = new JSONBuilder();
-		json.beginObject();
-		json.add("marginRight", marginRight);
-		json.add("marginLeft", marginLeft);
-		json.add("marginTop", marginTop);
-		json.add("marginBottom", marginBottom);
-		json.add("hoeheProStunde", hoeheProStunde);
-		json.add("minZeit", minZeit);
-		json.add("maxZeit", maxZeit);
-		json.add("autoSize", autoSize);
-		json.add("schachtelung", schachtelung);
-		json.endObject();
-		return json.toString();
+		return prefs.schreibeEinstellungen();
+	}
+	public boolean importXML(InputStream is)
+	{
+		return prefs.importXML(is);
+	}
+	public boolean exportXML(OutputStream os)
+	{
+		return prefs.exportXML(os);
 	}
 	
 	public String toString()
 	{
-		return "{margin: r="+marginRight+", l="+marginLeft+", t="+marginTop+", b="+marginBottom+"}";
+		return "BildfahrplanConfig ("+prefs.toString()+")";
 	}
 	public String toXML()
 	{
@@ -371,10 +390,6 @@ public class BildfahrplanConfig
 	}
 	public String toXML(String indent)
 	{
-		String newLine = "\n"+indent+"  ";
-		return "<bildfahrplanConfig>"
-				+newLine+"<hoeheProStunde value=\""+hoeheProStunde+"\" />"
-				+newLine+"<zeitBereich min="+minZeit+" max=\""+maxZeit+"\" />"
-				+"\n"+indent+"</bildfahrplanConfig>";
+		return indent+"<bildfahrplanConfig />";
 	}
 }
