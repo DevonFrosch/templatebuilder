@@ -207,6 +207,7 @@ public class BildfahrplanGUI extends JComponent
 							name = name.substring(0, name.indexOf('%'));
 						}
 						drawLine(g, kmAb, ab - (i + 1) * minZeit, kmAn, an - (i + 1) * minZeit, name);
+						System.out.println(ab + " >= " + (i + 1) * minZeit);
 					}
 					
 					// für nächsten Eintrag
@@ -214,7 +215,6 @@ public class BildfahrplanGUI extends JComponent
 					kmAb = streckenKm.get(fh.getGleisabschnitt().getParent().getParent()).doubleValue();
 				}
 			}
-			System.out.println((i + 1) * minZeit + " + " + i * config.getSchachtelung() + " <= " + maxZeit);
 		}
 	}
 	
