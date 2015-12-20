@@ -10,7 +10,7 @@ public class Startup
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Startup.class);
 	
 	// Versionsinformationen
-	public final static String version = "0.2dev2";
+	public final static String version = "0.2dev3";
 	public final static boolean dev = true;
 	
 	public static void main(String[] args)
