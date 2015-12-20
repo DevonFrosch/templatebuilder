@@ -185,6 +185,8 @@ public class BildfahrplanGUI extends JComponent
 		 * Schachtelung der Züge nach Minuten
 		 */		
 		int verschachtelungVerschiebung = 0;
+		int schachtelung = config.getSchachtelung();
+		
 		for (int i = (int) minZeit; i <= maxZeit;)
 		{
 			// Fahrten im Bildfahrplan malen
@@ -216,8 +218,13 @@ public class BildfahrplanGUI extends JComponent
 					kmAb = streckenKm.get(fh.getGleisabschnitt().getParent().getParent()).doubleValue();
 				}
 			}
-			i += (int) config.getSchachtelung();
-			verschachtelungVerschiebung += config.getSchachtelung();
+			if(schachtelung == 0)
+			{
+				// Keine Schachtelung, abbrechen
+				break;
+			}
+			i += schachtelung;
+			verschachtelungVerschiebung += schachtelung;
 		}
 	}
 	

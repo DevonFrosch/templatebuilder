@@ -219,7 +219,14 @@ public class BildfahrplanSettingsGUIController
 		}
 		
 		// Schachtelung
-		config.setSchachtelung(parseIntField("Schachtelung", gui.inputSchachtelung.getText()));
+		if(gui.chckbxSchachtelung.isSelected())
+		{
+			config.setSchachtelung(parseIntField("Schachtelung", gui.inputSchachtelung.getText()));
+		}
+		else
+		{
+			config.setSchachtelung(0);
+		}
 		
 		// ZeigeZugnamen
 		config.setZeigeZugnamen(gui.rdbtngrpZeigeZugnamen.getSelection().getActionCommand());

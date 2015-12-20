@@ -27,6 +27,7 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 	JTextField inputHoeheProStunde;
 	JSlider sliderHoeheProStunde;
 	JCheckBox chckbxAuto;
+	JCheckBox chckbxSchachtelung;
 	JTextField inputSchachtelung;
 	
 	ButtonGroup rdbtngrpZeigeZugnamen;
@@ -120,9 +121,9 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 						new RowSpec[] {
 							FormSpecs.RELATED_GAP_ROWSPEC,
 							FormSpecs.DEFAULT_ROWSPEC,
-							FormSpecs.RELATED_GAP_ROWSPEC,
+							FormSpecs.UNRELATED_GAP_ROWSPEC,
 							FormSpecs.DEFAULT_ROWSPEC,
-							FormSpecs.RELATED_GAP_ROWSPEC,
+							FormSpecs.UNRELATED_GAP_ROWSPEC,
 							FormSpecs.DEFAULT_ROWSPEC,
 							FormSpecs.RELATED_GAP_ROWSPEC,}));
 					{
@@ -172,14 +173,14 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 						panelZeiten.add(panelZeit, "4, 4");
 						panelZeit.setLayout(new FormLayout(new ColumnSpec[] {
 								ColumnSpec.decode("default:grow"),
-								com.jgoodies.forms.layout.FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
-								com.jgoodies.forms.layout.FormSpecs.DEFAULT_COLSPEC,
-								com.jgoodies.forms.layout.FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
+								FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
+								FormSpecs.DEFAULT_COLSPEC,
+								FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
 								ColumnSpec.decode("default:grow"),
-								com.jgoodies.forms.layout.FormSpecs.RELATED_GAP_COLSPEC,
-								com.jgoodies.forms.layout.FormSpecs.DEFAULT_COLSPEC,},
+								FormSpecs.RELATED_GAP_COLSPEC,
+								FormSpecs.DEFAULT_COLSPEC,},
 							new RowSpec[] {
-								com.jgoodies.forms.layout.FormSpecs.DEFAULT_ROWSPEC,}));
+								FormSpecs.DEFAULT_ROWSPEC,}));
 						{
 							inputMinZeit = new JTextField();
 							panelZeit.add(inputMinZeit, "1, 1");
@@ -208,9 +209,22 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 						panelZeiten.add(lblSchachtelung, "2, 6");
 					}
 					{
-						inputSchachtelung = new JTextField();
-						panelZeiten.add(inputSchachtelung, "4, 6");
-						inputSchachtelung.setColumns(10);
+						JPanel panel = new JPanel();
+						FlowLayout flowLayout = (FlowLayout) panel.getLayout();
+						flowLayout.setVgap(0);
+						panelZeiten.add(panel, "4, 6, left, default");
+						{
+							chckbxSchachtelung = new JCheckBox("");
+							panel.add(chckbxSchachtelung);
+						}
+						{
+							inputSchachtelung = new JTextField();
+							panel.add(inputSchachtelung);
+							inputSchachtelung.setColumns(10);
+						}
+						chckbxSchachtelung.addActionListener((ActionEvent arg0) -> {
+							inputSchachtelung.setEnabled(chckbxSchachtelung.isSelected());
+						});
 					}
 				}
 				{
@@ -486,6 +500,8 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 		inputMinZeit.setText(controller.getMinZeit());
 		inputMaxZeit.setText(controller.getMaxZeit());
 		inputSchachtelung.setText(String.valueOf(config.getSchachtelung()));
+		inputSchachtelung.setEnabled(config.getSchachtelung() != 0);
+		chckbxSchachtelung.setSelected(config.getSchachtelung() != 0);
 		
 		switch(config.getZeigeZugnamen())
 		{
