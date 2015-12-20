@@ -9,6 +9,7 @@ import de.stsFanGruppe.templatebuilder.gui.TemplateBuilderGUI;
 import de.stsFanGruppe.templatebuilder.strecken.*;
 import de.stsFanGruppe.templatebuilder.zug.*;
 import de.stsFanGruppe.tools.NullTester;
+import de.stsFanGruppe.tools.TimeFormater;
 
 public class BildfahrplanGUI extends JComponent
 {
@@ -125,6 +126,7 @@ public class BildfahrplanGUI extends JComponent
 			return;
 		}
 		
+		
 		boolean ersteLinie = true;
 		// Verschiebung der senkrechten Linie zum 0, falls bei der 1. Abfrage bs.getMaxKm() > 0 ist
 		double linienVerschiebung = 0;
@@ -178,35 +180,44 @@ public class BildfahrplanGUI extends JComponent
 		//Dicke des Strichs wieder auf 1 setzen
 		g.setStroke(new BasicStroke(1));
 		
-		// Fahrten im Bildfahrplan malen
 		g.setColor(config.getFahrtenFarbe());
-		
-		for(Fahrt fahrt: fahrten)
+		/*
+		 * Schachtelung der Züge nach Minuten
+		 */		
+		int verschachtelungVerschiebung = 0;
+		for (int i = (int) minZeit; i <= maxZeit;)
 		{
-			double ab = -1;
-			double kmAb = -1;
+			// Fahrten im Bildfahrplan malen
 			
-			for(Fahrplanhalt fh: fahrt.getFahrplanhalte())
+			for(Fahrt fahrt: fahrten)
 			{
-				if(ab >= 0 && kmAb >= 0)
-				{
-					double an = fh.getAnkunft();
-					double kmAn = streckenKm.get(fh.getGleisabschnitt().getParent().getParent());
-					
-					String name = fahrt.getName();
-					
-					if(!config.getZeigeZugnamenKommentare() && name.indexOf('%') >= 0)
-					{
-						// entferne alles ab dem ersten %, falls vorhanden
-						name = name.substring(0, name.indexOf('%'));
-					}
-					drawLine(g, kmAb, ab, kmAn, an, name);
-				}
+				double ab = -1;
+				double kmAb = -1;
 				
-				// für nächsten Eintrag
-				ab = fh.getAbfahrt();
-				kmAb = streckenKm.get(fh.getGleisabschnitt().getParent().getParent()).doubleValue();
+				for(Fahrplanhalt fh: fahrt.getFahrplanhalte())
+				{
+					if(ab >= 0 && ab >= i && kmAb >= 0)
+					{
+						double an = fh.getAnkunft();
+						double kmAn = streckenKm.get(fh.getGleisabschnitt().getParent().getParent());
+						
+						String name = fahrt.getName();
+						
+						if(!config.getZeigeZugnamenKommentare() && name.indexOf('%') >= 0)
+						{
+							// entferne alles ab dem ersten %, falls vorhanden
+							name = name.substring(0, name.indexOf('%'));
+						}
+						drawLine(g, kmAb, ab - verschachtelungVerschiebung , kmAn, an - verschachtelungVerschiebung , name);
+					}
+					
+					// für nächsten Eintrag
+					ab = fh.getAbfahrt();
+					kmAb = streckenKm.get(fh.getGleisabschnitt().getParent().getParent()).doubleValue();
+				}
 			}
+			i += (int) config.getSchachtelung();
+			verschachtelungVerschiebung += config.getSchachtelung();
 		}
 	}
 	
@@ -232,27 +243,22 @@ public class BildfahrplanGUI extends JComponent
 		if(config.getZeigeZeiten())
 		{
 			// Minuten aus den Zeiten auslesen
-			String abMinute = String.valueOf((int) (ab % 60));
-			String anMinute = String.valueOf((int) (an % 60));
+			String abMinute = TimeFormater.doubleToMinute(ab);
+			String anMinute = TimeFormater.doubleToMinute(an);
 			int verschiebungX = 13;
-			
-			// Dreieckberechnung für eine bessere Darstellung der Minutenanzeige
-			double ankathete = x2 - x1;
-			double gegenkathete = y2 - y1;
-			double hoeheAnkunft = gegenkathete / ankathete * verschiebungX;
-			
+				
 			// Zeiten zeichnen
 			if(x1 < x2)
 			{ 
 				//Wenn die Linie von Links nach Rechts gezeichnet wird. 
 				g.drawString(abMinute, x1 + 2 , y1);
-				g.drawString(anMinute, x2 - verschiebungX , y2 - (int) hoeheAnkunft); 
+				g.drawString(anMinute, x2 - verschiebungX , y2 + g.getFontMetrics().getHeight() - 2); 
 			}
 			else
 			{
 				// Wenn die Linie von Rechts nach Links gezeichnet wird.
 				g.drawString(abMinute, x1 - verschiebungX , y1);
-				g.drawString(anMinute, x2 + 2 , y2 + (int) hoeheAnkunft); 
+				g.drawString(anMinute, x2 + 2 , y2 + g.getFontMetrics().getHeight() - 2); 
 			}
 		}
 		

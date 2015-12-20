@@ -61,7 +61,7 @@ public class BildfahrplanConfig
 	private static final double DEFAULT_F_MINZEIT = 360; // Minuten
 	private static final double DEFAULT_F_MAXZEIT = 1260; // Minuten
 	private static final boolean DEFAULT_F_AUTOSIZE = true;
-	private static final int DEFAULT_F_SCHACHTELUNG = 24; // Stunden
+	private static final int DEFAULT_F_SCHACHTELUNG = 1440; // Minuten
 	
 	// Darstellung von Texten
 	public static final String CONFIG_TEXT_ZEIGEZEITEN = "bildfahrplan/darstellung/text/zeigeZeiten";

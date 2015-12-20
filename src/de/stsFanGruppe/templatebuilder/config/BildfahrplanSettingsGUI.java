@@ -499,7 +499,7 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 				rdbtngrpZeigeZugnamen.setSelected(radioZeigeZugnamenAuto.getModel(), true);
 				break;
 			default:
-				log.error("ZeigeZugnamen: Ungültiger Wert {}", config.getZeigeZugnamen());
+				log.error("ZeigeZugnamen: UngÃ¼ltiger Wert {}", config.getZeigeZugnamen());
 		}
 		
 		chckbxZugnamenKommentare.setSelected(config.getZeigeZugnamenKommentare());
