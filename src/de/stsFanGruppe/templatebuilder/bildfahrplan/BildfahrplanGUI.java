@@ -27,6 +27,9 @@ public class BildfahrplanGUI extends JComponent
 	
 	protected boolean paint = true;
 	protected boolean firstPaint = true;
+	protected boolean repaint = true;
+	
+	protected Set<Paintable> paintables = new HashSet<>();
 	
 	public BildfahrplanGUI(BildfahrplanGUIController controller, TemplateBuilderGUI parent)
 	{
@@ -54,13 +57,14 @@ public class BildfahrplanGUI extends JComponent
 		
 		this.streckenabschnitt = streckenabschnitt;
 		
-		// km für Betriebsstelle: Mittelwert aus getMinKm und getMaxKm: (max+min)/2
+		// km für Betriebsstelle: Mittelwert aus getMinKm und getMaxKm:
+		// (max+min)/2
 		Betriebsstelle b = streckenabschnitt.getStrecken().first().getAnfang();
 		streckenKm.put(b, new Double(0.0));
 		letzterAlterKm = (b.getMaxKm() + b.getMinKm()) / 2;
 		
 		// Vorbereitung für unterschiedliche Strecken-km
-		for(Strecke s: streckenabschnitt.getStrecken())
+		for(Strecke s : streckenabschnitt.getStrecken())
 		{
 			b = s.getEnde();
 			double alterKm = (b.getMaxKm() + b.getMinKm()) / 2;
@@ -74,6 +78,7 @@ public class BildfahrplanGUI extends JComponent
 		controller.setPanelSize();
 		controller.repaint();
 	}
+	
 	public void zeichneFahrt(Fahrt fahrt)
 	{
 		NullTester.test(fahrt);
@@ -85,6 +90,7 @@ public class BildfahrplanGUI extends JComponent
 		
 		this.fahrten.add(fahrt);
 	}
+	
 	public void zeichneFahrten(Collection<? extends Fahrt> fahrten)
 	{
 		fahrten.forEach((Fahrt f) -> this.zeichneFahrt(f));
@@ -103,20 +109,19 @@ public class BildfahrplanGUI extends JComponent
 	protected void paintComponent(Graphics graphics)
 	{
 		super.paintComponent(graphics);
-		// wir nehmen mal an, dass wir Graphics2D haben, sonst wird's schwierig...
+		// wir nehmen mal an, dass wir Graphics2D haben, sonst wird's
+		// schwierig...
 		Graphics2D g = (Graphics2D) graphics;
-		
-		// Anti-Aliasing an
-		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-		System.setProperty("swing.aatext", "true");
-		System.setProperty("awt.useSystemAAFontSettings", "lcd");
 		
 		if(firstPaint)
 		{
-			// Farbe setzten
 			firstPaint = false;
-			g.setColor(Color.BLACK);
+			
+			// Anti-Aliasing an
+			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+			g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+			System.setProperty("swing.aatext", "true");
+			System.setProperty("awt.useSystemAAFontSettings", "lcd");
 		}
 		controller.guiRepaint();
 		
@@ -126,17 +131,31 @@ public class BildfahrplanGUI extends JComponent
 			return;
 		}
 		
+		if(paintables.isEmpty() || repaint)
+		{
+			recalculate(g);
+			repaint = false;
+		}
 		
+		for(Paintable p : paintables)
+		{
+			p.paint(g);
+		}
+	}
+	
+	protected void recalculate(Graphics2D g)
+	{
 		boolean ersteLinie = true;
-		// Verschiebung der senkrechten Linie zum 0, falls bei der 1. Abfrage bs.getMaxKm() > 0 ist
+		// Verschiebung der senkrechten Linie zum 0, falls bei der 1. Abfrage
+		// bs.getMaxKm() > 0 ist
 		double linienVerschiebung = 0;
 		
 		double minZeit = config.getMinZeit();
-		double maxZeit = config.getMaxZeit();	
+		double maxZeit = config.getMaxZeit();
 		
-		g.setColor(config.getBetriebsstellenFarbe());
+		Color c = config.getBetriebsstellenFarbe();
 		
-		for(Betriebsstelle bs: streckenabschnitt.getBetriebsstellen())
+		for(Betriebsstelle bs : streckenabschnitt.getBetriebsstellen())
 		{
 			double km = bs.getMaxKm();
 			
@@ -146,71 +165,115 @@ public class BildfahrplanGUI extends JComponent
 			}
 			km += linienVerschiebung;
 			
-			drawLine(g, km, minZeit, km, maxZeit, null);
-			
+			paintables.add(new PaintableLine(getWegPos(km), getZeitPos(minZeit), getWegPos(km), getZeitPos(maxZeit), c));
 			ersteLinie = false;
 		}
 		
 		// Zeichnet die waagerechte Linie bei jeder angegebenen Zeit
 		int zeitIntervall = config.getZeitIntervall();
 		
-		int x1 = 5;
-		int x2 = getWidth();
+		int zeitLinienStart = 5;
+		int zeitLinienEnde = getWidth();
 		int zeit = (int) minZeit;
 		
-		g.setColor(config.getZeitenFarbe());
+		c = config.getZeitenFarbe();
 		
-		if (zeit % 10 != 0) 
+		if(zeit % 10 != 0)
 		{
-			zeit -= (zeit % 10);
+			zeit += 10 - (zeit % 10);
 		}
-		while (zeit <= maxZeit) 
-		{	
-			if(zeit % 60 == 0)
-			{
-				g.setStroke(new BasicStroke(3));
-			}
-			else
-			{
-				g.setStroke(new BasicStroke(1));
-			}
-			g.drawLine(x1, getZeitPos(zeit), x2, getZeitPos(zeit));
-			zeit = zeit + zeitIntervall;
-		}
-		//Dicke des Strichs wieder auf 1 setzen
-		g.setStroke(new BasicStroke(1));
 		
-		g.setColor(config.getFahrtenFarbe());
+		Stroke duenneLinie = new BasicStroke(1);
+		Stroke dickeLinie = new BasicStroke(3);
+		
+		while(zeit <= maxZeit)
+		{
+			Stroke s = (zeit % 60 == 0) ?  dickeLinie : duenneLinie;
+			
+			paintables.add(new PaintableLine(zeitLinienStart, getZeitPos(zeit), zeitLinienEnde, getZeitPos(zeit), c, s));
+			zeit += zeitIntervall;
+		}
+		
+		c = config.getFahrtenFarbe();
 		/*
 		 * Schachtelung der Züge nach Minuten
-		 */		
+		 */
 		int verschachtelungVerschiebung = 0;
 		int schachtelung = config.getSchachtelung();
 		
-		for (int i = (int) minZeit; i <= maxZeit;)
+		for(int i = (int) minZeit; i <= maxZeit;)
 		{
 			// Fahrten im Bildfahrplan malen
 			
-			for(Fahrt fahrt: fahrten)
+			for(Fahrt fahrt : fahrten)
 			{
 				double ab = -1;
 				double kmAb = -1;
 				
-				for(Fahrplanhalt fh: fahrt.getFahrplanhalte())
+				for(Fahrplanhalt fh : fahrt.getFahrplanhalte())
 				{
 					if(ab >= 0 && ab >= i && kmAb >= 0)
 					{
 						double an = fh.getAnkunft();
-						double kmAn = streckenKm.get(fh.getGleisabschnitt().getParent().getParent());
+						
+						if(ab < config.getMinZeit() || an > config.getMaxZeit()) { return; }
 						
 						String name = fahrt.getName();
+						double kmAn = streckenKm.get(fh.getGleisabschnitt().getParent().getParent());
 						
 						if(!config.getZeigeZugnamenKommentare() && name.indexOf('%') >= 0)
 						{
 							// entferne alles ab dem ersten %, falls vorhanden
 							name = name.substring(0, name.indexOf('%'));
 						}
-						drawLine(g, kmAb, ab - verschachtelungVerschiebung , kmAn, an - verschachtelungVerschiebung , name);
+						
+						int x1 = getWegPos(kmAb);
+						int y1 = getZeitPos(ab - verschachtelungVerschiebung);
+						int x2 = getWegPos(kmAn);
+						int y2 = getZeitPos(an - verschachtelungVerschiebung);
+						
+						paintables.add(new PaintableLine(x1, y1, x2, y2, c));
+						
+						// Zeiten zeichnen, wenn in der Config, dies aktiv ist.
+						if(config.getZeigeZeiten())
+						{
+							// Minuten aus den Zeiten auslesen
+							String abMinute = TimeFormater.doubleToMinute(ab);
+							String anMinute = TimeFormater.doubleToMinute(an);
+							int verschiebungX = 13;
+							
+							// Zeiten zeichnen
+							if(x1 < x2)
+							{
+								// Wenn die Linie von Links nach Rechts gezeichnet wird.
+								paintables.add(new PaintableText(x1 + 2, y1, c, abMinute));
+								paintables.add(new PaintableText(x2 - verschiebungX, y2 + g.getFontMetrics().getHeight() - 2, c, anMinute));
+							}
+							else
+							{
+								// Wenn die Linie von Rechts nach Links gezeichnet wird.
+								paintables.add(new PaintableText(x1 - verschiebungX, y1, c, abMinute));
+								paintables.add(new PaintableText(x2 + 2, y2 + g.getFontMetrics().getHeight() - 2, c, anMinute));
+							}
+						}
+						
+						FontMetrics f = g.getFontMetrics();
+						int stringWidth = f.stringWidth(name);
+						
+						if(config.getZeigeZugnamen() == 0) { return; }
+						
+						if(config.getZeigeZugnamen() == 2)
+						{
+							// Zugnamen nur wenn Platz ist
+							// Textgröße holen
+							double lineLenght = Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
+							
+							// Text nur, wenn dieser weniger als doppelt so
+							// breit ist
+							if(stringWidth * 0.9 > lineLenght) { return; }
+						}
+						
+						paintables.add(new PaintableRotatedText(x1, y1, x2, y2, c, name, -2));
 					}
 					
 					// für nächsten Eintrag
@@ -228,79 +291,6 @@ public class BildfahrplanGUI extends JComponent
 		}
 	}
 	
-	protected void drawLine(Graphics2D g, double kmAb, double ab, double kmAn, double an, String beschriftung)
-	{
-		assert config != null;
-		assert g != null;
-		
-		if(ab < config.getMinZeit() || an > config.getMaxZeit())
-		{
-			return;
-		}
-		
-		int x1 = getWegPos(kmAb);
-		int y1 = getZeitPos(ab);
-		int x2 = getWegPos(kmAn);
-		int y2 = getZeitPos(an);
-		
-		// Linie zeichnen
-		g.drawLine(x1, y1, x2, y2);
-		
-		//Zeiten zeichnen, wenn in der Config, dies aktiv ist.
-		if(config.getZeigeZeiten())
-		{
-			// Minuten aus den Zeiten auslesen
-			String abMinute = TimeFormater.doubleToMinute(ab);
-			String anMinute = TimeFormater.doubleToMinute(an);
-			int verschiebungX = 13;
-				
-			// Zeiten zeichnen
-			if(x1 < x2)
-			{ 
-				//Wenn die Linie von Links nach Rechts gezeichnet wird. 
-				g.drawString(abMinute, x1 + 2 , y1);
-				g.drawString(anMinute, x2 - verschiebungX , y2 + g.getFontMetrics().getHeight() - 2); 
-			}
-			else
-			{
-				// Wenn die Linie von Rechts nach Links gezeichnet wird.
-				g.drawString(abMinute, x1 - verschiebungX , y1);
-				g.drawString(anMinute, x2 + 2 , y2 + g.getFontMetrics().getHeight() - 2); 
-			}
-		}
-		
-		if(config.getZeigeZugnamen() != 0 && beschriftung != null)
-		{
-			FontMetrics f = g.getFontMetrics();
-			int stringWidth = f.stringWidth(beschriftung);
-			
-			if(config.getZeigeZugnamen() == 2)
-			{
-				// Zugnamen nur wenn Platz ist
-				// Textgröße holen
-				double lineLenght = Math.sqrt((x1-x2) * (x1-x2) + (y1-y2) * (y1-y2));
-	
-				// Text nur, wenn dieser weniger als doppelt so breit ist
-				if(stringWidth * 0.9 > lineLenght)
-				{
-					return;
-				}
-			}
-			
-			// Koordinatensystem drehen
-			AffineTransform neu = g.getTransform();
-			AffineTransform alt = (AffineTransform)neu.clone(); 
-			neu.translate((x1 + x2) / 2, (y2 + y1) / 2);
-			neu.rotate(Math.atan((1.0 * y2 - y1) / (x2 - x1)));
-			g.setTransform(neu);
-				
-			// Text einzeichnen
-			g.drawString(beschriftung, -stringWidth / 2, -2);
-			
-			// Koordinatensystem zurücksetzen
-			g.setTransform(alt);
-		}
-	}
 	protected int getZeitPos(double zeit)
 	{
 		assert config != null;
@@ -312,6 +302,7 @@ public class BildfahrplanGUI extends JComponent
 		
 		return (int) ((zeitFaktor / diffZeit * hoehe) + min);
 	}
+	
 	protected int getWegPos(double km)
 	{
 		assert config != null;
@@ -320,6 +311,7 @@ public class BildfahrplanGUI extends JComponent
 		
 		return (int) ((km / diffKm * diffBreite) + minBreite);
 	}
+	
 	protected void reset()
 	{
 		streckenabschnitt = null;
