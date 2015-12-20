@@ -182,13 +182,12 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 					}
 					{
 						JSlider sliderSchachtelung = new JSlider();
-						sliderSchachtelung.setValue(24);
 						sliderSchachtelung.addChangeListener((ChangeEvent arg0) -> { inputSchachtelung.setText(sliderSchachtelung.getValue()+""); });
 						sliderSchachtelung.setPaintTicks(true);
 						sliderSchachtelung.setSnapToTicks(true);
-						sliderSchachtelung.setMinorTickSpacing(1);
-						sliderSchachtelung.setMinimum(1);
-						sliderSchachtelung.setMaximum(24);
+						sliderSchachtelung.setMinorTickSpacing(10);
+						sliderSchachtelung.setMinimum(10);
+						sliderSchachtelung.setMaximum(1440);
 						sliderSchachtelung.setValue(controller.getSchachtelung());
 						panel_1.add(sliderSchachtelung, "2, 1, left, center");
 					}
