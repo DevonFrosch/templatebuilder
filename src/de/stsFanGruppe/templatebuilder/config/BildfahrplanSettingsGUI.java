@@ -28,7 +28,11 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 	JSlider sliderHoeheProStunde;
 	JCheckBox chckbxAuto;
 	JTextField inputSchachtelung;
+	
 	ButtonGroup rdbtngrpZeigeZugnamen;
+	JRadioButton radioZeigeZugnamenNie;
+	JRadioButton radioZeigeZugnamenImmer;
+	JRadioButton radioZeigeZugnamenAuto;
 	JCheckBox chckbxZugnamenKommentare;
 	JCheckBox chckbxZeigeZeiten;
 	
@@ -36,6 +40,7 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 	JPanel panelBfpZeitenFarbeVorschau;
 	JPanel panelBfpBetriebsstellenFarbeVorschau;
 	JPanel panelBfpFahrtenFarbeVorschau;
+	JPanel panelBfpHintergrundFarbeVorschau;
 	
 	/**
 	 * Launch the application.
@@ -155,7 +160,6 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 							sliderHoeheProStunde.setMinorTickSpacing(100);
 							sliderHoeheProStunde.setMinimum(100);
 							sliderHoeheProStunde.setMaximum(2000);
-							sliderHoeheProStunde.setValue(config.getHoeheProStunde());
 							panelHoeheProStunde.add(sliderHoeheProStunde, "2, 1");
 						}
 					}
@@ -178,7 +182,6 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 								com.jgoodies.forms.layout.FormSpecs.DEFAULT_ROWSPEC,}));
 						{
 							inputMinZeit = new JTextField();
-							inputMinZeit.setText(controller.getMinZeit());
 							panelZeit.add(inputMinZeit, "1, 1");
 							inputMinZeit.setColumns(10);
 						}
@@ -188,7 +191,6 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 						}
 						{
 							inputMaxZeit = new JTextField();
-							inputMaxZeit.setText(controller.getMaxZeit());
 							panelZeit.add(inputMaxZeit, "5, 1");
 							inputMaxZeit.setColumns(10);
 						}
@@ -209,7 +211,6 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 						inputSchachtelung = new JTextField();
 						panelZeiten.add(inputSchachtelung, "4, 6");
 						inputSchachtelung.setColumns(10);
-						inputSchachtelung.setText(String.valueOf(config.getSchachtelung()));
 					}
 				}
 				{
@@ -243,46 +244,29 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 					fl_panelZeigeZugnamen.setHgap(0);
 					fl_panelZeigeZugnamen.setVgap(0);
 					
-					JRadioButton radioZeigeZugnamenNie = new JRadioButton("nie");
+					radioZeigeZugnamenNie = new JRadioButton("nie");
 					rdbtngrpZeigeZugnamen.add(radioZeigeZugnamenNie);
 					radioZeigeZugnamenNie.setActionCommand("nie");
 					panelZeigeZugnamen.add(radioZeigeZugnamenNie);
 					
-					JRadioButton radioZeigeZugnamenAuto = new JRadioButton("automatisch");
+					radioZeigeZugnamenAuto = new JRadioButton("automatisch");
 					rdbtngrpZeigeZugnamen.add(radioZeigeZugnamenAuto);
 					radioZeigeZugnamenAuto.setActionCommand("automatisch");
 					panelZeigeZugnamen.add(radioZeigeZugnamenAuto);
 					
-					JRadioButton radioZeigeZugnamenImmer = new JRadioButton("immer");
+					radioZeigeZugnamenImmer = new JRadioButton("immer");
 					rdbtngrpZeigeZugnamen.add(radioZeigeZugnamenImmer);
 					radioZeigeZugnamenImmer.setActionCommand("immer");
 					panelZeigeZugnamen.add(radioZeigeZugnamenImmer);
-					
-					switch(config.getZeigeZugnamen())
-					{
-						case 0:
-							rdbtngrpZeigeZugnamen.setSelected(radioZeigeZugnamenNie.getModel(), true);
-							break;
-						case 1:
-							rdbtngrpZeigeZugnamen.setSelected(radioZeigeZugnamenImmer.getModel(), true);
-							break;
-						case 2:
-							rdbtngrpZeigeZugnamen.setSelected(radioZeigeZugnamenAuto.getModel(), true);
-							break;
-						default:
-							log.error("ZeigeZugnamen: Ungültiger Wert {}", config.getZeigeZugnamen());
-					}
 					
 					{
 						chckbxZugnamenKommentare = new JCheckBox("Zeige Kommentare in Zugnamen");
 						panelDarstellung.add(chckbxZugnamenKommentare, "4, 4");
 						chckbxZugnamenKommentare.setToolTipText("Kommentare sind alles ab dem ersten %-Zeichen");
-						chckbxZugnamenKommentare.setSelected(config.getZeigeZugnamenKommentare());
 					}
 					{
 						chckbxZeigeZeiten = new JCheckBox("Zeige Zeiten an Halten");
 						panelDarstellung.add(chckbxZeigeZeiten, "4, 6");
-						chckbxZeigeZeiten.setSelected(config.getZeigeZeiten());
 					}
 				}
 			}
@@ -317,6 +301,8 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 							FormSpecs.DEFAULT_ROWSPEC,
 							FormSpecs.RELATED_GAP_ROWSPEC,
 							FormSpecs.DEFAULT_ROWSPEC,
+							FormSpecs.RELATED_GAP_ROWSPEC,
+							FormSpecs.DEFAULT_ROWSPEC,
 							FormSpecs.RELATED_GAP_ROWSPEC,}));
 					{
 						JLabel lblBfpZeitenFarbe = new JLabel("Zeiten");
@@ -328,7 +314,6 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 							panelFarbenBfp.add(panelBfpZeitenFarbe, "4, 2");
 							{
 								panelBfpZeitenFarbeVorschau = new JPanel();
-								panelBfpZeitenFarbeVorschau.setBackground(config.getZeitenFarbe());
 								FlowLayout fl_panelBfpZeitenFarbeVorschau = (FlowLayout) panelBfpZeitenFarbeVorschau.getLayout();
 								fl_panelBfpZeitenFarbeVorschau.setVgap(10);
 								fl_panelBfpZeitenFarbeVorschau.setHgap(10);
@@ -350,7 +335,6 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 							panelFarbenBfp.add(panelBfpBetriebsstellenFarbe, "4, 4");
 							{
 								panelBfpBetriebsstellenFarbeVorschau = new JPanel();
-								panelBfpBetriebsstellenFarbeVorschau.setBackground(config.getBetriebsstellenFarbe());
 								FlowLayout flowLayout = (FlowLayout) panelBfpBetriebsstellenFarbeVorschau.getLayout();
 								flowLayout.setHgap(10);
 								flowLayout.setVgap(10);
@@ -372,7 +356,6 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 							panelFarbenBfp.add(panelBfpFahrtenFarbe, "4, 6");
 							{
 								panelBfpFahrtenFarbeVorschau = new JPanel();
-								panelBfpFahrtenFarbeVorschau.setBackground(config.getFahrtenFarbe());
 								FlowLayout flowLayout = (FlowLayout) panelBfpFahrtenFarbeVorschau.getLayout();
 								flowLayout.setHgap(10);
 								flowLayout.setVgap(10);
@@ -400,6 +383,27 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 								}
 							}
 							btnBfpFahrtenFarbe.addActionListener((ActionEvent arg0) -> controller.farbButton(arg0));
+						}
+					}
+					{
+						{
+							JLabel lblBfpHintergrundFarbe = new JLabel("Hintergrund");
+							panelFarbenBfp.add(lblBfpHintergrundFarbe, "2, 8");
+						}
+						{
+							JPanel panelBfpHintergrundFarbe = new JPanel();
+							panelFarbenBfp.add(panelBfpHintergrundFarbe, "4, 8");
+							{
+								panelBfpHintergrundFarbeVorschau = new JPanel();
+								FlowLayout flowLayout = (FlowLayout) panelBfpHintergrundFarbeVorschau.getLayout();
+								flowLayout.setHgap(10);
+								flowLayout.setVgap(10);
+								panelBfpHintergrundFarbe.add(panelBfpHintergrundFarbeVorschau);
+							}
+							JButton btnBfpHintergrundFarbe = new JButton("w\u00E4hlen...");
+							panelBfpHintergrundFarbe.add(btnBfpHintergrundFarbe);
+							btnBfpHintergrundFarbe.setActionCommand("hintergrundFarbe");
+							btnBfpHintergrundFarbe.addActionListener((ActionEvent arg0) -> controller.farbButton(arg0));
 						}
 					}
 				}
@@ -464,7 +468,47 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 				}
 			}
 		}
+		loadSettings();
 		setVisible(true);
+	}
+	
+	public void loadSettings()
+	{
+		log.info("Einstellungen neu lesen");
+		
+		if(!config.schreibTest())
+		{
+			return;
+		}
+		config.schreibeEinstellungen();
+		
+		sliderHoeheProStunde.setValue(config.getHoeheProStunde());
+		inputMinZeit.setText(controller.getMinZeit());
+		inputMaxZeit.setText(controller.getMaxZeit());
+		inputSchachtelung.setText(String.valueOf(config.getSchachtelung()));
+		
+		switch(config.getZeigeZugnamen())
+		{
+			case 0:
+				rdbtngrpZeigeZugnamen.setSelected(radioZeigeZugnamenNie.getModel(), true);
+				break;
+			case 1:
+				rdbtngrpZeigeZugnamen.setSelected(radioZeigeZugnamenImmer.getModel(), true);
+				break;
+			case 2:
+				rdbtngrpZeigeZugnamen.setSelected(radioZeigeZugnamenAuto.getModel(), true);
+				break;
+			default:
+				log.error("ZeigeZugnamen: Ungültiger Wert {}", config.getZeigeZugnamen());
+		}
+		
+		chckbxZugnamenKommentare.setSelected(config.getZeigeZugnamenKommentare());
+		chckbxZeigeZeiten.setSelected(config.getZeigeZeiten());
+		
+		panelBfpZeitenFarbeVorschau.setBackground(config.getZeitenFarbe());
+		panelBfpBetriebsstellenFarbeVorschau.setBackground(config.getBetriebsstellenFarbe());
+		panelBfpFahrtenFarbeVorschau.setBackground(config.getFahrtenFarbe());
+		panelBfpHintergrundFarbeVorschau.setBackground(config.getHintergrundFarbe());
 	}
 	
 	public void close()

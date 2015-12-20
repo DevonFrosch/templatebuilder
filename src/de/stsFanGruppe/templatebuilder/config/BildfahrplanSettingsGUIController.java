@@ -136,6 +136,8 @@ public class BildfahrplanSettingsGUIController
 						gui.infoMessage("Fehler beim Laden der Einstellungen!");
 					}
 				}
+				// Einstellungen neu laden
+				gui.loadSettings();
 				break;
 			case "cancel":
 				gui.close();
@@ -233,11 +235,14 @@ public class BildfahrplanSettingsGUIController
 		// BfpZeiten
 		config.setZeitenFarbe(gui.panelBfpZeitenFarbeVorschau.getBackground());
 		
-		// BfpZeiten
+		// BfpBetriebsstellen
 		config.setBetriebsstellenFarbe(gui.panelBfpBetriebsstellenFarbeVorschau.getBackground());
 		
-		// BfpZeiten
+		// BfpFahrten
 		config.setFahrtenFarbe(gui.panelBfpFahrtenFarbeVorschau.getBackground());
+		
+		// BfpHintergrund
+		config.setHintergrundFarbe(gui.panelBfpHintergrundFarbeVorschau.getBackground());
 	}
 	
 	protected int parseIntField(String name, String input)
