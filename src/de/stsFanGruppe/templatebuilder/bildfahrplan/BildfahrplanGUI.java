@@ -184,9 +184,11 @@ public class BildfahrplanGUI extends JComponent
 		/*
 		 * Schachtelung der Züge nach Minuten
 		 */		
-		for (int i = 0; i * config.getSchachtelung() <= maxZeit; i++)
+		int verschachtelungVerschiebung = 0;
+		for (int i = (int) minZeit; i <= maxZeit;)
 		{
 			// Fahrten im Bildfahrplan malen
+			
 			for(Fahrt fahrt: fahrten)
 			{
 				double ab = -1;
@@ -194,7 +196,7 @@ public class BildfahrplanGUI extends JComponent
 				
 				for(Fahrplanhalt fh: fahrt.getFahrplanhalte())
 				{
-					if(ab >= 0 && ab >= (i + 1) * minZeit && kmAb >= 0)
+					if(ab >= 0 && ab >= i && kmAb >= 0)
 					{
 						double an = fh.getAnkunft();
 						double kmAn = streckenKm.get(fh.getGleisabschnitt().getParent().getParent());
@@ -206,8 +208,7 @@ public class BildfahrplanGUI extends JComponent
 							// entferne alles ab dem ersten %, falls vorhanden
 							name = name.substring(0, name.indexOf('%'));
 						}
-						drawLine(g, kmAb, ab - (i + 1) * minZeit, kmAn, an - (i + 1) * minZeit, name);
-						System.out.println(ab + " >= " + (i + 1) * minZeit);
+						drawLine(g, kmAb, ab - verschachtelungVerschiebung , kmAn, an - verschachtelungVerschiebung , name);
 					}
 					
 					// für nächsten Eintrag
@@ -215,6 +216,8 @@ public class BildfahrplanGUI extends JComponent
 					kmAb = streckenKm.get(fh.getGleisabschnitt().getParent().getParent()).doubleValue();
 				}
 			}
+			i += (int) config.getSchachtelung();
+			verschachtelungVerschiebung += config.getSchachtelung();
 		}
 	}
 	

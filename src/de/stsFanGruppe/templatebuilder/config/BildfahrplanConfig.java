@@ -36,7 +36,7 @@ public class BildfahrplanConfig
 	protected double minZeit = 360; // Minuten
 	protected double maxZeit = 1260; // Minuten
 	protected boolean autoSize = true;
-	protected int schachtelung = 1440; // Minuten
+	protected int schachtelung = 360; // Minuten
 	
 	// Darstellung von Texten
 	protected boolean zeichneZeiten = true; 
