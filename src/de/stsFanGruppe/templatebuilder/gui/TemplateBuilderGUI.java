@@ -10,6 +10,7 @@ import de.stsFanGruppe.tools.NullTester;
 import java.awt.Dimension;
 import java.awt.event.*;
 import java.awt.BorderLayout;
+import java.awt.Color;
 
 public class TemplateBuilderGUI implements GUI
 {

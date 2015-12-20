@@ -126,6 +126,7 @@ public class BildfahrplanGUI extends JComponent
 			return;
 		}
 		
+		
 		boolean ersteLinie = true;
 		// Verschiebung der senkrechten Linie zum 0, falls bei der 1. Abfrage bs.getMaxKm() > 0 ist
 		double linienVerschiebung = 0;
@@ -179,35 +180,41 @@ public class BildfahrplanGUI extends JComponent
 		//Dicke des Strichs wieder auf 1 setzen
 		g.setStroke(new BasicStroke(1));
 		
-		// Fahrten im Bildfahrplan malen
 		g.setColor(config.getFahrtenFarbe());
-		
-		for(Fahrt fahrt: fahrten)
+		/*
+		 * Schachtelung der Züge nach Minuten
+		 */		
+		for (int i = 0; i * config.getSchachtelung() <= maxZeit; i++)
 		{
-			double ab = -1;
-			double kmAb = -1;
-			
-			for(Fahrplanhalt fh: fahrt.getFahrplanhalte())
+			// Fahrten im Bildfahrplan malen
+			for(Fahrt fahrt: fahrten)
 			{
-				if(ab >= 0 && kmAb >= 0)
-				{
-					double an = fh.getAnkunft();
-					double kmAn = streckenKm.get(fh.getGleisabschnitt().getParent().getParent());
-					
-					String name = fahrt.getName();
-					
-					if(!config.getZeigeZugnamenKommentare() && name.indexOf('%') >= 0)
-					{
-						// entferne alles ab dem ersten %, falls vorhanden
-						name = name.substring(0, name.indexOf('%'));
-					}
-					drawLine(g, kmAb, ab, kmAn, an, name);
-				}
+				double ab = -1;
+				double kmAb = -1;
 				
-				// für nächsten Eintrag
-				ab = fh.getAbfahrt();
-				kmAb = streckenKm.get(fh.getGleisabschnitt().getParent().getParent()).doubleValue();
+				for(Fahrplanhalt fh: fahrt.getFahrplanhalte())
+				{
+					if(ab >= 0 && ab >= (i + 1) * minZeit && kmAb >= 0)
+					{
+						double an = fh.getAnkunft();
+						double kmAn = streckenKm.get(fh.getGleisabschnitt().getParent().getParent());
+						
+						String name = fahrt.getName();
+						
+						if(!config.getZeigeZugnamenKommentare() && name.indexOf('%') >= 0)
+						{
+							// entferne alles ab dem ersten %, falls vorhanden
+							name = name.substring(0, name.indexOf('%'));
+						}
+						drawLine(g, kmAb, ab - (i + 1) * minZeit, kmAn, an - (i + 1) * minZeit, name);
+					}
+					
+					// für nächsten Eintrag
+					ab = fh.getAbfahrt();
+					kmAb = streckenKm.get(fh.getGleisabschnitt().getParent().getParent()).doubleValue();
+				}
 			}
+			System.out.println((i + 1) * minZeit + " + " + i * config.getSchachtelung() + " <= " + maxZeit);
 		}
 	}
 	
