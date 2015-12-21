@@ -4,8 +4,8 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
-import java.util.Collection;
 import javax.swing.JComponent;
+import de.stsFanGruppe.tools.FirstLastLinkedList;
 import de.stsFanGruppe.tools.NullTester;
 
 public class BildfahrplanZeilenheaderGUI extends JComponent
@@ -16,7 +16,7 @@ public class BildfahrplanZeilenheaderGUI extends JComponent
 	protected BildfahrplanGUIController controller;
 
 	protected Object paintLock = new Object();
-	protected Collection<Paintable> paintables = null;
+	protected FirstLastLinkedList<Paintable> paintables = null;
 	boolean paint = true;
 	
 	/**
@@ -33,7 +33,7 @@ public class BildfahrplanZeilenheaderGUI extends JComponent
 		controller.setBildfahrplanZeilenheaderGUI(this);
 	}
 	
-	public void setPaintables(Collection<Paintable> paintables)
+	public void setPaintables(FirstLastLinkedList<Paintable> paintables)
 	{
 		synchronized(paintLock)
 		{
@@ -59,17 +59,21 @@ public class BildfahrplanZeilenheaderGUI extends JComponent
 			return;
 		}
 		
+		// Arbeitskopie
+		FirstLastLinkedList<Paintable> ps;
 		synchronized(paintLock)
 		{
-			if(paintables.isEmpty())
-			{
-				return;
-			}
-			
-			for(Paintable p : paintables)
-			{
-				p.paint(g);
-			}
+			ps = (FirstLastLinkedList<Paintable>) paintables.clone();
+		}
+		
+		if(ps.isEmpty())
+		{
+			return;
+		}
+		
+		for(Paintable p : ps)
+		{
+			p.paint(g);
 		}
 	}
 	

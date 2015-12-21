@@ -29,13 +29,12 @@ public class BildfahrplanGUIController
 	protected BildfahrplanSpaltenheaderGUI spaltenGui = null;
 	protected BildfahrplanZeilenheaderGUI zeilenGui = null;
 	
+	protected BildfahrplanPaintHelper ph;
 	protected int stringHeight = 0;
 	
 	protected Streckenabschnitt streckenabschnitt;
 	protected Map<Betriebsstelle, Double> streckenKm;
 	protected Set<Fahrt> fahrten;
-	
-	protected double diffKm;
 	
 	public BildfahrplanGUIController(BildfahrplanConfig config)
 	{
@@ -44,34 +43,31 @@ public class BildfahrplanGUIController
 		config.registerChangeHandler(() -> gui.recalculatePanelSize());
 	}
 	
+	// Offizielle Funktionen
 	public void setBildfahrplanGUI(BildfahrplanGUI gui)
 	{
 		NullTester.test(gui);
+		log.trace("setBildfahrplanGUI()");
 		this.gui = gui;
+		this.ph = new BildfahrplanPaintHelper(config, gui);
 	}
-	
 	public void setBildfahrplanSpaltenHeaderGUI(BildfahrplanSpaltenheaderGUI spaltenGui)
 	{
 		NullTester.test(spaltenGui);
+		log.trace("setBildfahrplanSpaltenHeaderGUI()");
 		this.spaltenGui = spaltenGui;
 	}
-	
 	public void setBildfahrplanZeilenheaderGUI(BildfahrplanZeilenheaderGUI zeilenGui)
 	{
 		NullTester.test(zeilenGui);
+		log.trace("setBildfahrplanZeilenheaderGUI()");
 		this.zeilenGui = zeilenGui;
 	}
-	
-	public BildfahrplanConfig getConfig()
-	{
-		return config;
-	}
-	
-	// Offizielle Funktionen
 	public void ladeStreckenabschnitt(Streckenabschnitt streckenabschnitt)
 	{
 		NullTester.test(gui);
 		NullTester.test(streckenabschnitt);
+		log.trace("ladeStreckenabschnitt()");
 		
 		double streckenlaenge = 0;
 		double letzterAlterKm = 0;
@@ -96,7 +92,7 @@ public class BildfahrplanGUIController
 			streckenKm.put(b, new Double(neuerKm));
 			letzterAlterKm = alterKm;
 			letzterNeuerKm = neuerKm;
-			this.diffKm = neuerKm;
+			ph.setDiffKm(neuerKm);
 		}
 		
 		gui.recalculatePanelSize();
@@ -109,6 +105,7 @@ public class BildfahrplanGUIController
 		{
 			this.fahrten = new HashSet<>();
 		}
+		log.trace("ladeZüge()");
 		
 		fahrten.forEach((f) -> {
 			NullTester.test(f);
@@ -117,15 +114,7 @@ public class BildfahrplanGUIController
 		
 		gui.recalculatePanelSize();
 	}
-	public Streckenabschnitt getStreckenabschnitt()
-	{
-		return streckenabschnitt;
-	}
-	public Set<Fahrt> getFahrten()
-	{
-		return fahrten;
-	}
-	
+
 	public void repaint()
 	{
 		if(gui == null)
@@ -135,6 +124,16 @@ public class BildfahrplanGUIController
 		gui.repaint();
 		spaltenGui.repaint();
 		zeilenGui.repaint();
+	}
+	
+	// TODO temporäre Funktionen, Ablösung durch Datenobjekt (BT 059)
+	public Streckenabschnitt getStreckenabschnitt()
+	{
+		return streckenabschnitt;
+	}
+	public Set<Fahrt> getFahrten()
+	{
+		return fahrten;
 	}
 	
 	// Nachricht von der GUI, dass sie gerade am repainten ist
@@ -159,12 +158,13 @@ public class BildfahrplanGUIController
 	}
 	
 	// Interne Funktionen
-	protected synchronized void optimizeHeight()
+	protected void optimizeHeight()
 	{
 		if(gui == null || fahrten == null || fahrten.isEmpty())
 		{
 			return;
 		}
+		log.trace("optimizeHeight()");
 		
 		double minZeit, maxZeit;
 		synchronized(fahrten)
@@ -184,91 +184,85 @@ public class BildfahrplanGUIController
 			streckenabschnitt = null;
 			streckenKm = new HashMap<>();
 			fahrten = null;
-			diffKm = -1;
+			ph.setDiffKm(-1);
 		}
-	}
-	
-	protected int getZeitPos(double zeit)
-	{
-		assert config != null;
-		int min = config.getMarginTop();
-		int hoehe = config.getZeichnenHoehe(gui);
-		double diffZeit = config.getMaxZeit() - config.getMinZeit();
-		
-		double zeitFaktor = zeit - config.getMinZeit();
-		
-		return (int) ((zeitFaktor / diffZeit * hoehe) + min);
-	}
-	protected int getWegPos(double km)
-	{
-		assert config != null;
-		int minBreite = config.getMarginLeft();
-		int diffBreite = config.getZeichnenBreite(gui);
-		
-		return (int) ((km / diffKm * diffBreite) + minBreite);
 	}
 	
 	// alle Grafikobjekte neu berechnen
 	protected void recalculate(FontMetrics fontMetrics)
 	{
-		if(config == null || streckenabschnitt == null || streckenKm == null || fahrten == null)
+		/* Berechnet alles neu
+		 * Wichtig: Die Berechnung ist aufgeteilt:
+		 * - hier wird (außerhalb der Lambdas) berechnet, was nicht von der GUI abhängig ist
+		 * - in den Lambdas und im BildfahrplanPaintHelper ph wird berechnet, was von der GUI abhängig ist
+		 * Alles, was aus der Config kommt etc. wird also vorberechnet und in Variablen gespeichert, die dann im Lambda verwendet werden können.
+		 * Die im Lambda verwendeten Variablen müssen "quasi final" sein, also für mehrere Aufrufe des selben Lambdas nicht verändert werden.
+		 * Schleifenzähler müssen innerhalb der Schleife in eine lokale Variable kopiert werden, letztere kann dann verwendet werden. 
+		 */
+		
+		if(config == null || streckenabschnitt == null || streckenKm == null || fahrten == null
+				|| gui == null || spaltenGui == null || zeilenGui == null)
 		{
 			return;
 		}
 		
-		assert gui != null;
-		assert spaltenGui != null;
-		assert zeilenGui != null;
+		log.trace("recalc begonnen");
 
-		Collection<Paintable> guiPaints = new FirstLastLinkedList<>();
-		Collection<Paintable> spaltenGuiPaints = new FirstLastLinkedList<>();
-		Collection<Paintable> zeilenGuiPaints = new FirstLastLinkedList<>();
+		FirstLastLinkedList<Paintable> guiPaints = new FirstLastLinkedList<>();
+		FirstLastLinkedList<Paintable> spaltenGuiPaints = new FirstLastLinkedList<>();
+		FirstLastLinkedList<Paintable> zeilenGuiPaints = new FirstLastLinkedList<>();
 		
 		double minZeit = config.getMinZeit();
 		double maxZeit = config.getMaxZeit();
-		stringHeight = fontMetrics.getHeight();
+		double diffZeit = maxZeit - minZeit;
+		
+		// lokale Kopie zur Verwendung in Lambdas
+		int stringHeight = fontMetrics.getHeight();
+		this.stringHeight = stringHeight;
+		
+		// Config für PaintHelper neu laden
+		ph.readConfig();
 		
 		// ### Betriebsstellen-Linien ###
 		{
 			Color c = config.getBetriebsstellenFarbe();
 			FirstLastList<Betriebsstelle> betriebsstellen = streckenabschnitt.getBetriebsstellen();
 			
-			int bsCounter=0;
+			int bsCounter = 0;
 			for(Betriebsstelle bs: streckenabschnitt.getBetriebsstellen())
 			{
 				double km = streckenKm.get(bs);
-				
-				// Linie in gui
-				guiPaints.add(new PaintableLine(getWegPos(km), getZeitPos(minZeit), getWegPos(km), getZeitPos(maxZeit), c));
-				
-				// Linie in spaltenGui
-				int x = getWegPos(km);
-				int y1 = spaltenGui.getHeight();
-				int y2 = y1 - config.getLineHeight();
-				
-				spaltenGuiPaints.add(new PaintableLine(x, y1, x, y2, c));
-				
-				// Text in spaltenGui
-				int offsetX = config.getOffsetX();
-				int textY = config.getTextMarginTop() + ((stringHeight + config.getOffsetY()) * (bsCounter % config.getZeilenAnzahl())) + config.getTextMarginBottom();
+				int lineHeight = config.getLineHeight();
+				final int offsetX = config.getOffsetX();
+				final int textY = config.getTextMarginTop() + ((stringHeight + config.getOffsetY()) * (bsCounter % config.getZeilenAnzahl())) + config.getTextMarginBottom();
 				String name = bs.getName();
 				int stringWidth = fontMetrics.stringWidth(name);
 				
-				if(x < stringWidth)
-				{
-					// linker Rand
-					spaltenGuiPaints.add(new PaintableText(x - offsetX, textY, c, name));
-				}
-				else if((x + stringWidth) > spaltenGui.getWidth())
-				{
-					// rechter Rand
-					spaltenGuiPaints.add(new PaintableText(x - stringWidth + offsetX, textY, c, name));
-				}
-				else
-				{
-					// sonstwo
-					spaltenGuiPaints.add(new PaintableText(x - (stringWidth / 2), textY, c, name));
-				}
+				// Linie in gui
+				guiPaints.add(g -> ph.paintLine(g, ph.getWegPos(km), ph.getZeitPos(minZeit), ph.getWegPos(km), ph.getZeitPos(maxZeit), c));
+				
+				// Linie in spaltenGui
+				spaltenGuiPaints.add(g -> ph.paintLine(g, ph.getWegPos(km), spaltenGui.getHeight(), ph.getWegPos(km), spaltenGui.getHeight() - lineHeight, c));
+				
+				// Text in spaltenGui
+				spaltenGuiPaints.add(g -> {
+					int x = ph.getWegPos(km);
+					if(x < stringWidth)
+					{
+						// linker Rand
+						ph.paintText(g, x - offsetX, textY, c, name);
+					}
+					else if((x + stringWidth) > spaltenGui.getWidth())
+					{
+						// rechter Rand
+						ph.paintText(g, x - stringWidth + offsetX, textY, c, name);
+					}
+					else
+					{
+						// sonstwo
+						ph.paintText(g, x - (stringWidth / 2), textY, c, name);
+					}
+				});
 				
 				bsCounter++;
 			}
@@ -283,139 +277,161 @@ public class BildfahrplanGUIController
 			// Min-Zeit, auf 10 abgerundet
 			int zeit = (int) Math.ceil(minZeit / 10) * 10;
 			int zeitLinienStart = 5;
-			int zeitLinienEnde = gui.getWidth();
 			int textPosX = 5;
-			int maxWidth = 0;
 			
 			Stroke duenneLinie = new BasicStroke(1);
 			Stroke dickeLinie = new BasicStroke(3);
 			
 			while(zeit <= maxZeit)
 			{
-				Stroke s = (zeit % 60 == 0) ?  dickeLinie : duenneLinie;
-				int zeitPos = getZeitPos(zeit);
+				int thisZeit = zeit;
+				Stroke s = (thisZeit % 60 == 0) ?  dickeLinie : duenneLinie;
+				String text = TimeFormater.doubleToString(zeit);
 				
 				// Linie in gui
-				guiPaints.add(new PaintableLine(zeitLinienStart, zeitPos, zeitLinienEnde, zeitPos, c, s));
-				
-				// Schriftbreite erkennen
-				String text = TimeFormater.doubleToString(zeit);
-				int stringWidth = fontMetrics.stringWidth(text);
-				maxWidth = Integer.max(maxWidth, stringWidth);
-				zeit += zeitIntervall;
+				guiPaints.add(g -> ph.paintLine(g, zeitLinienStart, ph.getZeitPos(thisZeit), gui.getWidth(), ph.getZeitPos(thisZeit), c, s));
 				
 				// Text in zeilenGui
-				zeilenGuiPaints.add(new PaintableText(textPosX , zeitPos + (stringHeight/3), c, text));
+				zeilenGuiPaints.add(g -> ph.paintText(g, textPosX , ph.getZeitPos(thisZeit) + (stringHeight/3), c, text));
+				
+				zeit += zeitIntervall;
 			}
 		}
 		
 		// ### Fahrten-Linien ###
 		{
 			Color c = config.getFahrtenFarbe();
-			
-			// Schachtelung der Züge nach Minuten
-			int verschachtelungVerschiebung = 0;
 			int schachtelung = config.getSchachtelung();
+			int zeigeZugnamen = config.getZeigeZugnamen();
+			boolean zeigeZeiten = config.getZeigeZeiten();
 			
-			for(int i = (int) minZeit; i <= maxZeit;)
+			synchronized(fahrten)
 			{
-				for(Fahrt fahrt : fahrten)
+				for(Fahrt fahrt: fahrten)
 				{
-					double ab = -1;
-					double kmAb = -1;
+					double letzteZeit = -1;
+					double letzterKm = -1;
 					
-					for(Fahrplanhalt fh : fahrt.getFahrplanhalte())
+					for(Fahrplanhalt fh: fahrt.getFahrplanhalte())
 					{
-						if(ab >= 0 && ab >= i && kmAb >= 0)
+						double an = fh.getAnkunft();
+								
+						if(an > maxZeit)
 						{
-							double an = fh.getAnkunft();
-							
-							if(ab < minZeit || an > maxZeit) { return; }
-							
-							String name = fahrt.getName();
-							double kmAn = streckenKm.get(fh.getGleisabschnitt().getParent().getParent());
-							
-							if(!config.getZeigeZugnamenKommentare() && name.indexOf('%') >= 0)
+							continue;
+						}
+						
+						String zugName = fahrt.getName();
+						double kmAn = streckenKm.get(fh.getGleisabschnitt().getParent().getParent());
+						
+						if(!config.getZeigeZugnamenKommentare() && zugName.indexOf('%') >= 0)
+						{
+							// entferne alles ab dem ersten %, falls vorhanden
+							zugName = zugName.substring(0, zugName.indexOf('%'));
+						}
+						
+						// Übersetzten von dynamischen Variablen
+						double kmAb = letzterKm;
+						double ab = letzteZeit;
+						String name = zugName;
+						double showTextWidth = fontMetrics.stringWidth(name) * 0.9;
+						
+						// für ZeigeZeiten
+						int diffX = 5;
+						int diffY = -3;
+						
+						// Minuten aus den Zeiten auslesen
+						String abMinute = TimeFormater.doubleToMinute(ab);
+						String anMinute = TimeFormater.doubleToMinute(an);
+						int abMinuteBreite = fontMetrics.stringWidth(abMinute) - 2;
+						int anMinuteBreite = fontMetrics.stringWidth(anMinute) - 2;
+						int abVerschiebungY = diffY;
+						int anVerschiebungY = stringHeight + diffY;
+	
+						// erst ab dem 2. Fahrplanhalt zeichnen (die Linie, die zum Fahrplanhalt hinführt)
+						if(letzteZeit >= 0 && letzterKm >= 0 && letzteZeit >= minZeit && kmAb >= 0)
+						{
+							guiPaints.add(g ->
 							{
-								// entferne alles ab dem ersten %, falls vorhanden
-								name = name.substring(0, name.indexOf('%'));
-							}
-							
-							int x1 = getWegPos(kmAb);
-							int y1 = getZeitPos(ab - verschachtelungVerschiebung);
-							int x2 = getWegPos(kmAn);
-							int y2 = getZeitPos(an - verschachtelungVerschiebung);
-							
-							guiPaints.add(new PaintableLine(x1, y1, x2, y2, c));
-							
-							// Zeiten zeichnen, wenn in der Config, dies aktiv ist.
-							if(config.getZeigeZeiten())
-							{
-								int diffX = 5;
-								int diffY = -3;
+								int x1 = ph.getWegPos(kmAb);
+								int x2 = ph.getWegPos(kmAn);
 								
-								// Minuten aus den Zeiten auslesen
-								String abMinute = TimeFormater.doubleToMinute(ab);
-								String anMinute = TimeFormater.doubleToMinute(an);
-								int abVerschiebungY = diffY;
-								int anVerschiebungY = stringHeight + diffY;
+								int zeitenLTRx1 = x1 + diffX;
+								int zeitenLTRx2 = x2 - anMinuteBreite - diffX;
+								int zeitenRTLx1 = x1 - abMinuteBreite - diffX;
+								int zeitenRTLx2 = x2 + diffX;
 								
-								// Zeiten zeichnen
-								if(x1 < x2)
+								// Schachtelung der Züge nach Minuten
+								//for(int schachtelungVerschiebung = (int) minZeit; schachtelungVerschiebung <= maxZeit;)
+								for(int sch=0; sch < diffZeit; sch += schachtelung)
 								{
-									// Wenn die Linie von Links nach Rechts gezeichnet wird.
-									guiPaints.add(new PaintableText(x1 + diffX, y1 + diffY, c, abMinute));
-									guiPaints.add(new PaintableText(x2 - (fontMetrics.stringWidth(anMinute)-2) - diffX, y2 + stringHeight + diffY, c, anMinute));
+									int y1 = ph.getZeitPos(ab - sch);
+									int y2 = ph.getZeitPos(an - sch);
+	
+									ph.paintLine(g, x1, y1, x2, y2, c);
+									
+									// Zeiten zeichnen, wenn in der Config, dies aktiv ist.
+									if(zeigeZeiten)
+									{
+										// Zeiten zeichnen
+										if(x1 < x2)
+										{
+											// Wenn die Linie von Links nach Rechts gezeichnet wird.
+											ph.paintText(g, zeitenLTRx1, y1 + diffY, c, abMinute);
+											ph.paintText(g, zeitenLTRx2, y2 + stringHeight + diffY, c, anMinute);
+										}
+										else
+										{
+											// Wenn die Linie von Rechts nach Links gezeichnet wird.
+											ph.paintText(g, zeitenRTLx1, y1 + diffY, c, abMinute);
+											ph.paintText(g, zeitenRTLx2, y2 + stringHeight + diffY, c, anMinute);
+										}
+									}
+									
+									boolean zeichneZugnamen = (zeigeZugnamen != 0);
+									
+									if(zeigeZugnamen == 2)
+									{
+										// Zugnamen nur wenn Platz ist
+										// Textgröße holen
+										double lineLenght = Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
+										
+										// Text nur, wenn dieser weniger als doppelt so
+										// breit ist
+										if(showTextWidth > lineLenght)
+										{
+											zeichneZugnamen = false;
+										}
+									}
+									
+									if(zeichneZugnamen)
+									{
+										ph.paintRotatedText(g, x1, y1, x2, y2, c, name, -2);
+									}
+									
+									if(schachtelung == 0)
+									{
+										// Keine Schachtelung, abbrechen
+										break;
+									}
 								}
-								else
-								{
-									// Wenn die Linie von Rechts nach Links gezeichnet wird.
-									guiPaints.add(new PaintableText(x1 - (fontMetrics.stringWidth(anMinute)-2) - diffX, y1 + diffY, c, abMinute));
-									guiPaints.add(new PaintableText(x2 + diffX, y2 + stringHeight + diffY, c, anMinute));
-								}
-							}
-							
-							boolean zeichneZugnamen = config.getZeigeZugnamen() != 0;
-							
-							if(config.getZeigeZugnamen() == 2)
-							{
-								// Zugnamen nur wenn Platz ist
-								// Textgröße holen
-								double lineLenght = Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
-								
-								// Text nur, wenn dieser weniger als doppelt so
-								// breit ist
-								if(fontMetrics.stringWidth(name) * 0.9 > lineLenght)
-								{
-									zeichneZugnamen = false;
-								}
-							}
-							
-							if(zeichneZugnamen)
-							{
-								guiPaints.add(new PaintableRotatedText(x1, y1, x2, y2, c, name, -2));
-							}
+							});
 						}
 						
 						// für nächsten Eintrag
-						ab = fh.getAbfahrt();
-						kmAb = streckenKm.get(fh.getGleisabschnitt().getParent().getParent()).doubleValue();
-					}
-				}
-				
-				if(schachtelung == 0)
-				{
-					// Keine Schachtelung, abbrechen
-					break;
-				}
-				i += schachtelung;
-				verschachtelungVerschiebung += schachtelung;
-			}
+						letzteZeit = fh.getAbfahrt();
+						letzterKm = streckenKm.get(fh.getGleisabschnitt().getParent().getParent()).doubleValue();
+						
+					} // for(Fahrplanhalt fh: fahrt.getFahrplanhalte())
+				} // for(Fahrt fahrt: fahrten)
+			} // synchronized(fahrten)
 		}
 		
 		// Paint-Objekte überschreiben
 		gui.setPaintables(guiPaints);
 		spaltenGui.setPaintables(spaltenGuiPaints);
 		zeilenGui.setPaintables(zeilenGuiPaints);
+
+		log.trace("recalc fertig");
 	}
 }

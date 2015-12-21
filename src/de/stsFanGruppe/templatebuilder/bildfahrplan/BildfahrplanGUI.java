@@ -4,9 +4,9 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
-import java.util.Collection;
 import javax.swing.JComponent;
 import de.stsFanGruppe.templatebuilder.gui.TemplateBuilderGUI;
+import de.stsFanGruppe.tools.FirstLastLinkedList;
 import de.stsFanGruppe.tools.NullTester;
 
 public class BildfahrplanGUI extends JComponent
@@ -17,11 +17,9 @@ public class BildfahrplanGUI extends JComponent
 	protected TemplateBuilderGUI parent;
 	
 	protected Object paintLock = new Object();
-	protected Collection<Paintable> paintables = null;
+	protected FirstLastLinkedList<Paintable> paintables = null;
 	boolean paint = true;
 	protected boolean forceRepaint = true;
-	
-	Dimension lastSize = null;
 	
 	public BildfahrplanGUI(BildfahrplanGUIController controller, TemplateBuilderGUI parent)
 	{
@@ -33,7 +31,7 @@ public class BildfahrplanGUI extends JComponent
 		this.parent = parent;
 	}
 	
-	public void setPaintables(Collection<Paintable> paintables)
+	public void setPaintables(FirstLastLinkedList<Paintable> paintables)
 	{
 		synchronized(paintLock)
 		{
@@ -54,15 +52,6 @@ public class BildfahrplanGUI extends JComponent
 		repaint();
 	}
 	
-	public void errorMessage(String text)
-	{
-		if(parent == null)
-		{
-			log.error(text);
-		}
-		parent.errorMessage(text);
-	}
-	
 	@Override
 	protected void paintComponent(Graphics graphics)
 	{
@@ -78,7 +67,7 @@ public class BildfahrplanGUI extends JComponent
 		
 		controller.guiRepaint();
 		
-		if(forceRepaint || lastSize == null || !lastSize.equals(getSize()))
+		if(forceRepaint)
 		{
 			controller.recalculate(g.getFontMetrics());
 			forceRepaint = false;
@@ -89,17 +78,21 @@ public class BildfahrplanGUI extends JComponent
 			return;
 		}
 		
-		synchronized(paintables)
+		// Arbeitskopie
+		FirstLastLinkedList<Paintable> ps;
+		synchronized(paintLock)
 		{
-			if(paintables.isEmpty())
-			{
-				return;
-			}
-			
-			for(Paintable p : paintables)
-			{
-				p.paint(g);
-			}
+			ps = (FirstLastLinkedList<Paintable>) paintables.clone();
+		}
+		
+		if(ps.isEmpty())
+		{
+			return;
+		}
+		
+		for(Paintable p : ps)
+		{
+			p.paint(g);
 		}
 	}
 }
