@@ -18,7 +18,7 @@ public class PreferenceHandler
 	public PreferenceHandler(Class<?> reference, Runnable setCallback)
 	{
 		NullTester.test(reference);
-		log.info("Neuer PreferenceHandler ({})", reference);
+		log.trace("Neuer PreferenceHandler ({})", reference);
 		prefs = Preferences.userNodeForPackage(reference);
 		this.setCallback = setCallback;
 	}
@@ -28,7 +28,7 @@ public class PreferenceHandler
 	public void setString(String logName, String configName, String value)
 	{
 		prefs.put(configName, value);
-		log.debug("Config: {} = {}", logName, value);
+		log.trace("Config: {} = {}", logName, value);
 		setCallback.run();
 	}
 	public String getString(String configName, String defaultValue)
@@ -39,7 +39,7 @@ public class PreferenceHandler
 	public void setBoolean(String logName, String configName, boolean value)
 	{
 		prefs.putBoolean(configName, value);
-		log.debug("Config: {} = {}", logName, value);
+		log.trace("Config: {} = {}", logName, value);
 		setCallback.run();
 	}
 	public boolean getBoolean(String configName, boolean defaultValue)
@@ -50,7 +50,7 @@ public class PreferenceHandler
 	public void setInt(String logName, String configName, int value)
 	{
 		prefs.putInt(configName, value);
-		log.debug("Config: {} = {}", logName, value);
+		log.trace("Config: {} = {}", logName, value);
 		setCallback.run();
 	}
 	public int getInt(String configName, int defaultValue)
@@ -61,7 +61,7 @@ public class PreferenceHandler
 	public void setDouble(String logName, String configName, double value)
 	{
 		prefs.putDouble(configName, value);
-		log.debug("Config: {} = {}", logName, value);
+		log.trace("Config: {} = {}", logName, value);
 		setCallback.run();
 	}
 	public double getDouble(String configName, double defaultValue)
@@ -133,13 +133,13 @@ public class PreferenceHandler
 			boolean oldValue = prefs.getBoolean(key, false);
 			prefs.putBoolean(key, !oldValue);
 			prefs.flush();
-		return true;
+			return true;
 		}
 		catch(BackingStoreException e)
 		{
 			log.info("speichertest: Storage-Fehler", e);
 		}
-			return false;
+		return false;
 	}
 	/**
 	 * Stellt sicher, dass alle Einstellungen dauerhaft gespeichert sind.
