@@ -1,29 +1,23 @@
 package de.stsFanGruppe.templatebuilder.bildfahrplan;
 
-import java.awt.*;
-import java.util.Set;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import javax.swing.JComponent;
-import de.stsFanGruppe.templatebuilder.config.BildfahrplanConfig;
-import de.stsFanGruppe.templatebuilder.strecken.Streckenabschnitt;
-import de.stsFanGruppe.templatebuilder.zug.Fahrt;
+import de.stsFanGruppe.tools.FirstLastLinkedList;
 import de.stsFanGruppe.tools.NullTester;
-import de.stsFanGruppe.tools.TimeFormater;
 
 public class BildfahrplanZeilenheaderGUI extends JComponent
 {
+	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(BildfahrplanZeilenheaderGUI.class);
+	
 	protected BildfahrplanGUI gui;
-	protected BildfahrplanConfig config;
-	
-	protected Streckenabschnitt streckenabschnitt;
-	protected Set<Fahrt> fahrten;
-	
-	protected boolean changed = true;
-	protected boolean paint = true;
-	protected boolean firstPaint = true;
-	
-	protected int stringHeight = 0;
-	protected int zeitAbstand = 5;
-	protected int zeitBreite = 0;
+	protected BildfahrplanGUIController controller;
+
+	protected Object paintLock = new Object();
+	protected FirstLastLinkedList<Paintable> paintables = null;
+	boolean paint = true;
 	
 	/**
 	 * Anzeigen der GUI mit einer festen Zeilenzahl
@@ -35,8 +29,16 @@ public class BildfahrplanZeilenheaderGUI extends JComponent
 		NullTester.test(controller);
 		
 		this.gui = gui;
-		this.config = controller.getConfig();
+		this.controller = controller;
 		controller.setBildfahrplanZeilenheaderGUI(this);
+	}
+	
+	public void setPaintables(FirstLastLinkedList<Paintable> paintables)
+	{
+		synchronized(paintLock)
+		{
+			this.paintables = paintables;
+		}
 	}
 	
 	public void paintComponent(Graphics graphics)
@@ -52,59 +54,31 @@ public class BildfahrplanZeilenheaderGUI extends JComponent
 		System.setProperty("swing.aatext", "true");
 		System.setProperty("awt.useSystemAAFontSettings", "lcd");
 		
-		g.setColor(config.getZeitenFarbe());
-		
-		if(!paint || gui.streckenabschnitt == null)
+		if(!paint || paintables == null)
 		{
 			return;
 		}
-		int minZeit = (int) config.getMinZeit();
-		int maxZeit = (int) config.getMaxZeit();
-		int zeitIntervall = config.getZeitIntervall();
-		int zeit = minZeit;
 		
-		if(zeit % 10 != 0){
-			zeit = zeit - (zeit % 10);
-		}
-		while(zeit <= maxZeit)
+		// Arbeitskopie
+		FirstLastLinkedList<Paintable> ps;
+		synchronized(paintLock)
 		{
-			paintZeiten(g, zeit);
-			zeit += zeitIntervall;
+			ps = (FirstLastLinkedList<Paintable>) paintables.clone();
+		}
+		
+		if(ps.isEmpty())
+		{
+			return;
+		}
+		
+		for(Paintable p : ps)
+		{
+			p.paint(g);
 		}
 	}
-	/**
-	 * Die Breite wird aus der Config-Klasse ausgelesen. 
-	 * Die Höhe ist die Höhe der GUI. 
-	 */
+	
 	public Dimension getPreferredSize()
 	{
-		return new Dimension( config.getZeilenHeaderBreite(), (int) gui.getPreferredSize().getHeight());
-	}
-	/**
-	 * "Schreibt" den Text in den Header
-	 * @param g Variable für die Grafik.
-	 * @param zeit Die x-Koordinaten, wo der Text hingeschrieben werden soll.
-	 * @param bs Die Bezeichnung der Betriebsstelle.
-	 */
-	protected void paintZeiten(Graphics2D g, double zeit)
-	{
-		assert gui != null;
-		assert g != null;
-		
-		int x1 = 5;
-		int x2 = gui.getWidth();
-		int y = gui.getZeitPos(zeit);
-					
-		// Schriftbreite und -höhe erkennen
-		String zeitAngabe = TimeFormater.doubleToString(zeit);
-		FontMetrics f = g.getFontMetrics();
-		int stringWidth = f.stringWidth(zeitAngabe);
-		if(stringWidth < zeitBreite){
-			zeitBreite = stringWidth;
-		}
-		stringHeight = f.getHeight();
-		
-		// Text einzeichnen
-		g.drawString(zeitAngabe, x1 , y + (stringHeight/3));	
+		return new Dimension(controller.getZeilenHeaderBreite(), (int) gui.getPreferredSize().getHeight());
 	}
 }

@@ -1,24 +1,23 @@
 package de.stsFanGruppe.templatebuilder.bildfahrplan;
 
-import java.awt.*;
-import java.awt.geom.AffineTransform;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import javax.swing.JComponent;
-import de.stsFanGruppe.templatebuilder.config.BildfahrplanConfig;
-import de.stsFanGruppe.templatebuilder.strecken.Betriebsstelle;
-import de.stsFanGruppe.templatebuilder.strecken.Streckenabschnitt;
+import de.stsFanGruppe.tools.FirstLastLinkedList;
 import de.stsFanGruppe.tools.NullTester;
 
 public class BildfahrplanSpaltenheaderGUI extends JComponent
 {
+	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(BildfahrplanSpaltenheaderGUI.class);
+	
 	protected BildfahrplanGUI gui;
-	protected BildfahrplanConfig config;
-	
-	protected Streckenabschnitt streckenabschnitt;
-	
-	protected boolean changed = true;
-	protected boolean paint = true;
-	protected boolean firstPaint = true;
-	protected int stringHeight = 0;
+	protected BildfahrplanGUIController controller;
+
+	protected Object paintLock = new Object();
+	protected FirstLastLinkedList<Paintable> paintables = null;
+	boolean paint = true;
 	
 	/**
 	 * Anzeigen der GUI mit einer festen Spaltenanzahl
@@ -30,8 +29,16 @@ public class BildfahrplanSpaltenheaderGUI extends JComponent
 		NullTester.test(controller);
 		
 		this.gui = gui;
-		this.config = controller.getConfig();
+		this.controller = controller;
 		controller.setBildfahrplanSpaltenHeaderGUI(this);
+	}
+	
+	public void setPaintables(FirstLastLinkedList<Paintable> paintables)
+	{
+		synchronized(paintLock)
+		{
+			this.paintables = paintables;
+		}
 	}
 	
 	public void paintComponent(Graphics graphics)
@@ -47,92 +54,31 @@ public class BildfahrplanSpaltenheaderGUI extends JComponent
 		System.setProperty("swing.aatext", "true");
 		System.setProperty("awt.useSystemAAFontSettings", "lcd");
 		
-		// Prüft, ob Werte den Wert null haben
-		if(!paint || gui.streckenabschnitt == null)
+		if(!paint || paintables == null)
 		{
 			return;
 		}
 		
-		// Holt sich die Farbe für die Schrift und der Linie
-		g.setColor(config.getBetriebsstellenFarbe());
-		
-		boolean ersteLinie = true;
-		double linienVerschiebung = 0;
-		double km = 0;
-		int bsZaehler = 0;
-		
-		for(Betriebsstelle bs: gui.streckenabschnitt.getBetriebsstellen())
+		// Arbeitskopie
+		FirstLastLinkedList<Paintable> ps;
+		synchronized(paintLock)
 		{
-			km = bs.getMaxKm();
-			
-			if(km != 0 && ersteLinie)
-			{
-				linienVerschiebung -= km;	
-			}
-			km += linienVerschiebung;
-			
-			paintBetriebsstelle(g, km, bs.getName(), bsZaehler);
-			
-			ersteLinie = false;
-			bsZaehler++;
+			ps = (FirstLastLinkedList<Paintable>) paintables.clone();
+		}
+		
+		if(ps.isEmpty())
+		{
+			return;
+		}
+		
+		for(Paintable p : ps)
+		{
+			p.paint(g);
 		}
 	}
+	
 	public Dimension getPreferredSize()
 	{
-		return new Dimension((int) gui.getPreferredSize().getWidth(), config.spaltenHeaderHoehe(stringHeight));
-	}
-	/**
-	 * "Schreibt" den Text in den Header
-	 * @param g Variable für die Grafik.
-	 * @param km Die x-Koordinaten, wo der Text hingeschrieben werden soll.
-	 * @param bs Die Bezeichnung der Betriebsstelle.
-	 */
-	protected void paintBetriebsstelle(Graphics2D g, double km, String bs, int zaehler)
-	{
-		assert gui != null;
-		assert g != null;
-		
-		int x = gui.getWegPos(km);
-		int y1 = this.getHeight();
-		int y2 = y1 - config.getLineHeight();
-		
-		// Linie zeichnen
-		g.drawLine(x, y1, x, y2);
-		
-		// Koordinatensystem drehen
-		AffineTransform neu = g.getTransform();
-		AffineTransform alt = (AffineTransform)neu.clone();
-		neu.translate(x, (y2 + y1) / 2);
-		g.setTransform(neu);
-		
-		// Schriftbreite und -höhe erkennen
-		FontMetrics f = g.getFontMetrics();
-		int stringWidth = f.stringWidth(bs);
-		stringHeight = f.getHeight();
-		
-		// Koordinatensystem zurücksetzen
-		g.setTransform(alt);
-		
-		//weitere Variablen
-		int offsetX = config.getOffsetX();
-		
-		int textY = (config.getTextMarginTop()
-				+ (stringHeight + config.getOffsetY()) * (zaehler % config.getZeilenAnzahl()))
-				+ (stringHeight/2);
-		
-		// Text einzeichnen
-		if(x < stringWidth)
-		{
-			g.drawString(bs, x - offsetX, textY);
-		}
-		else if((stringWidth + x) > gui.getWidth())
-		{
-			g.drawString(bs, x + offsetX - stringWidth , textY);
-		}
-		else
-		{
-			g.drawString(bs, x - (stringWidth / 2), textY);
-		}
-		
+		return new Dimension((int) gui.getPreferredSize().getWidth(), controller.getSpaltenHeaderHoehe());
 	}
 }

@@ -328,17 +328,17 @@ public class BildfahrplanConfig
 	{
 		return (int) ((getMaxZeit() - getMinZeit()) / 60 * getHoeheProStunde()) + getMarginTop() + getMarginBottom();
 	}
-	public int zeichnenBreite(JComponent p)
+	public int getZeichnenBreite(JComponent p)
 	{
 		NullTester.test(p);
 		return p.getWidth() - getMarginLeft() - getMarginRight();
 	}
-	public int zeichnenHoehe(JComponent p)
+	public int getZeichnenHoehe(JComponent p)
 	{
 		NullTester.test(p);
 		return p.getHeight() - getMarginTop() - getMarginBottom();
 	}
-	public int spaltenHeaderHoehe(int textHeight)
+	public int getSpaltenHeaderHoehe(int textHeight)
 	{
 		return getTextMarginTop() + (textHeight + getOffsetY()) * getZeilenAnzahl() + getTextMarginBottom();  
 	}
