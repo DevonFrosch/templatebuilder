@@ -29,6 +29,6 @@ public class PaintableText implements Paintable
 		int stringWidth = f.stringWidth(beschriftung);
 		
 		// Text einzeichnen
-		g.drawString(beschriftung, x - stringWidth / 2, y);
+		g.drawString(beschriftung, x, y);
 	}
 }
