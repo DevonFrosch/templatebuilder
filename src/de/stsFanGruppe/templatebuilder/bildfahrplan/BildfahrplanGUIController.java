@@ -207,7 +207,14 @@ public class BildfahrplanGUIController
 		}
 		
 		log.trace("recalc begonnen");
-
+		
+		// Hintergrundfarbe einstellen
+		Color bg = config.getHintergrundFarbe();
+		gui.getParent().getParent().setBackground(bg);
+		gui.getParent().setBackground(bg);
+		spaltenGui.getParent().setBackground(bg);
+		zeilenGui.getParent().setBackground(bg);
+		
 		FirstLastLinkedList<Paintable> guiPaints = new FirstLastLinkedList<>();
 		FirstLastLinkedList<Paintable> spaltenGuiPaints = new FirstLastLinkedList<>();
 		FirstLastLinkedList<Paintable> zeilenGuiPaints = new FirstLastLinkedList<>();
