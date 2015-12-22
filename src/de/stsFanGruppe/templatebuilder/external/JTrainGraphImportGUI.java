@@ -15,6 +15,9 @@ public class JTrainGraphImportGUI extends JDialog implements GUI
 	public final int CANCEL_OPTION = 0;
 	public final int APPROVE_OPTION = 1;
 	
+	private Cursor waitCursor = new Cursor(Cursor.WAIT_CURSOR);
+	private Cursor defaultCursor = new Cursor(Cursor.DEFAULT_CURSOR);
+	
 	private Callback callback;
 	
 	final JPanel contentPanel = new JPanel();
@@ -128,7 +131,9 @@ public class JTrainGraphImportGUI extends JDialog implements GUI
 	// ActionHandler
 	private void dateiChooser(ActionEvent e)
 	{
+		setCursor(waitCursor);
 		JFileChooser fileChooser = new JFileChooser();
+		setCursor(defaultCursor);	
 		
 		fileChooser.setDialogTitle("Importieren...");
 		if(!pfadInput.getText().trim().isEmpty())
