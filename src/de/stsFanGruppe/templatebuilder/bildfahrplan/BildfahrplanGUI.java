@@ -82,7 +82,7 @@ public class BildfahrplanGUI extends JComponent
 		FirstLastLinkedList<Paintable> ps;
 		synchronized(paintLock)
 		{
-			ps = (FirstLastLinkedList<Paintable>) paintables.clone();
+			ps = paintables.clone();
 		}
 		
 		if(ps.isEmpty())
