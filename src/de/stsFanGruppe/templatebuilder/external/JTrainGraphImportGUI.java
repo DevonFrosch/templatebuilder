@@ -26,8 +26,6 @@ public class JTrainGraphImportGUI extends JDialog implements GUI
 	final JLabel lblLinie = new JLabel("Linie");
 	JCheckBox chckbxZgeImportieren;
 	
-	JFileChooser fileChooser = new JFileChooser();
-	
 	/**
 	 * Launch the application.
 	 */
@@ -130,6 +128,8 @@ public class JTrainGraphImportGUI extends JDialog implements GUI
 	// ActionHandler
 	private void dateiChooser(ActionEvent e)
 	{
+		JFileChooser fileChooser = new JFileChooser();
+		
 		fileChooser.setDialogTitle("Importieren...");
 		if(!pfadInput.getText().trim().isEmpty())
 		{
