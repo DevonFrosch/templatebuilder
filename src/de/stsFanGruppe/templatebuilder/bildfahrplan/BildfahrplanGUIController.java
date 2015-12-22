@@ -44,7 +44,10 @@ public class BildfahrplanGUIController
 		NullTester.test(parent);
 		this.config = config;
 		this.parent = parent;
-		config.registerChangeHandler(() -> gui.recalculatePanelSize());
+		config.registerChangeHandler(() -> {
+			gui.recalculatePanelSize();
+			repaint();
+		});
 	}
 	
 	// Offizielle Funktionen
