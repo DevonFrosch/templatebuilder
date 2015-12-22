@@ -179,7 +179,7 @@ public class TemplateBuilderGUI implements GUI
 		JScrollPane scrollPane = new JScrollPane();
 		tabbedPane.addTab("New tab", null, scrollPane, null);
 		
-		BildfahrplanGUIController bfpController = new BildfahrplanGUIController(controller.getConfig());
+		BildfahrplanGUIController bfpController = new BildfahrplanGUIController(controller.getConfig(), this);
 		bildfahrplanZeichner = new BildfahrplanGUI(bfpController, this);
 		controller.setBildfahrplanController(bfpController);
 		

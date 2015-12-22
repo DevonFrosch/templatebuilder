@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanConfig;
+import de.stsFanGruppe.templatebuilder.gui.GUI;
 import de.stsFanGruppe.templatebuilder.strecken.Betriebsstelle;
 import de.stsFanGruppe.templatebuilder.strecken.Strecke;
 import de.stsFanGruppe.templatebuilder.strecken.Streckenabschnitt;
@@ -28,6 +29,7 @@ public class BildfahrplanGUIController
 	protected BildfahrplanGUI gui = null;
 	protected BildfahrplanSpaltenheaderGUI spaltenGui = null;
 	protected BildfahrplanZeilenheaderGUI zeilenGui = null;
+	protected GUI parent;
 	
 	protected BildfahrplanPaintHelper ph;
 	protected int stringHeight = 0;
@@ -36,10 +38,12 @@ public class BildfahrplanGUIController
 	protected Map<Betriebsstelle, Double> streckenKm;
 	protected Set<Fahrt> fahrten;
 	
-	public BildfahrplanGUIController(BildfahrplanConfig config)
+	public BildfahrplanGUIController(BildfahrplanConfig config, GUI parent)
 	{
 		NullTester.test(config);
+		NullTester.test(parent);
 		this.config = config;
+		this.parent = parent;
 		config.registerChangeHandler(() -> gui.recalculatePanelSize());
 	}
 	
@@ -207,7 +211,14 @@ public class BildfahrplanGUIController
 		}
 		
 		log.trace("recalc begonnen");
-
+		
+		// Hintergrundfarbe einstellen
+		Color bg = config.getHintergrundFarbe();
+		gui.getParent().getParent().setBackground(bg);
+		gui.getParent().setBackground(bg);
+		spaltenGui.getParent().setBackground(bg);
+		zeilenGui.getParent().setBackground(bg);
+		
 		FirstLastLinkedList<Paintable> guiPaints = new FirstLastLinkedList<>();
 		FirstLastLinkedList<Paintable> spaltenGuiPaints = new FirstLastLinkedList<>();
 		FirstLastLinkedList<Paintable> zeilenGuiPaints = new FirstLastLinkedList<>();

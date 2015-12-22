@@ -80,6 +80,13 @@ public class BildfahrplanSettingsGUIController
 					gui.panelBfpFahrtenFarbeVorschau.setBackground(c);
 				}
 				break;
+			case "hintergrundFarbe":
+				c = JColorChooser.showDialog(gui, "Farbe wählen", gui.panelBfpHintergrundFarbeVorschau.getBackground());
+				if(c != null)
+				{
+					gui.panelBfpHintergrundFarbeVorschau.setBackground(c);
+				}
+				break;
 			default:
 				log.error("farbButton: actionCommand nicht erkannt: {}", event.getActionCommand());
 		}
@@ -141,8 +148,8 @@ public class BildfahrplanSettingsGUIController
 				break;
 			case "cancel":
 				gui.close();
-		        gui = null;
-		        return;
+				gui = null;
+				return;
 			case "apply":
 			case "ok":
 				try

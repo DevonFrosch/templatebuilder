@@ -378,24 +378,6 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 							JButton btnBfpFahrtenFarbe = new JButton("w\u00E4hlen...");
 							panelBfpFahrtenFarbe.add(btnBfpFahrtenFarbe);
 							btnBfpFahrtenFarbe.setActionCommand("fahrtenFarbe");
-							{
-								JPanel panelZugregeln = new JPanel();
-								panelZugregeln.setBorder(BorderFactory.createTitledBorder("Zugregeln"));
-								panelFarben.add(panelZugregeln, "2, 4, fill, fill");
-								panelZugregeln.setLayout(new FormLayout(new ColumnSpec[] {
-										FormSpecs.RELATED_GAP_COLSPEC,
-										ColumnSpec.decode("default:grow"),
-										FormSpecs.RELATED_GAP_COLSPEC,},
-									new RowSpec[] {
-										FormSpecs.RELATED_GAP_ROWSPEC,
-										FormSpecs.DEFAULT_ROWSPEC,
-										FormSpecs.RELATED_GAP_ROWSPEC,}));
-								{
-									JButton btnZugregeln = new JButton("Zugformatierungsregeln...");
-									btnZugregeln.setEnabled(false);
-									panelZugregeln.add(btnZugregeln, "2, 2, left, top");
-								}
-							}
 							btnBfpFahrtenFarbe.addActionListener((ActionEvent arg0) -> controller.farbButton(arg0));
 						}
 					}
@@ -418,6 +400,24 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 							panelBfpHintergrundFarbe.add(btnBfpHintergrundFarbe);
 							btnBfpHintergrundFarbe.setActionCommand("hintergrundFarbe");
 							btnBfpHintergrundFarbe.addActionListener((ActionEvent arg0) -> controller.farbButton(arg0));
+						}
+					}
+					{
+						JPanel panelZugregeln = new JPanel();
+						panelZugregeln.setBorder(BorderFactory.createTitledBorder("Zugregeln"));
+						panelFarben.add(panelZugregeln, "2, 4, fill, fill");
+						panelZugregeln.setLayout(new FormLayout(new ColumnSpec[] {
+								FormSpecs.RELATED_GAP_COLSPEC,
+								ColumnSpec.decode("default:grow"),
+								FormSpecs.RELATED_GAP_COLSPEC,},
+							new RowSpec[] {
+								FormSpecs.RELATED_GAP_ROWSPEC,
+								FormSpecs.DEFAULT_ROWSPEC,
+								FormSpecs.RELATED_GAP_ROWSPEC,}));
+						{
+							JButton btnZugregeln = new JButton("Zugformatierungsregeln...");
+							btnZugregeln.setEnabled(false);
+							panelZugregeln.add(btnZugregeln, "2, 2, left, top");
 						}
 					}
 				}
