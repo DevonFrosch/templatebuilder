@@ -69,8 +69,8 @@ public class BildfahrplanGUI extends JComponent
 		
 		if(forceRepaint)
 		{
-			controller.recalculate(g.getFontMetrics());
 			forceRepaint = false;
+			controller.recalculate(g.getFontMetrics());
 		}
 		
 		if(!paint || paintables == null)
