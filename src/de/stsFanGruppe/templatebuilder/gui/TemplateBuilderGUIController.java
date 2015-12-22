@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Hashtable;
 import java.util.Set;
 import java.util.StringJoiner;
 import javax.swing.JTabbedPane;
@@ -28,6 +29,8 @@ public class TemplateBuilderGUIController
 	private TemplateBuilderGUI gui = null;
 	private BildfahrplanGUIController bildfahrplanController = null;
 	private JTabbedPane tabs = null;
+	
+	private Hashtable<String, Boolean> windowLocks = new Hashtable<>();
 	
 	// TODO: allgemeines Config-Objekt
 	protected BildfahrplanConfig config;
@@ -59,11 +62,37 @@ public class TemplateBuilderGUIController
 	}
 	
 	// ActionHandler
+	private boolean lock(String name)
+	{
+		assert name != null;
+		
+		synchronized(windowLocks)
+		{
+			if(windowLocks.get(name) != null && windowLocks.get(name))
+			{
+				return false;
+			}
+			windowLocks.put(name, true);
+		}
+		
+		log.debug("WindowLock für {}", name);
+		return true;
+	}
+	private void unlock(String name)
+	{
+		assert name != null;
+		synchronized(windowLocks)
+		{
+			windowLocks.put(name, false);
+		}
+		log.debug("WindowUnlock für {}", name);
+	}
 	public void menuAction(ActionEvent event)
 	{
 		switch(event.getActionCommand())
 		{
 			case "importFromJTG":
+				if(!lock(event.getActionCommand())) break;
 				JTrainGraphImportGUI jtgi = new JTrainGraphImportGUI(gui.getFrame(), (ergebnis) -> {
 					assert bildfahrplanController != null;
 					assert ergebnis != null;
@@ -101,9 +130,11 @@ public class TemplateBuilderGUIController
 							gui.errorMessage("Fehler beim Import!");
 						}
 					}
+					unlock(event.getActionCommand());
 				});
 				break;
 			case "exportToJTG":
+				if(!lock(event.getActionCommand())) break;
 				JTrainGraphExportGUI jtge = new JTrainGraphExportGUI(gui.getFrame(), (ergebnis) -> {
 					assert bildfahrplanController != null;
 					assert ergebnis != null;
@@ -142,12 +173,15 @@ public class TemplateBuilderGUIController
 							gui.errorMessage("Fehler beim Export!");
 						}
 					}
+					unlock(event.getActionCommand());
 				});
 				break;
 			case "options":
-				BildfahrplanSettingsGUI sg = new BildfahrplanSettingsGUI(new BildfahrplanSettingsGUIController(config));
+				if(!lock(event.getActionCommand())) break;
+				BildfahrplanSettingsGUI sg = new BildfahrplanSettingsGUI(new BildfahrplanSettingsGUIController(config, () -> unlock(event.getActionCommand())), gui.getFrame());
 				break;
 			case "about":
+				if(!lock(event.getActionCommand())) break;
 				StringJoiner text = new StringJoiner("\n");
 				text.add("TemplateBuilder "+version);
 				text.add("Copyright DevonFrosch, Koschi (http://sts-fan-gruppe.de/)");
@@ -155,6 +189,7 @@ public class TemplateBuilderGUIController
 				if(dev) text.add("Dies ist eine Entwicklungsversion, die noch Fehler enthält!");
 				
 				gui.infoMessage(text.toString(), "Über");
+				unlock(event.getActionCommand());
 				break;
 			case "exit":
 				log.info("Programm beendet");

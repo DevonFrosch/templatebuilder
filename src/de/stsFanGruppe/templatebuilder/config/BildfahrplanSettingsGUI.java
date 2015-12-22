@@ -50,7 +50,7 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 	{
 		try
 		{
-			BildfahrplanSettingsGUI dialog = new BildfahrplanSettingsGUI(new BildfahrplanSettingsGUIController(new BildfahrplanConfig()));
+			BildfahrplanSettingsGUI dialog = new BildfahrplanSettingsGUI(new BildfahrplanSettingsGUIController(new BildfahrplanConfig(), () -> {}), null);
 		}
 		catch(Exception e)
 		{
@@ -61,8 +61,9 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 	/**
 	 * Create the dialog.
 	 */
-	public BildfahrplanSettingsGUI(BildfahrplanSettingsGUIController controller)
+	public BildfahrplanSettingsGUI(BildfahrplanSettingsGUIController controller, Window parent)
 	{
+		super(parent);
 		NullTester.test(controller);
 		this.controller = controller;
 		this.config = controller.getConfig();

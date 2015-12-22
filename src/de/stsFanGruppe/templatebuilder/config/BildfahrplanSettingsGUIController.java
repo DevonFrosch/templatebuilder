@@ -17,11 +17,14 @@ public class BildfahrplanSettingsGUIController
 	
 	private BildfahrplanSettingsGUI gui;
 	private BildfahrplanConfig config;
+	private Runnable onClose;
 	
-	public BildfahrplanSettingsGUIController(BildfahrplanConfig config)
+	public BildfahrplanSettingsGUIController(BildfahrplanConfig config, Runnable onClose)
 	{
 		NullTester.test(config);
+		NullTester.test(onClose);
 		this.config = config;
+		this.onClose = onClose;
 	}
 	
 	public void setSettingsGUI(BildfahrplanSettingsGUI gui)
@@ -147,8 +150,7 @@ public class BildfahrplanSettingsGUIController
 				gui.loadSettings();
 				break;
 			case "cancel":
-				gui.close();
-				gui = null;
+				close();
 				return;
 			case "apply":
 			case "ok":
@@ -176,8 +178,7 @@ public class BildfahrplanSettingsGUIController
 				// OK: Fenster schlieﬂen
 				if(event.getActionCommand() == "ok")
 				{
-					gui.close();
-			        gui = null;
+					close();
 			        return;
 				}
 				break;
@@ -257,6 +258,12 @@ public class BildfahrplanSettingsGUIController
 		
 		// BfpHintergrund
 		config.setHintergrundFarbe(gui.panelBfpHintergrundFarbeVorschau.getBackground());
+	}
+	protected void close()
+	{
+		gui.close();
+        gui = null;
+        onClose.run();
 	}
 	
 	protected int parseIntField(String name, String input)
