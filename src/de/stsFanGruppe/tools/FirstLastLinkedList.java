@@ -27,4 +27,18 @@ public class FirstLastLinkedList<E> extends LinkedList<E> implements
 	{
 		return this.get(this.size()-1);
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public FirstLastLinkedList<E> clone()
+	{
+		return (FirstLastLinkedList<E>) super.clone();
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public E[] toArray()
+	{
+		return (E[]) super.toArray();
+	}
 }
