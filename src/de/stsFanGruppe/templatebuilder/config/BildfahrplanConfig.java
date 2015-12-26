@@ -9,7 +9,7 @@ import javax.swing.JComponent;
 import de.stsFanGruppe.tools.NullTester;
 import de.stsFanGruppe.tools.PreferenceHandler;
 
-public class BildfahrplanConfig
+public class BildfahrplanConfig extends ConfigController
 {
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(BildfahrplanConfig.class);
 	
@@ -341,26 +341,6 @@ public class BildfahrplanConfig
 	public int getSpaltenHeaderHoehe(int textHeight)
 	{
 		return getTextMarginTop() + (textHeight + getOffsetY()) * getZeilenAnzahl() + getTextMarginBottom();  
-	}
-	
-	// Change-Handler
-	public Object registerChangeHandler(Runnable callback)
-	{
-		NullTester.test(callback);
-		Object handlerID = Integer.valueOf(callbackCounter++);
-		log.debug("registerChangeHandler (ID {})", handlerID);
-		callbacks.put(handlerID, callback);
-		return handlerID;
-	}
-	public boolean unregisterChangeHandler(Object handlerID)
-	{
-		NullTester.test(handlerID);
-		log.debug("unregisterChangeHandler (ID {})", handlerID);
-		return callbacks.remove(handlerID) != null;
-	}
-	protected void notifyChange()
-	{
-		callbacks.forEach((k, v) -> v.run());
 	}
 	
 	public boolean schreibTest()

@@ -2,12 +2,7 @@ package de.stsFanGruppe.templatebuilder.config;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import javax.swing.JColorChooser;
-import javax.swing.JFileChooser;
 import de.stsFanGruppe.tools.NullTester;
 import de.stsFanGruppe.tools.TimeFormater;
 
@@ -108,44 +103,10 @@ public class BildfahrplanSettingsGUIController
 		switch(event.getActionCommand())
 		{
 			case "save":
-				JFileChooser saveFileChooser = new JFileChooser();
-				saveFileChooser.setDialogTitle("Einstellungen speichern");
-				
-				if (saveFileChooser.showSaveDialog(gui) == JFileChooser.APPROVE_OPTION)
-				{
-					try
-					{
-						if(!config.exportXML(new FileOutputStream(new File(saveFileChooser.getSelectedFile().getPath()))))
-						{
-							gui.infoMessage("Fehler beim Speichern der Einstellungen!");
-						}
-					}
-					catch(FileNotFoundException e)
-					{
-						log.error("Einstellungen exportieren", e);
-						gui.infoMessage("Fehler beim Speichern der Einstellungen!");
-					}
-				}
+				config.exportSettings(gui, gui);
 				break;
 			case "load":
-				JFileChooser loadFileChooser = new JFileChooser();
-				loadFileChooser.setDialogTitle("Einstellungen laden");
-				
-				if (loadFileChooser.showOpenDialog(gui) == JFileChooser.APPROVE_OPTION)
-				{
-					try
-					{
-						if(!config.importXML(new FileInputStream(new File(loadFileChooser.getSelectedFile().getPath()))))
-						{
-							gui.infoMessage("Fehler beim Laden der Einstellungen!");
-						}
-					}
-					catch(FileNotFoundException e)
-					{
-						log.error("Einstellungen importieren", e);
-						gui.infoMessage("Fehler beim Laden der Einstellungen!");
-					}
-				}
+				config.importSettings(gui, gui);
 				// Einstellungen neu laden
 				gui.loadSettings();
 				break;
