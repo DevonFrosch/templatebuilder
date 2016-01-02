@@ -14,6 +14,7 @@ import com.jgoodies.forms.layout.RowSpec;
 import de.stsFanGruppe.templatebuilder.config.*;
 import de.stsFanGruppe.templatebuilder.gui.GUI;
 import de.stsFanGruppe.tools.NullTester;
+import javax.swing.border.TitledBorder;
 
 public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 {
@@ -53,32 +54,29 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 		setBounds(100, 100, 450, 500);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
-		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		
+		getContentPane().add(contentPanel, BorderLayout.NORTH);
 		{
-			panelDescription = new JPanel();
-			panelDescription.setBorder(BorderFactory.createTitledBorder("Linienfarbe konfigurieren"));
-			panelDescription.setLayout(new GridLayout(3, 5));
-			contentPanel.add(panelDescription, "2, 2, fill, fill");
-			JLabel lblDescription = new JLabel("<html>F\u00FCr eine bessere Darstellung k\u00F6nnen Linien hier nach festgelegten Kriterien hervorgehoben werden.</html>");
-			panelDescription.add(lblDescription);
-		}
-		{
-			Object[][] data = {
-				    {"Kathy", "Smith",
-				     "Snowboarding"},
-				    {"John", "Doe",
-				     "Rowing"},
-				    {"Sue", "Black",
-				     "Knitting"},
-				    {"Jane", "White",
-				     "Speed reading"},
-				    {"Joe", "Brown",
-				     "Pool"}
-				};
-			String[] columnNamens = {"Suchkriterium", "Farbe", "Linienart"};
-			table = new JTable(data, columnNamens);
-			panelDescription.add(table);
+			{ //Rahmen
+				panelDescription = new JPanel();
+				panelDescription.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Linienfarbe konfigurieren", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+				panelDescription.setPreferredSize(new Dimension(getWidth() - 20, getHeight() - 100));
+				panelDescription.setLayout(new GridLayout(3, 5));
+				contentPanel.add(panelDescription, "2, 2, fill, fill");
+			}
+			{ //Beschreibung
+				JLabel lblDescription = new JLabel("<html>F\u00FCr eine bessere Darstellung k\u00F6nnen Linien hier nach festgelegten Kriterien hervorgehoben werden.</html>");
+				panelDescription.add(lblDescription);
+			}
+			{ //Tabelle
+				Object[][] data = {
+					    {"Kathy", "Smith",
+					     "Snowboarding"},
+					};
+				String[] columnNamens = {"Suchkriterium", "Farbe", "Linienart"};
+				table = new JTable(data, columnNamens);
+				panelDescription.add(table.getTableHeader(), BorderLayout.NORTH);
+				panelDescription.add(table, BorderLayout.CENTER);
+			}
 		}
 		{
 			JPanel buttonPane = new JPanel();
@@ -140,6 +138,20 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 		setVisible(true);			
 	}
 
+	public void loadSettings() {
+		log.info("FahrtenFarbe einlesen");
+		
+		
+		
+	}
+	
+	public void close()
+	{
+		dispose();
+        setVisible(false);
+        controller = null;
+	}
+	
 	public void errorMessage(String text, String titel)
 	{
 		JOptionPane.showMessageDialog(contentPanel, text, titel, JOptionPane.ERROR_MESSAGE);
@@ -151,17 +163,5 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 	public void infoMessage(String text, String titel)
 	{
 		JOptionPane.showMessageDialog(contentPanel, text, titel, JOptionPane.INFORMATION_MESSAGE);
-	}
-
-	public void loadSettings() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void close()
-	{
-		dispose();
-        setVisible(false);
-        controller = null;
 	}
 }
