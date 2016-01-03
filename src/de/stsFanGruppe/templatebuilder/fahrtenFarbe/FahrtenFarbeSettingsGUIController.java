@@ -35,7 +35,10 @@ public class FahrtenFarbeSettingsGUIController {
 	{
 		return config;
 	}
-
+	/**
+	 * Liest den ActionCommand vom event aus und führt dann etwas aus.
+	 * @param event
+	 */
 	public void tableButtonAction(ActionEvent event)
 	{
 		assert config != null;
@@ -47,24 +50,52 @@ public class FahrtenFarbeSettingsGUIController {
 			return;
 		}
 		DefaultTableModel model = (DefaultTableModel)gui.table.getModel();
+		int[] rows = gui.table.getSelectedRows();
 		switch(event.getActionCommand())
 		{
+			//Zeile(n) nach oben verschieben
 			case "moveUpRow":
+				for(int i=0; i < rows.length; i++)
+				{
+					model.moveRow(rows[i], rows[i], rows[i]-1);
+				}
+				gui.table.clearSelection();
 				break;
+			//Zeile(n) nach unten verschieben
 			case "moveDownRow":
+				for(int i=0; i < rows.length; i++)
+				{
+					model.moveRow(rows[i], rows[i], rows[i]+1);
+				}
+				gui.table.clearSelection();
 				break;
+			/* Zeile(n) hinzufügen
+			 * Zeile(n) wird/ werden nach ausgewählten Zeilen hinzugefügt oder nach der letzten Zeile
+			 */
 			case "addRow":
-				model.addRow(new Object[] {"RE 123", "ok", "nicht ok", "na gut"});
-				break;
+				if(rows.length > 0)
+				{
+					for(int i=0; i < rows.length; i++)
+					{
+						model.insertRow(rows[i]+i+1, new Object[] {"RE 123", "ok", "nicht ok", "na gut"});
+					}
+					gui.table.clearSelection();
+					break;
+				} else {
+					model.addRow(new Object[] {"RE 123", "ok", "nicht ok", "na gut"});
+					break;
+				}
+			/* Zeile(n) löschen
+			 * Wenn keine Zeile ausgewählt, erscheint Fehlerfenster.
+			 */
 			case "removeRow":
-				if(gui.table.getSelectedRow() < 0)
+				if(rows.length < 0)
 				{
 					gui.errorMessage("Zeile auswählen, die gelöscht werden soll", "Zeile löschen fehlgeschlagen!");
 					break;
 				} 
 				else
 				{
-					int[] rows = gui.table.getSelectedRows();
 					for(int i=0; i < rows.length; i++)
 					{
 					     model.removeRow(rows[i]-i);
