@@ -46,7 +46,7 @@ public class JTrainGraphImporter
 					throw new ImportException("Keine Ortsangabe für Station "+stName);
 				}
 				
-				Gleis gleis = new Gleis(stName, Double.parseDouble(km));
+				Gleis gleis = new Gleis(stName, Double.parseDouble(km.replace(',', '.')));
 				Gleisabschnitt gleisabschnitt = gleis.getGleisabschnitte().first();
 				
 				betriebsstelle.addGleis(gleis);
