@@ -58,10 +58,6 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		{
-			JPanel pnlContent = new JPanel();
-			
-			pnlContent.setBorder(new EmptyBorder(5, 5, 5, 5));
-			contentPanel.add(pnlContent);
 			FormLayout fl_panel = new FormLayout(new ColumnSpec[] {
 					FormSpecs.RELATED_GAP_COLSPEC,
 					FormSpecs.DEFAULT_COLSPEC,
@@ -70,13 +66,13 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 					FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,},
 				new RowSpec[] {
 					FormSpecs.RELATED_GAP_ROWSPEC,
-					RowSpec.decode("default:grow(2)"),
+					RowSpec.decode("default:grow"),
 					FormSpecs.RELATED_GAP_ROWSPEC,
 					FormSpecs.DEFAULT_ROWSPEC,
 					FormSpecs.UNRELATED_GAP_ROWSPEC,
 					FormSpecs.DEFAULT_ROWSPEC,
 					FormSpecs.RELATED_GAP_ROWSPEC,});
-			pnlContent.setLayout(fl_panel);
+			contentPanel.setLayout(fl_panel);
 			{
 				Object[][] data = {
 					    {"Kathy", "Smith",
@@ -94,15 +90,14 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 				String[] columnName = {"Kriterium", "Farbe", "Linienart"};
 				{
 					JLabel lblDiscription = new JLabel();
-					pnlContent.add(lblDiscription, "2, 2");
+					contentPanel.add(lblDiscription, "2, 2");
 					lblDiscription.setText("<html>Für eine bessere Darstellung können Linien hier nach festgelegten Kriterien hervorgehoben werden.</html>");
-					lblDiscription.setMaximumSize(getMaximumSize());
 				}
 				table = new JTable(data, columnName);
+				JScrollPane scrollPane = new JScrollPane(table);
+				contentPanel.add(scrollPane, "2, 4");
 				int breite = contentPanel.getWidth();
 				System.out.println(breite);
-				JScrollPane scrollPane = new JScrollPane(table);
-				pnlContent.add(scrollPane, "2, 4");
 			}
 		}
 		
