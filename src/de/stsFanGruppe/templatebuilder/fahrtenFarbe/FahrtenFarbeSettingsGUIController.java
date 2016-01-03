@@ -2,6 +2,9 @@ package de.stsFanGruppe.templatebuilder.fahrtenFarbe;
 
 import java.awt.event.ActionEvent;
 
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanSettingsGUIController;
 import de.stsFanGruppe.tools.NullTester;
 
@@ -33,9 +36,48 @@ public class FahrtenFarbeSettingsGUIController {
 		return config;
 	}
 
+	public void tableButtonAction(ActionEvent event)
+	{
+		assert config != null;
+		
+		// Ohne GUI können wir nichts machen
+		if(gui == null)
+		{
+			log.error("actionButton(): Keine GUI gesetzt!");
+			return;
+		}
+		DefaultTableModel model = (DefaultTableModel)gui.table.getModel();
+		switch(event.getActionCommand())
+		{
+			case "moveUpRow":
+				break;
+			case "moveDownRow":
+				break;
+			case "addRow":
+				model.addRow(new Object[] {"RE 123", "ok", "nicht ok", "na gut"});
+				break;
+			case "removeRow":
+				if(gui.table.getSelectedRow() < 0)
+				{
+					gui.errorMessage("Zeile auswählen, die gelöscht werden soll", "Zeile löschen fehlgeschlagen!");
+					break;
+				} 
+				else
+				{
+					int[] rows = gui.table.getSelectedRows();
+					for(int i=0; i < rows.length; i++)
+					{
+					     model.removeRow(rows[i]-i);
+					}
+					break;
+				}
+		}
+		
+	}
+	
 	public void actionButton(ActionEvent event)
 	{
-assert config != null;
+		assert config != null;
 		
 		// Ohne GUI können wir nichts machen
 		if(gui == null)

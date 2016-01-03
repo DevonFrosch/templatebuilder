@@ -12,6 +12,8 @@ import de.stsFanGruppe.templatebuilder.config.*;
 import de.stsFanGruppe.templatebuilder.gui.GUI;
 import de.stsFanGruppe.tools.NullTester;
 import javax.swing.border.TitledBorder;
+import javax.swing.table.DefaultTableModel;
+
 import com.jgoodies.forms.factories.DefaultComponentFactory;
 
 public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
@@ -93,8 +95,11 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 				};
 						
 				String[] columnName = {"Zugname", "Linienfarbe", "Linienstärke", "Linienart"};
+				DefaultTableModel tableModel = new DefaultTableModel();
+				tableModel.setDataVector(data, columnName);
 				
-				table = new JTable(data, columnName);
+				
+				table = new JTable(tableModel);
 				JScrollPane scrollPane = new JScrollPane(table);
 				scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 				contentPanel.add(scrollPane, "2, 4");
@@ -108,18 +113,26 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 								FormSpecs.LABEL_COMPONENT_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, FormSpecs.LABEL_COMPONENT_GAP_ROWSPEC,}));
 				{
 					JButton btnMoveUp = new JButton("Oben");
+					btnMoveUp.setActionCommand("moveUpRow");
+					btnMoveUp.addActionListener((ActionEvent arg0) -> controller.tableButtonAction(arg0));
 					buttonTablePane.add(btnMoveUp, "1, 2");
 				}
 				{
 					JButton btnMoveDown = new JButton("Unten");
+					btnMoveDown.setActionCommand("moveDownRow");
+					btnMoveDown.addActionListener((ActionEvent arg0) -> controller.tableButtonAction(arg0));
 					buttonTablePane.add(btnMoveDown, "1, 4");
 				}
 				{
 					JButton btnAddRow = new JButton("+");
+					btnAddRow.setActionCommand("addRow");
+					btnAddRow.addActionListener((ActionEvent arg0) -> controller.tableButtonAction(arg0));
 					buttonTablePane.add(btnAddRow, "1, 6");
 				}
 				{
 					JButton btnRemoveRow = new JButton("-");
+					btnRemoveRow.setActionCommand("removeRow");
+					btnRemoveRow.addActionListener((ActionEvent arg0) -> controller.tableButtonAction(arg0));
 					buttonTablePane.add(btnRemoveRow, "1, 8");
 				}
 			}
