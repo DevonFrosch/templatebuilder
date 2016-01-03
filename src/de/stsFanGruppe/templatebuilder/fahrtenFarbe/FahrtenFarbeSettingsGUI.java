@@ -15,6 +15,7 @@ import de.stsFanGruppe.templatebuilder.config.*;
 import de.stsFanGruppe.templatebuilder.gui.GUI;
 import de.stsFanGruppe.tools.NullTester;
 import javax.swing.border.TitledBorder;
+import com.jgoodies.forms.factories.DefaultComponentFactory;
 
 public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 {
@@ -27,8 +28,9 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 	final JPanel contentPanel = new JPanel();
 	
 	JLabel lblDescription;
+	
 	JTable table;
-	JPanel panelDescription;
+	JScrollPane scrollPaneTable;
 
 	public static void main(String[] args)
 	{
@@ -51,33 +53,60 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 		controller.setSettingsGui(this);
 		
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 450, 500);
+		setBounds(0, 0, 500, 500);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
-		getContentPane().add(contentPanel, BorderLayout.NORTH);
+		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		{
-			{ //Rahmen
-				panelDescription = new JPanel();
-				panelDescription.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Linienfarbe konfigurieren", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-				panelDescription.setPreferredSize(new Dimension(getWidth() - 20, getHeight() - 100));
-				panelDescription.setLayout(new GridLayout(3, 5));
-				contentPanel.add(panelDescription, "2, 2, fill, fill");
-			}
-			{ //Beschreibung
-				JLabel lblDescription = new JLabel("<html>F\u00FCr eine bessere Darstellung k\u00F6nnen Linien hier nach festgelegten Kriterien hervorgehoben werden.</html>");
-				panelDescription.add(lblDescription);
-			}
-			{ //Tabelle
+			JPanel pnlContent = new JPanel();
+			
+			pnlContent.setBorder(new EmptyBorder(5, 5, 5, 5));
+			contentPanel.add(pnlContent);
+			FormLayout fl_panel = new FormLayout(new ColumnSpec[] {
+					FormSpecs.RELATED_GAP_COLSPEC,
+					FormSpecs.DEFAULT_COLSPEC,
+					FormSpecs.RELATED_GAP_COLSPEC,
+					FormSpecs.DEFAULT_COLSPEC,
+					FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,},
+				new RowSpec[] {
+					FormSpecs.RELATED_GAP_ROWSPEC,
+					RowSpec.decode("default:grow(2)"),
+					FormSpecs.RELATED_GAP_ROWSPEC,
+					FormSpecs.DEFAULT_ROWSPEC,
+					FormSpecs.UNRELATED_GAP_ROWSPEC,
+					FormSpecs.DEFAULT_ROWSPEC,
+					FormSpecs.RELATED_GAP_ROWSPEC,});
+			pnlContent.setLayout(fl_panel);
+			{
 				Object[][] data = {
 					    {"Kathy", "Smith",
-					     "Snowboarding"},
+					     "Snowboarding", new Integer(5), new Boolean(false)},
+					    {"John", "Doe",
+					     "Rowing", new Integer(3), new Boolean(true)},
+					    {"Sue", "Black",
+					     "Knitting", new Integer(2), new Boolean(false)},
+					    {"Jane", "White",
+					     "Speed reading", new Integer(20), new Boolean(true)},
+					    {"Joe", "Brown",
+					     "Pool", new Integer(10), new Boolean(false)}
 					};
-				String[] columnNamens = {"Suchkriterium", "Farbe", "Linienart"};
-				table = new JTable(data, columnNamens);
-				panelDescription.add(table.getTableHeader(), BorderLayout.NORTH);
-				panelDescription.add(table, BorderLayout.CENTER);
+				
+				String[] columnName = {"Kriterium", "Farbe", "Linienart"};
+				{
+					JLabel lblDiscription = new JLabel();
+					pnlContent.add(lblDiscription, "2, 2");
+					lblDiscription.setText("<html>Für eine bessere Darstellung können Linien hier nach festgelegten Kriterien hervorgehoben werden.</html>");
+					lblDiscription.setMaximumSize(getMaximumSize());
+				}
+				table = new JTable(data, columnName);
+				int breite = contentPanel.getWidth();
+				System.out.println(breite);
+				JScrollPane scrollPane = new JScrollPane(table);
+				pnlContent.add(scrollPane, "2, 4");
 			}
 		}
+		
+		
 		{
 			JPanel buttonPane = new JPanel();
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
