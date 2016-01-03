@@ -2,15 +2,12 @@ package de.stsFanGruppe.templatebuilder.fahrtenFarbe;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
-
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
-
 import de.stsFanGruppe.templatebuilder.config.*;
 import de.stsFanGruppe.templatebuilder.gui.GUI;
 import de.stsFanGruppe.tools.NullTester;
@@ -30,13 +27,13 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 	JLabel lblDescription;
 	
 	JTable table;
-	JScrollPane scrollPaneTable;
-
+	
 	public static void main(String[] args)
 	{
 		try
 		{
-			FahrtenFarbeSettingsGUI dialog = new FahrtenFarbeSettingsGUI(new FahrtenFarbeSettingsGUIController(new FahrtenFarbeConfig(), () -> {}), null);
+			FahrtenFarbeSettingsGUI dialog = new FahrtenFarbeSettingsGUI(new FahrtenFarbeSettingsGUIController(new FahrtenFarbeConfig(), () -> {}),
+					null);
 		}
 		catch(Exception e)
 		{
@@ -44,7 +41,7 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 		}
 	}
 	
-	public FahrtenFarbeSettingsGUI(FahrtenFarbeSettingsGUIController controller, Window parent) 
+	public FahrtenFarbeSettingsGUI(FahrtenFarbeSettingsGUIController controller, Window parent)
 	{
 		super(parent);
 		NullTester.test(controller);
@@ -58,70 +55,86 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		{
-			FormLayout fl_panel = new FormLayout(new ColumnSpec[] {
-					FormSpecs.RELATED_GAP_COLSPEC,
-					FormSpecs.DEFAULT_COLSPEC,
-					FormSpecs.RELATED_GAP_COLSPEC,
-					FormSpecs.DEFAULT_COLSPEC,
-					FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,},
-				new RowSpec[] {
-					FormSpecs.RELATED_GAP_ROWSPEC,
-					RowSpec.decode("default:grow"),
-					FormSpecs.RELATED_GAP_ROWSPEC,
-					FormSpecs.DEFAULT_ROWSPEC,
-					FormSpecs.UNRELATED_GAP_ROWSPEC,
-					FormSpecs.DEFAULT_ROWSPEC,
-					FormSpecs.RELATED_GAP_ROWSPEC,});
+			FormLayout fl_panel = new FormLayout(
+				new ColumnSpec[] 
+					{
+						FormSpecs.RELATED_GAP_COLSPEC, 
+						FormSpecs.DEFAULT_COLSPEC, 
+						FormSpecs.RELATED_GAP_COLSPEC,
+						FormSpecs.DEFAULT_COLSPEC, 
+						FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
+					},
+				new RowSpec[] 
+					{
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						RowSpec.decode("default:grow"),
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						FormSpecs.DEFAULT_ROWSPEC,
+						FormSpecs.UNRELATED_GAP_ROWSPEC,
+						FormSpecs.DEFAULT_ROWSPEC,
+						FormSpecs.RELATED_GAP_ROWSPEC,
+					}
+				);
 			contentPanel.setLayout(fl_panel);
 			{
-				Object[][] data = {
-					    {"Kathy", "Smith",
-					     "Snowboarding", new Integer(5), new Boolean(false)},
-					    {"John", "Doe",
-					     "Rowing", new Integer(3), new Boolean(true)},
-					    {"Sue", "Black",
-					     "Knitting", new Integer(2), new Boolean(false)},
-					    {"Jane", "White",
-					     "Speed reading", new Integer(20), new Boolean(true)},
-					    {"Joe", "Brown",
-					     "Pool", new Integer(10), new Boolean(false)}
-					};
-				
-				String[] columnName = {"Kriterium", "Farbe", "Linienart"};
+				JLabel lblDiscription = new JLabel();
+				contentPanel.add(lblDiscription, "2, 2, 3, 1");
+				lblDiscription
+						.setText("<html>Für eine bessere Darstellung können Linien hier nach festgelegten Kriterien hervorgehoben werden.</html>");
+			}
+			{
+				Object[][] data = 
 				{
-					JLabel lblDiscription = new JLabel();
-					contentPanel.add(lblDiscription, "2, 2");
-					lblDiscription.setText("<html>Für eine bessere Darstellung können Linien hier nach festgelegten Kriterien hervorgehoben werden.</html>");
-				}
+					{"Kathy", "Smith", "Snowboarding", new Integer(5), new Boolean(false)},
+					{"John", "Doe", "Rowing", new Integer(3), new Boolean(true)},
+					{"Sue", "Black", "Knitting", new Integer(2), new Boolean(false)},
+					{"Jane", "White", "Speed reading", new Integer(20), new Boolean(true)},
+					{"Joe", "Brown", "Pool", new Integer(10), new Boolean(false)}
+				};
+						
+				String[] columnName = {"Zugname", "Linienfarbe", "Linienstärke", "Linienart"};
+				
 				table = new JTable(data, columnName);
 				JScrollPane scrollPane = new JScrollPane(table);
+				scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 				contentPanel.add(scrollPane, "2, 4");
-				int breite = contentPanel.getWidth();
-				System.out.println(breite);
+			}
+			{
+				JPanel buttonTablePane = new JPanel();
+				contentPanel.add(buttonTablePane, "4, 4, default, top");
+				buttonTablePane.setLayout(new FormLayout(new ColumnSpec[] {FormSpecs.DEFAULT_COLSPEC,},
+						new RowSpec[] {FormSpecs.LABEL_COMPONENT_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, FormSpecs.LABEL_COMPONENT_GAP_ROWSPEC,
+								FormSpecs.DEFAULT_ROWSPEC, FormSpecs.LABEL_COMPONENT_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC,
+								FormSpecs.LABEL_COMPONENT_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, FormSpecs.LABEL_COMPONENT_GAP_ROWSPEC,}));
+				{
+					JButton btnMoveUp = new JButton("Oben");
+					buttonTablePane.add(btnMoveUp, "1, 2");
+				}
+				{
+					JButton btnMoveDown = new JButton("Unten");
+					buttonTablePane.add(btnMoveDown, "1, 4");
+				}
+				{
+					JButton btnAddRow = new JButton("+");
+					buttonTablePane.add(btnAddRow, "1, 6");
+				}
+				{
+					JButton btnRemoveRow = new JButton("-");
+					buttonTablePane.add(btnRemoveRow, "1, 8");
+				}
 			}
 		}
-		
 		
 		{
 			JPanel buttonPane = new JPanel();
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
-				buttonPane.setLayout(new FormLayout(new ColumnSpec[] {
-						FormSpecs.UNRELATED_GAP_COLSPEC,
-						FormSpecs.DEFAULT_COLSPEC,
-						FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
-						FormSpecs.DEFAULT_COLSPEC,
-						ColumnSpec.decode("3dlu:grow"),
-						FormSpecs.DEFAULT_COLSPEC,
-						FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
-						FormSpecs.DEFAULT_COLSPEC,
-						FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
-						FormSpecs.DEFAULT_COLSPEC,
-						FormSpecs.UNRELATED_GAP_COLSPEC,},
-					new RowSpec[] {
-						FormSpecs.LINE_GAP_ROWSPEC,
-						FormSpecs.DEFAULT_ROWSPEC,
-						FormSpecs.UNRELATED_GAP_ROWSPEC,}));
+				buttonPane.setLayout(new FormLayout(
+						new ColumnSpec[] {FormSpecs.UNRELATED_GAP_COLSPEC, FormSpecs.DEFAULT_COLSPEC, FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
+								FormSpecs.DEFAULT_COLSPEC, ColumnSpec.decode("3dlu:grow"), FormSpecs.DEFAULT_COLSPEC,
+								FormSpecs.LABEL_COMPONENT_GAP_COLSPEC, FormSpecs.DEFAULT_COLSPEC, FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
+								FormSpecs.DEFAULT_COLSPEC, FormSpecs.UNRELATED_GAP_COLSPEC,},
+						new RowSpec[] {FormSpecs.LINE_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, FormSpecs.UNRELATED_GAP_ROWSPEC,}));
 				{
 					JButton speichernButton = new JButton("Speichern");
 					speichernButton.setActionCommand("save");
@@ -159,31 +172,32 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 			}
 		}
 		loadSettings();
-		setVisible(true);			
+		setVisible(true);
 	}
-
-	public void loadSettings() {
+	
+	public void loadSettings()
+	{
 		log.info("FahrtenFarbe einlesen");
-		
-		
 		
 	}
 	
 	public void close()
 	{
 		dispose();
-        setVisible(false);
-        controller = null;
+		setVisible(false);
+		controller = null;
 	}
 	
 	public void errorMessage(String text, String titel)
 	{
 		JOptionPane.showMessageDialog(contentPanel, text, titel, JOptionPane.ERROR_MESSAGE);
 	}
+	
 	public void warningMessage(String text, String titel)
 	{
 		JOptionPane.showMessageDialog(contentPanel, text, titel, JOptionPane.WARNING_MESSAGE);
 	}
+	
 	public void infoMessage(String text, String titel)
 	{
 		JOptionPane.showMessageDialog(contentPanel, text, titel, JOptionPane.INFORMATION_MESSAGE);
