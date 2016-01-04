@@ -8,11 +8,15 @@ import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
+
+import de.stsFanGruppe.bibliothek.FahrtenFarbe;
+import de.stsFanGruppe.bibliothek.linienArten.LinienArt;
 import de.stsFanGruppe.templatebuilder.config.*;
 import de.stsFanGruppe.templatebuilder.gui.GUI;
 import de.stsFanGruppe.tools.NullTester;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 
 import com.jgoodies.forms.factories.DefaultComponentFactory;
 
@@ -22,13 +26,15 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 	
 	FahrtenFarbeSettingsGUIController controller;
 	FahrtenFarbeConfig config;
+	FahrtenFarbe fahrtenFarbe;
+	LinienArt linienArt;
+	
 	boolean saveEnabled = false;
-	
 	final JPanel contentPanel = new JPanel();
-	
 	JLabel lblDescription;
-	
 	JTable table;
+	
+	public final String[] columnName = {"Zugname", "Linienfarbe", "Linienstärke", "Linienart"};
 	
 	public static void main(String[] args)
 	{
@@ -57,26 +63,20 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		{
-			FormLayout fl_panel = new FormLayout(
-				new ColumnSpec[] 
-					{
-						FormSpecs.RELATED_GAP_COLSPEC, 
-						FormSpecs.DEFAULT_COLSPEC, 
-						FormSpecs.RELATED_GAP_COLSPEC,
-						FormSpecs.DEFAULT_COLSPEC, 
-						FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
-					},
-				new RowSpec[] 
-					{
-						FormSpecs.RELATED_GAP_ROWSPEC,
-						RowSpec.decode("default:grow"),
-						FormSpecs.RELATED_GAP_ROWSPEC,
-						FormSpecs.DEFAULT_ROWSPEC,
-						FormSpecs.UNRELATED_GAP_ROWSPEC,
-						FormSpecs.DEFAULT_ROWSPEC,
-						FormSpecs.RELATED_GAP_ROWSPEC,
-					}
-				);
+			FormLayout fl_panel = new FormLayout(new ColumnSpec[] {
+					FormSpecs.RELATED_GAP_COLSPEC,
+					ColumnSpec.decode("default:grow"),
+					FormSpecs.RELATED_GAP_COLSPEC,
+					FormSpecs.DEFAULT_COLSPEC,
+					FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,},
+				new RowSpec[] {
+					FormSpecs.RELATED_GAP_ROWSPEC,
+					RowSpec.decode("default:grow"),
+					FormSpecs.RELATED_GAP_ROWSPEC,
+					FormSpecs.DEFAULT_ROWSPEC,
+					FormSpecs.UNRELATED_GAP_ROWSPEC,
+					RowSpec.decode("default:grow"),
+					FormSpecs.RELATED_GAP_ROWSPEC,});
 			contentPanel.setLayout(fl_panel);
 			{
 				JLabel lblDiscription = new JLabel();
@@ -85,21 +85,25 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 						.setText("<html>Für eine bessere Darstellung können Linien hier nach festgelegten Kriterien hervorgehoben werden.</html>");
 			}
 			{
+				
 				Object[][] data = 
 				{
-					{"Kathy", "Smith", "Snowboarding", new Integer(5), new Boolean(false)},
-					{"John", "Doe", "Rowing", new Integer(3), new Boolean(true)},
-					{"Sue", "Black", "Knitting", new Integer(2), new Boolean(false)},
-					{"Jane", "White", "Speed reading", new Integer(20), new Boolean(true)},
-					{"Joe", "Brown", "Pool", new Integer(10), new Boolean(false)}
+					{"Kathy", "Smith", "Doe", new Integer(5)},
+					{"John", "Doe", "Doe", new Integer(3)},
+					{"Sue", "Black", "Doe", new Integer(2)},
+					{"Jane", "White", "Doe", new Integer(20)},
+					{"Joe", "Brown", "Doe", new Integer(10)}
 				};
 						
-				String[] columnName = {"Zugname", "Linienfarbe", "Linienstärke", "Linienart"};
 				DefaultTableModel tableModel = new DefaultTableModel();
-				tableModel.setDataVector(data, columnName);
 				
+				tableModel.setDataVector(data, columnName);			
 				
 				table = new JTable(tableModel);
+				table.getTableHeader().setReorderingAllowed(false);
+				//TableColumn linienArtColumn = table.getColumnModel().getColumn(2);
+				//linienArt.setUpLinienArtColumn(table, linienArtColumn);
+				
 				JScrollPane scrollPane = new JScrollPane(table);
 				scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 				contentPanel.add(scrollPane, "2, 4");
@@ -134,6 +138,29 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 					btnRemoveRow.setActionCommand("removeRow");
 					btnRemoveRow.addActionListener((ActionEvent arg0) -> controller.tableButtonAction(arg0));
 					buttonTablePane.add(btnRemoveRow, "1, 8");
+				}
+			}
+		}
+		{
+			JPanel standardConfigLabel = new JPanel();
+			contentPanel.add(standardConfigLabel, "2, 6, 3, 1, fill, fill");
+			FormLayout fl_standardConfigLabel = new FormLayout(new ColumnSpec[] {
+					ColumnSpec.decode("default:grow"),
+					FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
+					FormSpecs.DEFAULT_COLSPEC,},
+				new RowSpec[] {
+					RowSpec.decode("default:grow"),
+					FormSpecs.LABEL_COMPONENT_GAP_ROWSPEC,
+					FormSpecs.DEFAULT_ROWSPEC,
+					FormSpecs.LABEL_COMPONENT_GAP_ROWSPEC,
+					FormSpecs.DEFAULT_ROWSPEC,});
+			standardConfigLabel.setLayout(fl_standardConfigLabel);
+			{
+				JComboBox comboBox = new JComboBox();
+				standardConfigLabel.add(comboBox, "1, 1, fill, default");
+				for (float i : linienArt.getLinienArt())
+				{
+					
 				}
 			}
 		}
