@@ -2,16 +2,21 @@ package de.stsFanGruppe.templatebuilder.fahrtenFarbe;
 
 import java.awt.Color;
 
+import de.stsFanGruppe.tools.PreferenceHandler;
+
 public class FahrtenFarbeConfig {
 
-	//Farbeinstellungen
-	public static final String CONFIG_LINIEN_FARBE = "bildfahrplan/darstellung/farben/zeiten";
-	public static final String CONFIG_LINIEN_STAERKE  = "bildfahrplan/darstellung/farben/fahrten";
-	public static final String CONFIG_LINIEN_ART = "bildfahrplan/darstellung/farben/betriebsstellen";
+	private static PreferenceHandler prefs;
 	
-	private static final Color DEFAULT_LINIEN_FARBE = Color.RED;
+	//Farbeinstellungen
+	public static final String CONFIG_LINIEN_FARBE = "bildfahrplan/darstellung/linie/farben";
+	public static final String CONFIG_LINIEN_STAERKE  = "bildfahrplan/darstellung/linie/staerke";
+	public static final String CONFIG_LINIEN_ART = "bildfahrplan/darstellung/linie/art";
+	
+	private static final Color DEFAULT_LINIEN_FARBE = Color.BLACK;
 	private static final int DEFAULT_LINIEN_STAERKE = 1;
-	private static final Color DEFAULT_LINIEN_ART = Color.BLUE;
+	private static final float[] DEFAULT_LINIEN_ART = {10, 10};
+	
 	
 	//Linienarten
 	public static final float[] DURCHGEZOGENE_LINIE = {0};
@@ -29,6 +34,28 @@ public class FahrtenFarbeConfig {
 
 	public void setComboBoxListe(float[][] comboBoxListe) {
 		this.comboBoxListe = comboBoxListe;
+	}
+
+	public static Color getDefaultLinienFarbe() {
+		return DEFAULT_LINIEN_FARBE;
+	}
+
+	public static int getDefaultLinienStaerke() {
+		return DEFAULT_LINIEN_STAERKE;
+	}
+
+	public static float[] getDefaultLinienArt() {
+		return DEFAULT_LINIEN_ART;
+	}
+	
+	public String colorToString(Color color)
+	{
+		if (Color.BLACK.equals(color))
+		{
+			String c = "Schwarz";
+			return c;
+		}
+		return "Schwarz2";
 	}
 
 	public void exportSettings(FahrtenFarbeSettingsGUI gui, FahrtenFarbeSettingsGUI gui2) {

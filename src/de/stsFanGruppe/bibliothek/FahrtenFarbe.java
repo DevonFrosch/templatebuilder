@@ -10,18 +10,21 @@ public class FahrtenFarbe{
 	private String suchKriterium;
 	private Color linienFarbe;
 	private int linienStaerke;
+	private float[] linienArt;
 	
 	private ArrayList<FahrtenFarbe> fahrtenFarbeList = new ArrayList<FahrtenFarbe>();
 	
-	public FahrtenFarbe(String suchKriterium, Color linienFarbe, int linienStaerke)
+	public FahrtenFarbe(String suchKriterium, Color linienFarbe, int linienStaerke, float[] linienArt)
 	{
 		NullTester.test(suchKriterium);
 		NullTester.test(linienFarbe);
 		NullTester.test(linienStaerke);
+		NullTester.test(linienArt);
 		this.suchKriterium = suchKriterium;
 		this.linienFarbe = linienFarbe;
 		this.linienStaerke = linienStaerke;
-	}
+		this.linienArt = linienArt;
+	}	
 	
 	public FahrtenFarbe(ArrayList<FahrtenFarbe> fahrtenFarbeList)
 	{
@@ -46,5 +49,16 @@ public class FahrtenFarbe{
 	public void setLinienStärke(int linienStärke) {
 		this.linienStaerke = linienStärke;
 	}
+	public float[] getLinienArt() {
+		return linienArt;
+	}
+	public void setLinienArt(float[] linienArt) {
+		this.linienArt = linienArt;
+	}
 	
+	public String colorToString(Color color)
+	{
+		String c = color.toString();
+		return c;
+	}
 }

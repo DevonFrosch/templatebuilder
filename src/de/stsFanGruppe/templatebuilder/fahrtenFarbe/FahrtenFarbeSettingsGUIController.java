@@ -6,6 +6,7 @@ import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 
+import de.stsFanGruppe.bibliothek.FahrtenFarbe;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanSettingsGUIController;
 import de.stsFanGruppe.tools.NullTester;
 
@@ -13,6 +14,7 @@ public class FahrtenFarbeSettingsGUIController {
 	
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(BildfahrplanSettingsGUIController.class);
 	
+	private FahrtenFarbe fahrtenFarbe;
 	private FahrtenFarbeSettingsGUI gui;
 	private FahrtenFarbeConfig config;
 	private Runnable onClose;
@@ -53,6 +55,8 @@ public class FahrtenFarbeSettingsGUIController {
 		DefaultTableModel model = (DefaultTableModel)gui.table.getModel();
 		ListSelectionModel selectionModel = gui.table.getSelectionModel();
 		int[] rows = gui.table.getSelectedRows();
+		String defaultLinienFarbe = fahrtenFarbe.colorToString(config.getDefaultLinienFarbe());
+		Object[] defaultRowdata = {"", defaultLinienFarbe, config.getDefaultLinienStaerke(), config.getDefaultLinienArt()};
 		switch(event.getActionCommand())
 		{
 			//Zeile(n) nach oben verschieben
@@ -81,12 +85,12 @@ public class FahrtenFarbeSettingsGUIController {
 				{
 					for(int i=0; i < rows.length; i++)
 					{
-						model.insertRow(rows[i]+i+1, new Object[] {"RE 123", "ok", "nicht ok", "na gut"});
+						model.insertRow(rows[i]+i+1, defaultRowdata);
 					}
 					gui.table.clearSelection();
 					break;
 				} else {
-					model.addRow(new Object[] {"RE 123", "ok", "nicht ok", "na gut"});
+					model.addRow(defaultRowdata);
 					break;
 				}
 			/* Zeile(n) löschen
