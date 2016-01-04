@@ -3,6 +3,7 @@ package de.stsFanGruppe.templatebuilder.fahrtenFarbe;
 import java.awt.event.ActionEvent;
 
 import javax.swing.JOptionPane;
+import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanSettingsGUIController;
@@ -50,24 +51,27 @@ public class FahrtenFarbeSettingsGUIController {
 			return;
 		}
 		DefaultTableModel model = (DefaultTableModel)gui.table.getModel();
+		ListSelectionModel selectionModel = gui.table.getSelectionModel();
 		int[] rows = gui.table.getSelectedRows();
 		switch(event.getActionCommand())
 		{
 			//Zeile(n) nach oben verschieben
 			case "moveUpRow":
+				selectionModel.clearSelection();
 				for(int i=0; i < rows.length; i++)
 				{
 					model.moveRow(rows[i], rows[i], rows[i]-1);
+					gui.table.addRowSelectionInterval(rows[i]-1, rows[i]-1);
 				}
-				gui.table.clearSelection();
 				break;
 			//Zeile(n) nach unten verschieben
 			case "moveDownRow":
+				selectionModel.clearSelection();
 				for(int i=0; i < rows.length; i++)
 				{
 					model.moveRow(rows[i], rows[i], rows[i]+1);
+					gui.table.addRowSelectionInterval(rows[i]+1, rows[i]+1);
 				}
-				gui.table.clearSelection();
 				break;
 			/* Zeile(n) hinzufügen
 			 * Zeile(n) wird/ werden nach ausgewählten Zeilen hinzugefügt oder nach der letzten Zeile
