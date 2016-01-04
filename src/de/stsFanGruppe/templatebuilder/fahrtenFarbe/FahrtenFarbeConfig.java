@@ -13,6 +13,24 @@ public class FahrtenFarbeConfig {
 	private static final int DEFAULT_LINIEN_STAERKE = 1;
 	private static final Color DEFAULT_LINIEN_ART = Color.BLUE;
 	
+	//Linienarten
+	public static final float[] DURCHGEZOGENE_LINIE = {0};
+	public static final float[] GEPUNKTE_LINIE = {10, 10};
+	public static final float[] GESTRICHELTE_LINIE = {30, 10};
+	public static final float[] KURZ_LANG_LINIE = {10, 10, 30, 10};
+	public static final float[] KURZ_KURZ_LANG_LINIE = {10, 10, 10, 10, 30, 10};
+	public static final float[] KURZ_LANG_LANG_LINIE = {10, 10, 30, 10, 30, 10};
+	
+	float[] comboBoxListe[] = {DURCHGEZOGENE_LINIE, GEPUNKTE_LINIE, GESTRICHELTE_LINIE, KURZ_LANG_LINIE, KURZ_KURZ_LANG_LINIE, KURZ_LANG_LANG_LINIE};
+	
+	public float[][] getComboBoxListe() {
+		return comboBoxListe;
+	}
+
+	public void setComboBoxListe(float[][] comboBoxListe) {
+		this.comboBoxListe = comboBoxListe;
+	}
+
 	public void exportSettings(FahrtenFarbeSettingsGUI gui, FahrtenFarbeSettingsGUI gui2) {
 		// TODO Auto-generated method stub
 		
@@ -27,5 +45,6 @@ public class FahrtenFarbeConfig {
 		// TODO Auto-generated method stub
 		return false;
 	}
+
 
 }

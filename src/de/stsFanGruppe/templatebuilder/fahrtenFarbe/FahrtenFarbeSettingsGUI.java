@@ -10,15 +10,10 @@ import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
 
 import de.stsFanGruppe.bibliothek.FahrtenFarbe;
-import de.stsFanGruppe.bibliothek.linienArten.LinienArt;
 import de.stsFanGruppe.templatebuilder.config.*;
 import de.stsFanGruppe.templatebuilder.gui.GUI;
 import de.stsFanGruppe.tools.NullTester;
-import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
-
-import com.jgoodies.forms.factories.DefaultComponentFactory;
 
 public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 {
@@ -27,7 +22,6 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 	FahrtenFarbeSettingsGUIController controller;
 	FahrtenFarbeConfig config;
 	FahrtenFarbe fahrtenFarbe;
-	LinienArt linienArt;
 	
 	boolean saveEnabled = false;
 	final JPanel contentPanel = new JPanel();
@@ -156,12 +150,17 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 					FormSpecs.DEFAULT_ROWSPEC,});
 			standardConfigLabel.setLayout(fl_standardConfigLabel);
 			{
-				JComboBox comboBox = new JComboBox();
-				standardConfigLabel.add(comboBox, "1, 1, fill, default");
-				for (float i : linienArt.getLinienArt())
-				{
-					
-				}
+				JLabel lblStandardfarbe = new JLabel("Standardfarbe");
+				standardConfigLabel.add(lblStandardfarbe, "1, 1, left, default");
+			}
+			{
+				JComboBox comboBox = new JComboBox<float[]>(config.getComboBoxListe());
+				standardConfigLabel.add(comboBox, "3, 1, fill, default");
+				
+//				for (int i = 0; i < linienArt.getLinienArtenSammlung().size(); i++)
+//				{
+//					comboBox.addItem(linienArt.getLinienArtenSammlung().get(i));
+//				}
 			}
 		}
 		
