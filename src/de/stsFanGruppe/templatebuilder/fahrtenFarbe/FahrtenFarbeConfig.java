@@ -43,6 +43,13 @@ public class FahrtenFarbeConfig {
 	public static int getDefaultLinienStaerke() {
 		return DEFAULT_LINIEN_STAERKE;
 	}
+	
+	public static String getDefaultLinienStaerkeToString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(DEFAULT_LINIEN_STAERKE);		
+		String linienStaerke = sb.toString();
+		return linienStaerke;
+	}
 
 	public static float[] getDefaultLinienArt() {
 		return DEFAULT_LINIEN_ART;

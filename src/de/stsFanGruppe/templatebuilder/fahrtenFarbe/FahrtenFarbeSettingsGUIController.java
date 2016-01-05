@@ -1,7 +1,8 @@
 package de.stsFanGruppe.templatebuilder.fahrtenFarbe;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
-
+import javax.swing.JColorChooser;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
@@ -121,6 +122,32 @@ public class FahrtenFarbeSettingsGUIController {
 				}
 		}
 		
+	}
+	
+	public void farbButton(ActionEvent event)
+	{
+		assert config != null;
+		
+		// Ohne GUI können wir nichts machen
+		if(gui == null)
+		{
+			log.error("farbButton(): Keine GUI gesetzt!");
+			return;
+		}
+		
+		Color c = null;
+		switch(event.getActionCommand())
+		{
+			case "zeitenFarbe":
+				c = JColorChooser.showDialog(gui, "Farbe wählen", gui.panelStandardFarbeVorschau.getBackground());
+				if(c != null)
+				{
+					gui.panelStandardFarbeVorschau.setBackground(c);
+				}
+				break;
+			default:
+				log.error("farbButton: actionCommand nicht erkannt: {}", event.getActionCommand());
+		}
 	}
 	
 	public void actionButton(ActionEvent event)
