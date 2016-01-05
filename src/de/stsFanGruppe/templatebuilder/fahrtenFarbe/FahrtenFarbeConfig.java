@@ -36,7 +36,7 @@ public class FahrtenFarbeConfig {
 		this.comboBoxListe = comboBoxListe;
 	}
 
-	public static Color getDefaultLinienFarbe() {
+	public Color getDefaultLinienFarbe() {
 		return DEFAULT_LINIEN_FARBE;
 	}
 

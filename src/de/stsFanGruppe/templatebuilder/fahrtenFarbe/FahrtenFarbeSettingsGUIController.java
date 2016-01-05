@@ -52,20 +52,29 @@ public class FahrtenFarbeSettingsGUIController {
 			log.error("actionButton(): Keine GUI gesetzt!");
 			return;
 		}
+		//Tabellenmodell wird ausgelesen
 		DefaultTableModel model = (DefaultTableModel)gui.table.getModel();
+		//Selectionmodell wird ausgelesen
 		ListSelectionModel selectionModel = gui.table.getSelectionModel();
+		//Erhalte ausgewählte Zeilen
 		int[] rows = gui.table.getSelectedRows();
-		String defaultLinienFarbe = fahrtenFarbe.colorToString(config.getDefaultLinienFarbe());
-		Object[] defaultRowdata = {"", defaultLinienFarbe, config.getDefaultLinienStaerke(), config.getDefaultLinienArt()};
+		Object[] defaultRowdata = {"", config.getDefaultLinienFarbe(), "", config.getDefaultLinienArt()};
 		switch(event.getActionCommand())
 		{
 			//Zeile(n) nach oben verschieben
 			case "moveUpRow":
-				selectionModel.clearSelection();
-				for(int i=0; i < rows.length; i++)
+				if(rows[0]==0)
 				{
-					model.moveRow(rows[i], rows[i], rows[i]-1);
-					gui.table.addRowSelectionInterval(rows[i]-1, rows[i]-1);
+					gui.infoMessage("Erste Zeile kann nicht nach oben verschoben werden.", "Info: Zeile nach oben verschieben");
+				}
+				else
+				{
+					selectionModel.clearSelection();
+					for(int i=0; i < rows.length; i++)
+					{
+						model.moveRow(rows[i], rows[i], rows[i]-1);
+						gui.table.addRowSelectionInterval(rows[i]-1, rows[i]-1);
+					}
 				}
 				break;
 			//Zeile(n) nach unten verschieben
