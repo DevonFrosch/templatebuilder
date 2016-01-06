@@ -141,7 +141,7 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 			}
 		}
 		/*
-		 * Standardlinienfarbe
+		 * Standardeinstellung
 		 */
 		{
 			JPanel standardConfigLabel = new JPanel();
@@ -159,118 +159,119 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 					FormSpecs.DEFAULT_ROWSPEC,});
 			standardConfigLabel.setLayout(fl_standardConfigLabel);
 			{
-					//Label für Standardlinienfarbe für die Beschriftung
+			/*
+			 * Standardlinienfarbe
+			 */
+			//Label für Standardlinienfarbe für die Beschriftung
+				{
+					JLabel lblDefaultFarbeString = new JLabel();
+					lblDefaultFarbeString.setText("Linienfarbe");
+					standardConfigLabel.add(lblDefaultFarbeString, "1,1");
+				}
+				//Panel für Standardlinienfarbe
+				{
+					JPanel panelStandardLinienFarbe = new JPanel();
+					FlowLayout flowLayout = (FlowLayout) panelStandardLinienFarbe.getLayout();
+					flowLayout.setAlignment(FlowLayout.RIGHT);
+					standardConfigLabel.add(panelStandardLinienFarbe, "3, 1, right, default");
 					{
-						JLabel lblDefaultFarbeString = new JLabel();
-						lblDefaultFarbeString.setText("Linienfarbe");
-						standardConfigLabel.add(lblDefaultFarbeString, "1,1");
-					}
-					//Panel für Standardlinienfarbe
-					{
-						JPanel panelStandardLinienFarbe = new JPanel();
-						FlowLayout flowLayout = (FlowLayout) panelStandardLinienFarbe.getLayout();
-						flowLayout.setAlignment(FlowLayout.RIGHT);
-						standardConfigLabel.add(panelStandardLinienFarbe, "3, 1, right, default");
+						//FlowLayout & Button werden im Panel hinzugefügt
 						{
-							//FlowLayout & Button werden im Panel hinzugefügt
-							{
-							}
-								panelStandardFarbeVorschau = new JPanel();
-								FlowLayout fl_panelStandardFarbeVorschau = (FlowLayout) panelStandardFarbeVorschau.getLayout();
-								fl_panelStandardFarbeVorschau.setVgap(10);
-								fl_panelStandardFarbeVorschau.setHgap(10);
-								panelStandardLinienFarbe.add(panelStandardFarbeVorschau);
-							}
-							{
-								JButton btnStandardFarbe = new JButton("w\u00E4hlen...");
-								panelStandardLinienFarbe.add(btnStandardFarbe);
-								btnStandardFarbe.setActionCommand("zeitenFarbe");
-								btnStandardFarbe.addActionListener((ActionEvent arg0) -> controller.farbButton(arg0));
-							}
+							panelStandardFarbeVorschau = new JPanel();
+							FlowLayout fl_panelStandardFarbeVorschau = (FlowLayout) panelStandardFarbeVorschau.getLayout();
+							fl_panelStandardFarbeVorschau.setVgap(10);
+							fl_panelStandardFarbeVorschau.setHgap(10);
+							panelStandardLinienFarbe.add(panelStandardFarbeVorschau);
+						}
+						{
+							JButton btnStandardFarbe = new JButton("w\u00E4hlen...");
+							panelStandardLinienFarbe.add(btnStandardFarbe);
+							btnStandardFarbe.setActionCommand("zeitenFarbe");
+							btnStandardFarbe.addActionListener((ActionEvent arg0) -> controller.farbButton(arg0));
 						}
 					}
-				/*
-				 * Standardlinienstärke
-				 */
-				{
-					{
-						JLabel lblDefaultLinienStaerkeString = new JLabel();
-						lblDefaultLinienStaerkeString.setText("Linienstärke");
-						standardConfigLabel.add(lblDefaultLinienStaerkeString, "1,3");
-					}
-					{
-						txtStandardLinienStaerke = new JTextField();
-						standardConfigLabel.add(txtStandardLinienStaerke, "3, 3, right, default");
-						// FIXME Textfeld darf nur zahlen zurückgeben
-						txtStandardLinienStaerke.setColumns(1);
-					}
-				}
-				/*
-				 * Standardlinienfarbe
-				 */
-				{
-					JLabel lblStandardLinienart = new JLabel();
-					lblStandardLinienart.setText("Linienart");
-					standardConfigLabel.add(lblStandardLinienart, "1, 5, left, default");
-				}
-				{
-					comboBoxLinienArt = new JComboBox(config.getComboBoxListe());
-					comboBoxLinienArt.setSelectedItem(config.getDefaultLinienArt());
-					standardConfigLabel.add(comboBoxLinienArt, "3, 5, fill, default");
 				}
 			}
-		
-		/*
-		 * Buttonsfläche
-		 */
-		{
+			/*
+			 * Standardlinienstärke
+			 */
 			{
-				JPanel buttonPane = new JPanel();
-				getContentPane().add(buttonPane, BorderLayout.SOUTH);
 				{
-					buttonPane.setLayout(new FormLayout(
+					JLabel lblDefaultLinienStaerkeString = new JLabel();
+					lblDefaultLinienStaerkeString.setText("Linienstärke");
+					standardConfigLabel.add(lblDefaultLinienStaerkeString, "1,3");
+				}
+				{
+					txtStandardLinienStaerke = new JTextField();
+					standardConfigLabel.add(txtStandardLinienStaerke, "3, 3, right, default");
+					// FIXME Textfeld darf nur zahlen zurückgeben
+					txtStandardLinienStaerke.setColumns(1);
+				}
+			}
+			/*
+			 * Standardlinienart
+			 */
+			{
+				JLabel lblStandardLinienart = new JLabel();
+				lblStandardLinienart.setText("Linienart");
+				standardConfigLabel.add(lblStandardLinienart, "1, 5, left, default");
+			}
+			{
+				// FIXME ComboBox soll Linien zeichnen.
+				standardConfigLabel.add(config.getComboBoxLineStyle(), "3, 5, fill, default");
+			}
+		}
+			/*
+			 * Buttonsfläche
+			 */
+			{
+				{
+					JPanel buttonPane = new JPanel();
+					getContentPane().add(buttonPane, BorderLayout.SOUTH);
+					{
+						buttonPane.setLayout(new FormLayout(
 							new ColumnSpec[] {FormSpecs.UNRELATED_GAP_COLSPEC, FormSpecs.DEFAULT_COLSPEC, FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
 									FormSpecs.DEFAULT_COLSPEC, ColumnSpec.decode("3dlu:grow"), FormSpecs.DEFAULT_COLSPEC,
 									FormSpecs.LABEL_COMPONENT_GAP_COLSPEC, FormSpecs.DEFAULT_COLSPEC, FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
 									FormSpecs.DEFAULT_COLSPEC, FormSpecs.UNRELATED_GAP_COLSPEC,},
 							new RowSpec[] {FormSpecs.LINE_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, FormSpecs.UNRELATED_GAP_ROWSPEC,}));
-					{
-						JButton speichernButton = new JButton("Speichern");
-						speichernButton.setActionCommand("save");
-						speichernButton.addActionListener((ActionEvent arg0) -> controller.actionButton(arg0));
-						buttonPane.add(speichernButton, "2, 2, left, top");
-					}
-					{
-						JButton ladenButton = new JButton("Laden");
-						ladenButton.setActionCommand("load");
-						ladenButton.addActionListener((ActionEvent arg0) -> controller.actionButton(arg0));
-						buttonPane.add(ladenButton, "4, 2, left, top");
-					}
-					{
-						JButton okButton = new JButton("OK");
-						okButton.setEnabled(saveEnabled);
-						okButton.setActionCommand("ok");
-						okButton.addActionListener((ActionEvent arg0) -> controller.actionButton(arg0));
-						buttonPane.add(okButton, "6, 2, left, top");
-						getRootPane().setDefaultButton(okButton);
-					}
-					{
-						JButton cancelButton = new JButton("Abbrechen");
-						cancelButton.setEnabled(saveEnabled);
-						cancelButton.setActionCommand("cancel");
-						cancelButton.addActionListener((ActionEvent arg0) -> controller.actionButton(arg0));
-						buttonPane.add(cancelButton, "8, 2, left, top");
-					}
-					{
-						JButton applyButton = new JButton("Anwenden");
-						applyButton.setEnabled(saveEnabled);
-						applyButton.setActionCommand("apply");
-						applyButton.addActionListener((ActionEvent arg0) -> controller.actionButton(arg0));
-						buttonPane.add(applyButton, "10, 2, left, top");
+						{
+							JButton speichernButton = new JButton("Speichern");
+							speichernButton.setActionCommand("save");
+							speichernButton.addActionListener((ActionEvent arg0) -> controller.actionButton(arg0));
+							buttonPane.add(speichernButton, "2, 2, left, top");
+						}
+						{
+							JButton ladenButton = new JButton("Laden");
+							ladenButton.setActionCommand("load");
+							ladenButton.addActionListener((ActionEvent arg0) -> controller.actionButton(arg0));
+							buttonPane.add(ladenButton, "4, 2, left, top");
+						}
+						{
+							JButton okButton = new JButton("OK");
+							okButton.setEnabled(saveEnabled);
+							okButton.setActionCommand("ok");
+							okButton.addActionListener((ActionEvent arg0) -> controller.actionButton(arg0));
+							buttonPane.add(okButton, "6, 2, left, top");
+							getRootPane().setDefaultButton(okButton);
+						}
+						{
+							JButton cancelButton = new JButton("Abbrechen");
+							cancelButton.setEnabled(saveEnabled);
+							cancelButton.setActionCommand("cancel");
+							cancelButton.addActionListener((ActionEvent arg0) -> controller.actionButton(arg0));
+							buttonPane.add(cancelButton, "8, 2, left, top");
+						}
+						{
+							JButton applyButton = new JButton("Anwenden");
+							applyButton.setEnabled(saveEnabled);
+							applyButton.setActionCommand("apply");
+							applyButton.addActionListener((ActionEvent arg0) -> controller.actionButton(arg0));
+							buttonPane.add(applyButton, "10, 2, left, top");
+						}
 					}
 				}
 			}
-		}
 		loadSettings();
 		setVisible(true);
 	}
@@ -281,7 +282,7 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 		
 		panelStandardFarbeVorschau.setBackground(config.getDefaultLinienFarbe());
 		txtStandardLinienStaerke.setText(config.getDefaultLinienStaerkeToString());
-		comboBoxLinienArt.setSelectedItem(config.getDefaultLinienArt());
+		//comboBoxLinienArt.setSelectedItem(config.getComboBoxLineStyle());
 		
 	}
 	
