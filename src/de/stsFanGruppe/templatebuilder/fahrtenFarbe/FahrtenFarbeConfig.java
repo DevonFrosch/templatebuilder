@@ -80,21 +80,6 @@ public class FahrtenFarbeConfig {
 	        public abstract Stroke getStroke();
 	    }
 	
-	//Standardwerte fürs Zeichnen (NICHT ÄNDERN!)
-//	private static final int x1 = 10;
-//	private static final int x2 = gui.comboBoxLinienArt.getWidth() - 10;
-//	private static final int y = gui.comboBoxLinienArt.getHeight()/2;
-	
-	float[] comboBoxListe[] = {DURCHGEZOGENE_LINIE, GEPUNKTE_LINIE, GESTRICHELTE_LINIE, KURZ_LANG_LINIE, KURZ_KURZ_LANG_LINIE, KURZ_LANG_LANG_LINIE};
-	
-	public float[][] getComboBoxListe() {
-		return comboBoxListe;
-	}
-
-	public void setComboBoxListe(float[][] comboBoxListe) {
-		this.comboBoxListe = comboBoxListe;
-	}
-
 	public Color getDefaultLinienFarbe() {
 		return DEFAULT_LINIEN_FARBE;
 	}
@@ -176,25 +161,13 @@ public class FahrtenFarbeConfig {
 	protected Component getComboBoxLineStyle(){
 		final JComboBox comboBox = new JComboBox(LineType.values());
 	    comboBox.setRenderer(new LineRenderer());
-	    comboBox.setSelectedItem(null);
+	    comboBox.setSelectedIndex(0);
 	    comboBox.addActionListener(new ActionListener() {
 	
 	        public void actionPerformed(ActionEvent e) {
-	            SwingUtilities.invokeLater(new Runnable() {
-	
-	                @Override
-	                public void run() {
-	                    JOptionPane.showMessageDialog(comboBox, "You have selected " + comboBox.getSelectedItem());
-	                }
-	            });
+	            
 	        }
 	    });
 		return comboBox;
 	}
-//	protected void paintComponent( Graphics g )
-//	{
-//		Graphics2D g2 = (Graphics2D) g;
-//		g2.setStroke(new BasicStroke(DEFAULT_LINIEN_ART[0]));
-//		g2.drawLine( x1, y, x2, y );
-//	}
 }

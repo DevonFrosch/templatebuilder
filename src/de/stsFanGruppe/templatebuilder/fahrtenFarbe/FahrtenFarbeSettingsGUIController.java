@@ -59,7 +59,7 @@ public class FahrtenFarbeSettingsGUIController {
 		ListSelectionModel selectionModel = gui.table.getSelectionModel();
 		//Erhalte ausgewählte Zeilen
 		int[] rows = gui.table.getSelectedRows();
-		Object[] defaultRowdata = {"", config.getDefaultLinienFarbe(), "", config.getDefaultLinienArt(0)};
+		Object[] defaultRowdata = {"", config.getDefaultLinienFarbe(), "", config.getComboBoxLineStyle()};
 		switch(event.getActionCommand())
 		{
 			//Zeile(n) nach oben verschieben

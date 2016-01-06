@@ -89,11 +89,11 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 				
 				Object[][] data = 
 				{
-					{"Kathy", "Smith", "Doe", new Integer(5)},
-					{"John", "Doe", "Doe", new Integer(3)},
-					{"Sue", "Black", "Doe", new Integer(2)},
-					{"Jane", "White", "Doe", new Integer(20)},
-					{"Joe", "Brown", "Doe", new Integer(10)}
+					{"Kathy", "Smith", new Integer(5), config.getComboBoxLineStyle()},
+					{"John", "Doe", new Integer(5), config.getComboBoxLineStyle()},
+					{"Sue", "Black", new Integer(5), config.getComboBoxLineStyle()},
+					{"Jane", "White", new Integer(5), config.getComboBoxLineStyle()},
+					{"Joe", "Brown", new Integer(5), config.getComboBoxLineStyle()}
 				};
 						
 				DefaultTableModel tableModel = new DefaultTableModel();
@@ -282,8 +282,6 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 		
 		panelStandardFarbeVorschau.setBackground(config.getDefaultLinienFarbe());
 		txtStandardLinienStaerke.setText(config.getDefaultLinienStaerkeToString());
-		//comboBoxLinienArt.setSelectedItem(config.getComboBoxLineStyle());
-		
 	}
 	
 	public void close()
