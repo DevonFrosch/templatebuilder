@@ -124,12 +124,4 @@ public class FahrtenFarbeConfig {
 		// TODO Auto-generated method stub
 		return false;
 	}
-
-	protected Component getComboBoxLineStyle(){
-		final JComboBox comboBox = new JComboBox(LineType.values());
-	    comboBox.setRenderer(new LineRenderer());
-	    comboBox.setEditable(false);
-	    comboBox.setSelectedIndex(0);
-		return comboBox;
-	}
 }

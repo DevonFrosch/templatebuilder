@@ -10,10 +10,11 @@ import javax.swing.JColorChooser;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTable;
 import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
-
+import javax.swing.table.TableModel;
 import de.stsFanGruppe.bibliothek.FahrtenFarbe;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanSettingsGUIController;
 import de.stsFanGruppe.templatebuilder.fahrtenFarbe.FahrtenFarbeConfig.LineType;
@@ -48,6 +49,24 @@ public class FahrtenFarbeSettingsGUIController {
 		return config;
 	}
 	
+	public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int rowIndex, int colIndex) 
+    {
+
+	    // Set the model data of the table
+	    if(isSelected)
+	    {
+	    gui.comboBoxLinienArt.setSelectedItem(value);
+	    TableModel model = table.getModel();
+	    model.setValueAt(value, rowIndex, colIndex);
+	    }
+	    
+	    return gui.comboBoxLinienArt;
+    }
+	
+	public Object getCellEditorValue() 
+    {
+		return gui.comboBoxLinienArt.getSelectedItem();
+    }
 	
 	/**
 	 * Liest den ActionCommand vom event aus und führt dann etwas aus.
@@ -69,7 +88,7 @@ public class FahrtenFarbeSettingsGUIController {
 		ListSelectionModel selectionModel = gui.table.getSelectionModel();
 		//Erhalte ausgewählte Zeilen
 		int[] rows = gui.table.getSelectedRows();
-		Object[] defaultRowdata = {"", gui.panelStandardFarbeVorschau.getBackground(), gui.txtStandardLinienStaerke.getText(), config.getComboBoxLineStyle()};
+		Object[] defaultRowdata = {"", gui.panelStandardFarbeVorschau.getBackground(), gui.txtStandardLinienStaerke.getText(), gui.comboBoxLinienArt};
 		switch(event.getActionCommand())
 		{
 			//Zeile(n) nach oben verschieben

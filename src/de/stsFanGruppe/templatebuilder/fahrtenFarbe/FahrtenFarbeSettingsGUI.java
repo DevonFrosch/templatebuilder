@@ -11,12 +11,15 @@ import com.jgoodies.forms.layout.RowSpec;
 
 import de.stsFanGruppe.bibliothek.FahrtenFarbe;
 import de.stsFanGruppe.bibliothek.LineRenderer;
+import de.stsFanGruppe.bibliothek.MyClassCellEditor;
 import de.stsFanGruppe.templatebuilder.config.*;
 
 import de.stsFanGruppe.templatebuilder.fahrtenFarbe.FahrtenFarbeConfig.LineType;
 import de.stsFanGruppe.templatebuilder.gui.GUI;
 import de.stsFanGruppe.tools.NullTester;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableColumn;
 import com.jgoodies.forms.factories.DefaultComponentFactory;
 
 public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
@@ -92,19 +95,21 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 				
 				Object[][] data = 
 				{
-					{"Kathy", "Smith", new Integer(5), config.getComboBoxLineStyle()},
-					{"John", "Doe", new Integer(5), config.getComboBoxLineStyle()},
-					{"Sue", "Black", new Integer(5), config.getComboBoxLineStyle()},
-					{"Jane", "White", new Integer(5), config.getComboBoxLineStyle()},
-					{"Joe", "Brown", new Integer(5), config.getComboBoxLineStyle()}
+					{"Kathy", Color.BLACK, new Integer(5), comboBoxLinienArt},
+					{"John", Color.BLUE, new Integer(5), comboBoxLinienArt},
+					{"Sue", Color.RED, new Integer(5), comboBoxLinienArt},
+					{"Jane", Color.YELLOW, new Integer(5), comboBoxLinienArt},
+					{"Joe", Color.GREEN, new Integer(5), comboBoxLinienArt}
 				};
 						
-				DefaultTableModel tableModel = new DefaultTableModel();
-				
-				tableModel.setDataVector(data, columnName);			
+				DefaultTableModel tableModel = new DefaultTableModel();				
+				tableModel.setDataVector(data, columnName);
 				
 				table = new JTable(tableModel);
 				table.getTableHeader().setReorderingAllowed(false);
+				
+				TableColumn linienArtColumn = table.getColumnModel().getColumn(3);
+				linienArtColumn.setCellEditor(new MyClassCellEditor());
 				
 				JScrollPane scrollPane = new JScrollPane(table);
 				scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
@@ -222,16 +227,11 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 				}
 				{
 					// FIXME Nach Auswahl eines Eintrags werden alle Linien ausgewählt.
-					JComboBox comboBoxLinienArt = new JComboBox(LineType.values());
-					comboBoxLinienArt.setRenderer(new LineRenderer());
-					comboBoxLinienArt.setEditable(false);
-					comboBoxLinienArt.setSelectedIndex(0);
-//				    comboBox.addActionListener(new ActionListener() {
-			//	
-//				        public void actionPerformed(ActionEvent e) {
-//				            
-//				        }
-//				    });
+					comboBoxLinienArt = new JComboBox(LineType.values());
+			    	comboBoxLinienArt.setRenderer(new LineRenderer());
+			    	comboBoxLinienArt.setEditable(false);
+			    	comboBoxLinienArt.setSelectedIndex(0);
+						
 					standardConfigLabel.add(comboBoxLinienArt, "3, 5, fill, default");
 				}
 			}
@@ -294,7 +294,6 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 	public void loadSettings()
 	{
 		log.info("Standardwerte für FahrtenFarbe einlesen");
-		
 		panelStandardFarbeVorschau.setBackground(config.getDefaultLinienFarbe());
 		txtStandardLinienStaerke.setText(config.getDefaultLinienStaerkeToString());
 	}
