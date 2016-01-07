@@ -10,8 +10,6 @@ import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
 
 import de.stsFanGruppe.bibliothek.FahrtenFarbe;
-import de.stsFanGruppe.bibliothek.LineRenderer;
-import de.stsFanGruppe.bibliothek.MyClassCellEditor;
 import de.stsFanGruppe.templatebuilder.config.*;
 
 import de.stsFanGruppe.templatebuilder.fahrtenFarbe.FahrtenFarbeConfig.LineType;
@@ -20,6 +18,7 @@ import de.stsFanGruppe.tools.NullTester;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableModel;
 import com.jgoodies.forms.factories.DefaultComponentFactory;
 
 public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
@@ -227,12 +226,7 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 				}
 				{
 					// FIXME Nach Auswahl eines Eintrags werden alle Linien ausgewählt.
-					comboBoxLinienArt = new JComboBox(LineType.values());
-			    	comboBoxLinienArt.setRenderer(new LineRenderer());
-			    	comboBoxLinienArt.setEditable(false);
-			    	comboBoxLinienArt.setSelectedIndex(0);
-						
-					standardConfigLabel.add(comboBoxLinienArt, "3, 5, fill, default");
+					standardConfigLabel.add(getComboBoxLinienArt(), "3, 5, fill, default");
 				}
 			}
 		}
@@ -291,6 +285,14 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 		setVisible(true);
 	}
 	
+	public JComboBox getComboBoxLinienArt(){
+		comboBoxLinienArt = new JComboBox(LineType.values());
+    	comboBoxLinienArt.setRenderer(new LineRenderer());
+    	comboBoxLinienArt.setEditable(true);
+    	comboBoxLinienArt.setSelectedIndex(0);
+    	return comboBoxLinienArt;
+	}
+	
 	public void loadSettings()
 	{
 		log.info("Standardwerte für FahrtenFarbe einlesen");
@@ -303,6 +305,83 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 		dispose();
 		setVisible(false);
 		controller = null;
+	}
+	/**
+	 * Erstellt ein Dropdown für die Tabelle. 
+	 *
+	 */
+	public static class MyClassCellEditor extends AbstractCellEditor implements TableCellEditor 
+	{	
+		JComboBox comboBoxLinienArt;
+		FahrtenFarbeSettingsGUI gui;
+		
+		public MyClassCellEditor()
+	    {
+		// FIXME Combobox werden derzeit doppelt im Code geschrieben. Die JComboBox sollte möglich einmal definiert werden.
+	    // Create a new Combobox with the array of values.
+			comboBoxLinienArt = new JComboBox(LineType.values());
+	    	comboBoxLinienArt.setRenderer(new LineRenderer());
+	    	comboBoxLinienArt.setEditable(true);
+	    	comboBoxLinienArt.setSelectedIndex(0);
+	    }
+
+	    @Override
+	    public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int rowIndex, int colIndex) 
+	    {
+
+	    // Set the model data of the table
+	    if(isSelected)
+	    {
+	    	comboBoxLinienArt.setSelectedItem(value);
+	    	TableModel model = table.getModel();
+	    	model.setValueAt(value, rowIndex, colIndex);
+	    }
+
+	    return comboBoxLinienArt;
+	    }
+
+	    @Override
+	    public Object getCellEditorValue() 
+	    {
+	    	return comboBoxLinienArt.getSelectedItem();
+	    }
+	}
+	/**
+	 * Erstellt für das Dropdown die Linien.
+	 * Die Grundeinstellung, wie eine Linie auszusehen hat, werden in der Klasse FahrtenFarbeConfig beschrieben.
+	 */
+	private static class LineRenderer extends JPanel implements ListCellRenderer {
+	    private LineType value;
+
+	    @Override
+	    public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+	        if (value instanceof LineType) {
+	            setLineType((LineType) value);
+	        } else {
+	            setLineType(null);
+	        }
+	        return this;
+	    }
+
+	    @Override
+	    protected void paintComponent(Graphics g) {
+	        super.paintComponent(g);
+	        Graphics2D g2d = (Graphics2D) g;
+	        if (value != null) {
+	            g2d.setStroke(value.getStroke());
+	            g.drawLine(0, getHeight() / 2, getWidth(), getHeight() / 2);
+	        }
+	    }
+
+	    private void setLineType(LineType value) {
+	        this.value = value;
+	    }
+
+	    @Override
+	    public Dimension getPreferredSize() {
+	        return new Dimension(20, 20);
+	    }
+
 	}
 	
 	public void errorMessage(String text, String titel)

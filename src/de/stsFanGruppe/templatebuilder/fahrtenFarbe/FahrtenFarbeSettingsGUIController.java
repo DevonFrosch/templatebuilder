@@ -6,7 +6,9 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
+import javax.swing.AbstractCellEditor;
 import javax.swing.JColorChooser;
+import javax.swing.JComboBox;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -14,6 +16,7 @@ import javax.swing.JTable;
 import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableModel;
 import de.stsFanGruppe.bibliothek.FahrtenFarbe;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanSettingsGUIController;
@@ -234,7 +237,7 @@ public class FahrtenFarbeSettingsGUIController {
 				log.error("actionButton: actionCommand nicht erkannt: {}", event.getActionCommand());
 		}
 	}
-
+	
 	protected void close()
 	{
 		gui.close();
