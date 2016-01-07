@@ -15,6 +15,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
 import javax.swing.SwingUtilities;
+import de.stsFanGruppe.bibliothek.LineRenderer;
 import de.stsFanGruppe.tools.PreferenceHandler;
 
 public class FahrtenFarbeConfig {
@@ -79,7 +80,7 @@ public class FahrtenFarbeConfig {
 	        };
 	        public abstract Stroke getStroke();
 	    }
-	
+			
 	public Color getDefaultLinienFarbe() {
 		return DEFAULT_LINIEN_FARBE;
 	}
@@ -124,50 +125,11 @@ public class FahrtenFarbeConfig {
 		return false;
 	}
 
-	public class LineRenderer extends JPanel implements ListCellRenderer {
-        private LineType value;
-
-        @Override
-        public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-            if (value instanceof LineType) {
-                setLineType((LineType) value);
-            } else {
-                setLineType(null);
-            }
-            return this;
-        }
-
-        @Override
-        protected void paintComponent(Graphics g) {
-            super.paintComponent(g);
-            Graphics2D g2d = (Graphics2D) g;
-            if (value != null) {
-                g2d.setStroke(value.getStroke());
-                g.drawLine(0, getHeight() / 2, getWidth(), getHeight() / 2);
-            }
-
-        }
-
-        private void setLineType(LineType value) {
-            this.value = value;
-        }
-
-        @Override
-        public Dimension getPreferredSize() {
-            return new Dimension(50, 20);
-        }
-
-    }
 	protected Component getComboBoxLineStyle(){
 		final JComboBox comboBox = new JComboBox(LineType.values());
 	    comboBox.setRenderer(new LineRenderer());
+	    comboBox.setEditable(false);
 	    comboBox.setSelectedIndex(0);
-	    comboBox.addActionListener(new ActionListener() {
-	
-	        public void actionPerformed(ActionEvent e) {
-	            
-	        }
-	    });
 		return comboBox;
 	}
 }

@@ -10,7 +10,10 @@ import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
 
 import de.stsFanGruppe.bibliothek.FahrtenFarbe;
+import de.stsFanGruppe.bibliothek.LineRenderer;
 import de.stsFanGruppe.templatebuilder.config.*;
+
+import de.stsFanGruppe.templatebuilder.fahrtenFarbe.FahrtenFarbeConfig.LineType;
 import de.stsFanGruppe.templatebuilder.gui.GUI;
 import de.stsFanGruppe.tools.NullTester;
 import javax.swing.table.DefaultTableModel;
@@ -158,11 +161,11 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 					FormSpecs.LABEL_COMPONENT_GAP_ROWSPEC,
 					FormSpecs.DEFAULT_ROWSPEC,});
 			standardConfigLabel.setLayout(fl_standardConfigLabel);
-			{
 			/*
 			 * Standardlinienfarbe
 			 */
-			//Label für Standardlinienfarbe für die Beschriftung
+			{
+				//Label für Standardlinienfarbe für die Beschriftung
 				{
 					JLabel lblDefaultFarbeString = new JLabel();
 					lblDefaultFarbeString.setText("Linienfarbe");
@@ -212,13 +215,25 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 			 * Standardlinienart
 			 */
 			{
-				JLabel lblStandardLinienart = new JLabel();
-				lblStandardLinienart.setText("Linienart");
-				standardConfigLabel.add(lblStandardLinienart, "1, 5, left, default");
-			}
-			{
-				// FIXME ComboBox soll Linien zeichnen.
-				standardConfigLabel.add(config.getComboBoxLineStyle(), "3, 5, fill, default");
+				{	
+					JLabel lblStandardLinienart = new JLabel();
+					lblStandardLinienart.setText("Linienart");
+					standardConfigLabel.add(lblStandardLinienart, "1, 5, left, default");
+				}
+				{
+					// FIXME Nach Auswahl eines Eintrags werden alle Linien ausgewählt.
+					JComboBox comboBoxLinienArt = new JComboBox(LineType.values());
+					comboBoxLinienArt.setRenderer(new LineRenderer());
+					comboBoxLinienArt.setEditable(false);
+					comboBoxLinienArt.setSelectedIndex(0);
+//				    comboBox.addActionListener(new ActionListener() {
+			//	
+//				        public void actionPerformed(ActionEvent e) {
+//				            
+//				        }
+//				    });
+					standardConfigLabel.add(comboBoxLinienArt, "3, 5, fill, default");
+				}
 			}
 		}
 			/*

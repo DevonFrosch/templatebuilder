@@ -1,14 +1,22 @@
 package de.stsFanGruppe.templatebuilder.fahrtenFarbe;
 
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import javax.swing.JColorChooser;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 
 import de.stsFanGruppe.bibliothek.FahrtenFarbe;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanSettingsGUIController;
+import de.stsFanGruppe.templatebuilder.fahrtenFarbe.FahrtenFarbeConfig.LineType;
 import de.stsFanGruppe.tools.NullTester;
 
 public class FahrtenFarbeSettingsGUIController {
@@ -39,6 +47,8 @@ public class FahrtenFarbeSettingsGUIController {
 	{
 		return config;
 	}
+	
+	
 	/**
 	 * Liest den ActionCommand vom event aus und führt dann etwas aus.
 	 * @param event
@@ -59,7 +69,7 @@ public class FahrtenFarbeSettingsGUIController {
 		ListSelectionModel selectionModel = gui.table.getSelectionModel();
 		//Erhalte ausgewählte Zeilen
 		int[] rows = gui.table.getSelectedRows();
-		Object[] defaultRowdata = {"", config.getDefaultLinienFarbe(), "", config.getComboBoxLineStyle()};
+		Object[] defaultRowdata = {"", gui.panelStandardFarbeVorschau.getBackground(), gui.txtStandardLinienStaerke.getText(), config.getComboBoxLineStyle()};
 		switch(event.getActionCommand())
 		{
 			//Zeile(n) nach oben verschieben
