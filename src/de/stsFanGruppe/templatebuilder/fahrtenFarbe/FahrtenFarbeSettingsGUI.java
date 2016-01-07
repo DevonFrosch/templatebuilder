@@ -2,19 +2,22 @@ package de.stsFanGruppe.templatebuilder.fahrtenFarbe;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
-
+import ch.qos.logback.core.pattern.color.YellowCompositeConverter;
 import de.stsFanGruppe.bibliothek.FahrtenFarbe;
 import de.stsFanGruppe.templatebuilder.config.*;
 
 import de.stsFanGruppe.templatebuilder.fahrtenFarbe.FahrtenFarbeConfig.LineType;
 import de.stsFanGruppe.templatebuilder.gui.GUI;
 import de.stsFanGruppe.tools.NullTester;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
@@ -106,9 +109,49 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 				
 				table = new JTable(tableModel);
 				table.getTableHeader().setReorderingAllowed(false);
+				table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+		            @Override
+		            public Component getTableCellRendererComponent(JTable table,
+		                    Object value, boolean isSelected, boolean hasFocus,
+		                    int row, int column) {
+		 
+		                Component c = super.getTableCellRendererComponent(table, value,
+		                        isSelected, hasFocus, row, column);
+		 
+		                
+		                Color bgColor = null;
+		                try
+		                {
+		                	bgColor = (Color) table.getValueAt(row, column);
+		                }
+		                catch (Exception e)
+		                {
+		                	log.error(e.toString());
+		                }
+		                
+		                if (row == table.getRowCount() && column == 2 && !bgColor.equals(null)) {
+		                    setBackground(bgColor);
+		                } else {
+		                    setBackground(Color.WHITE);
+		                }
+		                return this;
+		            }
+		        });
+				table.addMouseListener(new MouseAdapter() {
+					  public void mouseClicked(MouseEvent e) {
+					    if (e.getClickCount() == 1) {
+					      JTable target = (JTable)e.getSource();
+					      int row = target.getSelectedRow();
+					      int column = target.getSelectedColumn();
+					      	if(column == 2){
+					      		
+					      	}
+					    }
+					  }
+					});
 				
 				TableColumn linienArtColumn = table.getColumnModel().getColumn(3);
-				linienArtColumn.setCellEditor(new MyClassCellEditor());
+				linienArtColumn.setCellEditor(new LinienArtCellEditor());
 				
 				JScrollPane scrollPane = new JScrollPane(table);
 				scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
@@ -310,18 +353,18 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 	 * Erstellt ein Dropdown für die Tabelle. 
 	 *
 	 */
-	public static class MyClassCellEditor extends AbstractCellEditor implements TableCellEditor 
+	public static class LinienArtCellEditor extends AbstractCellEditor implements TableCellEditor 
 	{	
 		JComboBox comboBoxLinienArt;
 		FahrtenFarbeSettingsGUI gui;
 		
-		public MyClassCellEditor()
+		public LinienArtCellEditor()
 	    {
 		// FIXME Combobox werden derzeit doppelt im Code geschrieben. Die JComboBox sollte möglich einmal definiert werden.
 	    // Create a new Combobox with the array of values.
 			comboBoxLinienArt = new JComboBox(LineType.values());
 	    	comboBoxLinienArt.setRenderer(new LineRenderer());
-	    	comboBoxLinienArt.setEditable(true);
+	    	comboBoxLinienArt.setEditable(false);
 	    	comboBoxLinienArt.setSelectedIndex(0);
 	    }
 
@@ -381,7 +424,6 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 	    public Dimension getPreferredSize() {
 	        return new Dimension(20, 20);
 	    }
-
 	}
 	
 	public void errorMessage(String text, String titel)
