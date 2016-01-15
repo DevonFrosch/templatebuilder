@@ -91,7 +91,7 @@ public class FahrtenFarbeSettingsGUIController {
 		ListSelectionModel selectionModel = gui.table.getSelectionModel();
 		//Erhalte ausgewählte Zeilen
 		int[] rows = gui.table.getSelectedRows();
-		Object[] defaultRowdata = {"", gui.panelStandardFarbeVorschau.getBackground(), gui.txtStandardLinienStaerke.getText(), gui.comboBoxLinienArt};
+		Object[] defaultRowdata = {"", "", gui.txtStandardLinienStaerke.getText(),gui.comboBoxLinienArt.getSelectedItem()};
 		switch(event.getActionCommand())
 		{
 			//Zeile(n) nach oben verschieben
@@ -128,10 +128,12 @@ public class FahrtenFarbeSettingsGUIController {
 					for(int i=0; i < rows.length; i++)
 					{
 						model.insertRow(rows[i]+i+1, defaultRowdata);
+						gui.testFarben.add(rows[i]+i+1, gui.panelStandardFarbeVorschau.getBackground());
 					}
 					gui.table.clearSelection();
 					break;
 				} else {
+					gui.testFarben.add(gui.panelStandardFarbeVorschau.getBackground());
 					model.addRow(defaultRowdata);
 					break;
 				}
@@ -148,7 +150,8 @@ public class FahrtenFarbeSettingsGUIController {
 				{
 					for(int i=0; i < rows.length; i++)
 					{
-					     model.removeRow(rows[i]-i);
+						gui.testFarben.remove(rows[i]-i); 
+						model.removeRow(rows[i]-i);
 					}
 					break;
 				}

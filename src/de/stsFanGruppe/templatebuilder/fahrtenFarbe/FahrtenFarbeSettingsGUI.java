@@ -2,8 +2,10 @@ package de.stsFanGruppe.templatebuilder.fahrtenFarbe;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import com.jgoodies.forms.layout.ColumnSpec;
@@ -40,6 +42,7 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 	JPanel panelStandardFarbeVorschau;
 	JTextField txtStandardLinienStaerke;
 	JComboBox comboBoxLinienArt;
+	ArrayList<Color> testFarben = config.TEST_FARBEN;
 	
 	
 	public final String[] columnName = {"Zugname", "Linienfarbe", "Linienstärke", "Linienart"};
@@ -97,57 +100,59 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 				
 				Object[][] data = 
 				{
-					{"Kathy", Color.BLACK, new Integer(5), comboBoxLinienArt},
-					{"John", Color.BLUE, new Integer(5), comboBoxLinienArt},
-					{"Sue", Color.RED, new Integer(5), comboBoxLinienArt},
-					{"Jane", Color.YELLOW, new Integer(5), comboBoxLinienArt},
-					{"Joe", Color.GREEN, new Integer(5), comboBoxLinienArt}
+					{"Kathy", "", new Integer(5), comboBoxLinienArt},
+					{"John", "", new Integer(5), comboBoxLinienArt},
+					{"Sue", "", new Integer(5), comboBoxLinienArt},
+					{"Jane", "", new Integer(5), comboBoxLinienArt},
+					{"Joe", "", new Integer(5), comboBoxLinienArt}
 				};
+				testFarben.add(Color.BLACK);
+				testFarben.add(Color.BLUE);
+				testFarben.add(Color.RED);
+				testFarben.add(Color.GREEN);
+				testFarben.add(Color.GRAY);
 						
 				DefaultTableModel tableModel = new DefaultTableModel();				
 				tableModel.setDataVector(data, columnName);
 				
 				table = new JTable(tableModel);
 				table.getTableHeader().setReorderingAllowed(false);
-				table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+				table.getColumnModel().getColumn(1).setCellRenderer(new DefaultTableCellRenderer() {
 		            @Override
 		            public Component getTableCellRendererComponent(JTable table,
 		                    Object value, boolean isSelected, boolean hasFocus,
 		                    int row, int column) {
-		 
-		                Component c = super.getTableCellRendererComponent(table, value,
-		                        isSelected, hasFocus, row, column);
-		 
-		                
-		                Color bgColor = null;
+		                super.getTableCellRendererComponent(table, value, isSelected,
+		    	                hasFocus, row, column);
+		                Color color = null;
 		                try
-		                {
-		                	bgColor = (Color) table.getValueAt(row, column);
-		                }
-		                catch (Exception e)
-		                {
-		                	log.error(e.toString());
-		                }
-		                
-		                if (row == table.getRowCount() && column == 2 && !bgColor.equals(null)) {
-		                    setBackground(bgColor);
-		                } else {
-		                    setBackground(Color.WHITE);
-		                }
+			                {
+		                	if(row>0)
+			                	color = testFarben.get(row);
+			                }
+			                catch(IndexOutOfBoundsException e)
+			                {
+			                	log.error("Farbenspalte: Farbe konnte nicht gefunden werden - " + e.getMessage() + color);
+			                }
+			    	    setBackground( color );
 		                return this;
 		            }
 		        });
 				table.addMouseListener(new MouseAdapter() {
 					  public void mouseClicked(MouseEvent e) {
-					    if (e.getClickCount() == 1) {
-					      JTable target = (JTable)e.getSource();
+						  
+						  JTable target = (JTable)e.getSource();
 					      int row = target.getSelectedRow();
 					      int column = target.getSelectedColumn();
-					      	if(column == 2){
-					      		
+					      	if(column == 1){
+					      		Color c = null;
+					      		c = JColorChooser.showDialog(table, "Farbe wählen", testFarben.get(row));
+								if(c != null)
+								{
+									testFarben.set(row, c);
+								}
 					      	}
 					    }
-					  }
 					});
 				
 				TableColumn linienArtColumn = table.getColumnModel().getColumn(3);
@@ -328,11 +333,13 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 		setVisible(true);
 	}
 	
-	public JComboBox getComboBoxLinienArt(){
+	public JComboBox getComboBoxLinienArt()
+	{
 		comboBoxLinienArt = new JComboBox(LineType.values());
     	comboBoxLinienArt.setRenderer(new LineRenderer());
     	comboBoxLinienArt.setEditable(true);
-    	comboBoxLinienArt.setSelectedIndex(0);
+    	comboBoxLinienArt.setSelectedItem(null);
+    	
     	return comboBoxLinienArt;
 	}
 	
@@ -349,6 +356,16 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 		setVisible(false);
 		controller = null;
 	}
+	
+	public boolean isCellColorEditable(int row, int col) {
+	     switch (col) {
+	         case 1:
+	             return true;
+	         default:
+	             return false;
+	      }
+	}
+
 	/**
 	 * Erstellt ein Dropdown für die Tabelle. 
 	 *
@@ -356,31 +373,28 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 	public static class LinienArtCellEditor extends AbstractCellEditor implements TableCellEditor 
 	{	
 		JComboBox comboBoxLinienArt;
-		FahrtenFarbeSettingsGUI gui;
 		
 		public LinienArtCellEditor()
 	    {
 		// FIXME Combobox werden derzeit doppelt im Code geschrieben. Die JComboBox sollte möglich einmal definiert werden.
-	    // Create a new Combobox with the array of values.
+	    // Erstellt eine Combobox mit den Linientypen.
 			comboBoxLinienArt = new JComboBox(LineType.values());
 	    	comboBoxLinienArt.setRenderer(new LineRenderer());
 	    	comboBoxLinienArt.setEditable(false);
-	    	comboBoxLinienArt.setSelectedIndex(0);
+	    	comboBoxLinienArt.setSelectedItem(null);
 	    }
 
 	    @Override
 	    public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int rowIndex, int colIndex) 
 	    {
-
-	    // Set the model data of the table
-	    if(isSelected)
-	    {
-	    	comboBoxLinienArt.setSelectedItem(value);
-	    	TableModel model = table.getModel();
-	    	model.setValueAt(value, rowIndex, colIndex);
-	    }
-
-	    return comboBoxLinienArt;
+		    // Setzt das Modell für die Tabelle
+		    if(isSelected)
+		    {
+		    	comboBoxLinienArt.setSelectedItem(value);
+		    	TableModel model = table.getModel();
+		    	model.setValueAt(value, rowIndex, colIndex);
+		    }
+		    return comboBoxLinienArt;
 	    }
 
 	    @Override

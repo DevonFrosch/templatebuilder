@@ -9,6 +9,8 @@ import java.awt.Graphics2D;
 import java.awt.Stroke;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Collection;
 import javax.swing.JComboBox;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -27,12 +29,15 @@ public class FahrtenFarbeConfig {
 	public static final String CONFIG_LINIEN_STAERKE  = "bildfahrplan/darstellung/linie/staerke";
 	public static final String CONFIG_LINIEN_ART = "bildfahrplan/darstellung/linie/art";
 	
+	//Linienarten
 	public static final float[] DURCHGEZOGENE_LINIE = {0};
 	public static final float[] GEPUNKTE_LINIE = {10, 10};
 	public static final float[] GESTRICHELTE_LINIE = {30, 10};
 	public static final float[] KURZ_LANG_LINIE = {10, 10, 30, 10};
 	public static final float[] KURZ_KURZ_LANG_LINIE = {10, 10, 10, 10, 30, 10};
 	public static final float[] KURZ_LANG_LANG_LINIE = {10, 10, 30, 10, 30, 10};
+	
+	public static final ArrayList<Color> TEST_FARBEN = new ArrayList<Color>();
 	
 	private static final Color DEFAULT_LINIEN_FARBE = Color.BLACK;
 	private static final int DEFAULT_LINIEN_STAERKE = 1;
@@ -79,7 +84,8 @@ public class FahrtenFarbeConfig {
 	        };
 	        public abstract Stroke getStroke();
 	    }
-			
+	//FIXME: NUR FÜR TESTZWECKE - SPÄTER ENTFERNEN
+	
 	public Color getDefaultLinienFarbe() {
 		return DEFAULT_LINIEN_FARBE;
 	}
