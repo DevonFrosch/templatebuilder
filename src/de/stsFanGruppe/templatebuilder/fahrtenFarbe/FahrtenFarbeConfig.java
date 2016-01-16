@@ -37,8 +37,6 @@ public class FahrtenFarbeConfig {
 	public static final float[] KURZ_KURZ_LANG_LINIE = {10, 10, 10, 10, 30, 10};
 	public static final float[] KURZ_LANG_LANG_LINIE = {10, 10, 30, 10, 30, 10};
 	
-	public static final ArrayList<Color> TEST_FARBEN = new ArrayList<Color>();
-	
 	private static final Color DEFAULT_LINIEN_FARBE = Color.BLACK;
 	private static final int DEFAULT_LINIEN_STAERKE = 1;
 	private static final float[] DEFAULT_LINIEN_ART = DURCHGEZOGENE_LINIE;
@@ -83,9 +81,7 @@ public class FahrtenFarbeConfig {
 	            }
 	        };
 	        public abstract Stroke getStroke();
-	    }
-	//FIXME: NUR FÜR TESTZWECKE - SPÄTER ENTFERNEN
-	
+	    }	
 	public Color getDefaultLinienFarbe() {
 		return DEFAULT_LINIEN_FARBE;
 	}

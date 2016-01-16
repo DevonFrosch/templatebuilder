@@ -105,6 +105,7 @@ public class FahrtenFarbeSettingsGUIController {
 					selectionModel.clearSelection();
 					for(int i=0; i < rows.length; i++)
 					{
+						//FIXME Farbe wird noch nicht nach oben bewegt.
 						model.moveRow(rows[i], rows[i], rows[i]-1);
 						gui.table.addRowSelectionInterval(rows[i]-1, rows[i]-1);
 					}
@@ -115,6 +116,7 @@ public class FahrtenFarbeSettingsGUIController {
 				selectionModel.clearSelection();
 				for(int i=0; i < rows.length; i++)
 				{
+					//FIXME Farbe wird noch nicht nach unten bewegt.
 					model.moveRow(rows[i], rows[i], rows[i]+1);
 					gui.table.addRowSelectionInterval(rows[i]+1, rows[i]+1);
 				}
