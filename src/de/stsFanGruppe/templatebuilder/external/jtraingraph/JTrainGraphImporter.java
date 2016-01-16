@@ -1,6 +1,7 @@
 package de.stsFanGruppe.templatebuilder.external.jtraingraph;
 
 import java.io.InputStream;
+import java.text.Collator;
 import java.util.*;
 import javax.xml.stream.XMLStreamException;
 import de.stsFanGruppe.templatebuilder.external.*;
@@ -52,7 +53,7 @@ public class JTrainGraphImporter
 				betriebsstelle.addGleis(gleis);
 				betriebsstellen.add(betriebsstelle);
 			}
-			
+			betriebsstellen.sort((Betriebsstelle a, Betriebsstelle b) -> a.compareByKM(b));
 			String strName = tJtgTt.getAttribute("name");
 			if(isEmpty(strName))
 			{
