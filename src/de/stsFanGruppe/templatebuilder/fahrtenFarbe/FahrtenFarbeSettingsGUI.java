@@ -12,7 +12,6 @@ import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
-import de.stsFanGruppe.bibliothek.FahrtenFarbe;
 import de.stsFanGruppe.templatebuilder.config.*;
 import de.stsFanGruppe.templatebuilder.fahrtenFarbe.FahrtenFarbeConfig.LineType;
 import de.stsFanGruppe.templatebuilder.gui.GUI;
@@ -30,7 +29,6 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 	
 	FahrtenFarbeSettingsGUIController controller;
 	FahrtenFarbeConfig config;
-	FahrtenFarbe fahrtenFarbe;
 	TableModel ownTableModel;
 	
 	boolean saveEnabled = false;

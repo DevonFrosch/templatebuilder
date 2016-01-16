@@ -18,7 +18,6 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableModel;
-import de.stsFanGruppe.bibliothek.FahrtenFarbe;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanSettingsGUIController;
 import de.stsFanGruppe.templatebuilder.fahrtenFarbe.FahrtenFarbeConfig.LineType;
 import de.stsFanGruppe.tools.NullTester;
@@ -27,7 +26,6 @@ public class FahrtenFarbeSettingsGUIController {
 	
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(BildfahrplanSettingsGUIController.class);
 	
-	private FahrtenFarbe fahrtenFarbe;
 	private FahrtenFarbeSettingsGUI gui;
 	private FahrtenFarbeConfig config;
 	private Runnable onClose;
