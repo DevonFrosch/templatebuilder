@@ -101,25 +101,7 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 				table.getColumnModel().getColumn(1).setCellRenderer(new BackgroundTableCellRenderer());
 				// Einstellung des Editors für die letzte Spalte (Linienart):
 				table.getColumnModel().getColumn(3).setCellEditor(new LinienArtCellEditor());
-				table.addMouseListener(new MouseAdapter() {
-					public void mouseClicked(MouseEvent e)
-					{
-						JTable target = (JTable) e.getSource();
-						int row = target.getSelectedRow();
-						int column = target.getSelectedColumn();
-						if(column == 1)
-						{
-							Color c = null;
-							c = JColorChooser.showDialog(table, "Farbe wählen", testFarben.get(row));
-							if(c != null)
-							{
-								testFarben.set(row, c);
-							}
-						}
-					}
-				});
-				
-				
+				table.addMouseListener(new CellMouseClickForBackgroundColor());			
 				
 				JScrollPane scrollPane = new JScrollPane(table);
 				scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
@@ -297,7 +279,7 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 		comboBoxLinienArt = new JComboBox(LineType.values());
 		comboBoxLinienArt.setRenderer(new LineRenderer());
 		comboBoxLinienArt.setEditable(false);
-		comboBoxLinienArt.setSelectedItem(null);
+		comboBoxLinienArt.setSelectedItem(0);
 		
 		return comboBoxLinienArt;
 	}
@@ -315,31 +297,7 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 		setVisible(false);
 		controller = null;
 	}
-	
-	public boolean isCellColorEditable(int row, int col)
-	{
-		switch(col)
-		{
-			case 1:
-				return true;
-			default:
-				return false;
-		}
-	}
-	
-	/**
-	 * Erstellt ein Dropdown für die Tabelle.
-	 *
-	 */
-	
-	
-	/**
-	 * Erstellt für das Dropdown die Linien. Die Grundeinstellung, wie eine
-	 * Linie auszusehen hat, werden in der Klasse FahrtenFarbeConfig
-	 * beschrieben.
-	 */
-	
-	
+		
 	public void errorMessage(String text, String titel)
 	{
 		JOptionPane.showMessageDialog(contentPanel, text, titel, JOptionPane.ERROR_MESSAGE);
