@@ -21,7 +21,6 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
-import de.stsFanGruppe.tools.TableModel.*;
 
 public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 {
@@ -96,10 +95,10 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 				table = new JTable(tableModel);
 				table.getTableHeader().setReorderingAllowed(false);
 				// Einstellung für die 2. Spalte (Farbe):
-				table.getColumnModel().getColumn(1).setCellRenderer(new BackgroundTableCellRenderer());
+				table.getColumnModel().getColumn(1).setCellRenderer(new TableModel.BackgroundTableCellRenderer());
 				// Einstellung des Editors für die letzte Spalte (Linienart):
-				table.getColumnModel().getColumn(3).setCellEditor(new LinienArtCellEditor());
-				table.addMouseListener(new CellMouseClickForBackgroundColor());			
+				table.getColumnModel().getColumn(3).setCellEditor(new TableModel.LinienArtCellEditor());
+				table.addMouseListener(new TableModel.CellMouseClickForBackgroundColor());			
 				
 				JScrollPane scrollPane = new JScrollPane(table);
 				scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
@@ -275,7 +274,7 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 	public JComboBox getComboBoxLinienArt()
 	{
 		comboBoxLinienArt = new JComboBox(LineType.values());
-		comboBoxLinienArt.setRenderer(new LineRenderer());
+		comboBoxLinienArt.setRenderer(new TableModel.LineRenderer());
 		comboBoxLinienArt.setEditable(false);
 		comboBoxLinienArt.setSelectedItem(0);
 		
