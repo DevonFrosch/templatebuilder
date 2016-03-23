@@ -1,6 +1,7 @@
 package de.stsFanGruppe.templatebuilder.gui;
 
 import java.awt.Component;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -22,6 +23,9 @@ import de.stsFanGruppe.templatebuilder.external.*;
 import de.stsFanGruppe.templatebuilder.external.jtraingraph.*;
 import de.stsFanGruppe.templatebuilder.gui.TemplateBuilderGUI;
 import de.stsFanGruppe.templatebuilder.strecken.Streckenabschnitt;
+import de.stsFanGruppe.templatebuilder.streckenConfig.BildfahrplanSettingsStreckenGUI;
+import de.stsFanGruppe.templatebuilder.streckenConfig.BildfahrplanSettingsStreckenGUIController;
+import de.stsFanGruppe.templatebuilder.streckenConfig.BildfahrplanStreckenConfig;
 import de.stsFanGruppe.templatebuilder.zug.Fahrt;
 import de.stsFanGruppe.tools.FirstLastLinkedList;
 import de.stsFanGruppe.tools.GUILocker;
@@ -39,11 +43,14 @@ public class TemplateBuilderGUIController extends GUIController
 	protected TemplateBuilderGUI gui = null;
 	protected BildfahrplanConfig config;
 	protected FirstLastLinkedList<TabController> tabController = new FirstLastLinkedList<>();
+	protected BildfahrplanStreckenConfig streckenConfig;
 	
-	public TemplateBuilderGUIController(BildfahrplanConfig config, String version, boolean dev)
+	public TemplateBuilderGUIController(BildfahrplanConfig config, BildfahrplanStreckenConfig streckenConfig, String version, boolean dev)
 	{
 		NullTester.test(config);
+		NullTester.test(streckenConfig);
 		this.config = config;
+		this.streckenConfig = streckenConfig;
 		this.version = version;
 		this.dev = dev;
 	}
@@ -219,6 +226,11 @@ public class TemplateBuilderGUIController extends GUIController
 				});
 				break;
 			}
+
+			case "streckenEdit":
+				if(!lock(event.getActionCommand())) break;
+				BildfahrplanSettingsStreckenGUI bssg = new BildfahrplanSettingsStreckenGUI(new BildfahrplanSettingsStreckenGUIController(streckenConfig, () -> unlock(event.getActionCommand())), gui.getFrame());
+				break;
 			case "options":
 				if(!GUILocker.lock(BildfahrplanSettingsGUI.class)) break;
 				BildfahrplanSettingsGUI sg = new BildfahrplanSettingsGUI(new BildfahrplanSettingsGUIController(config, () -> GUILocker.unlock(BildfahrplanSettingsGUI.class)), gui.getFrame());

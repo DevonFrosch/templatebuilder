@@ -140,8 +140,12 @@ public class TemplateBuilderGUI implements GUI
 		menuBar.add(mnBearbeiten);
 		
 		JMenu mnStrecken = new JMenu("Strecken");
-		mnStrecken.setEnabled(false);
 		menuBar.add(mnStrecken);
+		
+		JMenuItem mntmStreckeEdit = new JMenuItem("Strecke bearbeiten");
+		mntmStreckeEdit.setActionCommand("streckenEdit");
+		mntmStreckeEdit.addActionListener((ActionEvent arg0) -> controller.menuAction(arg0));
+		mnStrecken.add(mntmStreckeEdit);
 		
 		JMenu mnZge = new JMenu("Z\u00FCge");
 		mnZge.setEnabled(false);

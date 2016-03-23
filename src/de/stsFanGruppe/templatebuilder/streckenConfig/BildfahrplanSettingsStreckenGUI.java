@@ -3,6 +3,7 @@ package de.stsFanGruppe.templatebuilder.streckenConfig;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
+import java.util.Map;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -10,14 +11,20 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
 
+import de.stsFanGruppe.templatebuilder.bildfahrplan.BildfahrplanGUIController;
 import de.stsFanGruppe.templatebuilder.fahrtenFarbe.FahrtenFarbeConfig;
 import de.stsFanGruppe.templatebuilder.fahrtenFarbe.FahrtenFarbeSettingsGUIController;
 import de.stsFanGruppe.templatebuilder.gui.GUI;
+import de.stsFanGruppe.templatebuilder.strecken.Betriebsstelle;
+import de.stsFanGruppe.templatebuilder.strecken.Streckenabschnitt;
+import de.stsFanGruppe.tools.FirstLastList;
 import de.stsFanGruppe.tools.NullTester;
 import de.stsFanGruppe.tools.TableModel;
 
 import javax.swing.event.ChangeEvent;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 import com.jgoodies.forms.layout.FormSpecs;
 
@@ -25,14 +32,18 @@ public class BildfahrplanSettingsStreckenGUI extends JDialog implements GUI
 {
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(BildfahrplanSettingsStreckenGUI.class);
 	
-	BildfahrplanSettingsStreckenGUIController controller;
-	BildfahrplanStreckenConfig config;
+	protected static Streckenabschnitt streckenabschnitt;
+	private BildfahrplanGUIController bildfahrplanController = null;
+	protected BildfahrplanSettingsStreckenGUIController controller;
+	protected BildfahrplanStreckenConfig config;
 	boolean saveEnabled = false;
+	
+	protected static Map<Betriebsstelle, Double> streckenKm;
 	
 	JLabel lblDescription;
 	JTable table;
 	
-	public final String[] columnName = {"km", "Bestriebsstelle"};
+	public static final String[] columnName = {"km", "Bestriebsstelle"};
 	private JTextField textField;
 	
 	final JPanel contentPanel = new JPanel();
@@ -82,15 +93,11 @@ public class BildfahrplanSettingsStreckenGUI extends JDialog implements GUI
 				lblDiscription
 						.setText("<html>Hier kannst du die Strecke bearbeiten.</html>");
 			}
-			{
-				// TODO Nach Testphase entfernen
-				Object[][] data = {{new Integer(5), "Hamburg"}, {new Integer(10), "John"}};
-						
-				DefaultTableModel tableModel = new DefaultTableModel();
-				tableModel.setDataVector(data, columnName);
-				
-				table = new JTable(tableModel);
+			{				
+				table = new JTable(tableModel());
 				table.getTableHeader().setReorderingAllowed(false);
+				
+				table.setDefaultRenderer( Point.class, new PointRender());
 				
 				JScrollPane scrollPane = new JScrollPane(table);
 				scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
@@ -134,6 +141,38 @@ public class BildfahrplanSettingsStreckenGUI extends JDialog implements GUI
 		setVisible(true);
 	}
 	
+	private DefaultTableModel tableModel() {
+		
+		DefaultTableModel model = new DefaultTableModel(columnName, 0){
+            @Override
+            public Class<?> getColumnClass( int column ) {
+                switch( column ){
+                    case 0: return Integer.class;
+                    case 1: return String.class;
+                    default: return Object.class;
+                }
+            }
+        };
+        
+		if(streckenabschnitt == null)
+		{
+			return model;
+		}
+		
+		Streckenabschnitt streckenabschnitt = bildfahrplanController.getStreckenabschnitt();
+        
+		for(Betriebsstelle bs: streckenabschnitt.getBetriebsstellen())
+		{
+			double km = streckenKm.get(bs);
+			String name = bs.getName();
+			Object[] row = {km, name};
+			
+			model.addRow(row);
+		}
+		
+		return model;
+	}
+
 	public void close()
 	{
 		dispose();
@@ -161,5 +200,20 @@ public class BildfahrplanSettingsStreckenGUI extends JDialog implements GUI
 		// TODO Auto-generated method stub
 		
 	}
+	public class PointRender extends DefaultTableCellRenderer{
+	    /**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 
+		@Override
+	    public Component getTableCellRendererComponent( JTable table, Object value, 
+	            boolean isSelected, boolean hasFocus, int row, int column ) {
+	        Point point = (Point)value;
+	        String text = point.x + " / " + point.y;
+	        return super.getTableCellRendererComponent( table, text, isSelected,
+	            hasFocus,  row, column );
+	    }
+	}
 }
+
