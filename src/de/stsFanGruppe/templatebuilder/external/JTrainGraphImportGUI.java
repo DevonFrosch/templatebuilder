@@ -52,7 +52,11 @@ public class JTrainGraphImportGUI extends JDialog implements GUI
 		super(parent, "JTrainGraph-Import");
 		this.callback = callback;
 		
-		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+		addWindowListener(new WindowAdapter() { public void windowClosing(WindowEvent e) {
+			close();
+		}});
+		
 		setBounds(100, 100, 450, 300);
 		getContentPane().setLayout(new BorderLayout(0, 0));
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -155,7 +159,7 @@ public class JTrainGraphImportGUI extends JDialog implements GUI
 		switch(e.getActionCommand())
 		{
 			case "Cancel":
-				callback.call(new DoneFuture());
+				close();
 				break;
 			case "OK":
 				String pfad = pfadInput.getText();
@@ -242,6 +246,11 @@ public class JTrainGraphImportGUI extends JDialog implements GUI
 			}
 			return null;
 		}
+	}
+	
+	public void close()
+	{
+		callback.call(new DoneFuture());
 	}
 	
 	public void errorMessage(String text, String titel)
