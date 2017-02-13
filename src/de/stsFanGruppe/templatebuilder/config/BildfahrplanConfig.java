@@ -67,10 +67,12 @@ public class BildfahrplanConfig extends ConfigController
 	public static final String CONFIG_TEXT_ZEIGEZEITEN = "bildfahrplan/darstellung/text/zeigeZeiten";
 	public static final String CONFIG_TEXT_ZEIGEZUGNAMEN = "bildfahrplan/darstellung/text/zeigeZugnamen";
 	public static final String CONFIG_TEXT_ZEIGEKOMMENTARE = "bildfahrplan/darstellung/text/zeigeZugnamenKommentare";
+	public static final String CONFIG_TEXT_ZEIGERICHTUNG = "bildfahrplan/darstellung/text/zeigeRichtung";
 	
 	private static final boolean DEFAULT_TEXT_ZEIGEZEITEN = true; 
 	private static final int DEFAULT_TEXT_ZEIGEZUGNAMEN = 2;
 	private static final boolean DEFAULT_TEXT_ZEIGEKOMMENTARE = true;
+	private static final int DEFAULT_TEXT_ZEIGERICHTUNG = 3; // 0 = Keine, 1 = Hin, 2 = Rück, 3 = Beide
 	
 	//Farbeinstellungen
 	public static final String CONFIG_FARBEN_ZEITEN = "bildfahrplan/darstellung/farben/zeiten";
@@ -266,7 +268,7 @@ public class BildfahrplanConfig extends ConfigController
 	}
 	public void setZeigeZugnamen(String zeigeZugnamen)
 	{
-		int zz = 0;
+		int zz = DEFAULT_TEXT_ZEIGEZUGNAMEN;
 		switch(zeigeZugnamen)
 		{
 			case "nie":
@@ -276,8 +278,9 @@ public class BildfahrplanConfig extends ConfigController
 				zz = 1;
 				break;
 			case "auto":
-			default:
 				zz = 2;
+				break;
+			default:
 		}
 		prefs.setInt("zeigeZugnamen", CONFIG_TEXT_ZEIGEZUGNAMEN, zz);
 	}
@@ -288,6 +291,35 @@ public class BildfahrplanConfig extends ConfigController
 	public void setZeigeZugnamenKommentare(boolean zeigeZugnamenKommentare)
 	{
 		prefs.setBoolean("zeigeZugnamenKommentare", CONFIG_TEXT_ZEIGEKOMMENTARE, zeigeZugnamenKommentare);
+	}
+	public int getZeigeRichtung()
+	{
+		return prefs.getInt(CONFIG_TEXT_ZEIGERICHTUNG, DEFAULT_TEXT_ZEIGERICHTUNG);
+	}
+	public void setZeigeRichtung(int zeigeRichtung)
+	{
+		prefs.setInt("zeigeRichtung", CONFIG_TEXT_ZEIGERICHTUNG, zeigeRichtung);
+	}
+	public void setZeigeRichtung(String zeigeRichtung)
+	{
+		int zr = DEFAULT_TEXT_ZEIGERICHTUNG;
+		switch(zeigeRichtung)
+		{
+			case "keine":
+				zr = 0;
+				break;
+			case "hin":
+				zr = 1;
+				break;
+			case "zurueck":
+				zr = 2;
+				break;
+			case "beide":
+				zr = 3;
+				break;
+			default:
+		}
+		prefs.setInt("zeigeRichtung", CONFIG_TEXT_ZEIGERICHTUNG, zr);
 	}
 	
 	public Color getZeitenFarbe()

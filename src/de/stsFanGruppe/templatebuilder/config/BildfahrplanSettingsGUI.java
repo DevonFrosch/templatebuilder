@@ -36,6 +36,11 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 	JRadioButton radioZeigeZugnamenAuto;
 	JCheckBox chckbxZugnamenKommentare;
 	JCheckBox chckbxZeigeZeiten;
+	ButtonGroup rdbtngrpZeigeRichtung;
+	JRadioButton radioZeigeRichtungKeine;
+	JRadioButton radioZeigeRichtungHin;
+	JRadioButton radioZeigeRichtungZurueck;
+	JRadioButton radioZeigeRichtungBeide;
 	
 	// Farben 
 	JPanel panelBfpZeitenFarbeVorschau;
@@ -245,35 +250,37 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 							FormSpecs.DEFAULT_ROWSPEC,
 							FormSpecs.RELATED_GAP_ROWSPEC,
 							FormSpecs.DEFAULT_ROWSPEC,
+							FormSpecs.RELATED_GAP_ROWSPEC,
+							RowSpec.decode("default:grow"),
 							FormSpecs.RELATED_GAP_ROWSPEC,}));
 					{
 						JLabel lblZeigeZugnamen = new JLabel("Zeige Zugnamen");
 						panelDarstellung.add(lblZeigeZugnamen, "2, 2");
 					}
-					
-					rdbtngrpZeigeZugnamen = new ButtonGroup();
-					
-					JPanel panelZeigeZugnamen = new JPanel();
-					panelDarstellung.add(panelZeigeZugnamen, "4, 2, left, fill");
-					FlowLayout fl_panelZeigeZugnamen = (FlowLayout) panelZeigeZugnamen.getLayout();
-					fl_panelZeigeZugnamen.setHgap(0);
-					fl_panelZeigeZugnamen.setVgap(0);
-					
-					radioZeigeZugnamenNie = new JRadioButton("nie");
-					rdbtngrpZeigeZugnamen.add(radioZeigeZugnamenNie);
-					radioZeigeZugnamenNie.setActionCommand("nie");
-					panelZeigeZugnamen.add(radioZeigeZugnamenNie);
-					
-					radioZeigeZugnamenAuto = new JRadioButton("automatisch");
-					rdbtngrpZeigeZugnamen.add(radioZeigeZugnamenAuto);
-					radioZeigeZugnamenAuto.setActionCommand("automatisch");
-					panelZeigeZugnamen.add(radioZeigeZugnamenAuto);
-					
-					radioZeigeZugnamenImmer = new JRadioButton("immer");
-					rdbtngrpZeigeZugnamen.add(radioZeigeZugnamenImmer);
-					radioZeigeZugnamenImmer.setActionCommand("immer");
-					panelZeigeZugnamen.add(radioZeigeZugnamenImmer);
-					
+					{
+						rdbtngrpZeigeZugnamen = new ButtonGroup();
+						
+						JPanel panelZeigeZugnamen = new JPanel();
+						panelDarstellung.add(panelZeigeZugnamen, "4, 2, left, fill");
+						FlowLayout fl_panelZeigeZugnamen = (FlowLayout) panelZeigeZugnamen.getLayout();
+						fl_panelZeigeZugnamen.setHgap(0);
+						fl_panelZeigeZugnamen.setVgap(0);
+						
+						radioZeigeZugnamenNie = new JRadioButton("nie");
+						rdbtngrpZeigeZugnamen.add(radioZeigeZugnamenNie);
+						radioZeigeZugnamenNie.setActionCommand("nie");
+						panelZeigeZugnamen.add(radioZeigeZugnamenNie);
+						
+						radioZeigeZugnamenAuto = new JRadioButton("automatisch");
+						rdbtngrpZeigeZugnamen.add(radioZeigeZugnamenAuto);
+						radioZeigeZugnamenAuto.setActionCommand("automatisch");
+						panelZeigeZugnamen.add(radioZeigeZugnamenAuto);
+						
+						radioZeigeZugnamenImmer = new JRadioButton("immer");
+						rdbtngrpZeigeZugnamen.add(radioZeigeZugnamenImmer);
+						radioZeigeZugnamenImmer.setActionCommand("immer");
+						panelZeigeZugnamen.add(radioZeigeZugnamenImmer);
+					}
 					{
 						chckbxZugnamenKommentare = new JCheckBox("Zeige Kommentare in Zugnamen");
 						panelDarstellung.add(chckbxZugnamenKommentare, "4, 4");
@@ -282,6 +289,44 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 					{
 						chckbxZeigeZeiten = new JCheckBox("Zeige Zeiten an Halten");
 						panelDarstellung.add(chckbxZeigeZeiten, "4, 6");
+					}
+					{
+						JLabel lblZeigeRichtung = new JLabel("Zeige Richtung");
+						panelDarstellung.add(lblZeigeRichtung, "2, 8");
+					}
+					{
+						rdbtngrpZeigeRichtung = new ButtonGroup();
+						
+						JPanel panelZeigeRichtung = new JPanel();
+						panelDarstellung.add(panelZeigeRichtung, "4, 8, left, fill");
+						FlowLayout flowLayout = (FlowLayout) panelZeigeRichtung.getLayout();
+						flowLayout.setVgap(0);
+						flowLayout.setHgap(0);
+						{
+							radioZeigeRichtungKeine = new JRadioButton("keine");
+							rdbtngrpZeigeRichtung.add(radioZeigeRichtungKeine);
+							radioZeigeRichtungKeine.setActionCommand("keine");
+							panelZeigeRichtung.add(radioZeigeRichtungKeine);
+						}
+						{
+							radioZeigeRichtungHin = new JRadioButton("hin");
+							rdbtngrpZeigeRichtung.add(radioZeigeRichtungHin);
+							radioZeigeRichtungHin.setActionCommand("hin");
+							panelZeigeRichtung.add(radioZeigeRichtungHin);
+						}
+						{
+							radioZeigeRichtungZurueck = new JRadioButton("zur\u00FCck");
+							rdbtngrpZeigeRichtung.add(radioZeigeRichtungZurueck);
+							radioZeigeRichtungZurueck.setActionCommand("zurueck");
+							panelZeigeRichtung.add(radioZeigeRichtungZurueck);
+						}
+						{
+
+							radioZeigeRichtungBeide = new JRadioButton("beide");
+							rdbtngrpZeigeRichtung.add(radioZeigeRichtungBeide);
+							radioZeigeRichtungBeide.setActionCommand("beide");
+							panelZeigeRichtung.add(radioZeigeRichtungBeide);
+						}
 					}
 				}
 			}
@@ -516,11 +561,29 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 				rdbtngrpZeigeZugnamen.setSelected(radioZeigeZugnamenAuto.getModel(), true);
 				break;
 			default:
-				log.error("ZeigeZugnamen: Ungültiger Wert {}", config.getZeigeZugnamen());
+				log.error("ZeigeZugnamen: Ung\u00FCltiger Wert {}", config.getZeigeZugnamen());
 		}
 		
 		chckbxZugnamenKommentare.setSelected(config.getZeigeZugnamenKommentare());
 		chckbxZeigeZeiten.setSelected(config.getZeigeZeiten());
+		
+		switch(config.getZeigeRichtung())
+		{
+			case 0:
+				rdbtngrpZeigeRichtung.setSelected(radioZeigeRichtungKeine.getModel(), true);
+				break;
+			case 1:
+				rdbtngrpZeigeRichtung.setSelected(radioZeigeRichtungHin.getModel(), true);
+				break;
+			case 2:
+				rdbtngrpZeigeRichtung.setSelected(radioZeigeRichtungZurueck.getModel(), true);
+				break;
+			case 3:
+				rdbtngrpZeigeRichtung.setSelected(radioZeigeRichtungBeide.getModel(), true);
+				break;
+			default:
+				log.error("ZeigeRichtung: Ung\u00FCltiger Wert {}", config.getZeigeRichtung());
+		}
 		
 		panelBfpZeitenFarbeVorschau.setBackground(config.getZeitenFarbe());
 		panelBfpBetriebsstellenFarbeVorschau.setBackground(config.getBetriebsstellenFarbe());

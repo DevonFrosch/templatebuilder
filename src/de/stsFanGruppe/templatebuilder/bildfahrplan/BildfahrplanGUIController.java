@@ -318,6 +318,7 @@ public class BildfahrplanGUIController
 			int schachtelung = config.getSchachtelung();
 			int zeigeZugnamen = config.getZeigeZugnamen();
 			boolean zeigeZeiten = config.getZeigeZeiten();
+			int zeigeRichtung = config.getZeigeRichtung();
 			
 			synchronized(fahrten)
 			{
@@ -329,7 +330,6 @@ public class BildfahrplanGUIController
 					for(Fahrplanhalt fh: fahrt.getFahrplanhalte())
 					{
 						double an = fh.getAnkunft();
-								
 						if(an > maxZeit)
 						{
 							continue;
@@ -361,75 +361,80 @@ public class BildfahrplanGUIController
 						int anMinuteBreite = fontMetrics.stringWidth(anMinute) - 2;
 						int abVerschiebungY = diffY;
 						int anVerschiebungY = stringHeight + diffY;
-	
+						
 						// erst ab dem 2. Fahrplanhalt zeichnen (die Linie, die zum Fahrplanhalt hinführt)
 						if(letzteZeit >= 0 && letzterKm >= 0 && letzteZeit >= minZeit && kmAb >= 0)
 						{
-							guiPaints.add(g ->
+							// nicht zeichnen, wenn Richtung ausgeblendet
+							if((kmAb < kmAn && (zeigeRichtung & 1) != 0)
+									|| (kmAb > kmAn && (zeigeRichtung & 2) != 0))
 							{
-								int x1 = ph.getWegPos(kmAb);
-								int x2 = ph.getWegPos(kmAn);
-								
-								int zeitenLTRx1 = x1 + diffX;
-								int zeitenLTRx2 = x2 - anMinuteBreite - diffX;
-								int zeitenRTLx1 = x1 - abMinuteBreite - diffX;
-								int zeitenRTLx2 = x2 + diffX;
-								
-								// Schachtelung der Züge nach Minuten
-								//for(int schachtelungVerschiebung = (int) minZeit; schachtelungVerschiebung <= maxZeit;)
-								for(int sch=0; sch < diffZeit; sch += schachtelung)
+								guiPaints.add(g ->
 								{
-									int y1 = ph.getZeitPos(ab - sch);
-									int y2 = ph.getZeitPos(an - sch);
-	
-									ph.paintLine(g, x1, y1, x2, y2, c);
+									int x1 = ph.getWegPos(kmAb);
+									int x2 = ph.getWegPos(kmAn);
 									
-									// Zeiten zeichnen, wenn in der Config, dies aktiv ist.
-									if(zeigeZeiten)
+									int zeitenLTRx1 = x1 + diffX;
+									int zeitenLTRx2 = x2 - anMinuteBreite - diffX;
+									int zeitenRTLx1 = x1 - abMinuteBreite - diffX;
+									int zeitenRTLx2 = x2 + diffX;
+									
+									// Schachtelung der Züge nach Minuten
+									//for(int schachtelungVerschiebung = (int) minZeit; schachtelungVerschiebung <= maxZeit;)
+									for(int sch=0; sch < diffZeit; sch += schachtelung)
 									{
-										// Zeiten zeichnen
-										if(x1 < x2)
-										{
-											// Wenn die Linie von Links nach Rechts gezeichnet wird.
-											ph.paintText(g, zeitenLTRx1, y1 + diffY, c, abMinute);
-											ph.paintText(g, zeitenLTRx2, y2 + stringHeight + diffY, c, anMinute);
-										}
-										else
-										{
-											// Wenn die Linie von Rechts nach Links gezeichnet wird.
-											ph.paintText(g, zeitenRTLx1, y1 + diffY, c, abMinute);
-											ph.paintText(g, zeitenRTLx2, y2 + stringHeight + diffY, c, anMinute);
-										}
-									}
-									
-									boolean zeichneZugnamen = (zeigeZugnamen != 0);
-									
-									if(zeigeZugnamen == 2)
-									{
-										// Zugnamen nur wenn Platz ist
-										// Textgröße holen
-										double lineLenght = Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
+										int y1 = ph.getZeitPos(ab - sch);
+										int y2 = ph.getZeitPos(an - sch);
 										
-										// Text nur, wenn dieser weniger als doppelt so
-										// breit ist
-										if(showTextWidth > lineLenght)
+										ph.paintLine(g, x1, y1, x2, y2, c);
+										
+										// Zeiten zeichnen, wenn in der Config, dies aktiv ist.
+										if(zeigeZeiten)
 										{
-											zeichneZugnamen = false;
+											// Zeiten zeichnen
+											if(x1 < x2)
+											{
+												// Wenn die Linie von Links nach Rechts gezeichnet wird.
+												ph.paintText(g, zeitenLTRx1, y1 + diffY, c, abMinute);
+												ph.paintText(g, zeitenLTRx2, y2 + stringHeight + diffY, c, anMinute);
+											}
+											else
+											{
+												// Wenn die Linie von Rechts nach Links gezeichnet wird.
+												ph.paintText(g, zeitenRTLx1, y1 + diffY, c, abMinute);
+												ph.paintText(g, zeitenRTLx2, y2 + stringHeight + diffY, c, anMinute);
+											}
+										}
+										
+										boolean zeichneZugnamen = (zeigeZugnamen != 0);
+										
+										if(zeigeZugnamen == 2)
+										{
+											// Zugnamen nur wenn Platz ist
+											// Textgröße holen
+											double lineLenght = Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
+											
+											// Text nur, wenn dieser weniger als doppelt so
+											// breit ist
+											if(showTextWidth > lineLenght)
+											{
+												zeichneZugnamen = false;
+											}
+										}
+										
+										if(zeichneZugnamen)
+										{
+											ph.paintRotatedText(g, x1, y1, x2, y2, c, name, -2);
+										}
+										
+										if(schachtelung == 0)
+										{
+											// Keine Schachtelung, abbrechen
+											break;
 										}
 									}
-									
-									if(zeichneZugnamen)
-									{
-										ph.paintRotatedText(g, x1, y1, x2, y2, c, name, -2);
-									}
-									
-									if(schachtelung == 0)
-									{
-										// Keine Schachtelung, abbrechen
-										break;
-									}
-								}
-							});
+								});
+							}
 						}
 						
 						// für nächsten Eintrag

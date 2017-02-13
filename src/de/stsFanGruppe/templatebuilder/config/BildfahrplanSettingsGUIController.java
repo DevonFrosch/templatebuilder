@@ -205,6 +205,9 @@ public class BildfahrplanSettingsGUIController
 		
 		// ZeigeZugnamenKommentare
 		config.setZeigeZeiten(gui.chckbxZeigeZeiten.isSelected());
+		
+		// ZeigeRichtung
+		config.setZeigeRichtung(gui.rdbtngrpZeigeRichtung.getSelection().getActionCommand());
 	}
 	protected void speichereTabFarben()
 	{
