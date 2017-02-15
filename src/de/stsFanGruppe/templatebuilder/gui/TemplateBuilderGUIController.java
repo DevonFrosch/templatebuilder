@@ -181,34 +181,30 @@ public class TemplateBuilderGUIController
 				BildfahrplanSettingsGUI sg = new BildfahrplanSettingsGUI(new BildfahrplanSettingsGUIController(config, () -> unlock(event.getActionCommand())), gui.getFrame());
 				break;
 			case "about":
-				{
-					StringJoiner text = new StringJoiner("\n");
-					text.add("TemplateBuilder "+version+ ((dev) ? " (Entwicklungsversion)" : ""));
-					text.add("Copyright DevonFrosch, Koschi");
-					text.add("Fehler bitte unter https://sts-fan-gruppe.de/mantis/ melden.");
-					
-					gui.infoMessage(text.toString(), "Über");
-				}
+				StringJoiner aboutText = new StringJoiner("\n");
+				aboutText.add("TemplateBuilder "+version+ ((dev) ? " (Entwicklungsversion)" : ""));
+				aboutText.add("Copyright DevonFrosch, Koschi");
+				aboutText.add("Fehler bitte unter https://sts-fan-gruppe.de/mantis/ melden.");
+				
+				gui.infoMessage(aboutText.toString(), "Über");
 				break;
 			case "locks":
-			{
-				StringJoiner text = new StringJoiner("\n");
+				StringJoiner lockText = new StringJoiner("\n");
 				synchronized(windowLocks)
 				{
 					if(windowLocks.isEmpty())
 					{
-						text.add("Keine Locks registriert.");
+						lockText.add("Keine Locks registriert.");
 					}
 					else
 					{
 						windowLocks.forEach((name, locked) ->
-							text.add(name+": "+((locked) ? "locked" : "unlocked"))
+							lockText.add(name+": "+((locked) ? "locked" : "unlocked"))
 						);
 					}
 				}
-				gui.infoMessage(text.toString(), "Locks");
-			}
-			break;
+				gui.infoMessage(lockText.toString(), "Locks");
+				break;
 			case "exit":
 				log.info("Programm beendet");
 				System.exit(0);
