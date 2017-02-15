@@ -1,7 +1,6 @@
 package de.stsFanGruppe.templatebuilder.strecken;
 
 import java.util.*;
-import de.stsFanGruppe.templatebuilder.zug.Fahrplanhalt;
 import de.stsFanGruppe.tools.*;
 
 public class Betriebsstelle
