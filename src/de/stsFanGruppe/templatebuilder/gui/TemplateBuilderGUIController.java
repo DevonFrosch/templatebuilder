@@ -181,15 +181,16 @@ public class TemplateBuilderGUIController
 				BildfahrplanSettingsGUI sg = new BildfahrplanSettingsGUI(new BildfahrplanSettingsGUIController(config, () -> unlock(event.getActionCommand())), gui.getFrame());
 				break;
 			case "about":
-				if(!lock(event.getActionCommand())) break;
-				StringJoiner text = new StringJoiner("\n");
-				text.add("TemplateBuilder "+version);
-				text.add("Copyright DevonFrosch, Koschi (http://sts-fan-gruppe.de/)");
-				text.add("Tester: petero");
-				if(dev) text.add("Dies ist eine Entwicklungsversion, die noch Fehler enthält!");
-				
-				gui.infoMessage(text.toString(), "Über");
-				unlock(event.getActionCommand());
+				{
+					if(!lock(event.getActionCommand())) break;
+					StringJoiner text = new StringJoiner("\n");
+					text.add("TemplateBuilder "+version+ ((dev) ? " (Entwicklungsversion)" : ""));
+					text.add("Copyright DevonFrosch, Koschi");
+					text.add("Fehler bitte unter https://sts-fan-gruppe.de/mantis/ melden.");
+					
+					gui.infoMessage(text.toString(), "Über");
+					unlock(event.getActionCommand());
+				}
 				break;
 			case "exit":
 				log.info("Programm beendet");
