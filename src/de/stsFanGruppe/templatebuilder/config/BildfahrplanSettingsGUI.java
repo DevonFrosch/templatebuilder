@@ -232,7 +232,11 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 						{
 							inputSchachtelung = new JTextField();
 							panel.add(inputSchachtelung);
-							inputSchachtelung.setColumns(10);
+							inputSchachtelung.setColumns(5);
+						}
+						{
+							JLabel lblSchachtelungEinheit = new JLabel("Minuten");
+							panel.add(lblSchachtelungEinheit);
 						}
 						chckbxSchachtelung.addActionListener((ActionEvent arg0) -> {
 							inputSchachtelung.setEnabled(chckbxSchachtelung.isSelected());
