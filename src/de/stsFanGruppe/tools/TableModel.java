@@ -1,26 +1,15 @@
 package de.stsFanGruppe.tools;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
-import javax.swing.AbstractCellEditor;
-import javax.swing.JColorChooser;
-import javax.swing.JComboBox;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JTable;
-import javax.swing.ListCellRenderer;
+import javax.swing.*;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanSettingsGUI;
-import de.stsFanGruppe.templatebuilder.fahrtenFarbe.FahrtenFarbeSettingsGUI;
+import de.stsFanGruppe.templatebuilder.config.FahrtenFarbeSettingsGUI;
 import de.stsFanGruppe.templatebuilder.fahrtenFarbe.FahrtenFarbeConfig.LineType;
-import de.stsFanGruppe.tools.TableModel.LinienArtCellEditor;
 
 public class TableModel
 {
@@ -71,14 +60,14 @@ public class TableModel
 	 */
 	public static class LinienArtCellEditor extends AbstractCellEditor implements TableCellEditor
 	{
-		JComboBox comboBoxLinienArt;
+		JComboBox<LineType> comboBoxLinienArt;
 		
 		public LinienArtCellEditor()
 		{
 			// FIXME Combobox werden derzeit doppelt im Code geschrieben. Die
 			// JComboBox sollte möglich einmal definiert werden.
 			// Erstellt eine Combobox mit den Linientypen.
-			comboBoxLinienArt = new JComboBox(LineType.values());
+			comboBoxLinienArt = new JComboBox<LineType>(LineType.values());
 			comboBoxLinienArt.setRenderer(new LineRenderer());
 			comboBoxLinienArt.setEditable(false);
 			comboBoxLinienArt.setSelectedItem(null);
@@ -109,12 +98,12 @@ public class TableModel
 	 * Um dies aufzurufen, wird an der Combobox die Darstellung neu gesetzt:
 	 * combobox.setRenderer(new LineRenderer());
 	 */
-	public static class LineRenderer extends JPanel implements ListCellRenderer
+	public static class LineRenderer extends JPanel implements ListCellRenderer<LineType>
 	{
 		private LineType value;
 		
 		@Override
-		public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus)
+		public Component getListCellRendererComponent(JList<? extends LineType> list, LineType value, int index, boolean isSelected, boolean cellHasFocus)
 		{
 			if(value instanceof LineType)
 			{
@@ -157,7 +146,7 @@ public class TableModel
 	 *
 	 * Wenn eine Zelle in der 2. Spalte ausgewählt wird, öffnet sich ein Editor zum Ändern der Farbe.
 	 */
-	public static class CellMouseClickForBackgroundColor extends Object implements MouseListener
+	public static class CellMouseClickForBackgroundColor extends MouseAdapter
 	{
 		public void mouseClicked(MouseEvent e)
 		{
@@ -173,34 +162,6 @@ public class TableModel
 					testFarben.set(row, c);
 				}
 			}
-		}
-
-		@Override
-		public void mouseEntered(MouseEvent arg0)
-		{
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void mouseExited(MouseEvent arg0)
-		{
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void mousePressed(MouseEvent arg0)
-		{
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void mouseReleased(MouseEvent arg0)
-		{
-			// TODO Auto-generated method stub
-			
 		}
 	}
 

@@ -1,35 +1,24 @@
-package de.stsFanGruppe.templatebuilder.fahrtenFarbe;
+package de.stsFanGruppe.templatebuilder.config;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
-import javax.swing.AbstractCellEditor;
 import javax.swing.JColorChooser;
-import javax.swing.JComboBox;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JTable;
-import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableModel;
-import de.stsFanGruppe.templatebuilder.config.BildfahrplanSettingsGUIController;
-import de.stsFanGruppe.templatebuilder.fahrtenFarbe.FahrtenFarbeConfig.LineType;
+import de.stsFanGruppe.templatebuilder.fahrtenFarbe.FahrtenFarbeConfig;
 import de.stsFanGruppe.tools.NullTester;
 
-public class FahrtenFarbeSettingsGUIController {
-	
+public class FahrtenFarbeSettingsGUIController
+{
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(BildfahrplanSettingsGUIController.class);
 	
 	private FahrtenFarbeSettingsGUI gui;
 	private FahrtenFarbeConfig config;
 	private Runnable onClose;
-
+	
 	public FahrtenFarbeSettingsGUIController(FahrtenFarbeConfig config, Runnable onClose)
 	{
 		NullTester.test(config);
@@ -37,12 +26,12 @@ public class FahrtenFarbeSettingsGUIController {
 		this.config = config;
 		this.onClose = onClose;
 	}
-
+	
 	public void setSettingsGui(FahrtenFarbeSettingsGUI gui)
 	{
 		NullTester.test(gui);
 		this.gui = gui;
-		//gui.saveEnabled = config.schreibTest();
+		// gui.saveEnabled = config.schreibTest();
 	}
 	
 	public FahrtenFarbeConfig getConfig()
@@ -50,27 +39,27 @@ public class FahrtenFarbeSettingsGUIController {
 		return config;
 	}
 	
-	public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int rowIndex, int colIndex) 
-    {
-
-	    // Set the model data of the table
-	    if(isSelected)
-	    {
-	    gui.comboBoxLinienArt.setSelectedItem(value);
-	    TableModel model = table.getModel();
-	    model.setValueAt(value, rowIndex, colIndex);
-	    }
-	    
-	    return gui.comboBoxLinienArt;
-    }
+	public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int rowIndex, int colIndex)
+	{
+		// Set the model data of the table
+		if(isSelected)
+		{
+			gui.comboBoxLinienArt.setSelectedItem(value);
+			TableModel model = table.getModel();
+			model.setValueAt(value, rowIndex, colIndex);
+		}
+		
+		return gui.comboBoxLinienArt;
+	}
 	
-	public Object getCellEditorValue() 
-    {
+	public Object getCellEditorValue()
+	{
 		return gui.comboBoxLinienArt.getSelectedItem();
-    }
+	}
 	
 	/**
 	 * Liest den ActionCommand vom event aus und führt dann etwas aus.
+	 * 
 	 * @param event
 	 */
 	public void tableButtonAction(ActionEvent event)
@@ -83,40 +72,40 @@ public class FahrtenFarbeSettingsGUIController {
 			log.error("actionButton(): Keine GUI gesetzt!");
 			return;
 		}
-		//Tabellenmodell wird ausgelesen
-		DefaultTableModel model = (DefaultTableModel)gui.table.getModel();
-		//Selectionmodell wird ausgelesen
+		// Tabellenmodell wird ausgelesen
+		DefaultTableModel model = (DefaultTableModel) gui.table.getModel();
+		// Selectionmodell wird ausgelesen
 		ListSelectionModel selectionModel = gui.table.getSelectionModel();
-		//Erhalte ausgewählte Zeilen
+		// Erhalte ausgewählte Zeilen
 		int[] rows = gui.table.getSelectedRows();
 		Object[] defaultRowdata = {"", "", gui.txtStandardLinienStaerke.getText(),gui.comboBoxLinienArt.getSelectedItem()};
 		switch(event.getActionCommand())
 		{
-			//Zeile(n) nach oben verschieben
+			// Zeile(n) nach oben verschieben
 			case "moveUpRow":
-				if(rows[0]==0)
+				if(rows[0] == 0)
 				{
 					gui.infoMessage("Erste Zeile kann nicht nach oben verschoben werden.", "Info: Zeile nach oben verschieben");
 				}
 				else
 				{
 					selectionModel.clearSelection();
-					for(int i=0; i < rows.length; i++)
+					for(int i = 0; i < rows.length; i++)
 					{
-						//FIXME Farbe wird noch nicht nach oben bewegt.
-						model.moveRow(rows[i], rows[i], rows[i]-1);
-						gui.table.addRowSelectionInterval(rows[i]-1, rows[i]-1);
+						// FIXME Farbe wird noch nicht nach oben bewegt.
+						model.moveRow(rows[i], rows[i], rows[i] - 1);
+						gui.table.addRowSelectionInterval(rows[i] - 1, rows[i] - 1);
 					}
 				}
 				break;
-			//Zeile(n) nach unten verschieben
+			// Zeile(n) nach unten verschieben
 			case "moveDownRow":
 				selectionModel.clearSelection();
-				for(int i=0; i < rows.length; i++)
+				for(int i = 0; i < rows.length; i++)
 				{
-					//FIXME Farbe wird noch nicht nach unten bewegt.
-					model.moveRow(rows[i], rows[i], rows[i]+1);
-					gui.table.addRowSelectionInterval(rows[i]+1, rows[i]+1);
+					// FIXME Farbe wird noch nicht nach unten bewegt.
+					model.moveRow(rows[i], rows[i], rows[i] + 1);
+					gui.table.addRowSelectionInterval(rows[i] + 1, rows[i] + 1);
 				}
 				break;
 			/* Zeile(n) hinzufügen
@@ -125,14 +114,16 @@ public class FahrtenFarbeSettingsGUIController {
 			case "addRow":
 				if(rows.length > 0)
 				{
-					for(int i=0; i < rows.length; i++)
+					for(int i = 0; i < rows.length; i++)
 					{
-						model.insertRow(rows[i]+i+1, defaultRowdata);
-						gui.testFarben.add(rows[i]+i+1, gui.panelStandardFarbeVorschau.getBackground());
+						model.insertRow(rows[i] + i + 1, defaultRowdata);
+						gui.testFarben.add(rows[i] + i + 1, gui.panelStandardFarbeVorschau.getBackground());
 					}
 					gui.table.clearSelection();
 					break;
-				} else {
+				}
+				else
+				{
 					gui.testFarben.add(gui.panelStandardFarbeVorschau.getBackground());
 					model.addRow(defaultRowdata);
 					break;
@@ -145,13 +136,13 @@ public class FahrtenFarbeSettingsGUIController {
 				{
 					gui.errorMessage("Zeile auswählen, die gelöscht werden soll", "Zeile löschen fehlgeschlagen!");
 					break;
-				} 
+				}
 				else
 				{
-					for(int i=0; i < rows.length; i++)
+					for(int i = 0; i < rows.length; i++)
 					{
-						gui.testFarben.remove(rows[i]-i); 
-						model.removeRow(rows[i]-i);
+						gui.testFarben.remove(rows[i] - i);
+						model.removeRow(rows[i] - i);
 					}
 					break;
 				}
@@ -233,7 +224,7 @@ public class FahrtenFarbeSettingsGUIController {
 				if(event.getActionCommand() == "ok")
 				{
 					close();
-			        return;
+					return;
 				}
 				break;
 			default:
@@ -244,7 +235,7 @@ public class FahrtenFarbeSettingsGUIController {
 	protected void close()
 	{
 		gui.close();
-        gui = null;
-        onClose.run();
+		gui = null;
+		onClose.run();
 	}
 }
