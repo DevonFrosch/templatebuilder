@@ -1,12 +1,10 @@
-package de.stsFanGruppe.templatebuilder.fahrtenFarbe;
+package de.stsFanGruppe.templatebuilder.config;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Stroke;
 import java.io.InputStream;
 import java.io.OutputStream;
-import de.stsFanGruppe.templatebuilder.config.ConfigController;
-import de.stsFanGruppe.templatebuilder.config.FahrtenFarbeSettingsGUI;
 import de.stsFanGruppe.tools.PreferenceHandler;
 
 public class FahrtenFarbeConfig extends ConfigController

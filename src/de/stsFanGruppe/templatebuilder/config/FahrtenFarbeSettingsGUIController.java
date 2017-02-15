@@ -8,7 +8,6 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
-import de.stsFanGruppe.templatebuilder.fahrtenFarbe.FahrtenFarbeConfig;
 import de.stsFanGruppe.tools.NullTester;
 
 public class FahrtenFarbeSettingsGUIController

@@ -9,7 +9,7 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanSettingsGUI;
 import de.stsFanGruppe.templatebuilder.config.FahrtenFarbeSettingsGUI;
-import de.stsFanGruppe.templatebuilder.fahrtenFarbe.FahrtenFarbeConfig.LineType;
+import de.stsFanGruppe.templatebuilder.config.FahrtenFarbeConfig.LineType;
 
 public class TableModel
 {
