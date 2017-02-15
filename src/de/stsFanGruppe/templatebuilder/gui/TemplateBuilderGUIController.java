@@ -182,14 +182,12 @@ public class TemplateBuilderGUIController
 				break;
 			case "about":
 				{
-					if(!lock(event.getActionCommand())) break;
 					StringJoiner text = new StringJoiner("\n");
 					text.add("TemplateBuilder "+version+ ((dev) ? " (Entwicklungsversion)" : ""));
 					text.add("Copyright DevonFrosch, Koschi");
 					text.add("Fehler bitte unter https://sts-fan-gruppe.de/mantis/ melden.");
 					
 					gui.infoMessage(text.toString(), "Über");
-					unlock(event.getActionCommand());
 				}
 				break;
 			case "locks":
