@@ -1,6 +1,7 @@
 package de.stsFanGruppe.templatebuilder.strecken;
 
 import java.util.*;
+import de.stsFanGruppe.templatebuilder.zug.Fahrplanhalt;
 import de.stsFanGruppe.tools.*;
 
 public class Betriebsstelle
@@ -161,5 +162,17 @@ public class Betriebsstelle
 			return this.ds100 == o.ds100;
 		}
 		return this.name == o.name;
+	}
+	public int compareByKM(Betriebsstelle other)
+	{
+		NullTester.test(other);
+		
+		// Sortiere erst nach Minkm...
+		if(Double.compare(this.getMinKm(), other.getMinKm()) != 0)
+		{
+			return Double.compare(this.getMinKm(), other.getMinKm());
+		}
+		// ... dann nach Maxkm...
+		return Double.compare(this.getMaxKm(), other.getMaxKm());
 	}
 }
