@@ -1,4 +1,4 @@
-package de.stsFanGruppe.templatebuilder.external;
+package de.stsFanGruppe.templatebuilder.external.jtraingraph;
 
 import java.awt.*;
 import java.awt.event.*;
