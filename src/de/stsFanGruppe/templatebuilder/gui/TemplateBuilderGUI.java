@@ -154,6 +154,15 @@ public class TemplateBuilderGUI implements GUI
 		mntmUeber.addActionListener((ActionEvent arg0) -> controller.menuAction(arg0));
 		mnHilfe.add(mntmUeber);
 		
+		if(controller.dev)
+		{
+			// Übersicht über bestehende Locks
+			JMenuItem mntmLocks = new JMenuItem("GUI-Locks");
+			mntmLocks.setActionCommand("locks");
+			mntmLocks.addActionListener((ActionEvent arg0) -> controller.menuAction(arg0));
+			mnHilfe.add(mntmLocks);
+		}
+		
 		JSplitPane splitPane = new JSplitPane();
 		frmTemplatebauer.getContentPane().add(splitPane, BorderLayout.CENTER);
 		

@@ -192,6 +192,25 @@ public class TemplateBuilderGUIController
 					unlock(event.getActionCommand());
 				}
 				break;
+			case "locks":
+			{
+				StringJoiner text = new StringJoiner("\n");
+				synchronized(windowLocks)
+				{
+					if(windowLocks.isEmpty())
+					{
+						text.add("Keine Locks registriert.");
+					}
+					else
+					{
+						windowLocks.forEach((name, locked) ->
+							text.add(name+": "+((locked) ? "locked" : "unlocked"))
+						);
+					}
+				}
+				gui.infoMessage(text.toString(), "Locks");
+			}
+			break;
 			case "exit":
 				log.info("Programm beendet");
 				System.exit(0);
