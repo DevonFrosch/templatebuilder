@@ -250,6 +250,8 @@ public class JTrainGraphImportGUI extends JDialog implements GUI
 	
 	public void close()
 	{
+		dispose();
+        setVisible(false);
 		callback.call(new DoneFuture());
 	}
 	

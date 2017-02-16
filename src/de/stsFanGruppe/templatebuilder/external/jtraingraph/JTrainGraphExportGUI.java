@@ -245,6 +245,8 @@ public class JTrainGraphExportGUI extends JDialog implements GUI
 	
 	public void close()
 	{
+		dispose();
+        setVisible(false);
 		callback.call(new DoneFuture());
 	}
 	
