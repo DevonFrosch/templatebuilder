@@ -4,7 +4,6 @@ import java.awt.event.ActionEvent;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.time.Instant;
 import java.util.Hashtable;
 import java.util.Set;
 import java.util.StringJoiner;
@@ -64,49 +63,12 @@ public class TemplateBuilderGUIController
 	}
 	
 	// ActionHandler
-	public boolean lock(String name)
-	{
-		return GUILocker.lock(name);
-	}
-	public boolean lock(String name, int timeout)
-	{
-		Instant start = Instant.now();
-		Instant stop = start.plusMillis(timeout);
-		while(Instant.now().isBefore(stop))
-		{
-			if(lock(name))
-			{
-				return true;
-			}
-			
-			// Sleep to use less cpu time
-			if(timeout >= 100)
-			{
-				try
-				{
-					Thread.sleep(Integer.min(200, timeout / 20));
-				}
-				catch(InterruptedException e)
-				{}
-			}
-		}
-		return false;
-	}
-	public void unlock(String name)
-	{
-		assert name != null;
-		synchronized(windowLocks)
-		{
-			windowLocks.put(name, false);
-		}
-		log.debug("WindowUnlock für {}", name);
-	}
 	public void menuAction(ActionEvent event)
 	{
 		switch(event.getActionCommand())
 		{
 			case "importFromJTG":
-				if(!lock(event.getActionCommand())) break;
+				if(!GUILocker.lock(JTrainGraphImportGUI.class)) break;
 				JTrainGraphImportGUI jtgi = new JTrainGraphImportGUI(gui.getFrame(), (ergebnis) -> {
 					assert bildfahrplanController != null;
 					assert ergebnis != null;
@@ -144,11 +106,11 @@ public class TemplateBuilderGUIController
 							gui.errorMessage("Fehler beim Import!");
 						}
 					}
-					unlock(event.getActionCommand());
+					GUILocker.unlock(JTrainGraphImportGUI.class);
 				});
 				break;
 			case "exportToJTG":
-				if(!lock(event.getActionCommand())) break;
+				if(!GUILocker.lock(JTrainGraphExportGUI.class)) break;
 				JTrainGraphExportGUI jtge = new JTrainGraphExportGUI(gui.getFrame(), (ergebnis) -> {
 					assert bildfahrplanController != null;
 					assert ergebnis != null;
@@ -187,12 +149,12 @@ public class TemplateBuilderGUIController
 							gui.errorMessage("Fehler beim Export!");
 						}
 					}
-					unlock(event.getActionCommand());
+					GUILocker.unlock(JTrainGraphExportGUI.class);
 				});
 				break;
 			case "options":
-				if(!lock(event.getActionCommand())) break;
-				BildfahrplanSettingsGUI sg = new BildfahrplanSettingsGUI(new BildfahrplanSettingsGUIController(config, () -> unlock(event.getActionCommand())), gui.getFrame());
+				if(!GUILocker.lock(BildfahrplanSettingsGUI.class)) break;
+				BildfahrplanSettingsGUI sg = new BildfahrplanSettingsGUI(new BildfahrplanSettingsGUIController(config, () -> GUILocker.unlock(BildfahrplanSettingsGUI.class)), gui.getFrame());
 				break;
 			case "about":
 				StringJoiner aboutText = new StringJoiner("\n");
@@ -203,21 +165,7 @@ public class TemplateBuilderGUIController
 				gui.infoMessage(aboutText.toString(), "Über");
 				break;
 			case "locks":
-				StringJoiner lockText = new StringJoiner("\n");
-				synchronized(windowLocks)
-				{
-					if(windowLocks.isEmpty())
-					{
-						lockText.add("Keine Locks registriert.");
-					}
-					else
-					{
-						windowLocks.forEach((name, locked) ->
-							lockText.add(name+": "+((locked) ? "locked" : "unlocked"))
-						);
-					}
-				}
-				gui.infoMessage(lockText.toString(), "Locks");
+				gui.infoMessage(GUILocker.lockInfo(), "Locks");
 				break;
 			case "exit":
 				log.info("Programm beendet");
