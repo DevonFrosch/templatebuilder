@@ -472,7 +472,8 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 								FormSpecs.RELATED_GAP_ROWSPEC,}));
 						{
 							JButton btnZugregeln = new JButton("Zugformatierungsregeln...");
-							btnZugregeln.setEnabled(false);
+							btnZugregeln.setActionCommand("format");
+							btnZugregeln.addActionListener((ActionEvent arg0) -> controller.actionButton(arg0));
 							panelZugregeln.add(btnZugregeln, "2, 2, left, top");
 						}
 					}
