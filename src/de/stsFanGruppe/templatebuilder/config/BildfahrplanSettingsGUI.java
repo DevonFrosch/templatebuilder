@@ -70,7 +70,7 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 	 */
 	public BildfahrplanSettingsGUI(BildfahrplanSettingsGUIController controller, Window parent)
 	{
-		super(parent);
+		super(parent, "Einstellungen");
 		NullTester.test(controller);
 		this.controller = controller;
 		this.config = controller.getConfig();
