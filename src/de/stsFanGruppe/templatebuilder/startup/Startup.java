@@ -15,6 +15,12 @@ public class Startup
 	
 	public static void main(String[] args)
 	{
+		String v = version;
+		if(dev) v += " (dev)";
+		
+		log.info("Templatebuilder gestartet.");
+		log.info("Version {}", v);
+		
 		try
 		{
 			javax.swing.UIManager.setLookAndFeel( javax.swing.UIManager.getSystemLookAndFeelClassName() );
