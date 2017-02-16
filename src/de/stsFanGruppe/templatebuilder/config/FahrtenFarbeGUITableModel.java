@@ -1,4 +1,4 @@
-package de.stsFanGruppe.tools;
+package de.stsFanGruppe.templatebuilder.config;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -7,11 +7,9 @@ import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
-import de.stsFanGruppe.templatebuilder.config.BildfahrplanSettingsGUI;
-import de.stsFanGruppe.templatebuilder.config.FahrtenFarbeSettingsGUI;
 import de.stsFanGruppe.templatebuilder.config.FahrtenFarbeConfig.LineType;
 
-public class TableModel
+public class FahrtenFarbeGUITableModel
 {
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(BildfahrplanSettingsGUI.class);
 	
@@ -26,6 +24,7 @@ public class TableModel
 			add(Color.BLACK);
 		}
 	};
+	
 	/**
 	 * Anhand der ArrayList (aktuell) testFarben erhält jede Zelle in seiner Zeile die Hintergrundfarbe definiert,
 	 * die ihm gegeben wird.

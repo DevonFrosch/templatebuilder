@@ -9,7 +9,6 @@ import com.jgoodies.forms.layout.*;
 import de.stsFanGruppe.templatebuilder.config.FahrtenFarbeConfig.LineType;
 import de.stsFanGruppe.templatebuilder.gui.GUI;
 import de.stsFanGruppe.tools.NullTester;
-import de.stsFanGruppe.tools.TableModel;
 import javax.swing.table.DefaultTableModel;
 
 public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
@@ -18,7 +17,7 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 	
 	FahrtenFarbeSettingsGUIController controller;
 	FahrtenFarbeConfig config;
-	TableModel ownTableModel;
+	FahrtenFarbeGUITableModel ownTableModel;
 	
 	boolean saveEnabled = false;
 	final JPanel contentPanel = new JPanel();
@@ -28,7 +27,7 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 	JPanel panelStandardFarbeVorschau;
 	JTextField txtStandardLinienStaerke;
 	JComboBox<LineType> comboBoxLinienArt;
-	ArrayList<Color> testFarben = TableModel.testFarben;
+	ArrayList<Color> testFarben = FahrtenFarbeGUITableModel.testFarben;
 	
 	public final String[] columnName = {"Zugname", "Linienfarbe", "Linienstärke", "Linienart"};
 	private JTextField textField;
@@ -84,10 +83,10 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 				table = new JTable(tableModel);
 				table.getTableHeader().setReorderingAllowed(false);
 				// Einstellung für die 2. Spalte (Farbe):
-				table.getColumnModel().getColumn(1).setCellRenderer(new TableModel.BackgroundTableCellRenderer());
+				table.getColumnModel().getColumn(1).setCellRenderer(new FahrtenFarbeGUITableModel.BackgroundTableCellRenderer());
 				// Einstellung des Editors für die letzte Spalte (Linienart):
-				table.getColumnModel().getColumn(3).setCellEditor(new TableModel.LinienArtCellEditor());
-				table.addMouseListener(new TableModel.CellMouseClickForBackgroundColor());			
+				table.getColumnModel().getColumn(3).setCellEditor(new FahrtenFarbeGUITableModel.LinienArtCellEditor());
+				table.addMouseListener(new FahrtenFarbeGUITableModel.CellMouseClickForBackgroundColor());			
 				
 				JScrollPane scrollPane = new JScrollPane(table);
 				scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
@@ -263,7 +262,7 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 	public JComboBox<LineType> getComboBoxLinienArt()
 	{
 		comboBoxLinienArt = new JComboBox<LineType>(LineType.values());
-		comboBoxLinienArt.setRenderer(new TableModel.LineRenderer());
+		comboBoxLinienArt.setRenderer(new FahrtenFarbeGUITableModel.LineRenderer());
 		comboBoxLinienArt.setEditable(false);
 		comboBoxLinienArt.setSelectedItem(0);
 		
@@ -273,8 +272,8 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 	public void loadSettings()
 	{
 		log.info("Standardwerte für FahrtenFarbe einlesen");
-		panelStandardFarbeVorschau.setBackground(config.getDefaultLinienFarbe());
-		txtStandardLinienStaerke.setText(FahrtenFarbeConfig.getDefaultLinienStaerkeToString());
+		panelStandardFarbeVorschau.setBackground(config.getStandardLinienFarbe());
+		txtStandardLinienStaerke.setText(config.getStandardLinienTypString());
 	}
 	
 	public void close()
