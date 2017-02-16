@@ -46,7 +46,7 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 	
 	public FahrtenFarbeSettingsGUI(FahrtenFarbeSettingsGUIController controller, Window parent)
 	{
-		super(parent);
+		super(parent, "Zugdarstellungsregeln");
 		NullTester.test(controller);
 		this.controller = controller;
 		this.config = controller.getConfig();
@@ -133,10 +133,16 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 			JPanel standardConfigLabel = new JPanel();
 			standardConfigLabel.setBorder(BorderFactory.createTitledBorder("Standardeinstellung"));
 			contentPanel.add(standardConfigLabel, "2, 6, 3, 1, fill, fill");
-			FormLayout fl_standardConfigLabel = new FormLayout(
-					new ColumnSpec[] {ColumnSpec.decode("default:grow"), FormSpecs.LABEL_COMPONENT_GAP_COLSPEC, ColumnSpec.decode("default:grow"),},
-					new RowSpec[] {RowSpec.decode("default:grow"), FormSpecs.LABEL_COMPONENT_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC,
-							FormSpecs.LABEL_COMPONENT_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC,});
+			FormLayout fl_standardConfigLabel = new FormLayout(new ColumnSpec[] {
+					FormSpecs.DEFAULT_COLSPEC,
+					FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
+					ColumnSpec.decode("default:grow"),},
+				new RowSpec[] {
+					RowSpec.decode("default:grow"),
+					FormSpecs.LABEL_COMPONENT_GAP_ROWSPEC,
+					FormSpecs.DEFAULT_ROWSPEC,
+					FormSpecs.LABEL_COMPONENT_GAP_ROWSPEC,
+					FormSpecs.DEFAULT_ROWSPEC,});
 			standardConfigLabel.setLayout(fl_standardConfigLabel);
 			/*
 			 * Standardlinienfarbe
@@ -153,7 +159,7 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 					JPanel panelStandardLinienFarbe = new JPanel();
 					FlowLayout flowLayout = (FlowLayout) panelStandardLinienFarbe.getLayout();
 					flowLayout.setAlignment(FlowLayout.RIGHT);
-					standardConfigLabel.add(panelStandardLinienFarbe, "3, 1, right, default");
+					standardConfigLabel.add(panelStandardLinienFarbe, "3, 1, left, default");
 					{
 						// FlowLayout & Button werden im Panel hinzugefügt
 						{
@@ -183,9 +189,9 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 				}
 				{
 					txtStandardLinienStaerke = new JTextField();
-					standardConfigLabel.add(txtStandardLinienStaerke, "3, 3, right, default");
+					standardConfigLabel.add(txtStandardLinienStaerke, "3, 3, left, default");
 					// FIXME Textfeld darf nur zahlen zurückgeben
-					txtStandardLinienStaerke.setColumns(1);
+					txtStandardLinienStaerke.setColumns(10);
 				}
 			}
 			/*
@@ -200,7 +206,7 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 				{
 					// FIXME Nach Auswahl eines Eintrags werden alle Linien
 					// ausgewählt.
-					standardConfigLabel.add(getComboBoxLinienArt(), "3, 5, fill, default");
+					standardConfigLabel.add(getComboBoxLinienArt(), "3, 5, left, default");
 				}
 			}
 		}
@@ -232,7 +238,6 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 					}
 					{
 						JButton okButton = new JButton("OK");
-						okButton.setEnabled(saveEnabled);
 						okButton.setActionCommand("ok");
 						okButton.addActionListener((ActionEvent arg0) -> controller.actionButton(arg0));
 						buttonPane.add(okButton, "6, 2, left, top");
@@ -240,14 +245,12 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 					}
 					{
 						JButton cancelButton = new JButton("Abbrechen");
-						cancelButton.setEnabled(saveEnabled);
 						cancelButton.setActionCommand("cancel");
 						cancelButton.addActionListener((ActionEvent arg0) -> controller.actionButton(arg0));
 						buttonPane.add(cancelButton, "8, 2, left, top");
 					}
 					{
 						JButton applyButton = new JButton("Anwenden");
-						applyButton.setEnabled(saveEnabled);
 						applyButton.setActionCommand("apply");
 						applyButton.addActionListener((ActionEvent arg0) -> controller.actionButton(arg0));
 						buttonPane.add(applyButton, "10, 2, left, top");
@@ -261,7 +264,8 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 	
 	public JComboBox<LineType> getComboBoxLinienArt()
 	{
-		comboBoxLinienArt = new JComboBox<LineType>(LineType.values());
+		DefaultComboBoxModel<LineType> model = new DefaultComboBoxModel<LineType>(LineType.values());
+		comboBoxLinienArt = new JComboBox<LineType>(model);
 		comboBoxLinienArt.setRenderer(new FahrtenFarbeGUITableModel.LineRenderer());
 		comboBoxLinienArt.setEditable(false);
 		comboBoxLinienArt.setSelectedItem(0);
@@ -282,7 +286,7 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 		setVisible(false);
 		controller = null;
 	}
-		
+	
 	public void errorMessage(String text, String titel)
 	{
 		JOptionPane.showMessageDialog(contentPanel, text, titel, JOptionPane.ERROR_MESSAGE);
