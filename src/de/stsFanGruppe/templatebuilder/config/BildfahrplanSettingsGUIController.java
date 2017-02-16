@@ -110,6 +110,11 @@ public class BildfahrplanSettingsGUIController
 				// Einstellungen neu laden
 				gui.loadSettings();
 				break;
+			case "format":
+				// TODO: GUI-Lock für FahrtenFarbeSettingsGUI
+				FahrtenFarbeSettingsGUIController ffsgc = new FahrtenFarbeSettingsGUIController(new FahrtenFarbeConfig(), () -> {});
+				FahrtenFarbeSettingsGUI ffsg = new FahrtenFarbeSettingsGUI(ffsgc, gui);
+				break;
 			case "cancel":
 				close();
 				return;
