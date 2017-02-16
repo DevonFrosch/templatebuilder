@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.time.Instant;
 import java.util.Hashtable;
 import java.util.Set;
 import java.util.StringJoiner;
@@ -17,6 +18,7 @@ import de.stsFanGruppe.templatebuilder.external.jtraingraph.*;
 import de.stsFanGruppe.templatebuilder.gui.TemplateBuilderGUI;
 import de.stsFanGruppe.templatebuilder.strecken.Streckenabschnitt;
 import de.stsFanGruppe.templatebuilder.zug.Fahrt;
+import de.stsFanGruppe.tools.GUILocker;
 import de.stsFanGruppe.tools.NullTester;
 
 public class TemplateBuilderGUIController
@@ -62,23 +64,35 @@ public class TemplateBuilderGUIController
 	}
 	
 	// ActionHandler
-	private boolean lock(String name)
+	public boolean lock(String name)
 	{
-		assert name != null;
-		
-		synchronized(windowLocks)
-		{
-			if(windowLocks.get(name) != null && windowLocks.get(name))
-			{
-				return false;
-			}
-			windowLocks.put(name, true);
-		}
-		
-		log.debug("WindowLock für {}", name);
-		return true;
+		return GUILocker.lock(name);
 	}
-	private void unlock(String name)
+	public boolean lock(String name, int timeout)
+	{
+		Instant start = Instant.now();
+		Instant stop = start.plusMillis(timeout);
+		while(Instant.now().isBefore(stop))
+		{
+			if(lock(name))
+			{
+				return true;
+			}
+			
+			// Sleep to use less cpu time
+			if(timeout >= 100)
+			{
+				try
+				{
+					Thread.sleep(Integer.min(200, timeout / 20));
+				}
+				catch(InterruptedException e)
+				{}
+			}
+		}
+		return false;
+	}
+	public void unlock(String name)
 	{
 		assert name != null;
 		synchronized(windowLocks)
