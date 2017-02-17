@@ -133,7 +133,7 @@ public class BildfahrplanSettingsGUIController extends GUIController
 				}
 				catch(NumberFormatException e)
 				{
-					gui.errorMessage("Fehler beim Speichern der Einstellungen");
+					gui.errorMessage("Fehler beim Lesen der Einstellungen");
 					return;
 				}
 				

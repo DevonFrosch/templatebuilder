@@ -205,21 +205,20 @@ public class FahrtenFarbeSettingsGUIController extends GUIController
 			case "ok":
 				try
 				{
-					//speichereTabAllgemein();
-					
+					speichereStandards();
 				}
 				catch(NumberFormatException e)
 				{
-					gui.errorMessage("Fehler beim Speichern der Einstellungen");
+					gui.errorMessage("Fehler beim Lesen der Einstellungen");
 					return;
 				}
 				
-				//if(!config.schreibeEinstellungen())
-				//{
-				//	log.error("Fehler beim Speichern der Einstellungen");
-				//	gui.errorMessage("Fehler beim Speichern der Einstellungen");
-				//	return;
-				//}
+				if(!config.schreibeEinstellungen())
+				{
+					log.error("Fehler beim Speichern der Einstellungen");
+					gui.errorMessage("Fehler beim Speichern der Einstellungen");
+					return;
+				}
 				
 				// OK: Fenster schlieﬂen
 				if(event.getActionCommand() == "ok")
