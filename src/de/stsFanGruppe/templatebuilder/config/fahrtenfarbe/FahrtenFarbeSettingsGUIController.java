@@ -32,7 +32,6 @@ public class FahrtenFarbeSettingsGUIController extends GUIController
 	{
 		NullTester.test(gui);
 		this.gui = gui;
-		// gui.saveEnabled = config.schreibTest();
 	}
 	
 	public FahrtenFarbeConfig getConfig()
@@ -251,6 +250,11 @@ public class FahrtenFarbeSettingsGUIController extends GUIController
 		// StandardLinienTyp
 		int typIndex = gui.comboBoxLinienTyp.getSelectedIndex();
 		config.setStandardLinienTyp(LineType.values()[typIndex]);
+	}
+
+	public boolean speichertest()
+	{
+		return config.speichertest();
 	}
 	
 	protected void close()

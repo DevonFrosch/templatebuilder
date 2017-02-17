@@ -19,7 +19,6 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 	FahrtenFarbeConfig config;
 	FahrtenFarbeGUITableModel ownTableModel;
 	
-	boolean saveEnabled = false;
 	final JPanel contentPanel = new JPanel();
 	JLabel lblDescription;
 	JTable table;
@@ -237,20 +236,26 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 									FormSpecs.LABEL_COMPONENT_GAP_COLSPEC, FormSpecs.DEFAULT_COLSPEC, FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
 									FormSpecs.DEFAULT_COLSPEC, FormSpecs.UNRELATED_GAP_COLSPEC,},
 							new RowSpec[] {FormSpecs.LINE_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, FormSpecs.UNRELATED_GAP_ROWSPEC,}));
+					
+					boolean saveEnabled = controller.speichertest();
+					
 					{
 						JButton speichernButton = new JButton("Speichern");
+						speichernButton.setEnabled(saveEnabled);
 						speichernButton.setActionCommand("save");
 						speichernButton.addActionListener((ActionEvent arg0) -> controller.actionButton(arg0));
 						buttonPane.add(speichernButton, "2, 2, left, top");
 					}
 					{
 						JButton ladenButton = new JButton("Laden");
+						ladenButton.setEnabled(saveEnabled);
 						ladenButton.setActionCommand("load");
 						ladenButton.addActionListener((ActionEvent arg0) -> controller.actionButton(arg0));
 						buttonPane.add(ladenButton, "4, 2, left, top");
 					}
 					{
 						JButton okButton = new JButton("OK");
+						okButton.setEnabled(saveEnabled);
 						okButton.setActionCommand("ok");
 						okButton.addActionListener((ActionEvent arg0) -> controller.actionButton(arg0));
 						buttonPane.add(okButton, "6, 2, left, top");
@@ -264,6 +269,7 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 					}
 					{
 						JButton applyButton = new JButton("Anwenden");
+						applyButton.setEnabled(saveEnabled);
 						applyButton.setActionCommand("apply");
 						applyButton.addActionListener((ActionEvent arg0) -> controller.actionButton(arg0));
 						buttonPane.add(applyButton, "10, 2, left, top");

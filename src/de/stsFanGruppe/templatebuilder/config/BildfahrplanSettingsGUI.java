@@ -20,7 +20,6 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 	
 	BildfahrplanSettingsGUIController controller;
 	BildfahrplanConfig config;
-	boolean saveEnabled = false;
 	
 	final JPanel contentPanel = new JPanel();
 	// Bildfahrplan
@@ -503,14 +502,19 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 						FormSpecs.LINE_GAP_ROWSPEC,
 						FormSpecs.DEFAULT_ROWSPEC,
 						FormSpecs.UNRELATED_GAP_ROWSPEC,}));
+				
+				boolean saveEnabled = controller.speichertest();
+				
 				{
 					JButton speichernButton = new JButton("Speichern");
+					speichernButton.setEnabled(saveEnabled);
 					speichernButton.setActionCommand("save");
 					speichernButton.addActionListener((ActionEvent arg0) -> controller.actionButton(arg0));
 					buttonPane.add(speichernButton, "2, 2, left, top");
 				}
 				{
 					JButton ladenButton = new JButton("Laden");
+					ladenButton.setEnabled(saveEnabled);
 					ladenButton.setActionCommand("load");
 					ladenButton.addActionListener((ActionEvent arg0) -> controller.actionButton(arg0));
 					buttonPane.add(ladenButton, "4, 2, left, top");
@@ -525,7 +529,6 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 				}
 				{
 					JButton cancelButton = new JButton("Abbrechen");
-					cancelButton.setEnabled(saveEnabled);
 					cancelButton.setActionCommand("cancel");
 					cancelButton.addActionListener((ActionEvent arg0) -> controller.actionButton(arg0));
 					buttonPane.add(cancelButton, "8, 2, left, top");

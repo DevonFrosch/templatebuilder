@@ -31,7 +31,6 @@ public class BildfahrplanSettingsGUIController extends GUIController
 	{
 		NullTester.test(gui);
 		this.gui = gui;
-		gui.saveEnabled = config.speichertest();
 	}
 	
 	public BildfahrplanConfig getConfig()
@@ -250,6 +249,12 @@ public class BildfahrplanSettingsGUIController extends GUIController
 		// BfpHintergrund
 		config.setHintergrundFarbe(gui.panelBfpHintergrundFarbeVorschau.getBackground());
 	}
+	
+	public boolean speichertest()
+	{
+		return config.speichertest();
+	}
+	
 	protected void close()
 	{
 		gui.close();
