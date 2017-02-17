@@ -46,10 +46,6 @@ public enum LineType
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(LineType.class);
 	
 	public abstract Stroke getStroke();
-	public static String getLineTypeName(LineType type)
-	{
-		return type.name();
-	}
 	public static LineType getLineType(String name)
 	{
 		if(name == null)
