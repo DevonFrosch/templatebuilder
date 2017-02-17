@@ -19,21 +19,18 @@ public class LineRenderer extends JPanel implements ListCellRenderer<LineType>
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(LineRenderer.class);
 	private LineType value;
 	
-	@Override
 	public Component getListCellRendererComponent(JList<? extends LineType> list, LineType value, int index, boolean isSelected, boolean cellHasFocus)
 	{
-		if(value instanceof LineType)
+		this.value = value;
+		
+		if(isSelected)
 		{
-			setLineType((LineType) value);
+			// TODO Farbeffekte bei Auswahl			
 		}
-		else
-		{
-			setLineType(null);
-		}
+		
 		return this;
 	}
 	
-	@Override
 	protected void paintComponent(Graphics g)
 	{
 		super.paintComponent(g);
@@ -42,15 +39,11 @@ public class LineRenderer extends JPanel implements ListCellRenderer<LineType>
 		{
 			g2.setStroke(value.getStroke());
 			g.drawLine(0, getHeight() / 2, getWidth(), getHeight() / 2);
+			
+			// TODO Hintergrundfarbe an Hintergrund, Selektion, ... anpassen
 		}
 	}
 	
-	private void setLineType(LineType value)
-	{
-		this.value = value;
-	}
-	
-	@Override
 	public Dimension getPreferredSize()
 	{
 		return new Dimension(20, 20);
