@@ -3,6 +3,7 @@ package de.stsFanGruppe.templatebuilder.config;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import javax.swing.JColorChooser;
+import de.stsFanGruppe.tools.GUILocker;
 import de.stsFanGruppe.tools.NullTester;
 import de.stsFanGruppe.tools.TimeFormater;
 
@@ -111,8 +112,9 @@ public class BildfahrplanSettingsGUIController
 				gui.loadSettings();
 				break;
 			case "format":
-				// TODO: GUI-Lock für FahrtenFarbeSettingsGUI
-				FahrtenFarbeSettingsGUIController ffsgc = new FahrtenFarbeSettingsGUIController(new FahrtenFarbeConfig(), () -> {});
+				FahrtenFarbeSettingsGUIController ffsgc = new FahrtenFarbeSettingsGUIController(
+						new FahrtenFarbeConfig(), () -> {GUILocker.unlock(FahrtenFarbeSettingsGUI.class);}
+				);
 				FahrtenFarbeSettingsGUI ffsg = new FahrtenFarbeSettingsGUI(ffsgc, gui);
 				break;
 			case "cancel":
