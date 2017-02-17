@@ -55,13 +55,13 @@ public class FahrtenFarbeGUITableModel
 	 * Zelleneditoreinstellung für die Spalte, die eine Combobox erhalten soll, wo die Linientypen gezeichnet werden.
 	 *
 	 * Um dies aufzurufen, wird an der Tabelle die Spalte gesucht und die Zelleditordarstellung neu gesetzt:
-	 * table.getColumnModel().getColumn(n).setCellEditor(new LinienTypCellEditor());
+	 * table.getColumnModel().getColumn(n).setCellEditor(new LineTypeCellEditor());
 	 */
-	public static class LinienTypCellEditor extends AbstractCellEditor implements TableCellEditor
+	public static class LineTypeCellEditor extends AbstractCellEditor implements TableCellEditor
 	{
 		JComboBox<LineType> comboBoxLinienTyp;
 		
-		public LinienTypCellEditor()
+		public LineTypeCellEditor()
 		{
 			// FIXME Combobox werden derzeit doppelt im Code geschrieben. Die
 			// JComboBox sollte möglich einmal definiert werden.

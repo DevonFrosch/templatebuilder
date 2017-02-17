@@ -92,7 +92,7 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 				// Einstellung für die 2. Spalte (Farbe):
 				table.getColumnModel().getColumn(1).setCellRenderer(new FahrtenFarbeGUITableModel.BackgroundTableCellRenderer());
 				// Einstellung des Editors für die letzte Spalte (Linientyp):
-				table.getColumnModel().getColumn(3).setCellEditor(new FahrtenFarbeGUITableModel.LinienTypCellEditor());
+				table.getColumnModel().getColumn(3).setCellEditor(new FahrtenFarbeGUITableModel.LineTypeCellEditor());
 				table.addMouseListener(new FahrtenFarbeGUITableModel.CellMouseClickForBackgroundColor());			
 				
 				JScrollPane scrollPane = new JScrollPane(table);
