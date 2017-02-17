@@ -279,7 +279,7 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 	{
 		log.info("Standardwerte für FahrtenFarbe einlesen");
 		panelStandardFarbeVorschau.setBackground(config.getStandardLinienFarbe());
-		
+		txtStandardLinienStaerke.setText(config.getStandardLinienStärke()+"");
 		comboBoxLinienTyp.setSelectedItem(config.getStandardLinienTyp());
 	}
 	
