@@ -127,7 +127,7 @@ public class PreferenceHandler
 	public boolean speichertest()
 	{
 		String key = "test/speichertest";
-		Preferences prefs = Preferences.userRoot().node("<temporary>");
+		Preferences prefs = Preferences.userNodeForPackage(PreferenceHandler.class);
 		try
 		{
 			boolean oldValue = prefs.getBoolean(key, false);

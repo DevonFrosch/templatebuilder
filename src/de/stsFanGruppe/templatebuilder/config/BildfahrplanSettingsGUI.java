@@ -547,7 +547,7 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 	{
 		log.info("Einstellungen neu lesen");
 		
-		if(!config.schreibTest())
+		if(!config.speichertest())
 		{
 			return;
 		}

@@ -14,6 +14,7 @@ import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import de.stsFanGruppe.templatebuilder.gui.GUI;
 import de.stsFanGruppe.tools.NullTester;
+import de.stsFanGruppe.tools.PreferenceHandler;
 
 public abstract class ConfigController
 {
@@ -21,6 +22,7 @@ public abstract class ConfigController
 
 	protected Map<Object, Runnable> callbacks = new HashMap<>();
 	protected int callbackCounter = 0;
+	protected PreferenceHandler prefs = null;
 	
 	// Change-Handler
 	public Object registerChangeHandler(Runnable callback)
@@ -109,8 +111,23 @@ public abstract class ConfigController
 		return 0;
 	}
 	
-	protected abstract boolean exportXML(OutputStream os);
-	protected abstract boolean importXML(InputStream is);
+	public boolean schreibeEinstellungen()
+	{
+		return prefs.schreibeEinstellungen();
+	}
+	public boolean importXML(InputStream is)
+	{
+		return prefs.importXML(is);
+	}
+	public boolean exportXML(OutputStream os)
+	{
+		return prefs.exportXML(os);
+	}
+	public boolean speichertest()
+	{
+		NullTester.test(prefs);
+		return prefs.speichertest();
+	}
 	
 	public interface ErrorHandler
 	{

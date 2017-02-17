@@ -1,4 +1,4 @@
-package de.stsFanGruppe.templatebuilder.config;
+package de.stsFanGruppe.templatebuilder.config.fahrtenfarbe;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
-import de.stsFanGruppe.templatebuilder.config.FahrtenFarbeConfig.LineType;
+import de.stsFanGruppe.templatebuilder.config.BildfahrplanSettingsGUI;
 
 public class FahrtenFarbeGUITableModel
 {
@@ -52,24 +52,24 @@ public class FahrtenFarbeGUITableModel
 	}
 	
 	/**
-	 * Zelleneditoreinstellung für die Spalte, die eine Combobox erhalten soll, wo die Linienarten gezeichnet werden.
+	 * Zelleneditoreinstellung für die Spalte, die eine Combobox erhalten soll, wo die Linientypen gezeichnet werden.
 	 *
 	 * Um dies aufzurufen, wird an der Tabelle die Spalte gesucht und die Zelleditordarstellung neu gesetzt:
-	 * table.getColumnModel().getColumn(n).setCellEditor(new LinienArtCellEditor());
+	 * table.getColumnModel().getColumn(n).setCellEditor(new LinienTypCellEditor());
 	 */
-	public static class LinienArtCellEditor extends AbstractCellEditor implements TableCellEditor
+	public static class LinienTypCellEditor extends AbstractCellEditor implements TableCellEditor
 	{
-		JComboBox<LineType> comboBoxLinienArt;
+		JComboBox<LineType> comboBoxLinienTyp;
 		
-		public LinienArtCellEditor()
+		public LinienTypCellEditor()
 		{
 			// FIXME Combobox werden derzeit doppelt im Code geschrieben. Die
 			// JComboBox sollte möglich einmal definiert werden.
 			// Erstellt eine Combobox mit den Linientypen.
-			comboBoxLinienArt = new JComboBox<LineType>(LineType.values());
-			comboBoxLinienArt.setRenderer(new LineRenderer());
-			comboBoxLinienArt.setEditable(false);
-			comboBoxLinienArt.setSelectedItem(null);
+			comboBoxLinienTyp = new JComboBox<LineType>(LineType.values());
+			comboBoxLinienTyp.setRenderer(new LineRenderer());
+			comboBoxLinienTyp.setEditable(false);
+			comboBoxLinienTyp.setSelectedItem(null);
 		}
 		
 		@Override
@@ -78,64 +78,17 @@ public class FahrtenFarbeGUITableModel
 //			//Setzt das Modell für die Tabelle
 //			if(isSelected)
 //			{
-//				comboBoxLinienArt.setSelectedItem(value);
+//				comboBoxLinienTyp.setSelectedItem(value);
 //				TableModel model = (TableModel) table.getModel();
 //				model.setValueAt(value, rowIndex, colIndex);
 //			}
-			return comboBoxLinienArt;
+			return comboBoxLinienTyp;
 		}
 		
 		@Override
 		public Object getCellEditorValue()
 		{
-			return comboBoxLinienArt.getSelectedItem();
-		}
-	}
-	/**
-	 * Ändern die Darstellung der Combobox so, dass Linien eingezeichnet werden.
-	 *
-	 * Um dies aufzurufen, wird an der Combobox die Darstellung neu gesetzt:
-	 * combobox.setRenderer(new LineRenderer());
-	 */
-	public static class LineRenderer extends JPanel implements ListCellRenderer<LineType>
-	{
-		private LineType value;
-		
-		@Override
-		public Component getListCellRendererComponent(JList<? extends LineType> list, LineType value, int index, boolean isSelected, boolean cellHasFocus)
-		{
-			if(value instanceof LineType)
-			{
-				setLineType((LineType) value);
-			}
-			else
-			{
-				setLineType(null);
-			}
-			return this;
-		}
-		
-		@Override
-		protected void paintComponent(Graphics g)
-		{
-			super.paintComponent(g);
-			Graphics2D g2 = (Graphics2D) g;
-			if(value != null)
-			{
-				g2.setStroke(value.getStroke());
-				g.drawLine(0, getHeight() / 2, getWidth(), getHeight() / 2);
-			}
-		}
-		
-		private void setLineType(LineType value)
-		{
-			this.value = value;
-		}
-		
-		@Override
-		public Dimension getPreferredSize()
-		{
-			return new Dimension(20, 20);
+			return comboBoxLinienTyp.getSelectedItem();
 		}
 	}
 	

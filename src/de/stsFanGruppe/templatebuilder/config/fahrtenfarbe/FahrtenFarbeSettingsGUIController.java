@@ -1,4 +1,4 @@
-package de.stsFanGruppe.templatebuilder.config;
+package de.stsFanGruppe.templatebuilder.config.fahrtenfarbe;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -8,9 +8,11 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
+import de.stsFanGruppe.templatebuilder.config.BildfahrplanSettingsGUIController;
+import de.stsFanGruppe.templatebuilder.gui.GUIController;
 import de.stsFanGruppe.tools.NullTester;
 
-public class FahrtenFarbeSettingsGUIController
+public class FahrtenFarbeSettingsGUIController extends GUIController
 {
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(BildfahrplanSettingsGUIController.class);
 	
@@ -43,17 +45,17 @@ public class FahrtenFarbeSettingsGUIController
 		// Set the model data of the table
 		if(isSelected)
 		{
-			gui.comboBoxLinienArt.setSelectedItem(value);
+			gui.comboBoxLinienTyp.setSelectedItem(value);
 			TableModel model = table.getModel();
 			model.setValueAt(value, rowIndex, colIndex);
 		}
 		
-		return gui.comboBoxLinienArt;
+		return gui.comboBoxLinienTyp;
 	}
 	
 	public Object getCellEditorValue()
 	{
-		return gui.comboBoxLinienArt.getSelectedItem();
+		return gui.comboBoxLinienTyp.getSelectedItem();
 	}
 	
 	/**
@@ -77,7 +79,7 @@ public class FahrtenFarbeSettingsGUIController
 		ListSelectionModel selectionModel = gui.table.getSelectionModel();
 		// Erhalte ausgew‰hlte Zeilen
 		int[] rows = gui.table.getSelectedRows();
-		Object[] defaultRowdata = {"", "", gui.txtStandardLinienStaerke.getText(),gui.comboBoxLinienArt.getSelectedItem()};
+		Object[] defaultRowdata = {"", "", gui.txtStandardLinienStaerke.getText(),gui.comboBoxLinienTyp.getSelectedItem()};
 		switch(event.getActionCommand())
 		{
 			// Zeile(n) nach oben verschieben
@@ -203,21 +205,20 @@ public class FahrtenFarbeSettingsGUIController
 			case "ok":
 				try
 				{
-					//speichereTabAllgemein();
-					
+					speichereStandards();
 				}
 				catch(NumberFormatException e)
 				{
-					gui.errorMessage("Fehler beim Speichern der Einstellungen");
+					gui.errorMessage("Fehler beim Lesen der Einstellungen");
 					return;
 				}
 				
-				//if(!config.schreibeEinstellungen())
-				//{
-				//	log.error("Fehler beim Speichern der Einstellungen");
-				//	gui.errorMessage("Fehler beim Speichern der Einstellungen");
-				//	return;
-				//}
+				if(!config.schreibeEinstellungen())
+				{
+					log.error("Fehler beim Speichern der Einstellungen");
+					gui.errorMessage("Fehler beim Speichern der Einstellungen");
+					return;
+				}
 				
 				// OK: Fenster schlieﬂen
 				if(event.getActionCommand() == "ok")
@@ -229,6 +230,27 @@ public class FahrtenFarbeSettingsGUIController
 			default:
 				log.error("actionButton: actionCommand nicht erkannt: {}", event.getActionCommand());
 		}
+	}
+	
+	public void speichereStandards() throws NumberFormatException
+	{
+		// StandardLinienFarbe
+		config.setStandardLinienFarbe(gui.panelStandardFarbeVorschau.getBackground());
+		
+		// StandardLinienSt‰rke
+		try
+		{
+			config.setStandardLinienSt‰rke(parseIntField("Linienst‰rke", gui.txtStandardLinienStaerke.getText()));
+		}
+		catch(NumberFormatException e)
+		{
+			gui.errorMessage("Linienst‰rke: Nur positive ganze Zahlen erlaubt.");
+			throw e;
+		}
+		
+		// StandardLinienTyp
+		int typIndex = gui.comboBoxLinienTyp.getSelectedIndex();
+		config.setStandardLinienTyp(LineType.values()[typIndex]);
 	}
 	
 	protected void close()

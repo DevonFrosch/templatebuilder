@@ -3,10 +3,15 @@ package de.stsFanGruppe.templatebuilder.config;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import javax.swing.JColorChooser;
+import de.stsFanGruppe.templatebuilder.config.fahrtenfarbe.FahrtenFarbeConfig;
+import de.stsFanGruppe.templatebuilder.config.fahrtenfarbe.FahrtenFarbeSettingsGUI;
+import de.stsFanGruppe.templatebuilder.config.fahrtenfarbe.FahrtenFarbeSettingsGUIController;
+import de.stsFanGruppe.templatebuilder.gui.GUIController;
+import de.stsFanGruppe.tools.GUILocker;
 import de.stsFanGruppe.tools.NullTester;
 import de.stsFanGruppe.tools.TimeFormater;
 
-public class BildfahrplanSettingsGUIController
+public class BildfahrplanSettingsGUIController extends GUIController
 {
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(BildfahrplanSettingsGUIController.class);
 	
@@ -26,7 +31,7 @@ public class BildfahrplanSettingsGUIController
 	{
 		NullTester.test(gui);
 		this.gui = gui;
-		gui.saveEnabled = config.schreibTest();
+		gui.saveEnabled = config.speichertest();
 	}
 	
 	public BildfahrplanConfig getConfig()
@@ -111,8 +116,9 @@ public class BildfahrplanSettingsGUIController
 				gui.loadSettings();
 				break;
 			case "format":
-				// TODO: GUI-Lock für FahrtenFarbeSettingsGUI
-				FahrtenFarbeSettingsGUIController ffsgc = new FahrtenFarbeSettingsGUIController(new FahrtenFarbeConfig(), () -> {});
+				FahrtenFarbeSettingsGUIController ffsgc = new FahrtenFarbeSettingsGUIController(
+						new FahrtenFarbeConfig(), () -> {GUILocker.unlock(FahrtenFarbeSettingsGUI.class);}
+				);
 				FahrtenFarbeSettingsGUI ffsg = new FahrtenFarbeSettingsGUI(ffsgc, gui);
 				break;
 			case "cancel":
@@ -130,7 +136,7 @@ public class BildfahrplanSettingsGUIController
 				}
 				catch(NumberFormatException e)
 				{
-					gui.errorMessage("Fehler beim Speichern der Einstellungen");
+					gui.errorMessage("Fehler beim Lesen der Einstellungen");
 					return;
 				}
 				
@@ -164,10 +170,18 @@ public class BildfahrplanSettingsGUIController
 	{
 		
 	}
-	protected void speichereTabBildfahrplan()
+	protected void speichereTabBildfahrplan() throws NumberFormatException
 	{
 		// Höhe pro Stunde
-		config.setHoeheProStunde(parseIntField("Höhe pro Stunde", gui.inputHoeheProStunde.getText()));
+		try
+		{
+			config.setHoeheProStunde(parseIntField("Höhe pro Stunde", gui.inputHoeheProStunde.getText()));
+		}
+		catch(NumberFormatException e)
+		{
+			gui.errorMessage("Höhe pro Stunde: Nur positive ganze Zahlen erlaubt.");
+			throw e;
+		}
 		
 		// Dargestellte Zeit + Autosizing
 		if(gui.chckbxAuto.isSelected())
@@ -195,7 +209,15 @@ public class BildfahrplanSettingsGUIController
 		// Schachtelung
 		if(gui.chckbxSchachtelung.isSelected())
 		{
-			config.setSchachtelung(parseIntField("Schachtelung", gui.inputSchachtelung.getText()));
+			try
+			{
+				config.setSchachtelung(parseIntField("Schachtelung", gui.inputSchachtelung.getText()));
+			}
+			catch(NumberFormatException e)
+			{
+				gui.errorMessage("Schachtelung: Nur positive ganze Zahlen erlaubt.");
+				throw e;
+			}
 		}
 		else
 		{
@@ -233,32 +255,5 @@ public class BildfahrplanSettingsGUIController
 		gui.close();
         gui = null;
         onClose.run();
-	}
-	
-	protected int parseIntField(String name, String input)
-	{
-		if(input == null || input.trim().isEmpty())
-		{
-			log.error("{}: Leerer String", name);
-			gui.errorMessage(name+": Dargestellte Zeit: Feld ist leer");
-			throw new NumberFormatException();
-		}
-		try
-		{
-			int hpsInt = Integer.parseInt(input);
-			if(hpsInt < 0)
-			{
-				log.error("{}: Wert kleiner 0", name);
-				gui.errorMessage(name+": Nur positive ganze Zahlen erlaubt.");
-				throw new NumberFormatException();
-			}
-			return hpsInt;
-		}
-		catch(NumberFormatException e)
-		{
-			log.error(name+": NumberformatException", e);
-			gui.errorMessage(name+": Nur positive ganze Zahlen erlaubt.");
-			throw new NumberFormatException();
-		}
 	}
 }
