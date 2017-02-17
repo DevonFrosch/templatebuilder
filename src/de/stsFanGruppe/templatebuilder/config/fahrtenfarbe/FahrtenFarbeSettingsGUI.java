@@ -1,4 +1,4 @@
-package de.stsFanGruppe.templatebuilder.config;
+package de.stsFanGruppe.templatebuilder.config.fahrtenfarbe;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -6,8 +6,7 @@ import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import com.jgoodies.forms.layout.*;
-import de.stsFanGruppe.templatebuilder.config.FahrtenFarbeConfig.LineType;
-import de.stsFanGruppe.templatebuilder.config.fahrtenfarbe.LineRenderer;
+import de.stsFanGruppe.templatebuilder.config.BildfahrplanSettingsGUI;
 import de.stsFanGruppe.templatebuilder.gui.GUI;
 import de.stsFanGruppe.tools.NullTester;
 import javax.swing.table.DefaultTableModel;

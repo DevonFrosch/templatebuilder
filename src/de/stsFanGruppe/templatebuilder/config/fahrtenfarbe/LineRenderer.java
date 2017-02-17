@@ -7,7 +7,6 @@ import java.awt.Graphics2D;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
-import de.stsFanGruppe.templatebuilder.config.FahrtenFarbeConfig.LineType;
 
 /**
  * Ändern die Darstellung der Combobox so, dass Linien eingezeichnet werden.
@@ -17,6 +16,7 @@ import de.stsFanGruppe.templatebuilder.config.FahrtenFarbeConfig.LineType;
  */
 public class LineRenderer extends JPanel implements ListCellRenderer<LineType>
 {
+	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(LineRenderer.class);
 	private LineType value;
 	
 	@Override

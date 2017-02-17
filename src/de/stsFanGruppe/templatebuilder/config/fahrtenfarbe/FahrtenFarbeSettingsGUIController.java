@@ -1,4 +1,4 @@
-package de.stsFanGruppe.templatebuilder.config;
+package de.stsFanGruppe.templatebuilder.config.fahrtenfarbe;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -8,7 +8,7 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
-import de.stsFanGruppe.templatebuilder.config.FahrtenFarbeConfig.LineType;
+import de.stsFanGruppe.templatebuilder.config.BildfahrplanSettingsGUIController;
 import de.stsFanGruppe.templatebuilder.gui.GUIController;
 import de.stsFanGruppe.tools.NullTester;
 

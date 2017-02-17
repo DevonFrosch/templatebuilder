@@ -1,4 +1,4 @@
-package de.stsFanGruppe.templatebuilder.config;
+package de.stsFanGruppe.templatebuilder.config.fahrtenfarbe;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -7,8 +7,7 @@ import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
-import de.stsFanGruppe.templatebuilder.config.FahrtenFarbeConfig.LineType;
-import de.stsFanGruppe.templatebuilder.config.fahrtenfarbe.LineRenderer;
+import de.stsFanGruppe.templatebuilder.config.BildfahrplanSettingsGUI;
 
 public class FahrtenFarbeGUITableModel
 {

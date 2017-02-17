@@ -1,15 +1,14 @@
-package de.stsFanGruppe.templatebuilder.config;
+package de.stsFanGruppe.templatebuilder.config.fahrtenfarbe;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Stroke;
 import java.io.InputStream;
 import java.io.OutputStream;
+import de.stsFanGruppe.templatebuilder.config.ConfigController;
 import de.stsFanGruppe.tools.PreferenceHandler;
 
 public class FahrtenFarbeConfig extends ConfigController
 {
-	
+	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(FahrtenFarbeConfig.class);
 	private PreferenceHandler prefs;
 	private static FahrtenFarbeSettingsGUI gui;
 	
@@ -50,7 +49,7 @@ public class FahrtenFarbeConfig extends ConfigController
 	public LineType getStandardLinienTyp()
 	{
 		String name = prefs.getString(CONFIG_STANDARD_LINIEN_TYP, null);
-		return getLineType(name);
+		return LineType.getLineType(name);
 	}
 	public String getStandardLinienTypString()
 	{
@@ -76,70 +75,5 @@ public class FahrtenFarbeConfig extends ConfigController
 	public boolean exportXML(OutputStream os)
 	{
 		return prefs.exportXML(os);
-	}
-	
-	// Linientypen
-	public static final float[] DURCHGEZOGENE_LINIE = {0};
-	public static final float[] GEPUNKTE_LINIE = {10, 10};
-	public static final float[] GESTRICHELTE_LINIE = {30, 10};
-	public static final float[] KURZ_LANG_LINIE = {10, 10, 30, 10};
-	public static final float[] KURZ_KURZ_LANG_LINIE = {10, 10, 10, 10, 30, 10};
-	public static final float[] KURZ_LANG_LANG_LINIE = {10, 10, 30, 10, 30, 10};
-	
-	public static enum LineType
-	{
-		SOLID_LINE {
-			public Stroke getStroke() {
-				return new BasicStroke(3);
-			}
-		},
-		DOTTED_LINE {
-			public Stroke getStroke() {
-				return new BasicStroke(3, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, 1.0f, GEPUNKTE_LINIE, 1);
-			}
-		},
-		DASEHED_LINE {
-			public Stroke getStroke() {
-				return new BasicStroke(3, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, 1.0f, GESTRICHELTE_LINIE, 1);
-			}
-		},
-		SHORT_LONG_LINE {
-			public Stroke getStroke() {
-				return new BasicStroke(3, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, 1.0f, KURZ_LANG_LINIE, 1);
-			}
-		},
-		SHORT_SHORT_LONG_LINE {
-			public Stroke getStroke() {
-				return new BasicStroke(3, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, 1.0f, KURZ_KURZ_LANG_LINIE, 1);
-			}
-		},
-		SHORT_LONG_LONG_LINE {
-			public Stroke getStroke() {
-				return new BasicStroke(3, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, 1.0f, KURZ_LANG_LANG_LINIE, 1);
-			}
-		};
-		public abstract Stroke getStroke();
-	}
-	
-	public static String getLineTypeName(LineType type)
-	{
-		return type.name();
-	}
-	public static LineType getLineType(String name)
-	{
-		if(name == null)
-		{
-			return DEFAULT_STANDARD_LINIEN_TYP;
-		}
-		
-		try
-		{
-			return Enum.valueOf(LineType.class, name);
-		}
-		catch(IllegalArgumentException e)
-		{
-			log.warn("Unknown LineType {}", name);
-			return DEFAULT_STANDARD_LINIEN_TYP;
-		}
 	}
 }
