@@ -13,14 +13,6 @@ public class FahrtenFarbeConfig extends ConfigController
 	private PreferenceHandler prefs;
 	private static FahrtenFarbeSettingsGUI gui;
 	
-	// TODO: alt: Linientypen
-	public static final float[] DURCHGEZOGENE_LINIE = {0};
-	public static final float[] GEPUNKTE_LINIE = {10, 10};
-	public static final float[] GESTRICHELTE_LINIE = {30, 10};
-	public static final float[] KURZ_LANG_LINIE = {10, 10, 30, 10};
-	public static final float[] KURZ_KURZ_LANG_LINIE = {10, 10, 10, 10, 30, 10};
-	public static final float[] KURZ_LANG_LANG_LINIE = {10, 10, 30, 10, 30, 10};
-	
 	// Farbeinstellungen
 	public static final String CONFIG_STANDARD_LINIEN_FARBE = "bildfahrplan/darstellung/linie/farben";
 	public static final String CONFIG_STANDARD_LINIEN_STAERKE = "bildfahrplan/darstellung/linie/staerke";
@@ -87,6 +79,13 @@ public class FahrtenFarbeConfig extends ConfigController
 	}
 	
 	// Linientypen
+	public static final float[] DURCHGEZOGENE_LINIE = {0};
+	public static final float[] GEPUNKTE_LINIE = {10, 10};
+	public static final float[] GESTRICHELTE_LINIE = {30, 10};
+	public static final float[] KURZ_LANG_LINIE = {10, 10, 30, 10};
+	public static final float[] KURZ_KURZ_LANG_LINIE = {10, 10, 10, 10, 30, 10};
+	public static final float[] KURZ_LANG_LANG_LINIE = {10, 10, 30, 10, 30, 10};
+	
 	public static enum LineType
 	{
 		SOLID_LINE {
