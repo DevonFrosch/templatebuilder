@@ -5,6 +5,7 @@ import java.awt.event.*;
 import java.io.File;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import com.jgoodies.forms.layout.*;
 import de.stsFanGruppe.templatebuilder.gui.GUI;
 import de.stsFanGruppe.templatebuilder.strecken.Bildfahrplanstrecke;
@@ -26,7 +27,6 @@ public class JTrainGraphExportGUI extends JDialog implements GUI
 	final JLabel lblBildfahrplanstrecke = new JLabel("Bildfahrplanstrecke");
 	JCheckBox chckbxZgeExportieren;
 	
-	JFileChooser fileChooser = new JFileChooser();
 	private JCheckBox chckbxDs100;
 	
 	/**
@@ -142,7 +142,14 @@ public class JTrainGraphExportGUI extends JDialog implements GUI
 	// ActionHandler
 	private void dateiChooser(ActionEvent e)
 	{
+		setCursor(new Cursor(Cursor.WAIT_CURSOR));
+		JFileChooser fileChooser = new JFileChooser();
+		setCursor(new Cursor(Cursor.DEFAULT_CURSOR));	
+		
 		fileChooser.setDialogTitle("Exportieren...");
+		fileChooser.setFileFilter(new FileNameExtensionFilter("Bildfahrpläne (*.fpl, *.xml)", "fpl", "xml"));
+		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		
 		if(!pfadInput.getText().trim().isEmpty())
 		{
 			File file = new File(pfadInput.getText());

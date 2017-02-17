@@ -5,6 +5,7 @@ import java.awt.event.*;
 import java.io.File;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import com.jgoodies.forms.layout.*;
 import de.stsFanGruppe.templatebuilder.gui.GUI;
 import de.stsFanGruppe.templatebuilder.zug.Linie;
@@ -14,9 +15,6 @@ public class JTrainGraphImportGUI extends JDialog implements GUI
 {
 	public final int CANCEL_OPTION = 0;
 	public final int APPROVE_OPTION = 1;
-	
-	private Cursor waitCursor = new Cursor(Cursor.WAIT_CURSOR);
-	private Cursor defaultCursor = new Cursor(Cursor.DEFAULT_CURSOR);
 	
 	private Callback callback;
 	
@@ -135,11 +133,14 @@ public class JTrainGraphImportGUI extends JDialog implements GUI
 	// ActionHandler
 	private void dateiChooser(ActionEvent e)
 	{
-		setCursor(waitCursor);
+		setCursor(new Cursor(Cursor.WAIT_CURSOR));
 		JFileChooser fileChooser = new JFileChooser();
-		setCursor(defaultCursor);	
+		setCursor(new Cursor(Cursor.DEFAULT_CURSOR));	
 		
 		fileChooser.setDialogTitle("Importieren...");
+		fileChooser.setFileFilter(new FileNameExtensionFilter("Bildfahrpläne (*.fpl, *.xml)", "fpl", "xml"));
+		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		
 		if(!pfadInput.getText().trim().isEmpty())
 		{
 			File file = new File(pfadInput.getText());

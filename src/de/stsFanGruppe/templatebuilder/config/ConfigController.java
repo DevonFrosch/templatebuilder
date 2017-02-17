@@ -11,6 +11,7 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import de.stsFanGruppe.templatebuilder.gui.GUI;
 import de.stsFanGruppe.tools.NullTester;
 
@@ -45,6 +46,8 @@ public abstract class ConfigController
 	{
 		JFileChooser loadFileChooser = new JFileChooser();
 		loadFileChooser.setDialogTitle("Einstellungen laden");
+		loadFileChooser.setFileFilter(new FileNameExtensionFilter("XML-Einstellungen (*.xml)", "xml"));
+		loadFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		
 		if (loadFileChooser.showOpenDialog(windowParent) == JFileChooser.APPROVE_OPTION)
 		{
@@ -79,6 +82,8 @@ public abstract class ConfigController
 	{
 		JFileChooser saveFileChooser = new JFileChooser();
 		saveFileChooser.setDialogTitle("Einstellungen speichern");
+		saveFileChooser.setFileFilter(new FileNameExtensionFilter("XML-Einstellungen (*.xml)", "xml"));
+		saveFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		
 		if (saveFileChooser.showSaveDialog(windowParent) == JFileChooser.APPROVE_OPTION)
 		{
