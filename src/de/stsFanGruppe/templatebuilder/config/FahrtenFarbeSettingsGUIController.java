@@ -9,9 +9,10 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import de.stsFanGruppe.templatebuilder.config.FahrtenFarbeConfig.LineType;
+import de.stsFanGruppe.templatebuilder.gui.GUIController;
 import de.stsFanGruppe.tools.NullTester;
 
-public class FahrtenFarbeSettingsGUIController
+public class FahrtenFarbeSettingsGUIController extends GUIController
 {
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(BildfahrplanSettingsGUIController.class);
 	
@@ -230,6 +231,27 @@ public class FahrtenFarbeSettingsGUIController
 			default:
 				log.error("actionButton: actionCommand nicht erkannt: {}", event.getActionCommand());
 		}
+	}
+	
+	public void speichereStandards() throws NumberFormatException
+	{
+		// StandardLinienFarbe
+		config.setStandardLinienFarbe(gui.panelStandardFarbeVorschau.getBackground());
+		
+		// StandardLinienStärke
+		try
+		{
+			config.setStandardLinienStärke(parseIntField("Linienstärke", gui.txtStandardLinienStaerke.getText()));
+		}
+		catch(NumberFormatException e)
+		{
+			gui.errorMessage("Linienstärke: Nur positive ganze Zahlen erlaubt.");
+			throw e;
+		}
+		
+		// StandardLinienTyp
+		int typIndex = gui.comboBoxLinienTyp.getSelectedIndex();
+		config.setStandardLinienTyp(LineType.values()[typIndex]);
 	}
 	
 	protected void close()
