@@ -1,8 +1,6 @@
 package de.stsFanGruppe.templatebuilder.config;
 
 import java.awt.Color;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JComponent;
@@ -13,7 +11,6 @@ public class BildfahrplanConfig extends ConfigController
 {
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(BildfahrplanConfig.class);
 	
-	private PreferenceHandler prefs;
 	private Map<Object, Runnable> callbacks = new HashMap<>();
 	private int callbackCounter = 0;
 	
@@ -373,23 +370,6 @@ public class BildfahrplanConfig extends ConfigController
 	public int getSpaltenHeaderHoehe(int textHeight)
 	{
 		return getTextMarginTop() + (textHeight + getOffsetY()) * getZeilenAnzahl() + getTextMarginBottom();  
-	}
-	
-	public boolean schreibTest()
-	{
-		return prefs.speichertest();
-	}
-	public boolean schreibeEinstellungen()
-	{
-		return prefs.schreibeEinstellungen();
-	}
-	public boolean importXML(InputStream is)
-	{
-		return prefs.importXML(is);
-	}
-	public boolean exportXML(OutputStream os)
-	{
-		return prefs.exportXML(os);
 	}
 	
 	public String toString()

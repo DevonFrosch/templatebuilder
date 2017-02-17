@@ -1,15 +1,12 @@
 package de.stsFanGruppe.templatebuilder.config.fahrtenfarbe;
 
 import java.awt.Color;
-import java.io.InputStream;
-import java.io.OutputStream;
 import de.stsFanGruppe.templatebuilder.config.ConfigController;
 import de.stsFanGruppe.tools.PreferenceHandler;
 
 public class FahrtenFarbeConfig extends ConfigController
 {
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(FahrtenFarbeConfig.class);
-	private PreferenceHandler prefs;
 	private static FahrtenFarbeSettingsGUI gui;
 	
 	// Farbeinstellungen
@@ -24,11 +21,11 @@ public class FahrtenFarbeConfig extends ConfigController
 	// Konstruktoren
 	public FahrtenFarbeConfig()
 	{
-		log.debug("Neue BildfahrplanConfig()");
+		log.debug("Neue FahrtenFarbeConfig()");
 		this.prefs = new PreferenceHandler(FahrtenFarbeConfig.class, () -> notifyChange());
 		assert prefs != null;
 	}
-
+	
 	// Getter / Setter
 	public Color getStandardLinienFarbe()
 	{
@@ -62,18 +59,5 @@ public class FahrtenFarbeConfig extends ConfigController
 	public void setStandardLinienTyp(String standardLinienFarbe)
 	{
 		prefs.setString("standardLinienFarbe", CONFIG_STANDARD_LINIEN_TYP, standardLinienFarbe);
-	}
-	
-	public boolean schreibeEinstellungen()
-	{
-		return prefs.schreibeEinstellungen();
-	}
-	public boolean importXML(InputStream is)
-	{
-		return prefs.importXML(is);
-	}
-	public boolean exportXML(OutputStream os)
-	{
-		return prefs.exportXML(os);
 	}
 }

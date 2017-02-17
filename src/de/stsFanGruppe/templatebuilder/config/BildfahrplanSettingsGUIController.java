@@ -31,7 +31,7 @@ public class BildfahrplanSettingsGUIController extends GUIController
 	{
 		NullTester.test(gui);
 		this.gui = gui;
-		gui.saveEnabled = config.schreibTest();
+		gui.saveEnabled = config.speichertest();
 	}
 	
 	public BildfahrplanConfig getConfig()
