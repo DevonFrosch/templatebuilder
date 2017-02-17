@@ -91,18 +91,21 @@ public class TemplateBuilderGUI implements GUI
 		JSeparator separator = new JSeparator();
 		mnDatei.add(separator);
 		
-		JMenu mnImportexport = new JMenu("Import/Export");
-		mnDatei.add(mnImportexport);
+		JMenu mnImport = new JMenu("Import");
+		mnDatei.add(mnImport);
 		
 		JMenuItem mntmImportAusJtraingraph = new JMenuItem("Import aus JTrainGraph");
 		mntmImportAusJtraingraph.setActionCommand("importFromJTG");
 		mntmImportAusJtraingraph.addActionListener((ActionEvent arg0) -> controller.menuAction(arg0));
-		mnImportexport.add(mntmImportAusJtraingraph);
+		mnImport.add(mntmImportAusJtraingraph);
+		
+		JMenu mnExport = new JMenu("Export");
+		mnDatei.add(mnExport);
 		
 		JMenuItem mntmExportNachJtraingraph = new JMenuItem("Export nach JTrainGraph");
 		mntmExportNachJtraingraph.setActionCommand("exportToJTG");
 		mntmExportNachJtraingraph.addActionListener((ActionEvent arg0) -> controller.menuAction(arg0));
-		mnImportexport.add(mntmExportNachJtraingraph);
+		mnExport.add(mntmExportNachJtraingraph);
 		
 		JSeparator separator_1 = new JSeparator();
 		mnDatei.add(separator_1);
