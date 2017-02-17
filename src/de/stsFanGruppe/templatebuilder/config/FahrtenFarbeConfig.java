@@ -13,7 +13,7 @@ public class FahrtenFarbeConfig extends ConfigController
 	private PreferenceHandler prefs;
 	private static FahrtenFarbeSettingsGUI gui;
 	
-	// TODO: alt: Linienarten
+	// TODO: alt: Linientypen
 	public static final float[] DURCHGEZOGENE_LINIE = {0};
 	public static final float[] GEPUNKTE_LINIE = {10, 10};
 	public static final float[] GESTRICHELTE_LINIE = {30, 10};
@@ -24,7 +24,7 @@ public class FahrtenFarbeConfig extends ConfigController
 	// Farbeinstellungen
 	public static final String CONFIG_STANDARD_LINIEN_FARBE = "bildfahrplan/darstellung/linie/farben";
 	public static final String CONFIG_STANDARD_LINIEN_STAERKE = "bildfahrplan/darstellung/linie/staerke";
-	public static final String CONFIG_STANDARD_LINIEN_TYP = "bildfahrplan/darstellung/linie/art";
+	public static final String CONFIG_STANDARD_LINIEN_TYP = "bildfahrplan/darstellung/linie/typ";
 	
 	public static final Color DEFAULT_STANDARD_LINIEN_FARBE = Color.BLACK;
 	public static final int DEFAULT_STANDARD_LINIEN_STAERKE = 1;
@@ -86,7 +86,7 @@ public class FahrtenFarbeConfig extends ConfigController
 		return prefs.exportXML(os);
 	}
 	
-	// Linienarten
+	// Linientypen
 	public static enum LineType
 	{
 		SOLID_LINE {

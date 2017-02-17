@@ -26,10 +26,10 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 	
 	JPanel panelStandardFarbeVorschau;
 	JTextField txtStandardLinienStaerke;
-	JComboBox<LineType> comboBoxLinienArt;
+	JComboBox<LineType> comboBoxLinienTyp;
 	ArrayList<Color> testFarben = FahrtenFarbeGUITableModel.testFarben;
 	
-	public final String[] columnName = {"Zugname", "Linienfarbe", "Linienstärke", "Linienart"};
+	public final String[] columnName = {"Zugname", "Linienfarbe", "Linienstärke", "Linientyp"};
 	private JTextField textField;
 	
 	public static void main(String[] args)
@@ -73,9 +73,9 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 			}
 			{
 				// TODO Nach Testphase entfernen
-				Object[][] data = {{"Kathy", "", new Integer(5), comboBoxLinienArt}, {"John", "", new Integer(5), comboBoxLinienArt},
-						{"Sue", "", new Integer(5), comboBoxLinienArt}, {"Jane", "", new Integer(5), comboBoxLinienArt},
-						{"Joe", "", new Integer(5), comboBoxLinienArt}};
+				Object[][] data = {{"Kathy", "", new Integer(5), comboBoxLinienTyp}, {"John", "", new Integer(5), comboBoxLinienTyp},
+						{"Sue", "", new Integer(5), comboBoxLinienTyp}, {"Jane", "", new Integer(5), comboBoxLinienTyp},
+						{"Joe", "", new Integer(5), comboBoxLinienTyp}};
 						
 				DefaultTableModel tableModel = new DefaultTableModel();
 				tableModel.setDataVector(data, columnName);
@@ -84,8 +84,8 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 				table.getTableHeader().setReorderingAllowed(false);
 				// Einstellung für die 2. Spalte (Farbe):
 				table.getColumnModel().getColumn(1).setCellRenderer(new FahrtenFarbeGUITableModel.BackgroundTableCellRenderer());
-				// Einstellung des Editors für die letzte Spalte (Linienart):
-				table.getColumnModel().getColumn(3).setCellEditor(new FahrtenFarbeGUITableModel.LinienArtCellEditor());
+				// Einstellung des Editors für die letzte Spalte (Linientyp):
+				table.getColumnModel().getColumn(3).setCellEditor(new FahrtenFarbeGUITableModel.LinienTypCellEditor());
 				table.addMouseListener(new FahrtenFarbeGUITableModel.CellMouseClickForBackgroundColor());			
 				
 				JScrollPane scrollPane = new JScrollPane(table);
@@ -195,18 +195,18 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 				}
 			}
 			/*
-			 * Standardlinienart
+			 * StandardlinienTyp
 			 */
 			{
 				{
-					JLabel lblStandardLinienart = new JLabel();
-					lblStandardLinienart.setText("Linienart");
-					standardConfigLabel.add(lblStandardLinienart, "1, 5, left, default");
+					JLabel lblStandardLinientyp = new JLabel();
+					lblStandardLinientyp.setText("Linientyp");
+					standardConfigLabel.add(lblStandardLinientyp, "1, 5, left, default");
 				}
 				{
 					// FIXME Nach Auswahl eines Eintrags werden alle Linien
 					// ausgewählt.
-					standardConfigLabel.add(getComboBoxLinienArt(), "3, 5, left, default");
+					standardConfigLabel.add(getComboBoxLinienTyp(), "3, 5, left, default");
 				}
 			}
 		}
@@ -262,15 +262,15 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 		setVisible(true);
 	}
 	
-	public JComboBox<LineType> getComboBoxLinienArt()
+	public JComboBox<LineType> getComboBoxLinienTyp()
 	{
 		DefaultComboBoxModel<LineType> model = new DefaultComboBoxModel<LineType>(LineType.values());
-		comboBoxLinienArt = new JComboBox<LineType>(model);
-		comboBoxLinienArt.setRenderer(new FahrtenFarbeGUITableModel.LineRenderer());
-		comboBoxLinienArt.setEditable(false);
-		comboBoxLinienArt.setSelectedItem(0);
+		comboBoxLinienTyp = new JComboBox<LineType>(model);
+		comboBoxLinienTyp.setRenderer(new FahrtenFarbeGUITableModel.LineRenderer());
+		comboBoxLinienTyp.setEditable(false);
+		comboBoxLinienTyp.setSelectedItem(0);
 		
-		return comboBoxLinienArt;
+		return comboBoxLinienTyp;
 	}
 	
 	public void loadSettings()

@@ -8,6 +8,7 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
+import de.stsFanGruppe.templatebuilder.config.FahrtenFarbeConfig.LineType;
 import de.stsFanGruppe.tools.NullTester;
 
 public class FahrtenFarbeSettingsGUIController
@@ -43,17 +44,17 @@ public class FahrtenFarbeSettingsGUIController
 		// Set the model data of the table
 		if(isSelected)
 		{
-			gui.comboBoxLinienArt.setSelectedItem(value);
+			gui.comboBoxLinienTyp.setSelectedItem(value);
 			TableModel model = table.getModel();
 			model.setValueAt(value, rowIndex, colIndex);
 		}
 		
-		return gui.comboBoxLinienArt;
+		return gui.comboBoxLinienTyp;
 	}
 	
 	public Object getCellEditorValue()
 	{
-		return gui.comboBoxLinienArt.getSelectedItem();
+		return gui.comboBoxLinienTyp.getSelectedItem();
 	}
 	
 	/**
@@ -77,7 +78,7 @@ public class FahrtenFarbeSettingsGUIController
 		ListSelectionModel selectionModel = gui.table.getSelectionModel();
 		// Erhalte ausgewählte Zeilen
 		int[] rows = gui.table.getSelectedRows();
-		Object[] defaultRowdata = {"", "", gui.txtStandardLinienStaerke.getText(),gui.comboBoxLinienArt.getSelectedItem()};
+		Object[] defaultRowdata = {"", "", gui.txtStandardLinienStaerke.getText(),gui.comboBoxLinienTyp.getSelectedItem()};
 		switch(event.getActionCommand())
 		{
 			// Zeile(n) nach oben verschieben

@@ -52,24 +52,24 @@ public class FahrtenFarbeGUITableModel
 	}
 	
 	/**
-	 * Zelleneditoreinstellung für die Spalte, die eine Combobox erhalten soll, wo die Linienarten gezeichnet werden.
+	 * Zelleneditoreinstellung für die Spalte, die eine Combobox erhalten soll, wo die Linientypen gezeichnet werden.
 	 *
 	 * Um dies aufzurufen, wird an der Tabelle die Spalte gesucht und die Zelleditordarstellung neu gesetzt:
-	 * table.getColumnModel().getColumn(n).setCellEditor(new LinienArtCellEditor());
+	 * table.getColumnModel().getColumn(n).setCellEditor(new LinienTypCellEditor());
 	 */
-	public static class LinienArtCellEditor extends AbstractCellEditor implements TableCellEditor
+	public static class LinienTypCellEditor extends AbstractCellEditor implements TableCellEditor
 	{
-		JComboBox<LineType> comboBoxLinienArt;
+		JComboBox<LineType> comboBoxLinienTyp;
 		
-		public LinienArtCellEditor()
+		public LinienTypCellEditor()
 		{
 			// FIXME Combobox werden derzeit doppelt im Code geschrieben. Die
 			// JComboBox sollte möglich einmal definiert werden.
 			// Erstellt eine Combobox mit den Linientypen.
-			comboBoxLinienArt = new JComboBox<LineType>(LineType.values());
-			comboBoxLinienArt.setRenderer(new LineRenderer());
-			comboBoxLinienArt.setEditable(false);
-			comboBoxLinienArt.setSelectedItem(null);
+			comboBoxLinienTyp = new JComboBox<LineType>(LineType.values());
+			comboBoxLinienTyp.setRenderer(new LineRenderer());
+			comboBoxLinienTyp.setEditable(false);
+			comboBoxLinienTyp.setSelectedItem(null);
 		}
 		
 		@Override
@@ -78,17 +78,17 @@ public class FahrtenFarbeGUITableModel
 //			//Setzt das Modell für die Tabelle
 //			if(isSelected)
 //			{
-//				comboBoxLinienArt.setSelectedItem(value);
+//				comboBoxLinienTyp.setSelectedItem(value);
 //				TableModel model = (TableModel) table.getModel();
 //				model.setValueAt(value, rowIndex, colIndex);
 //			}
-			return comboBoxLinienArt;
+			return comboBoxLinienTyp;
 		}
 		
 		@Override
 		public Object getCellEditorValue()
 		{
-			return comboBoxLinienArt.getSelectedItem();
+			return comboBoxLinienTyp.getSelectedItem();
 		}
 	}
 	/**
