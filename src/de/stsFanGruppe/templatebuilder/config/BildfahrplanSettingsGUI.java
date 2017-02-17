@@ -13,6 +13,7 @@ import de.stsFanGruppe.templatebuilder.gui.GUI;
 import de.stsFanGruppe.tools.NullTester;
 import javax.swing.event.ChangeEvent;
 import com.jgoodies.forms.layout.FormSpecs;
+import javax.swing.border.BevelBorder;
 
 public class BildfahrplanSettingsGUI extends JDialog implements GUI
 {
@@ -383,6 +384,7 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 							panelFarbenBfp.add(panelBfpZeitenFarbe, "4, 2");
 							{
 								panelBfpZeitenFarbeVorschau = new JPanel();
+								panelBfpZeitenFarbeVorschau.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 								FlowLayout fl_panelBfpZeitenFarbeVorschau = (FlowLayout) panelBfpZeitenFarbeVorschau.getLayout();
 								fl_panelBfpZeitenFarbeVorschau.setVgap(10);
 								fl_panelBfpZeitenFarbeVorschau.setHgap(10);
@@ -404,6 +406,7 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 							panelFarbenBfp.add(panelBfpBetriebsstellenFarbe, "4, 4");
 							{
 								panelBfpBetriebsstellenFarbeVorschau = new JPanel();
+								panelBfpBetriebsstellenFarbeVorschau.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 								FlowLayout flowLayout = (FlowLayout) panelBfpBetriebsstellenFarbeVorschau.getLayout();
 								flowLayout.setHgap(10);
 								flowLayout.setVgap(10);
@@ -425,6 +428,7 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 							panelFarbenBfp.add(panelBfpFahrtenFarbe, "4, 6");
 							{
 								panelBfpFahrtenFarbeVorschau = new JPanel();
+								panelBfpFahrtenFarbeVorschau.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 								FlowLayout flowLayout = (FlowLayout) panelBfpFahrtenFarbeVorschau.getLayout();
 								flowLayout.setHgap(10);
 								flowLayout.setVgap(10);
@@ -446,6 +450,7 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 							panelFarbenBfp.add(panelBfpHintergrundFarbe, "4, 8");
 							{
 								panelBfpHintergrundFarbeVorschau = new JPanel();
+								panelBfpHintergrundFarbeVorschau.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 								FlowLayout flowLayout = (FlowLayout) panelBfpHintergrundFarbeVorschau.getLayout();
 								flowLayout.setHgap(10);
 								flowLayout.setVgap(10);

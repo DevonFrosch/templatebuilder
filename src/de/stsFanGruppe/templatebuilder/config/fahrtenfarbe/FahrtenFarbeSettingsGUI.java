@@ -10,6 +10,7 @@ import de.stsFanGruppe.templatebuilder.config.BildfahrplanSettingsGUI;
 import de.stsFanGruppe.templatebuilder.gui.GUI;
 import de.stsFanGruppe.tools.NullTester;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.border.BevelBorder;
 
 public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 {
@@ -139,19 +140,21 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 		{
 			JPanel standardConfigLabel = new JPanel();
 			standardConfigLabel.setBorder(BorderFactory.createTitledBorder("Standardeinstellung"));
-			contentPanel.add(standardConfigLabel, "2, 6, 3, 1, fill, fill");
+			contentPanel.add(standardConfigLabel, "2, 6, 3, 1, left, fill");
 			FormLayout fl_standardConfigLabel = new FormLayout(new ColumnSpec[] {
-					ColumnSpec.decode("max(70dlu;default)"),
-					FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
+					FormSpecs.RELATED_GAP_COLSPEC,
 					FormSpecs.DEFAULT_COLSPEC,
-					ColumnSpec.decode("3dlu:grow"),},
+					FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
+					ColumnSpec.decode("default:grow"),
+					FormSpecs.RELATED_GAP_COLSPEC,},
 				new RowSpec[] {
+					FormSpecs.RELATED_GAP_ROWSPEC,
 					FormSpecs.DEFAULT_ROWSPEC,
-					FormSpecs.LABEL_COMPONENT_GAP_ROWSPEC,
+					FormSpecs.RELATED_GAP_ROWSPEC,
 					FormSpecs.DEFAULT_ROWSPEC,
-					FormSpecs.LABEL_COMPONENT_GAP_ROWSPEC,
-					FormSpecs.DEFAULT_ROWSPEC,
-					RowSpec.decode("2dlu:grow"),});
+					FormSpecs.RELATED_GAP_ROWSPEC,
+					RowSpec.decode("max(15dlu;default)"),
+					RowSpec.decode("4dlu:grow"),});
 			standardConfigLabel.setLayout(fl_standardConfigLabel);
 			/*
 			 * Standardlinienfarbe
@@ -161,18 +164,19 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 				{
 					JLabel lblDefaultFarbeString = new JLabel();
 					lblDefaultFarbeString.setText("Linienfarbe");
-					standardConfigLabel.add(lblDefaultFarbeString, "1,1");
+					standardConfigLabel.add(lblDefaultFarbeString, "2, 2, right, default");
 				}
 				// Panel für Standardlinienfarbe
 				{
 					JPanel panelStandardLinienFarbe = new JPanel();
 					FlowLayout flowLayout = (FlowLayout) panelStandardLinienFarbe.getLayout();
 					flowLayout.setAlignment(FlowLayout.RIGHT);
-					standardConfigLabel.add(panelStandardLinienFarbe, "3, 1, left, default");
+					standardConfigLabel.add(panelStandardLinienFarbe, "4, 2, left, default");
 					{
 						// FlowLayout & Button werden im Panel hinzugefügt
 						{
 							panelStandardFarbeVorschau = new JPanel();
+							panelStandardFarbeVorschau.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 							FlowLayout fl_panelStandardFarbeVorschau = (FlowLayout) panelStandardFarbeVorschau.getLayout();
 							fl_panelStandardFarbeVorschau.setVgap(10);
 							fl_panelStandardFarbeVorschau.setHgap(10);
@@ -194,11 +198,11 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 				{
 					JLabel lblDefaultLinienStaerkeString = new JLabel();
 					lblDefaultLinienStaerkeString.setText("Linienstärke");
-					standardConfigLabel.add(lblDefaultLinienStaerkeString, "1,3");
+					standardConfigLabel.add(lblDefaultLinienStaerkeString, "2, 4, right, default");
 				}
 				{
 					txtStandardLinienStaerke = new JTextField();
-					standardConfigLabel.add(txtStandardLinienStaerke, "3, 3, fill, default");
+					standardConfigLabel.add(txtStandardLinienStaerke, "4, 4, fill, default");
 				}
 			}
 			/*
@@ -208,7 +212,7 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 				{
 					JLabel lblStandardLinientyp = new JLabel();
 					lblStandardLinientyp.setText("Linientyp");
-					standardConfigLabel.add(lblStandardLinientyp, "1, 5, left, default");
+					standardConfigLabel.add(lblStandardLinientyp, "2, 6, right, default");
 				}
 				{
 					// FIXME Nach Auswahl eines Eintrags werden alle Linien
@@ -218,7 +222,7 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 					comboBoxLinienTyp.setRenderer(new LineRenderer());
 					comboBoxLinienTyp.setEditable(false);
 					comboBoxLinienTyp.setSelectedItem(0);
-					standardConfigLabel.add(comboBoxLinienTyp, "3, 5, fill, default");
+					standardConfigLabel.add(comboBoxLinienTyp, "4, 6, fill, fill");
 				}
 			}
 		}
