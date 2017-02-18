@@ -14,17 +14,18 @@ import de.stsFanGruppe.templatebuilder.config.BildfahrplanSettingsGUIController;
 import de.stsFanGruppe.templatebuilder.gui.GUIController;
 import de.stsFanGruppe.tools.NullTester;
 
-public class FahrtenFarbeSettingsGUIController extends GUIController
+public class FahrtDarstellungSettingsGUIController extends GUIController
 {
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(BildfahrplanSettingsGUIController.class);
 	
-	private FahrtenFarbeSettingsGUI gui;
-	private FahrtenFarbeConfig config;
+	private FahrtDarstellungSettingsGUI gui;
+	private FahrtDarstellungConfig config;
 	private Runnable onClose;
+	// FIXME wird das gebraucht?
 	private TableModel tableModel;
 	public static final String[] UEBERSCHRIFTEN = {"Zugname", "Farbe", "Breite [px]", "Typ"};
 	
-	public FahrtenFarbeSettingsGUIController(FahrtenFarbeConfig config, Runnable onClose)
+	public FahrtDarstellungSettingsGUIController(FahrtDarstellungConfig config, Runnable onClose)
 	{
 		NullTester.test(config);
 		NullTester.test(onClose);
@@ -33,13 +34,13 @@ public class FahrtenFarbeSettingsGUIController extends GUIController
 		this.tableModel = new DefaultTableModel(UEBERSCHRIFTEN, 0);
 	}
 	
-	public void setSettingsGui(FahrtenFarbeSettingsGUI gui)
+	public void setSettingsGui(FahrtDarstellungSettingsGUI gui)
 	{
 		NullTester.test(gui);
 		this.gui = gui;
 	}
 	
-	public FahrtenFarbeConfig getConfig()
+	public FahrtDarstellungConfig getConfig()
 	{
 		return config;
 	}

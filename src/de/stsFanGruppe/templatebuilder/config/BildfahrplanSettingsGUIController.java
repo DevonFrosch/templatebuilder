@@ -3,9 +3,9 @@ package de.stsFanGruppe.templatebuilder.config;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import javax.swing.JColorChooser;
-import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.FahrtenFarbeConfig;
-import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.FahrtenFarbeSettingsGUI;
-import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.FahrtenFarbeSettingsGUIController;
+import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.FahrtDarstellungConfig;
+import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.FahrtDarstellungSettingsGUI;
+import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.FahrtDarstellungSettingsGUIController;
 import de.stsFanGruppe.templatebuilder.gui.GUIController;
 import de.stsFanGruppe.tools.GUILocker;
 import de.stsFanGruppe.tools.NullTester;
@@ -115,10 +115,10 @@ public class BildfahrplanSettingsGUIController extends GUIController
 				gui.loadSettings();
 				break;
 			case "format":
-				FahrtenFarbeSettingsGUIController ffsgc = new FahrtenFarbeSettingsGUIController(
-						new FahrtenFarbeConfig(), () -> {GUILocker.unlock(FahrtenFarbeSettingsGUI.class);}
+				FahrtDarstellungSettingsGUIController ffsgc = new FahrtDarstellungSettingsGUIController(
+						new FahrtDarstellungConfig(), () -> {GUILocker.unlock(FahrtDarstellungSettingsGUI.class);}
 				);
-				FahrtenFarbeSettingsGUI ffsg = new FahrtenFarbeSettingsGUI(ffsgc, gui);
+				FahrtDarstellungSettingsGUI ffsg = new FahrtDarstellungSettingsGUI(ffsgc, gui);
 				break;
 			case "cancel":
 				close();

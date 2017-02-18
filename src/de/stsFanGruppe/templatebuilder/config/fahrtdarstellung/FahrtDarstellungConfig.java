@@ -5,10 +5,10 @@ import de.stsFanGruppe.templatebuilder.config.ConfigController;
 import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.linetype.LineType;
 import de.stsFanGruppe.tools.PreferenceHandler;
 
-public class FahrtenFarbeConfig extends ConfigController
+public class FahrtDarstellungConfig extends ConfigController
 {
-	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(FahrtenFarbeConfig.class);
-	private static FahrtenFarbeSettingsGUI gui;
+	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(FahrtDarstellungConfig.class);
+	private static FahrtDarstellungSettingsGUI gui;
 	
 	// Farbeinstellungen
 	public static final String CONFIG_STANDARD_LINIEN_FARBE = "bildfahrplan/darstellung/linie/farben";
@@ -20,10 +20,10 @@ public class FahrtenFarbeConfig extends ConfigController
 	public static final LineType DEFAULT_STANDARD_LINIEN_TYP = LineType.SOLID_LINE;
 	
 	// Konstruktoren
-	public FahrtenFarbeConfig()
+	public FahrtDarstellungConfig()
 	{
-		log.debug("Neue FahrtenFarbeConfig()");
-		this.prefs = new PreferenceHandler(FahrtenFarbeConfig.class, () -> notifyChange());
+		log.debug("Neue FahrtDarstellungConfig()");
+		this.prefs = new PreferenceHandler(FahrtDarstellungConfig.class, () -> notifyChange());
 		assert prefs != null;
 	}
 	

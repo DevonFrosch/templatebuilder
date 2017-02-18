@@ -15,12 +15,12 @@ import de.stsFanGruppe.templatebuilder.gui.GUI;
 import de.stsFanGruppe.tools.NullTester;
 import javax.swing.border.BevelBorder;
 
-public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
+public class FahrtDarstellungSettingsGUI extends JDialog implements GUI
 {
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(BildfahrplanSettingsGUI.class);
 	
-	FahrtenFarbeSettingsGUIController controller;
-	FahrtenFarbeConfig config;
+	FahrtDarstellungSettingsGUIController controller;
+	FahrtDarstellungConfig config;
 	
 	final JPanel contentPanel = new JPanel();
 	JLabel lblDescription;
@@ -36,7 +36,7 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 	{
 		try
 		{
-			FahrtenFarbeSettingsGUI dialog = new FahrtenFarbeSettingsGUI(new FahrtenFarbeSettingsGUIController(new FahrtenFarbeConfig(), () -> {}), null);
+			FahrtDarstellungSettingsGUI dialog = new FahrtDarstellungSettingsGUI(new FahrtDarstellungSettingsGUIController(new FahrtDarstellungConfig(), () -> {}), null);
 		}
 		catch(Exception e)
 		{
@@ -44,7 +44,7 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 		}
 	}
 	
-	public FahrtenFarbeSettingsGUI(FahrtenFarbeSettingsGUIController controller, Window parent)
+	public FahrtDarstellungSettingsGUI(FahrtDarstellungSettingsGUIController controller, Window parent)
 	{
 		super(parent, "Zugdarstellungsregeln");
 		NullTester.test(controller);
