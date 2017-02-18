@@ -2,9 +2,14 @@ package de.stsFanGruppe.templatebuilder.config.fahrtenfarbe;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import javax.swing.JColorChooser;
+import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanSettingsGUIController;
 import de.stsFanGruppe.templatebuilder.gui.GUIController;
 import de.stsFanGruppe.tools.NullTester;
@@ -16,6 +21,8 @@ public class FahrtenFarbeSettingsGUIController extends GUIController
 	private FahrtenFarbeSettingsGUI gui;
 	private FahrtenFarbeConfig config;
 	private Runnable onClose;
+	private TableModel tableModel;
+	public static final String[] UEBERSCHRIFTEN = {"Zugname", "Farbe", "Breite [px]", "Typ"};
 	
 	public FahrtenFarbeSettingsGUIController(FahrtenFarbeConfig config, Runnable onClose)
 	{
@@ -23,6 +30,7 @@ public class FahrtenFarbeSettingsGUIController extends GUIController
 		NullTester.test(onClose);
 		this.config = config;
 		this.onClose = onClose;
+		this.tableModel = new DefaultTableModel(UEBERSCHRIFTEN, 0);
 	}
 	
 	public void setSettingsGui(FahrtenFarbeSettingsGUI gui)
@@ -96,14 +104,12 @@ public class FahrtenFarbeSettingsGUIController extends GUIController
 					for(int i = 0; i < rows.length; i++)
 					{
 						model.insertRow(rows[i] + i + 1, getDefaultRowData());
-						gui.testFarben.add(rows[i] + i + 1, gui.panelStandardFarbeVorschau.getBackground());
 					}
 					gui.table.clearSelection();
 					break;
 				}
 				else
 				{
-					gui.testFarben.add(gui.panelStandardFarbeVorschau.getBackground());
 					model.addRow(getDefaultRowData());
 					break;
 				}
@@ -120,7 +126,6 @@ public class FahrtenFarbeSettingsGUIController extends GUIController
 				{
 					for(int i = 0; i < rows.length; i++)
 					{
-						gui.testFarben.remove(rows[i] - i);
 						model.removeRow(rows[i] - i);
 					}
 					break;
@@ -213,6 +218,34 @@ public class FahrtenFarbeSettingsGUIController extends GUIController
 	protected Object[] getDefaultRowData()
 	{
 		return new Object[]{"", gui.getDefaultLineColor(), gui.getDefaultLineWidth(), gui.getDefaultLineType()};
+	}
+	public TableModel getTableModel()
+	{
+		return tableModel;
+	}
+	public MouseListener getMouseListener()
+	{
+		return new MouseAdapter() {
+			public void mouseClicked(MouseEvent e)
+			{
+				JTable target = (JTable) e.getSource();
+				int row = target.getSelectedRow();
+				int column = target.getSelectedColumn();
+				if(column == 1)
+				{
+					Color alt = (Color) gui.table.getValueAt(row, column);
+					Color neu = JColorChooser.showDialog(gui, "Farbe wählen", alt);
+					if(neu != null)
+					{
+						gui.table.setValueAt(neu, row, column);
+					}
+				}
+				if(column == 3)
+				{
+					gui.table.editCellAt(row, column);
+				}
+			}
+		};
 	}
 	
 	public void speichereStandards() throws NumberFormatException

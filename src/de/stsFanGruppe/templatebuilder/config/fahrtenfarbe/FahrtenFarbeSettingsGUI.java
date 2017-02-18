@@ -2,9 +2,6 @@ package de.stsFanGruppe.templatebuilder.config.fahrtenfarbe;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import com.jgoodies.forms.layout.*;
@@ -30,7 +27,6 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 	JPanel panelStandardFarbeVorschau;
 	JTextField txtStandardLinienStaerke;
 	private JComboBox<LineType> comboBoxLinienTyp;
-	ArrayList<Color> testFarben = FahrtenFarbeGUITableModel.testFarben;
 	
 	private JTextField textField;
 	
@@ -82,15 +78,7 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 						.setText("<html>Für eine bessere Darstellung können Linien hier nach festgelegten Kriterien hervorgehoben werden.</html>");
 			}
 			{
-				// TODO Nach Testphase entfernen
-				Object[][] data = {{"Kathy", "", new Integer(5), comboBoxLinienTyp}, {"John", "", new Integer(5), comboBoxLinienTyp},
-						{"Sue", "", new Integer(5), comboBoxLinienTyp}, {"Jane", "", new Integer(5), comboBoxLinienTyp},
-						{"Joe", "", new Integer(5), comboBoxLinienTyp}};
-						
-				//DefaultTableModel tableModel = new DefaultTableModel();
-				//tableModel.setDataVector(data, COLUMN_NAMES);
-				
-				table = new JTable(new FahrtenFarbeGUITableModel());
+				table = new JTable(controller.getTableModel());
 				table.getTableHeader().setReorderingAllowed(false);
 				
 				// Einstellung für die 2. Spalte (Farbe):
@@ -101,27 +89,7 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 				table.getColumnModel().getColumn(3).setCellRenderer(new LineRenderer());
 				table.getColumnModel().getColumn(3).setCellEditor(new FahrtenFarbeGUITableModel.LineTypeCellEditor());
 				
-				table.addMouseListener(new MouseAdapter() {
-					public void mouseClicked(MouseEvent e)
-					{
-						JTable target = (JTable) e.getSource();
-						int row = target.getSelectedRow();
-						int column = target.getSelectedColumn();
-						if(column == 1)
-						{
-							Color alt = (Color) table.getValueAt(row, column);
-							Color neu = showDialog("Farbe wählen", alt);
-							if(neu != null)
-							{
-								table.setValueAt(neu, row, column);
-							}
-						}
-						if(column == 3)
-						{
-							table.editCellAt(row, column);
-						}
-					}
-				});
+				table.addMouseListener(controller.getMouseListener());
 				
 				JScrollPane scrollPane = new JScrollPane(table);
 				scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
@@ -348,15 +316,5 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 	public void infoMessage(String text, String titel)
 	{
 		JOptionPane.showMessageDialog(contentPanel, text, titel, JOptionPane.INFORMATION_MESSAGE);
-	}
-	
-	public Color showDialog(String title, Color initialColor)
-	{
-		return JColorChooser.showDialog(this, title, initialColor);
-	}
-
-	public ArrayList<Color> getTestFarben()
-	{
-		return testFarben;
 	}
 }
