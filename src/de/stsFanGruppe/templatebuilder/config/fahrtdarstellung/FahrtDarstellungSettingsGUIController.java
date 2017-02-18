@@ -89,11 +89,18 @@ public class FahrtDarstellungSettingsGUIController extends GUIController
 			// Zeile(n) nach unten verschieben
 			case "moveDownRow":
 				selectionModel.clearSelection();
-				for(int i = 0; i < rows.length; i++)
+				if(rows[0] == model.getRowCount()-1)
 				{
-					// FIXME Farbe wird noch nicht nach unten bewegt.
-					model.moveRow(rows[i], rows[i], rows[i] + 1);
-					gui.table.addRowSelectionInterval(rows[i] + 1, rows[i] + 1);
+					gui.infoMessage("Letzte Zeile kann nicht nach unten verschoben werden.", "Info: Zeile nach unten verschieben");
+				}
+				else
+				{
+					for(int i = 0; i < rows.length; i++)
+					{
+						// FIXME Farbe wird noch nicht nach unten bewegt.
+						model.moveRow(rows[i], rows[i], rows[i] + 1);
+						gui.table.addRowSelectionInterval(rows[i] + 1, rows[i] + 1);
+					}
 				}
 				break;
 			/* Zeile(n) hinzufügen
