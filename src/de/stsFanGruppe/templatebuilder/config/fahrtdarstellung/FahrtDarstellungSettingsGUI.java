@@ -23,14 +23,11 @@ public class FahrtDarstellungSettingsGUI extends JDialog implements GUI
 	FahrtDarstellungConfig config;
 	
 	final JPanel contentPanel = new JPanel();
-	JLabel lblDescription;
 	JTable table;
 	
-	JPanel panelStandardFarbeVorschau;
-	JTextField txtStandardLinienStaerke;
-	private JComboBox<LineType> comboBoxLinienTyp;
-	
-	private JTextField textField;
+	private JPanel vorschauStandardFarbe;
+	private JTextField inputStandardBreite;
+	private JComboBox<LineType> inputStandardLineType;
 	
 	public static void main(String[] args)
 	{
@@ -170,12 +167,12 @@ public class FahrtDarstellungSettingsGUI extends JDialog implements GUI
 					{
 						// FlowLayout & Button werden im Panel hinzugefügt
 						{
-							panelStandardFarbeVorschau = new JPanel();
-							panelStandardFarbeVorschau.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-							FlowLayout fl_panelStandardFarbeVorschau = (FlowLayout) panelStandardFarbeVorschau.getLayout();
+							vorschauStandardFarbe = new JPanel();
+							vorschauStandardFarbe.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+							FlowLayout fl_panelStandardFarbeVorschau = (FlowLayout) vorschauStandardFarbe.getLayout();
 							fl_panelStandardFarbeVorschau.setVgap(10);
 							fl_panelStandardFarbeVorschau.setHgap(10);
-							panelStandardLinienFarbe.add(panelStandardFarbeVorschau);
+							panelStandardLinienFarbe.add(vorschauStandardFarbe);
 						}
 						{
 							JButton btnStandardFarbe = new JButton("w\u00E4hlen...");
@@ -196,8 +193,8 @@ public class FahrtDarstellungSettingsGUI extends JDialog implements GUI
 					standardConfigLabel.add(lblDefaultLinienStaerkeString, "2, 4, right, default");
 				}
 				{
-					txtStandardLinienStaerke = new JTextField();
-					standardConfigLabel.add(txtStandardLinienStaerke, "4, 4, fill, default");
+					inputStandardBreite = new JTextField();
+					standardConfigLabel.add(inputStandardBreite, "4, 4, fill, default");
 				}
 			}
 			/*
@@ -210,8 +207,8 @@ public class FahrtDarstellungSettingsGUI extends JDialog implements GUI
 					standardConfigLabel.add(lblStandardLinientyp, "2, 6, right, default");
 				}
 				{
-					comboBoxLinienTyp = new JLineTypeComboBox();
-					standardConfigLabel.add(comboBoxLinienTyp, "4, 6, fill, fill");
+					inputStandardLineType = new JLineTypeComboBox();
+					standardConfigLabel.add(inputStandardLineType, "4, 6, fill, fill");
 				}
 			}
 		}
@@ -274,26 +271,38 @@ public class FahrtDarstellungSettingsGUI extends JDialog implements GUI
 		setVisible(true);
 	}
 	
-	public Color getDefaultLineColor()
+	public Color getStandardFarbe()
 	{
-		return panelStandardFarbeVorschau.getBackground();
+		return vorschauStandardFarbe.getBackground();
 	}
-	public String getDefaultLineWidth()
+	public void setStandardFarbe(Color farbe)
 	{
-		return txtStandardLinienStaerke.getText();
+		vorschauStandardFarbe.setBackground(farbe);
 	}
-	public LineType getDefaultLineType()
+	public String getStandardBreite()
 	{
-		int typIndex = comboBoxLinienTyp.getSelectedIndex();
+		return inputStandardBreite.getText();
+	}
+	public void setStandardBreite(String breite)
+	{
+		inputStandardBreite.setText(breite);
+	}
+	public LineType getStandardLineType()
+	{
+		int typIndex = inputStandardLineType.getSelectedIndex();
 		return LineType.values()[typIndex];
+	}
+	public void setStandardLineType(LineType lineType)
+	{
+		inputStandardLineType.setSelectedItem(lineType);
 	}
 	
 	public void loadSettings()
 	{
 		log.info("Standardwerte für FahrtenFarbe einlesen");
-		panelStandardFarbeVorschau.setBackground(config.getStandardLinienFarbe());
-		txtStandardLinienStaerke.setText(config.getStandardLinienStärke()+"");
-		comboBoxLinienTyp.setSelectedItem(config.getStandardLinienTyp());
+		vorschauStandardFarbe.setBackground(config.getStandardLinienFarbe());
+		inputStandardBreite.setText(config.getStandardLinienStärke()+"");
+		inputStandardLineType.setSelectedItem(config.getStandardLinienTyp());
 	}
 	
 	public void close()

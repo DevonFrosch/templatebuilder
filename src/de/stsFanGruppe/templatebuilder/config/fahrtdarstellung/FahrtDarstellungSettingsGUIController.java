@@ -150,10 +150,10 @@ public class FahrtDarstellungSettingsGUIController extends GUIController
 		switch(event.getActionCommand())
 		{
 			case "zeitenFarbe":
-				c = JColorChooser.showDialog(gui, "Farbe wählen", gui.panelStandardFarbeVorschau.getBackground());
+				c = JColorChooser.showDialog(gui, "Farbe wählen", gui.getStandardFarbe());
 				if(c != null)
 				{
-					gui.panelStandardFarbeVorschau.setBackground(c);
+					gui.setStandardFarbe(c);
 				}
 				break;
 			default:
@@ -218,7 +218,7 @@ public class FahrtDarstellungSettingsGUIController extends GUIController
 	
 	protected Object[] getDefaultRowData()
 	{
-		return new Object[]{"", gui.getDefaultLineColor(), gui.getDefaultLineWidth(), gui.getDefaultLineType()};
+		return new Object[]{"", gui.getStandardFarbe(), gui.getStandardBreite(), gui.getStandardLineType()};
 	}
 	public TableModel getTableModel()
 	{
@@ -252,12 +252,12 @@ public class FahrtDarstellungSettingsGUIController extends GUIController
 	public void speichereStandards() throws NumberFormatException
 	{
 		// StandardLinienFarbe
-		config.setStandardLinienFarbe(gui.getDefaultLineColor());
+		config.setStandardLinienFarbe(gui.getStandardFarbe());
 		
 		// StandardLinienStärke
 		try
 		{
-			config.setStandardLinienStärke(parseIntField("Linienstärke", gui.getDefaultLineWidth()));
+			config.setStandardLinienStärke(parseIntField("Linienstärke", gui.getStandardBreite()));
 		}
 		catch(NumberFormatException e)
 		{
@@ -266,7 +266,7 @@ public class FahrtDarstellungSettingsGUIController extends GUIController
 		}
 		
 		// StandardLinienTyp
-		config.setStandardLinienTyp(gui.getDefaultLineType());
+		config.setStandardLinienTyp(gui.getStandardLineType());
 	}
 
 	public boolean speichertest()
