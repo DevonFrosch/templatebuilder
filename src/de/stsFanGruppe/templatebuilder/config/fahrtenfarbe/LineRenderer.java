@@ -6,7 +6,9 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JTable;
 import javax.swing.ListCellRenderer;
+import javax.swing.table.TableCellRenderer;
 
 /**
  * Ändern die Darstellung der Combobox so, dass Linien eingezeichnet werden.
@@ -14,7 +16,7 @@ import javax.swing.ListCellRenderer;
  * Um dies aufzurufen, wird an der Combobox die Darstellung neu gesetzt:
  * combobox.setRenderer(new LineRenderer());
  */
-public class LineRenderer extends JPanel implements ListCellRenderer<LineType>
+public class LineRenderer extends JPanel implements ListCellRenderer<LineType>, TableCellRenderer
 {
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(LineRenderer.class);
 	private LineType value;
@@ -22,6 +24,18 @@ public class LineRenderer extends JPanel implements ListCellRenderer<LineType>
 	public Component getListCellRendererComponent(JList<? extends LineType> list, LineType value, int index, boolean isSelected, boolean cellHasFocus)
 	{
 		this.value = value;
+		
+		if(isSelected)
+		{
+			// TODO Farbeffekte bei Auswahl			
+		}
+		
+		return this;
+	}
+	
+	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column)
+	{
+		this.value = (LineType) value;
 		
 		if(isSelected)
 		{

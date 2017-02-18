@@ -97,6 +97,8 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 				table.getColumnModel().getColumn(1).setCellRenderer(new FahrtenFarbeGUITableModel.BackgroundTableCellRenderer());
 				
 				// Einstellung des Editors für die letzte Spalte (Linientyp):
+				// TODO: Zellen lassen sich nicht mehr editieren
+				table.getColumnModel().getColumn(3).setCellRenderer(new LineRenderer());
 				table.getColumnModel().getColumn(3).setCellEditor(new FahrtenFarbeGUITableModel.LineTypeCellEditor());
 				
 				table.addMouseListener(new MouseAdapter() {
