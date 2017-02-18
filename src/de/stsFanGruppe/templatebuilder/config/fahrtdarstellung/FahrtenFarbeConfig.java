@@ -46,7 +46,20 @@ public class FahrtenFarbeConfig extends ConfigController
 	public LineType getStandardLinienTyp()
 	{
 		String name = prefs.getString(CONFIG_STANDARD_LINIEN_TYP, null);
-		return LineType.getLineType(name);
+		if(name == null)
+		{
+			return DEFAULT_STANDARD_LINIEN_TYP;
+		}
+		
+		try
+		{
+			return Enum.valueOf(LineType.class, name);
+		}
+		catch(IllegalArgumentException e)
+		{
+			log.warn("Unknown LineType {}", name);
+		}
+		return DEFAULT_STANDARD_LINIEN_TYP;
 	}
 	public String getStandardLinienTypString()
 	{
