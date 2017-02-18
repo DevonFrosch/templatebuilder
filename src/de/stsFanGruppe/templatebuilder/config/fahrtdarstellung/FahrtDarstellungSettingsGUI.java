@@ -72,12 +72,14 @@ public class FahrtDarstellungSettingsGUI extends JDialog implements GUI
 			contentPanel.setLayout(fl_panel);
 			{
 				JLabel lblDiscription = new JLabel();
-				contentPanel.add(lblDiscription, "2, 2, 3, 1");
+				contentPanel.add(lblDiscription, "2, 2, 3, 1, fill, fill");
 				lblDiscription
 						.setText("<html>Für eine bessere Darstellung können Linien hier nach festgelegten Kriterien hervorgehoben werden.</html>");
 			}
 			{
 				table = new JTable(controller.getTableModel());
+				table.setFillsViewportHeight(true);
+				table.getTableHeader().setReorderingAllowed(false);
 				
 				// Einstellung für die 2. Spalte (Farbe):
 				table.getColumnModel().getColumn(1).setCellRenderer(new BackgroundTableCellRenderer());
@@ -89,13 +91,12 @@ public class FahrtDarstellungSettingsGUI extends JDialog implements GUI
 				table.addMouseListener(controller.getMouseListener());
 				
 				JScrollPane scrollPane = new JScrollPane(table);
-				scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-				scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-				contentPanel.add(scrollPane, "2, 4");
+				scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+				contentPanel.add(scrollPane, "2, 4, fill, fill");
 			}
 			{
 				JPanel buttonTablePane = new JPanel();
-				contentPanel.add(buttonTablePane, "4, 4, default, top");
+				contentPanel.add(buttonTablePane, "4, 4, fill, top");
 				buttonTablePane.setLayout(new FormLayout(new ColumnSpec[] {FormSpecs.DEFAULT_COLSPEC,},
 						new RowSpec[] {FormSpecs.LABEL_COMPONENT_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, FormSpecs.LABEL_COMPONENT_GAP_ROWSPEC,
 								FormSpecs.DEFAULT_ROWSPEC, FormSpecs.LABEL_COMPONENT_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC,
@@ -163,7 +164,7 @@ public class FahrtDarstellungSettingsGUI extends JDialog implements GUI
 					JPanel panelStandardLinienFarbe = new JPanel();
 					FlowLayout flowLayout = (FlowLayout) panelStandardLinienFarbe.getLayout();
 					flowLayout.setAlignment(FlowLayout.RIGHT);
-					standardConfigLabel.add(panelStandardLinienFarbe, "4, 2, left, default");
+					standardConfigLabel.add(panelStandardLinienFarbe, "4, 2, left, fill");
 					{
 						// FlowLayout & Button werden im Panel hinzugefügt
 						{
