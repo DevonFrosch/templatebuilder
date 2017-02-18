@@ -112,7 +112,7 @@ public class BildfahrplanSettingsGUIController extends GUIController
 			case "load":
 				config.importSettings(gui, gui);
 				// Einstellungen neu laden
-				gui.loadSettings();
+				ladeDaten();
 				break;
 			case "format":
 				FahrtDarstellungSettingsGUIController ffsgc = new FahrtDarstellungSettingsGUIController(
@@ -157,6 +157,19 @@ public class BildfahrplanSettingsGUIController extends GUIController
 				log.error("actionButton: actionCommand nicht erkannt: {}", event.getActionCommand());
 		}
 	}
+	
+	public void ladeDaten()
+	{
+		if(!config.speichertest())
+		{
+			return;
+		}
+		config.schreibeEinstellungen();
+		
+		ladeTabBildfahrplan();
+		ladeTabFarben();
+	}
+	
 	protected void speichereTabAllgemein()
 	{
 		
@@ -169,84 +182,55 @@ public class BildfahrplanSettingsGUIController extends GUIController
 	{
 		
 	}
+
+	public void ladeTabBildfahrplan()
+	{
+		
+		gui.sliderHoeheProStunde.setValue(config.getHoeheProStunde());
+		gui.inputMinZeit.setText(getMinZeit());
+		gui.inputMaxZeit.setText(getMaxZeit());
+		gui.inputSchachtelung.setText(String.valueOf(config.getSchachtelung()));
+		gui.inputSchachtelung.setEnabled(config.getSchachtelung() != 0);
+		gui.chckbxSchachtelung.setSelected(config.getSchachtelung() != 0);
+		
+		gui.setZeigeZugnamen(config.getZeigeZugnamen());
+		gui.chckbxZugnamenKommentare.setSelected(config.getZeigeZugnamenKommentare());
+		gui.chckbxZeigeZeiten.setSelected(config.getZeigeZeiten());
+		gui.setRichtung(config.getZeigeRichtung());
+	}
 	protected void speichereTabBildfahrplan() throws NumberFormatException
 	{
-		// Höhe pro Stunde
-		try
-		{
-			config.setHoeheProStunde(parseIntField("Höhe pro Stunde", gui.inputHoeheProStunde.getText()));
-		}
-		catch(NumberFormatException e)
-		{
-			gui.errorMessage("Höhe pro Stunde: Nur positive ganze Zahlen erlaubt.");
-			throw e;
-		}
+		config.setHoeheProStunde(gui.getHoeheProStunde());
 		
-		// Dargestellte Zeit + Autosizing
-		if(gui.chckbxAuto.isSelected())
+		if(gui.getAutoSizeSelected())
 		{
 			config.enableAutoSize();
 		}
 		else
 		{
-			double minZeit, maxZeit;
-			try
-			{
-				minZeit = TimeFormater.stringToDouble(gui.inputMinZeit.getText());
-				maxZeit = TimeFormater.stringToDouble(gui.inputMaxZeit.getText());
-			}
-			catch(NumberFormatException e)
-			{
-				log.error("Dargestellte Zeit: NumberformatException", e);
-				gui.errorMessage("Dargestellte Zeit: Nur positive ganze Zahlen erlaubt.");
-				// Ball weiterwerfen
-				throw e;
-			}
-			config.setZeiten(minZeit, maxZeit);
+			config.setZeiten(gui.getMinZeit(), gui.getMaxZeit());
 		}
 		
-		// Schachtelung
-		if(gui.chckbxSchachtelung.isSelected())
-		{
-			try
-			{
-				config.setSchachtelung(parseIntField("Schachtelung", gui.inputSchachtelung.getText()));
-			}
-			catch(NumberFormatException e)
-			{
-				gui.errorMessage("Schachtelung: Nur positive ganze Zahlen erlaubt.");
-				throw e;
-			}
-		}
-		else
-		{
-			config.setSchachtelung(0);
-		}
+		config.setSchachtelung(gui.getSchachtelung());
 		
-		// ZeigeZugnamen
 		config.setZeigeZugnamen(gui.rdbtngrpZeigeZugnamen.getSelection().getActionCommand());
-		
-		// ZeigeZugnamenKommentare
 		config.setZeigeZugnamenKommentare(gui.chckbxZugnamenKommentare.isSelected());
-		
-		// ZeigeZugnamenKommentare
 		config.setZeigeZeiten(gui.chckbxZeigeZeiten.isSelected());
-		
-		// ZeigeRichtung
 		config.setZeigeRichtung(gui.rdbtngrpZeigeRichtung.getSelection().getActionCommand());
+	}
+	
+	protected void ladeTabFarben()
+	{
+		gui.panelBfpZeitenFarbeVorschau.setBackground(config.getZeitenFarbe());
+		gui.panelBfpBetriebsstellenFarbeVorschau.setBackground(config.getBetriebsstellenFarbe());
+		gui.panelBfpFahrtenFarbeVorschau.setBackground(config.getFahrtenFarbe());
+		gui.panelBfpHintergrundFarbeVorschau.setBackground(config.getHintergrundFarbe());
 	}
 	protected void speichereTabFarben()
 	{
-		// BfpZeiten
 		config.setZeitenFarbe(gui.panelBfpZeitenFarbeVorschau.getBackground());
-		
-		// BfpBetriebsstellen
 		config.setBetriebsstellenFarbe(gui.panelBfpBetriebsstellenFarbeVorschau.getBackground());
-		
-		// BfpFahrten
 		config.setFahrtenFarbe(gui.panelBfpFahrtenFarbeVorschau.getBackground());
-		
-		// BfpHintergrund
 		config.setHintergrundFarbe(gui.panelBfpHintergrundFarbeVorschau.getBackground());
 	}
 	

@@ -3,6 +3,9 @@ package de.stsFanGruppe.templatebuilder.config.fahrtdarstellung;
 import java.awt.Color;
 import de.stsFanGruppe.templatebuilder.config.ConfigController;
 import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.linetype.LineType;
+import de.stsFanGruppe.templatebuilder.zug.FahrtDarstellung;
+import de.stsFanGruppe.tools.FirstLastLinkedList;
+import de.stsFanGruppe.tools.FirstLastList;
 import de.stsFanGruppe.tools.PreferenceHandler;
 
 public class FahrtDarstellungConfig extends ConfigController
@@ -10,19 +13,26 @@ public class FahrtDarstellungConfig extends ConfigController
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(FahrtDarstellungConfig.class);
 	private static FahrtDarstellungSettingsGUI gui;
 	
+	public static final String CONFIG_FAHRTDARSTELLUNG_POSTFIX_NAME = "/name";
+	public static final String CONFIG_FAHRTDARSTELLUNG_POSTFIX_FARBE = "/farben";
+	public static final String CONFIG_FAHRTDARSTELLUNG_POSTFIX_BREITE = "/breite";
+	public static final String CONFIG_FAHRTDARSTELLUNG_POSTFIX_TYP = "/typ";
+	
 	// Farbeinstellungen
-	public static final String CONFIG_STANDARD_LINIEN_FARBE = "bildfahrplan/darstellung/linie/farben";
-	public static final String CONFIG_STANDARD_LINIEN_STAERKE = "bildfahrplan/darstellung/linie/staerke";
-	public static final String CONFIG_STANDARD_LINIEN_TYP = "bildfahrplan/darstellung/linie/typ";
+	public static final String CONFIG_STANDARD_LINIEN_PREFIX = "bildfahrplan/darstellung/linie/standard";
+	public static final String CONFIG_STANDARD_LINIEN_FARBE = CONFIG_STANDARD_LINIEN_PREFIX+CONFIG_FAHRTDARSTELLUNG_POSTFIX_NAME;
+	public static final String CONFIG_STANDARD_LINIEN_BREITE = CONFIG_STANDARD_LINIEN_PREFIX+CONFIG_FAHRTDARSTELLUNG_POSTFIX_FARBE;
+	public static final String CONFIG_STANDARD_LINIEN_TYP = CONFIG_STANDARD_LINIEN_PREFIX+CONFIG_FAHRTDARSTELLUNG_POSTFIX_BREITE;
 	
 	public static final Color DEFAULT_STANDARD_LINIEN_FARBE = Color.BLACK;
-	public static final int DEFAULT_STANDARD_LINIEN_STAERKE = 1;
+	public static final int DEFAULT_STANDARD_LINIEN_BREITE = 1;
 	public static final LineType DEFAULT_STANDARD_LINIEN_TYP = LineType.SOLID_LINE;
+	
+	public static final String CONFIG_REGEL_FAHRTNAME_PREFIX = "bildfahrplan/darstellung/linie/fahrtname";
 	
 	// Konstruktoren
 	public FahrtDarstellungConfig()
 	{
-		log.debug("Neue FahrtDarstellungConfig()");
 		this.prefs = new PreferenceHandler(FahrtDarstellungConfig.class, () -> notifyChange());
 		assert prefs != null;
 	}
@@ -38,11 +48,11 @@ public class FahrtDarstellungConfig extends ConfigController
 	}
 	public int getStandardLinienStärke()
 	{
-		return prefs.getInt(CONFIG_STANDARD_LINIEN_STAERKE, DEFAULT_STANDARD_LINIEN_STAERKE);
+		return prefs.getInt(CONFIG_STANDARD_LINIEN_BREITE, DEFAULT_STANDARD_LINIEN_BREITE);
 	}
-	public void setStandardLinienStärke(int standardLinienStärke)
+	public void setStandardLinienBreite(int standardLinienStärke)
 	{
-		prefs.setInt("standardLinienStärke", CONFIG_STANDARD_LINIEN_STAERKE, standardLinienStärke);
+		prefs.setInt("standardLinienStärke", CONFIG_STANDARD_LINIEN_BREITE, standardLinienStärke);
 	}
 	public LineType getStandardLinienTyp()
 	{
@@ -73,5 +83,65 @@ public class FahrtDarstellungConfig extends ConfigController
 	public void setStandardLinienTyp(String standardLinienFarbe)
 	{
 		prefs.setString("standardLinienFarbe", CONFIG_STANDARD_LINIEN_TYP, standardLinienFarbe);
+	}
+	
+	protected void setFahrtDarstellung(String logName, String configName, FahrtDarstellung value)
+	{
+		assert value != null;
+		
+		prefs.setString(logName+"-Name", configName+CONFIG_FAHRTDARSTELLUNG_POSTFIX_NAME, value.getName());
+		prefs.setColor(logName+"-Farbe", configName+CONFIG_FAHRTDARSTELLUNG_POSTFIX_FARBE, value.getFarbe());
+		prefs.setInt(logName+"-Breite", configName+CONFIG_FAHRTDARSTELLUNG_POSTFIX_BREITE, value.getBreite());
+		prefs.setString(logName+"-Typ", configName+CONFIG_FAHRTDARSTELLUNG_POSTFIX_TYP, value.getTyp().name());
+	}
+	protected FahrtDarstellung getFahrtDarstellung(String configName, FahrtDarstellung defaultValue)
+	{
+		assert defaultValue != null;
+		
+		try
+		{
+			String name = prefs.getString(configName+CONFIG_FAHRTDARSTELLUNG_POSTFIX_NAME, defaultValue.getName());
+			Color farbe = prefs.getColor(configName+CONFIG_FAHRTDARSTELLUNG_POSTFIX_FARBE, defaultValue.getFarbe());
+			int breite = prefs.getInt(configName+CONFIG_FAHRTDARSTELLUNG_POSTFIX_BREITE, defaultValue.getBreite());
+			String typString = prefs.getString(configName+CONFIG_FAHRTDARSTELLUNG_POSTFIX_TYP, defaultValue.getTyp().name());
+			LineType typ = null;
+			if(typString != null)
+			{
+				typ = LineType.valueOf(typString);
+			}
+			return new FahrtDarstellung(name, farbe, breite, typ);
+		}
+		catch(IllegalArgumentException e)
+		{
+			log.error("NumberFormatException beim Lesen von {}", configName, e);
+		}
+		
+		return defaultValue;
+	}
+	// Fahrtdarstellungen = xxx/count, xxx/i/name, xxx/i/farbe
+	protected void setFahrtDarstellungen(FahrtDarstellung[] values)
+	{
+		int i=0;
+		for(FahrtDarstellung fd: values)
+		{
+			setFahrtDarstellung("FahrtDarstellung "+i, CONFIG_REGEL_FAHRTNAME_PREFIX+"/"+i, fd);
+			i++;
+		}
+		prefs.setInt("Anzahl FahrtDarstellungen", CONFIG_REGEL_FAHRTNAME_PREFIX+"/count", i);
+	}
+	protected FahrtDarstellung[] getFahrtDarstellungen()
+	{
+		int count = prefs.getInt(CONFIG_REGEL_FAHRTNAME_PREFIX+"/count", 0);
+		
+		FahrtDarstellung defaultValue = new FahrtDarstellung("", DEFAULT_STANDARD_LINIEN_FARBE,
+				DEFAULT_STANDARD_LINIEN_BREITE, DEFAULT_STANDARD_LINIEN_TYP);
+		FirstLastList<FahrtDarstellung> list = new FirstLastLinkedList<>();
+		
+		for(int i=0; i < count; i++)
+		{
+			list.add(getFahrtDarstellung(CONFIG_REGEL_FAHRTNAME_PREFIX+"/"+i, defaultValue));
+		}
+		
+		return list.toArray(new FahrtDarstellung[list.size()]);
 	}
 }

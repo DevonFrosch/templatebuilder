@@ -11,6 +11,7 @@ import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
 import de.stsFanGruppe.templatebuilder.gui.GUI;
 import de.stsFanGruppe.tools.NullTester;
+import de.stsFanGruppe.tools.TimeFormater;
 import javax.swing.event.ChangeEvent;
 import com.jgoodies.forms.layout.FormSpecs;
 import javax.swing.border.BevelBorder;
@@ -547,28 +548,80 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 				}
 			}
 		}
-		loadSettings();
+		controller.ladeDaten();
 		setVisible(true);
 	}
 	
-	public void loadSettings()
+	public int getHoeheProStunde()
 	{
-		log.info("Einstellungen neu lesen");
-		
-		if(!config.speichertest())
+		try
 		{
-			return;
+			return controller.parseIntField("Höhe pro Stunde", inputHoeheProStunde.getText());
 		}
-		config.schreibeEinstellungen();
+		catch(NumberFormatException e)
+		{
+			log.error("NumberFormatException bei hoeheProStunde: {}", e.getMessage());
+			errorMessage("Höhe pro Stunde: Nur positive ganze Zahlen erlaubt.");
+			throw e;
+		}
+	}
+	public boolean getAutoSizeSelected()
+	{
+		return chckbxAuto.isSelected();
+	}
+	public double getMinZeit() throws NumberFormatException
+	{
+		try
+		{
+			return TimeFormater.stringToDouble(inputMinZeit.getText());
+		}
+		catch(NumberFormatException e)
+		{
+			log.error("NumberFormatException bei minZeit: {}", e.getMessage());
+			errorMessage("Dargestellte Zeit: Nur Zeiten im Format hh:mm (z.B. 12:01) erlaubt.");
+			throw e;
+		}
+	}
+	public double getMaxZeit() throws NumberFormatException
+	{
+		try
+		{
+			return TimeFormater.stringToDouble(inputMaxZeit.getText());
+		}
+		catch(NumberFormatException e)
+		{
+			log.error("NumberFormatException bei maxZeit: {}", e.getMessage());
+			errorMessage("Dargestellte Zeit: Nur Zeiten im Format hh:mm (z.B. 12:01) erlaubt.");
+			throw e;
+		}
+	}
+	public int getSchachtelung()
+	{
+		if(!chckbxSchachtelung.isSelected())
+		{
+			return 0;
+		}
 		
-		sliderHoeheProStunde.setValue(config.getHoeheProStunde());
-		inputMinZeit.setText(controller.getMinZeit());
-		inputMaxZeit.setText(controller.getMaxZeit());
-		inputSchachtelung.setText(String.valueOf(config.getSchachtelung()));
-		inputSchachtelung.setEnabled(config.getSchachtelung() != 0);
-		chckbxSchachtelung.setSelected(config.getSchachtelung() != 0);
-		
-		switch(config.getZeigeZugnamen())
+		try
+		{
+			int schachtelung = controller.parseIntField("Schachtelung", inputSchachtelung.getText());
+			if(schachtelung == 0)
+			{
+				throw new NumberFormatException("0 Minuten nicht sinnvoll.");
+			}
+			return schachtelung;
+		}
+		catch(NumberFormatException e)
+		{
+			log.error("NumberFormatException bei schachtelung: {}", e.getMessage());
+			errorMessage("Schachtelung: Nur positive ganze Zahlen erlaubt.");
+			throw e;
+		}
+	}
+	
+	public void setZeigeZugnamen(int zeigeZugnamen)
+	{
+		switch(zeigeZugnamen)
 		{
 			case 0:
 				rdbtngrpZeigeZugnamen.setSelected(radioZeigeZugnamenNie.getModel(), true);
@@ -582,10 +635,9 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 			default:
 				log.error("ZeigeZugnamen: Ung\u00FCltiger Wert {}", config.getZeigeZugnamen());
 		}
-		
-		chckbxZugnamenKommentare.setSelected(config.getZeigeZugnamenKommentare());
-		chckbxZeigeZeiten.setSelected(config.getZeigeZeiten());
-		
+	}
+	public void setRichtung(int richtung)
+	{
 		switch(config.getZeigeRichtung())
 		{
 			case 0:
@@ -603,11 +655,6 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 			default:
 				log.error("ZeigeRichtung: Ung\u00FCltiger Wert {}", config.getZeigeRichtung());
 		}
-		
-		panelBfpZeitenFarbeVorschau.setBackground(config.getZeitenFarbe());
-		panelBfpBetriebsstellenFarbeVorschau.setBackground(config.getBetriebsstellenFarbe());
-		panelBfpFahrtenFarbeVorschau.setBackground(config.getFahrtenFarbe());
-		panelBfpHintergrundFarbeVorschau.setBackground(config.getHintergrundFarbe());
 	}
 	
 	public void close()

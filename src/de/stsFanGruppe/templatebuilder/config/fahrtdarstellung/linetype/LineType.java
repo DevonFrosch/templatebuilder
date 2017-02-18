@@ -37,4 +37,20 @@ public enum LineType
 	};
 	
 	public abstract Stroke getStroke();
+	
+	public static LineType valueOf(String name, LineType defaultValue)
+	{
+		if(name == null)
+		{
+			return defaultValue;
+		}
+		
+		try
+		{
+			return Enum.valueOf(LineType.class, name);
+		}
+		catch(IllegalArgumentException e)
+		{}
+		return defaultValue;
+	}
 }

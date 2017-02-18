@@ -6,12 +6,15 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Arrays;
+import javax.swing.DefaultCellEditor;
 import javax.swing.JColorChooser;
 import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
+import javax.swing.JTextField;
+import javax.swing.table.TableCellEditor;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanSettingsGUIController;
 import de.stsFanGruppe.templatebuilder.gui.GUIController;
 import de.stsFanGruppe.templatebuilder.zug.FahrtDarstellung;
+import de.stsFanGruppe.tools.FirstLastLinkedList;
 import de.stsFanGruppe.tools.NullTester;
 
 public class FahrtDarstellungSettingsGUIController extends GUIController
@@ -56,8 +59,6 @@ public class FahrtDarstellungSettingsGUIController extends GUIController
 			log.error("actionButton(): Keine GUI gesetzt!");
 			return;
 		}
-		// Selectionmodell wird ausgelesen
-		ListSelectionModel selectionModel = gui.table.getSelectionModel();
 		// Erhalte ausgewählte Zeilen
 		int[] rows = gui.table.getSelectedRows();
 		Arrays.sort(rows);
@@ -73,7 +74,7 @@ public class FahrtDarstellungSettingsGUIController extends GUIController
 					break;
 				}
 				
-				selectionModel.clearSelection();
+				gui.table.clearSelection();
 				
 				for(int i = 0; i < rows.length; i++)
 				{
@@ -93,7 +94,7 @@ public class FahrtDarstellungSettingsGUIController extends GUIController
 					break;
 				}
 				
-				selectionModel.clearSelection();
+				gui.table.clearSelection();
 				
 				for(int i = 0; i < rows.length; i++)
 				{
@@ -188,7 +189,7 @@ public class FahrtDarstellungSettingsGUIController extends GUIController
 			case "load":
 				config.importSettings(gui, gui);
 				// Einstellungen neu laden
-				gui.loadSettings();
+				ladeStandards();
 				break;
 			case "cancel":
 				close();
@@ -198,6 +199,7 @@ public class FahrtDarstellungSettingsGUIController extends GUIController
 				try
 				{
 					speichereStandards();
+					speichereRegeln();
 				}
 				catch(NumberFormatException e)
 				{
@@ -228,16 +230,39 @@ public class FahrtDarstellungSettingsGUIController extends GUIController
 	{
 		return new FahrtDarstellung("", gui.getStandardFarbe(), gui.getStandardBreiteInt(), gui.getStandardLineType());
 	}
+	public TableCellEditor getDoNothingCellEditor()
+	{
+		DefaultCellEditor editor = new DefaultCellEditor(new JTextField()) {
+			public boolean isCellEditable(java.util.EventObject anEvent)
+			{
+				return false;
+			}
+		};
+		
+		return editor;
+	}
 	public MouseListener getMouseListener()
 	{
-		return new MouseAdapter() {
+		return new MouseAdapter()
+		{
 			public void mouseClicked(MouseEvent e)
 			{
 				JTable target = (JTable) e.getSource();
+				
 				int row = target.getSelectedRow();
 				int column = target.getSelectedColumn();
-				if(column == 1)
+				
+				// übersetzt auf das unterliegende Modell
+				int modelColumn = target.convertColumnIndexToModel(column);
+				
+				if(modelColumn == 1)
 				{
+					if(e.getClickCount() != 2)
+					{
+						// Nur Doppelklicks
+						return;
+					}
+					
 					Color alt = (Color) gui.table.getValueAt(row, column);
 					Color neu = JColorChooser.showDialog(gui, "Farbe wählen", alt);
 					if(neu != null)
@@ -245,12 +270,15 @@ public class FahrtDarstellungSettingsGUIController extends GUIController
 						gui.table.setValueAt(neu, row, column);
 					}
 				}
-				if(column == 3)
-				{
-					gui.table.editCellAt(row, column);
-				}
 			}
 		};
+	}
+	
+	public void ladeStandards()
+	{
+		gui.setStandardFarbe(config.getStandardLinienFarbe());
+		gui.setStandardBreite(config.getStandardLinienStärke()+"");
+		gui.setStandardLineType(config.getStandardLinienTyp());
 	}
 	
 	public void speichereStandards() throws NumberFormatException
@@ -261,7 +289,7 @@ public class FahrtDarstellungSettingsGUIController extends GUIController
 		// StandardLinienStärke
 		try
 		{
-			config.setStandardLinienStärke(parseIntField("Linienstärke", gui.getStandardBreite()));
+			config.setStandardLinienBreite(parseIntField("Linienstärke", gui.getStandardBreite()));
 		}
 		catch(NumberFormatException e)
 		{
@@ -272,7 +300,26 @@ public class FahrtDarstellungSettingsGUIController extends GUIController
 		// StandardLinienTyp
 		config.setStandardLinienTyp(gui.getStandardLineType());
 	}
-
+	
+	public void ladeRegeln()
+	{
+		gui.table.removeAllRows();
+		for(FahrtDarstellung darstellung: config.getFahrtDarstellungen())
+		{
+			gui.table.addRow(darstellung);
+		}
+	}
+	public void speichereRegeln()
+	{
+		FirstLastLinkedList<FahrtDarstellung> darstellungen = new FirstLastLinkedList<>();
+		for(int i=0; i < gui.table.getRowCount(); i++)
+		{
+			darstellungen.add(gui.table.getRow(i));
+		}
+		FahrtDarstellung[] array = darstellungen.toArray(new FahrtDarstellung[darstellungen.size()]);
+		config.setFahrtDarstellungen(array);
+	}
+	
 	public boolean speichertest()
 	{
 		return config.speichertest();

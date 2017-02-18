@@ -85,6 +85,7 @@ public class FahrtDarstellungSettingsGUI extends JDialog implements GUI
 				
 				// Einstellung für die 2. Spalte (Farbe):
 				table.getColumnModel().getColumn(1).setCellRenderer(new BackgroundTableCellRenderer());
+				table.getColumnModel().getColumn(1).setCellEditor(controller.getDoNothingCellEditor());
 				
 				// Einstellung für die 4. Spalte (Linientyp):
 				table.getColumnModel().getColumn(3).setCellRenderer(new LineTypeRenderer());
@@ -270,7 +271,9 @@ public class FahrtDarstellungSettingsGUI extends JDialog implements GUI
 				}
 			}
 		}
-		loadSettings();
+		
+		controller.ladeStandards();
+		controller.ladeRegeln();
 		setVisible(true);
 	}
 	
@@ -294,7 +297,7 @@ public class FahrtDarstellungSettingsGUI extends JDialog implements GUI
 		}
 		catch(NumberFormatException e)
 		{
-			return FahrtDarstellungConfig.DEFAULT_STANDARD_LINIEN_STAERKE;
+			return FahrtDarstellungConfig.DEFAULT_STANDARD_LINIEN_BREITE;
 		}
 	}
 	public void setStandardBreite(String breite)
@@ -309,14 +312,6 @@ public class FahrtDarstellungSettingsGUI extends JDialog implements GUI
 	public void setStandardLineType(LineType lineType)
 	{
 		inputStandardLineType.setSelectedItem(lineType);
-	}
-	
-	public void loadSettings()
-	{
-		log.info("Standardwerte für FahrtenFarbe einlesen");
-		vorschauStandardFarbe.setBackground(config.getStandardLinienFarbe());
-		inputStandardBreite.setText(config.getStandardLinienStärke()+"");
-		inputStandardLineType.setSelectedItem(config.getStandardLinienTyp());
 	}
 	
 	public void close()
