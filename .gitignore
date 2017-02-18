@@ -1,0 +1,9 @@
+/bin/
+/doc/
+/logs/
+/testdaten/
+/versionen/
+.classpath
+.gitignore
+.project
+/Manifest.mf
