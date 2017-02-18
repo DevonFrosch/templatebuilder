@@ -2,6 +2,7 @@ package de.stsFanGruppe.templatebuilder.config.fahrtdarstellung;
 
 import java.awt.Color;
 import de.stsFanGruppe.templatebuilder.config.ConfigController;
+import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.linetype.LineType;
 import de.stsFanGruppe.tools.PreferenceHandler;
 
 public class FahrtenFarbeConfig extends ConfigController

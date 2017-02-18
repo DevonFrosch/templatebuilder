@@ -1,6 +1,7 @@
 package de.stsFanGruppe.templatebuilder.config.fahrtdarstellung;
 
 import java.awt.Color;
+import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.linetype.LineType;
 
 public class FahrtDarstellung
 {

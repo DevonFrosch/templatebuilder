@@ -4,8 +4,8 @@ import java.awt.Component;
 import javax.swing.AbstractCellEditor;
 import javax.swing.JTable;
 import javax.swing.table.TableCellEditor;
-import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.JLineTypeComboBox;
-import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.LineType;
+import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.linetype.JLineTypeComboBox;
+import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.linetype.LineType;
 
 /**
  * Zelleneditoreinstellung für die Spalte, die eine Combobox erhalten soll, wo die Linientypen gezeichnet werden.

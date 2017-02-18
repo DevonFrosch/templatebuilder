@@ -1,4 +1,4 @@
-package de.stsFanGruppe.templatebuilder.config.fahrtdarstellung;
+package de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.linetype;
 
 import javax.swing.JComboBox;
 
