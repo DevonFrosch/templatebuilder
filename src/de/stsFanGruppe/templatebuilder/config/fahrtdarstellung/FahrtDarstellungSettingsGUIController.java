@@ -5,13 +5,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.Arrays;
 import javax.swing.JColorChooser;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanSettingsGUIController;
 import de.stsFanGruppe.templatebuilder.gui.GUIController;
+import de.stsFanGruppe.templatebuilder.zug.FahrtDarstellung;
 import de.stsFanGruppe.tools.NullTester;
 
 public class FahrtDarstellungSettingsGUIController extends GUIController
@@ -21,9 +21,6 @@ public class FahrtDarstellungSettingsGUIController extends GUIController
 	private FahrtDarstellungSettingsGUI gui;
 	private FahrtDarstellungConfig config;
 	private Runnable onClose;
-	// FIXME wird das gebraucht?
-	private TableModel tableModel;
-	public static final String[] UEBERSCHRIFTEN = {"Zugname", "Farbe", "Breite [px]", "Typ"};
 	
 	public FahrtDarstellungSettingsGUIController(FahrtDarstellungConfig config, Runnable onClose)
 	{
@@ -31,7 +28,6 @@ public class FahrtDarstellungSettingsGUIController extends GUIController
 		NullTester.test(onClose);
 		this.config = config;
 		this.onClose = onClose;
-		this.tableModel = new DefaultTableModel(UEBERSCHRIFTEN, 0);
 	}
 	
 	public void setSettingsGui(FahrtDarstellungSettingsGUI gui)
@@ -60,48 +56,53 @@ public class FahrtDarstellungSettingsGUIController extends GUIController
 			log.error("actionButton(): Keine GUI gesetzt!");
 			return;
 		}
-		// Tabellenmodell wird ausgelesen
-		DefaultTableModel model = (DefaultTableModel) gui.table.getModel();
 		// Selectionmodell wird ausgelesen
 		ListSelectionModel selectionModel = gui.table.getSelectionModel();
 		// Erhalte ausgewählte Zeilen
 		int[] rows = gui.table.getSelectedRows();
+		Arrays.sort(rows);
 		
 		switch(event.getActionCommand())
 		{
 			// Zeile(n) nach oben verschieben
 			case "moveUpRow":
-				if(rows[0] == 0)
+				if(rows.length <= 0 || rows[0] <= 0)
 				{
-					gui.infoMessage("Erste Zeile kann nicht nach oben verschoben werden.", "Info: Zeile nach oben verschieben");
+					// TODO: Visuelles Feedback ohne Bestätigung
+					log.debug("tableButtonAction(moveUpRow): Keine oder oberste Zeile markiert.");
+					break;
 				}
-				else
+				
+				selectionModel.clearSelection();
+				
+				for(int i = 0; i < rows.length; i++)
 				{
-					selectionModel.clearSelection();
-					for(int i = 0; i < rows.length; i++)
-					{
-						// FIXME Farbe wird noch nicht nach oben bewegt.
-						model.moveRow(rows[i], rows[i], rows[i] - 1);
-						gui.table.addRowSelectionInterval(rows[i] - 1, rows[i] - 1);
-					}
+					FahrtDarstellung tauschPartner = gui.table.getRow(rows[i] - 1);
+					gui.table.setRow(gui.table.getRow(rows[i]), rows[i] - 1);
+					gui.table.setRow(tauschPartner, rows[i]);
+					gui.table.addRowSelectionInterval(rows[i] - 1, rows[i] - 1);
 				}
+				
 				break;
 			// Zeile(n) nach unten verschieben
 			case "moveDownRow":
+				if(rows.length <= 0 || rows[rows.length-1] >= gui.table.getRowCount()-1)
+				{
+					// TODO: Visuelles Feedback ohne Bestätigung
+					log.debug("tableButtonAction(moveDownRow): Keine oder unterste Zeile markiert.");
+					break;
+				}
+				
 				selectionModel.clearSelection();
-				if(rows[0] == model.getRowCount()-1)
+				
+				for(int i = 0; i < rows.length; i++)
 				{
-					gui.infoMessage("Letzte Zeile kann nicht nach unten verschoben werden.", "Info: Zeile nach unten verschieben");
+					FahrtDarstellung tauschPartner = gui.table.getRow(rows[i] + 1);
+					gui.table.setRow(gui.table.getRow(rows[i]), rows[i] + 1);
+					gui.table.setRow(tauschPartner, rows[i]);
+					gui.table.addRowSelectionInterval(rows[i] + 1, rows[i] + 1);
 				}
-				else
-				{
-					for(int i = 0; i < rows.length; i++)
-					{
-						// FIXME Farbe wird noch nicht nach unten bewegt.
-						model.moveRow(rows[i], rows[i], rows[i] + 1);
-						gui.table.addRowSelectionInterval(rows[i] + 1, rows[i] + 1);
-					}
-				}
+				
 				break;
 			/* Zeile(n) hinzufügen
 			 * Zeile(n) wird/ werden nach ausgewählten Zeilen hinzugefügt oder nach der letzten Zeile
@@ -111,35 +112,35 @@ public class FahrtDarstellungSettingsGUIController extends GUIController
 				{
 					for(int i = 0; i < rows.length; i++)
 					{
-						model.insertRow(rows[i] + i + 1, getDefaultRowData());
+						gui.table.insertRow(rows[i] + i + 1, getDefaultRowData());
 					}
 					gui.table.clearSelection();
-					break;
 				}
 				else
 				{
-					model.addRow(getDefaultRowData());
-					break;
+					gui.table.addRow(getDefaultRowData());
 				}
+				break;
 			/* Zeile(n) löschen
 			 * Wenn keine Zeile ausgewählt, erscheint Fehlerfenster.
 			 */
 			case "removeRow":
 				if(rows.length < 0)
 				{
-					gui.errorMessage("Zeile auswählen, die gelöscht werden soll", "Zeile löschen fehlgeschlagen!");
+					// TODO: Visuelles Feedback ohne Bestätigung
+					log.debug("tableButtonAction(removeRow): Keine Zeile markiert");
 					break;
 				}
-				else
+				
+				for(int i = 0; i < rows.length; i++)
 				{
-					for(int i = 0; i < rows.length; i++)
-					{
-						model.removeRow(rows[i] - i);
-					}
-					break;
+					gui.table.removeRow(rows[i] - i);
 				}
+				
+				break;
+			default:
+				log.error("tableButtonAction: actionCommand nicht erkannt: {}", event.getActionCommand());
 		}
-		
 	}
 	
 	public void farbButton(ActionEvent event)
@@ -223,13 +224,9 @@ public class FahrtDarstellungSettingsGUIController extends GUIController
 		}
 	}
 	
-	protected Object[] getDefaultRowData()
+	protected FahrtDarstellung getDefaultRowData()
 	{
-		return new Object[]{"", gui.getStandardFarbe(), gui.getStandardBreite(), gui.getStandardLineType()};
-	}
-	public TableModel getTableModel()
-	{
-		return tableModel;
+		return new FahrtDarstellung("", gui.getStandardFarbe(), gui.getStandardBreiteInt(), gui.getStandardLineType());
 	}
 	public MouseListener getMouseListener()
 	{

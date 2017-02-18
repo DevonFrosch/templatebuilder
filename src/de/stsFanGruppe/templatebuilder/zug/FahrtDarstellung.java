@@ -50,4 +50,9 @@ public class FahrtDarstellung
 	{
 		this.typ = typ;
 	}
+	
+	public Object[] toArray()
+	{
+		return new Object[]{name, farbe, Integer.toString(breite), typ};
+	}
 }

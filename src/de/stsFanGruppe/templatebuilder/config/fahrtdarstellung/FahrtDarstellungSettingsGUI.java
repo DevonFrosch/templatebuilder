@@ -10,6 +10,7 @@ import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.linetype.JLineTyp
 import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.linetype.LineTypeRenderer;
 import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.linetype.LineType;
 import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.table.BackgroundTableCellRenderer;
+import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.table.FahrtDarstellungTable;
 import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.table.LineTypeCellEditor;
 import de.stsFanGruppe.templatebuilder.gui.GUI;
 import de.stsFanGruppe.tools.NullTester;
@@ -21,9 +22,10 @@ public class FahrtDarstellungSettingsGUI extends JDialog implements GUI
 	
 	FahrtDarstellungSettingsGUIController controller;
 	FahrtDarstellungConfig config;
+	public static final String[] UEBERSCHRIFTEN = {"Zugname", "Farbe", "Breite [px]", "Typ"};
 	
 	final JPanel contentPanel = new JPanel();
-	JTable table;
+	FahrtDarstellungTable table;
 	
 	private JPanel vorschauStandardFarbe;
 	private JTextField inputStandardBreite;
@@ -77,7 +79,7 @@ public class FahrtDarstellungSettingsGUI extends JDialog implements GUI
 						.setText("<html>Für eine bessere Darstellung können Linien hier nach festgelegten Kriterien hervorgehoben werden.</html>");
 			}
 			{
-				table = new JTable(controller.getTableModel());
+				table = new FahrtDarstellungTable(UEBERSCHRIFTEN, 0);
 				table.setFillsViewportHeight(true);
 				table.getTableHeader().setReorderingAllowed(false);
 				
@@ -283,6 +285,17 @@ public class FahrtDarstellungSettingsGUI extends JDialog implements GUI
 	public String getStandardBreite()
 	{
 		return inputStandardBreite.getText();
+	}
+	public int getStandardBreiteInt()
+	{
+		try
+		{
+			return Integer.parseInt(getStandardBreite());
+		}
+		catch(NumberFormatException e)
+		{
+			return FahrtDarstellungConfig.DEFAULT_STANDARD_LINIEN_STAERKE;
+		}
 	}
 	public void setStandardBreite(String breite)
 	{
