@@ -1,4 +1,4 @@
-package de.stsFanGruppe.templatebuilder.config.fahrtenfarbe;
+package de.stsFanGruppe.templatebuilder.config.fahrtdarstellung;
 
 import javax.swing.JComboBox;
 
