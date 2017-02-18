@@ -6,6 +6,8 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import com.jgoodies.forms.layout.*;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanSettingsGUI;
+import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.table.BackgroundTableCellRenderer;
+import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.table.LineTypeCellEditor;
 import de.stsFanGruppe.templatebuilder.gui.GUI;
 import de.stsFanGruppe.tools.NullTester;
 import javax.swing.border.BevelBorder;
@@ -14,11 +16,8 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 {
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(BildfahrplanSettingsGUI.class);
 	
-	
-	
 	FahrtenFarbeSettingsGUIController controller;
 	FahrtenFarbeConfig config;
-	FahrtenFarbeGUITableModel ownTableModel;
 	
 	final JPanel contentPanel = new JPanel();
 	JLabel lblDescription;
@@ -82,12 +81,12 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 				table.getTableHeader().setReorderingAllowed(false);
 				
 				// Einstellung für die 2. Spalte (Farbe):
-				table.getColumnModel().getColumn(1).setCellRenderer(new FahrtenFarbeGUITableModel.BackgroundTableCellRenderer());
+				table.getColumnModel().getColumn(1).setCellRenderer(new BackgroundTableCellRenderer());
 				
 				// Einstellung des Editors für die letzte Spalte (Linientyp):
 				// TODO: Zellen lassen sich nicht mehr editieren
 				table.getColumnModel().getColumn(3).setCellRenderer(new LineRenderer());
-				table.getColumnModel().getColumn(3).setCellEditor(new FahrtenFarbeGUITableModel.LineTypeCellEditor());
+				table.getColumnModel().getColumn(3).setCellEditor(new LineTypeCellEditor());
 				
 				table.addMouseListener(controller.getMouseListener());
 				
