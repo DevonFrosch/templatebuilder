@@ -39,30 +39,23 @@ public class FahrtenFarbeGUITableModel
 	 */
 	public static class LineTypeCellEditor extends AbstractCellEditor implements TableCellEditor
 	{
-		JLineTypeComboBox comboBoxLinienTyp;
+		JLineTypeComboBox comboBox;
 		
 		public LineTypeCellEditor()
 		{
-			comboBoxLinienTyp = new JLineTypeComboBox();
+			comboBox = new JLineTypeComboBox();
 		}
 		
-		@Override
 		public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int rowIndex, int colIndex)
 		{
-//			//Setzt das Modell für die Tabelle
-//			if(isSelected)
-//			{
-//				comboBoxLinienTyp.setSelectedItem(value);
-//				TableModel model = (TableModel) table.getModel();
-//				model.setValueAt(value, rowIndex, colIndex);
-//			}
-			return comboBoxLinienTyp;
+			LineType lineType = (LineType) table.getValueAt(rowIndex, colIndex);
+			comboBox.setSelectedItem(lineType);
+			return comboBox;
 		}
 		
-		@Override
 		public Object getCellEditorValue()
 		{
-			return comboBoxLinienTyp.getSelectedItem();
+			return comboBox.getSelectedItem();
 		}
 	}
 }
