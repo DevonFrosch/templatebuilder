@@ -7,7 +7,7 @@ import javax.swing.border.EmptyBorder;
 import com.jgoodies.forms.layout.*;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanSettingsGUI;
 import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.linetype.JLineTypeComboBox;
-import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.linetype.LineRenderer;
+import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.linetype.LineTypeRenderer;
 import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.linetype.LineType;
 import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.table.BackgroundTableCellRenderer;
 import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.table.LineTypeCellEditor;
@@ -86,7 +86,7 @@ public class FahrtDarstellungSettingsGUI extends JDialog implements GUI
 				table.getColumnModel().getColumn(1).setCellRenderer(new BackgroundTableCellRenderer());
 				
 				// Einstellung für die 4. Spalte (Linientyp):
-				table.getColumnModel().getColumn(3).setCellRenderer(new LineRenderer());
+				table.getColumnModel().getColumn(3).setCellRenderer(new LineTypeRenderer());
 				table.getColumnModel().getColumn(3).setCellEditor(new LineTypeCellEditor());
 				
 				table.addMouseListener(controller.getMouseListener());

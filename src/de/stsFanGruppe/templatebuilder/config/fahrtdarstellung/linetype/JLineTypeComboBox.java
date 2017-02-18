@@ -7,7 +7,7 @@ public class JLineTypeComboBox extends JComboBox<LineType>
 	public JLineTypeComboBox()
 	{
 		super(LineType.values());
-		setRenderer(new LineRenderer());
+		setRenderer(new LineTypeRenderer());
 		setEditable(false);
 		setSelectedItem(0);
 	}

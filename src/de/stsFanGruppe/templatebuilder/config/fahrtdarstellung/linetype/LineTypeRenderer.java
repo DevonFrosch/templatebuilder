@@ -14,11 +14,11 @@ import javax.swing.table.TableCellRenderer;
  * Ändern die Darstellung der Combobox so, dass Linien eingezeichnet werden.
  *
  * Um dies aufzurufen, wird an der Combobox die Darstellung neu gesetzt:
- * combobox.setRenderer(new LineRenderer());
+ * combobox.setRenderer(new LineTypeRenderer());
  */
-public class LineRenderer extends JPanel implements ListCellRenderer<LineType>, TableCellRenderer
+public class LineTypeRenderer extends JPanel implements ListCellRenderer<LineType>, TableCellRenderer
 {
-	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(LineRenderer.class);
+	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(LineTypeRenderer.class);
 	private LineType value;
 	
 	public Component getListCellRendererComponent(JList<? extends LineType> list, LineType value, int index, boolean isSelected, boolean cellHasFocus)
