@@ -27,7 +27,13 @@ public class LineRenderer extends JPanel implements ListCellRenderer<LineType>, 
 		
 		if(isSelected)
 		{
-			// TODO Farbeffekte bei Auswahl			
+			this.setBackground(list.getSelectionBackground());
+			this.setForeground(list.getSelectionForeground());
+		}
+		else
+		{
+			this.setBackground(list.getBackground());
+			this.setForeground(list.getForeground());
 		}
 		
 		return this;
@@ -39,9 +45,14 @@ public class LineRenderer extends JPanel implements ListCellRenderer<LineType>, 
 		
 		if(isSelected)
 		{
-			// TODO Farbeffekte bei Auswahl			
+			this.setBackground(table.getSelectionBackground());
+			this.setForeground(table.getSelectionForeground());
 		}
-		
+		else
+		{
+			this.setBackground(table.getBackground());		
+			this.setForeground(table.getForeground());
+		}
 		return this;
 	}
 	
@@ -53,8 +64,6 @@ public class LineRenderer extends JPanel implements ListCellRenderer<LineType>, 
 		{
 			g2.setStroke(value.getStroke());
 			g.drawLine(0, getHeight() / 2, getWidth(), getHeight() / 2);
-			
-			// TODO Hintergrundfarbe an Hintergrund, Selektion, ... anpassen
 		}
 	}
 	

@@ -81,13 +81,11 @@ public class FahrtDarstellungSettingsGUI extends JDialog implements GUI
 			}
 			{
 				table = new JTable(controller.getTableModel());
-				table.getTableHeader().setReorderingAllowed(false);
 				
 				// Einstellung für die 2. Spalte (Farbe):
 				table.getColumnModel().getColumn(1).setCellRenderer(new BackgroundTableCellRenderer());
 				
-				// Einstellung des Editors für die letzte Spalte (Linientyp):
-				// TODO: Zellen lassen sich nicht mehr editieren
+				// Einstellung für die 4. Spalte (Linientyp):
 				table.getColumnModel().getColumn(3).setCellRenderer(new LineRenderer());
 				table.getColumnModel().getColumn(3).setCellEditor(new LineTypeCellEditor());
 				
