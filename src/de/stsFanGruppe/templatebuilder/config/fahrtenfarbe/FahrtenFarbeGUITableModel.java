@@ -1,19 +1,19 @@
 package de.stsFanGruppe.templatebuilder.config.fahrtenfarbe;
 
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import javax.swing.*;
+import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanSettingsGUI;
+import de.stsFanGruppe.tools.FirstLastLinkedList;
+import de.stsFanGruppe.tools.FirstLastList;
 
-public class FahrtenFarbeGUITableModel
+public class FahrtenFarbeGUITableModel extends AbstractTableModel
 {
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(BildfahrplanSettingsGUI.class);
 	
-	static FahrtenFarbeSettingsGUI gui;
 	public static ArrayList<Color> testFarben = new ArrayList<Color>()
 	{
 		{
@@ -24,6 +24,16 @@ public class FahrtenFarbeGUITableModel
 			add(Color.BLACK);
 		}
 	};
+	protected FirstLastList<FahrtDarstellung> darstellungen;
+	public static final String[] UEBERSCHRIFTEN = {"Zugname", "Farbe", "Breite [px]", "Typ"};
+	
+	public FahrtenFarbeGUITableModel()
+	{
+		darstellungen = new FirstLastLinkedList<>();
+		
+		// FIXME: Test
+		darstellungen.add(new FahrtDarstellung("Test", Color.RED, 1, LineType.SOLID_LINE));
+	}
 	
 	/**
 	 * Anhand der ArrayList (aktuell) testFarben erhält jede Zelle in seiner Zeile die Hintergrundfarbe definiert,
@@ -59,17 +69,11 @@ public class FahrtenFarbeGUITableModel
 	 */
 	public static class LineTypeCellEditor extends AbstractCellEditor implements TableCellEditor
 	{
-		JComboBox<LineType> comboBoxLinienTyp;
+		JLineTypeComboBox comboBoxLinienTyp;
 		
 		public LineTypeCellEditor()
 		{
-			// FIXME Combobox werden derzeit doppelt im Code geschrieben. Die
-			// JComboBox sollte möglich einmal definiert werden.
-			// Erstellt eine Combobox mit den Linientypen.
-			comboBoxLinienTyp = new JComboBox<LineType>(LineType.values());
-			comboBoxLinienTyp.setRenderer(new LineRenderer());
-			comboBoxLinienTyp.setEditable(false);
-			comboBoxLinienTyp.setSelectedItem(null);
+			comboBoxLinienTyp = new JLineTypeComboBox();
 		}
 		
 		@Override
@@ -92,34 +96,31 @@ public class FahrtenFarbeGUITableModel
 		}
 	}
 	
-	/**
-	 * MouseListener für die Tabelle: Fahrtenfarbekategoriesieren
-	 * Es wird nur der mouseClicked(..) mit einer funktionierenden Methode ausgeführt.
-	 *
-	 * Wenn eine Zelle in der 2. Spalte ausgewählt wird, öffnet sich ein Editor zum Ändern der Farbe.
-	 */
-	public static class CellMouseClickForBackgroundColor extends MouseAdapter
+	public int getColumnCount()
 	{
-		public void mouseClicked(MouseEvent e)
-		{
-			JTable target = (JTable) e.getSource();
-			int row = target.getSelectedRow();
-			int column = target.getSelectedColumn();
-			if(column == 1)
-			{
-				Color c = null;
-				c = JColorChooser.showDialog(gui, "Farbe wählen", testFarben.get(row));
-				if(c != null)
-				{
-					testFarben.set(row, c);
-				}
-			}
-		}
+		return UEBERSCHRIFTEN.length;
 	}
-
-	public void setValueAt(Object value, int rowIndex, int colIndex)
+	
+	public int getRowCount()
 	{
-		// TODO Auto-generated method stub
-		
+		return darstellungen.size();
+	}
+	
+	public Object getValueAt(int rowIndex, int columnIndex)
+	{
+		switch(columnIndex)
+		{
+			case 0:
+				return darstellungen.get(rowIndex).getName();
+			case 1:
+				return darstellungen.get(rowIndex).getFarbe();
+			case 2:
+				return darstellungen.get(rowIndex).getBreite();
+			case 3:
+				return darstellungen.get(rowIndex).getTyp();
+			default:
+				log.error("Tabelle hat zu viele Spalten (angefragt: {})", columnIndex);
+		}
+		return null;
 	}
 }

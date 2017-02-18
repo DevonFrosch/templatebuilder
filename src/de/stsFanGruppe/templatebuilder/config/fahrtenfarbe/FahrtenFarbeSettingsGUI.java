@@ -2,6 +2,8 @@ package de.stsFanGruppe.templatebuilder.config.fahrtenfarbe;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -9,12 +11,13 @@ import com.jgoodies.forms.layout.*;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanSettingsGUI;
 import de.stsFanGruppe.templatebuilder.gui.GUI;
 import de.stsFanGruppe.tools.NullTester;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.border.BevelBorder;
 
 public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 {
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(BildfahrplanSettingsGUI.class);
+	
+	
 	
 	FahrtenFarbeSettingsGUIController controller;
 	FahrtenFarbeConfig config;
@@ -26,10 +29,9 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 	
 	JPanel panelStandardFarbeVorschau;
 	JTextField txtStandardLinienStaerke;
-	JComboBox<LineType> comboBoxLinienTyp;
+	private JComboBox<LineType> comboBoxLinienTyp;
 	ArrayList<Color> testFarben = FahrtenFarbeGUITableModel.testFarben;
 	
-	public final String[] columnName = {"Zugname", "Linienfarbe", "Linienstärke", "Linientyp"};
 	private JTextField textField;
 	
 	public static void main(String[] args)
@@ -85,16 +87,39 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 						{"Sue", "", new Integer(5), comboBoxLinienTyp}, {"Jane", "", new Integer(5), comboBoxLinienTyp},
 						{"Joe", "", new Integer(5), comboBoxLinienTyp}};
 						
-				DefaultTableModel tableModel = new DefaultTableModel();
-				tableModel.setDataVector(data, columnName);
+				//DefaultTableModel tableModel = new DefaultTableModel();
+				//tableModel.setDataVector(data, COLUMN_NAMES);
 				
-				table = new JTable(tableModel);
+				table = new JTable(new FahrtenFarbeGUITableModel());
 				table.getTableHeader().setReorderingAllowed(false);
+				
 				// Einstellung für die 2. Spalte (Farbe):
 				table.getColumnModel().getColumn(1).setCellRenderer(new FahrtenFarbeGUITableModel.BackgroundTableCellRenderer());
+				
 				// Einstellung des Editors für die letzte Spalte (Linientyp):
 				table.getColumnModel().getColumn(3).setCellEditor(new FahrtenFarbeGUITableModel.LineTypeCellEditor());
-				table.addMouseListener(new FahrtenFarbeGUITableModel.CellMouseClickForBackgroundColor());			
+				
+				table.addMouseListener(new MouseAdapter() {
+					public void mouseClicked(MouseEvent e)
+					{
+						JTable target = (JTable) e.getSource();
+						int row = target.getSelectedRow();
+						int column = target.getSelectedColumn();
+						if(column == 1)
+						{
+							Color alt = (Color) table.getValueAt(row, column);
+							Color neu = showDialog("Farbe wählen", alt);
+							if(neu != null)
+							{
+								table.setValueAt(neu, row, column);
+							}
+						}
+						if(column == 3)
+						{
+							table.editCellAt(row, column);
+						}
+					}
+				});
 				
 				JScrollPane scrollPane = new JScrollPane(table);
 				scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
@@ -215,13 +240,7 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 					standardConfigLabel.add(lblStandardLinientyp, "2, 6, right, default");
 				}
 				{
-					// FIXME Nach Auswahl eines Eintrags werden alle Linien
-					// ausgewählt.
-					DefaultComboBoxModel<LineType> model = new DefaultComboBoxModel<LineType>(LineType.values());
-					comboBoxLinienTyp = new JComboBox<LineType>(model);
-					comboBoxLinienTyp.setRenderer(new LineRenderer());
-					comboBoxLinienTyp.setEditable(false);
-					comboBoxLinienTyp.setSelectedItem(0);
+					comboBoxLinienTyp = new JLineTypeComboBox();
 					standardConfigLabel.add(comboBoxLinienTyp, "4, 6, fill, fill");
 				}
 			}
@@ -285,6 +304,20 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 		setVisible(true);
 	}
 	
+	public Color getDefaultLineColor()
+	{
+		return panelStandardFarbeVorschau.getBackground();
+	}
+	public String getDefaultLineWidth()
+	{
+		return txtStandardLinienStaerke.getText();
+	}
+	public LineType getDefaultLineType()
+	{
+		int typIndex = comboBoxLinienTyp.getSelectedIndex();
+		return LineType.values()[typIndex];
+	}
+	
 	public void loadSettings()
 	{
 		log.info("Standardwerte für FahrtenFarbe einlesen");
@@ -313,6 +346,11 @@ public class FahrtenFarbeSettingsGUI extends JDialog implements GUI
 	public void infoMessage(String text, String titel)
 	{
 		JOptionPane.showMessageDialog(contentPanel, text, titel, JOptionPane.INFORMATION_MESSAGE);
+	}
+	
+	public Color showDialog(String title, Color initialColor)
+	{
+		return JColorChooser.showDialog(this, title, initialColor);
 	}
 
 	public ArrayList<Color> getTestFarben()
