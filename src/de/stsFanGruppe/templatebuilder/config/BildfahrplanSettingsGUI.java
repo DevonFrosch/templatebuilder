@@ -48,7 +48,6 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 	// Farben 
 	JPanel panelBfpZeitenFarbeVorschau;
 	JPanel panelBfpBetriebsstellenFarbeVorschau;
-	JPanel panelBfpFahrtenFarbeVorschau;
 	JPanel panelBfpHintergrundFarbeVorschau;
 	
 	/**
@@ -372,8 +371,6 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 							FormSpecs.DEFAULT_ROWSPEC,
 							FormSpecs.RELATED_GAP_ROWSPEC,
 							FormSpecs.DEFAULT_ROWSPEC,
-							FormSpecs.RELATED_GAP_ROWSPEC,
-							FormSpecs.DEFAULT_ROWSPEC,
 							FormSpecs.RELATED_GAP_ROWSPEC,}));
 					{
 						JLabel lblBfpZeitenFarbe = new JLabel("Zeiten");
@@ -421,34 +418,12 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 					}
 					{
 						{
-							JLabel lblBfpFahrtenFarbe = new JLabel("Z\u00FCge");
-							panelFarbenBfp.add(lblBfpFahrtenFarbe, "2, 6");
-						}
-						{
-							JPanel panelBfpFahrtenFarbe = new JPanel();
-							panelFarbenBfp.add(panelBfpFahrtenFarbe, "4, 6");
-							{
-								panelBfpFahrtenFarbeVorschau = new JPanel();
-								panelBfpFahrtenFarbeVorschau.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-								FlowLayout flowLayout = (FlowLayout) panelBfpFahrtenFarbeVorschau.getLayout();
-								flowLayout.setHgap(10);
-								flowLayout.setVgap(10);
-								panelBfpFahrtenFarbe.add(panelBfpFahrtenFarbeVorschau);
-							}
-							JButton btnBfpFahrtenFarbe = new JButton("w\u00E4hlen...");
-							panelBfpFahrtenFarbe.add(btnBfpFahrtenFarbe);
-							btnBfpFahrtenFarbe.setActionCommand("fahrtenFarbe");
-							btnBfpFahrtenFarbe.addActionListener((ActionEvent arg0) -> controller.farbButton(arg0));
-						}
-					}
-					{
-						{
 							JLabel lblBfpHintergrundFarbe = new JLabel("Hintergrund");
-							panelFarbenBfp.add(lblBfpHintergrundFarbe, "2, 8");
+							panelFarbenBfp.add(lblBfpHintergrundFarbe, "2, 6");
 						}
 						{
 							JPanel panelBfpHintergrundFarbe = new JPanel();
-							panelFarbenBfp.add(panelBfpHintergrundFarbe, "4, 8");
+							panelFarbenBfp.add(panelBfpHintergrundFarbe, "4, 6");
 							{
 								panelBfpHintergrundFarbeVorschau = new JPanel();
 								panelBfpHintergrundFarbeVorschau.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));

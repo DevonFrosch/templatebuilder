@@ -75,13 +75,6 @@ public class BildfahrplanSettingsGUIController extends GUIController
 					gui.panelBfpBetriebsstellenFarbeVorschau.setBackground(c);
 				}
 				break;
-			case "fahrtenFarbe":
-				c = JColorChooser.showDialog(gui, "Farbe wählen", gui.panelBfpFahrtenFarbeVorschau.getBackground());
-				if(c != null)
-				{
-					gui.panelBfpFahrtenFarbeVorschau.setBackground(c);
-				}
-				break;
 			case "hintergrundFarbe":
 				c = JColorChooser.showDialog(gui, "Farbe wählen", gui.panelBfpHintergrundFarbeVorschau.getBackground());
 				if(c != null)
@@ -224,14 +217,12 @@ public class BildfahrplanSettingsGUIController extends GUIController
 	{
 		gui.panelBfpZeitenFarbeVorschau.setBackground(config.getZeitenFarbe());
 		gui.panelBfpBetriebsstellenFarbeVorschau.setBackground(config.getBetriebsstellenFarbe());
-		gui.panelBfpFahrtenFarbeVorschau.setBackground(config.getFahrtenFarbe());
 		gui.panelBfpHintergrundFarbeVorschau.setBackground(config.getHintergrundFarbe());
 	}
 	protected void speichereTabFarben()
 	{
 		config.setZeitenFarbe(gui.panelBfpZeitenFarbeVorschau.getBackground());
 		config.setBetriebsstellenFarbe(gui.panelBfpBetriebsstellenFarbeVorschau.getBackground());
-		config.setFahrtenFarbe(gui.panelBfpFahrtenFarbeVorschau.getBackground());
 		config.setHintergrundFarbe(gui.panelBfpHintergrundFarbeVorschau.getBackground());
 	}
 	

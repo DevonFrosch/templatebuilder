@@ -314,7 +314,8 @@ public class BildfahrplanGUIController
 		
 		// ### Fahrten-Linien ###
 		{
-			Color c = config.getFahrtenFarbe();
+			// TODO Dynamik einbauen (BT105)
+			Color c = Color.BLACK;
 			int schachtelung = config.getSchachtelung();
 			int zeigeZugnamen = config.getZeigeZugnamen();
 			boolean zeigeZeiten = config.getZeigeZeiten();

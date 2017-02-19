@@ -68,12 +68,10 @@ public class BildfahrplanConfig extends ConfigController
 	
 	//Farbeinstellungen
 	public static final String CONFIG_FARBEN_ZEITEN = "bildfahrplan/darstellung/farben/zeiten";
-	public static final String CONFIG_FARBEN_FAHRTEN = "bildfahrplan/darstellung/farben/fahrten";
 	public static final String CONFIG_FARBEN_BETRIEBSS = "bildfahrplan/darstellung/farben/betriebsstellen";
 	public static final String CONFIG_FARBEN_HINTERGR = "bildfahrplan/darstellung/farben/hintergrund";
 
 	private static final Color DEFAULT_FARBEN_ZEITEN = Color.RED;
-	private static final Color DEFAULT_FARBEN_FAHRTEN = Color.BLACK;
 	private static final Color DEFAULT_FARBEN_BETRIEBSS = Color.BLUE;
 	private static final Color DEFAULT_FARBEN_HINTERGR = Color.WHITE;
 	
@@ -321,14 +319,6 @@ public class BildfahrplanConfig extends ConfigController
 	public void setZeitenFarbe(Color zeitenFarbe)
 	{
 		prefs.setColor("zeitenFarbe", CONFIG_FARBEN_ZEITEN, zeitenFarbe);
-	}
-	public Color getFahrtenFarbe()
-	{
-		return prefs.getColor(CONFIG_FARBEN_FAHRTEN, DEFAULT_FARBEN_FAHRTEN);
-	}
-	public void setFahrtenFarbe(Color fahrtenFarbe)
-	{
-		prefs.setColor("fahrtenFarbe", CONFIG_FARBEN_FAHRTEN, fahrtenFarbe);
 	}
 	public Color getBetriebsstellenFarbe()
 	{
