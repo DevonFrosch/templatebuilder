@@ -115,6 +115,7 @@ public class BildfahrplanSettingsGUIController extends GUIController
 				ladeDaten();
 				break;
 			case "format":
+				if(!GUILocker.lock(FahrtDarstellungSettingsGUI.class)) break;
 				FahrtDarstellungSettingsGUIController ffsgc = new FahrtDarstellungSettingsGUIController(
 						new FahrtDarstellungConfig(), () -> {GUILocker.unlock(FahrtDarstellungSettingsGUI.class);}
 				);
