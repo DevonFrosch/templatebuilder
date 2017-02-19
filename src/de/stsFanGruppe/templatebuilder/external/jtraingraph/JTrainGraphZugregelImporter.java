@@ -19,7 +19,7 @@ protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(JTrain
 	
 	public void importRegeln(InputStream input) throws ImportException
 	{
-		log.info("JTrainGraphZugregelImporter");
+		log.info("JTrainGraphZugregeln - Import");
 		NullTester.test(input);
 		
 		FahrtDarstellungConfig config = new FahrtDarstellungConfig();
@@ -113,6 +113,8 @@ protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(JTrain
 				return FahrtFilter.GERADE;
 			case "ist ungerade":
 				return FahrtFilter.UNGERADE;
+			case "keine":
+				break;
 			default:
 				log.info("Filter {} ignoriert.", input);
 				break;
@@ -147,6 +149,8 @@ protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(JTrain
 				return new Color(139, 69, 19);
 			case "magenta":
 				return Color.MAGENTA;
+			case "keine":
+				break;
 			default:
 				log.info("Farbe {} ignoriert.", input);
 				break;
@@ -176,6 +180,7 @@ protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(JTrain
 				// Lang gestrichelt
 				return LineType.SHORT_LONG_LONG_LINE;
 			case "keine":
+				break;
 			default:
 				log.info("Linientyp {} ignoriert.", input);
 				break;
