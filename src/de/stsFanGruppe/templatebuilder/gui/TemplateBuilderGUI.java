@@ -189,6 +189,7 @@ public class TemplateBuilderGUI implements GUI
 		splitPane.setRightComponent(tabbedPane);
 		
 		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.getVerticalScrollBar().setUnitIncrement(20);
 		tabbedPane.addTab("New tab", null, scrollPane, null);
 		
 		BildfahrplanGUIController bfpController = new BildfahrplanGUIController(controller.getConfig(), this);

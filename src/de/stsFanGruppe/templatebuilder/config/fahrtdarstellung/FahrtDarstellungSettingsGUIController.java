@@ -12,6 +12,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.TableCellEditor;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanSettingsGUIController;
+import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.filter.FahrtFilter;
 import de.stsFanGruppe.templatebuilder.gui.GUIController;
 import de.stsFanGruppe.templatebuilder.zug.FahrtDarstellung;
 import de.stsFanGruppe.tools.FirstLastLinkedList;
@@ -228,18 +229,16 @@ public class FahrtDarstellungSettingsGUIController extends GUIController
 	
 	protected FahrtDarstellung getDefaultRowData()
 	{
-		return new FahrtDarstellung("", gui.getStandardFarbe(), gui.getStandardBreiteInt(), gui.getStandardLineType());
+		return new FahrtDarstellung(FahrtFilter.BEGINNT_MIT, "", gui.getStandardFarbe(), gui.getStandardBreiteInt(), gui.getStandardLineType());
 	}
 	public TableCellEditor getDoNothingCellEditor()
 	{
-		DefaultCellEditor editor = new DefaultCellEditor(new JTextField()) {
+		return new DefaultCellEditor(new JTextField()) {
 			public boolean isCellEditable(java.util.EventObject anEvent)
 			{
 				return false;
 			}
 		};
-		
-		return editor;
 	}
 	public MouseListener getMouseListener()
 	{
@@ -255,7 +254,7 @@ public class FahrtDarstellungSettingsGUIController extends GUIController
 				// übersetzt auf das unterliegende Modell
 				int modelColumn = target.convertColumnIndexToModel(column);
 				
-				if(modelColumn == 1)
+				if(modelColumn == FahrtDarstellungSettingsGUI.REGELN_FARBE_SPALTE)
 				{
 					if(e.getClickCount() != 2)
 					{

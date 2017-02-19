@@ -6,6 +6,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import com.jgoodies.forms.layout.*;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanSettingsGUI;
+import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.filter.FahrtFilter;
 import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.linetype.JLineTypeComboBox;
 import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.linetype.LineTypeRenderer;
 import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.linetype.LineType;
@@ -22,7 +23,13 @@ public class FahrtDarstellungSettingsGUI extends JDialog implements GUI
 	
 	FahrtDarstellungSettingsGUIController controller;
 	FahrtDarstellungConfig config;
-	public static final String[] UEBERSCHRIFTEN = {"Zugname", "Farbe", "Breite [px]", "Typ"};
+	
+	public static final String[] RULES_COLUMNS = {"Filter", "Muster", "Farbe", "Breite [px]", "Typ"};
+	public static final int REGELN_FILTER_SPALTE = 0;
+	public static final int REGELN_MUSTER_SPALTE = 1;
+	public static final int REGELN_FARBE_SPALTE = 2;
+	public static final int REGELN_BREITE_SPALTE = 3;
+	public static final int REGELN_TYP_SPALTE = 4;
 	
 	final JPanel contentPanel = new JPanel();
 	FahrtDarstellungTable table;
@@ -79,17 +86,21 @@ public class FahrtDarstellungSettingsGUI extends JDialog implements GUI
 						.setText("<html>Für eine bessere Darstellung können Linien hier nach festgelegten Kriterien hervorgehoben werden.</html>");
 			}
 			{
-				table = new FahrtDarstellungTable(UEBERSCHRIFTEN, 0);
+				table = new FahrtDarstellungTable(RULES_COLUMNS, 0);
 				table.setFillsViewportHeight(true);
 				table.getTableHeader().setReorderingAllowed(false);
 				
-				// Einstellung für die 2. Spalte (Farbe):
-				table.getColumnModel().getColumn(1).setCellRenderer(new BackgroundTableCellRenderer());
-				table.getColumnModel().getColumn(1).setCellEditor(controller.getDoNothingCellEditor());
+				// Einstellung für FahrtFilter:
+				JComboBox<FahrtFilter> jcb = new JComboBox<>(FahrtFilter.values());
+				table.getColumnModel().getColumn(REGELN_FILTER_SPALTE).setCellEditor(new DefaultCellEditor(jcb));
 				
-				// Einstellung für die 4. Spalte (Linientyp):
-				table.getColumnModel().getColumn(3).setCellRenderer(new LineTypeRenderer());
-				table.getColumnModel().getColumn(3).setCellEditor(new LineTypeCellEditor());
+				// Einstellung für Farbe:
+				table.getColumnModel().getColumn(REGELN_FARBE_SPALTE).setCellRenderer(new BackgroundTableCellRenderer());
+				table.getColumnModel().getColumn(REGELN_FARBE_SPALTE).setCellEditor(controller.getDoNothingCellEditor());
+				
+				// Einstellung für Linientyp:
+				table.getColumnModel().getColumn(REGELN_TYP_SPALTE).setCellRenderer(new LineTypeRenderer());
+				table.getColumnModel().getColumn(REGELN_TYP_SPALTE).setCellEditor(new LineTypeCellEditor());
 				
 				table.addMouseListener(controller.getMouseListener());
 				
@@ -297,7 +308,7 @@ public class FahrtDarstellungSettingsGUI extends JDialog implements GUI
 		}
 		catch(NumberFormatException e)
 		{
-			return FahrtDarstellungConfig.DEFAULT_STANDARD_LINIEN_BREITE;
+			return FahrtDarstellungConfig.DEFAULT_FAHRTDARSTELLUNG_BREITE;
 		}
 	}
 	public void setStandardBreite(String breite)

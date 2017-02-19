@@ -1,30 +1,41 @@
 package de.stsFanGruppe.templatebuilder.zug;
 
 import java.awt.Color;
+import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.filter.FahrtFilter;
 import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.linetype.LineType;
 
 public class FahrtDarstellung
 {
-	protected String name;
+	protected FahrtFilter filter;
+	protected String muster;
 	protected Color farbe;
 	protected int breite;
 	protected LineType typ;
 	
-	public FahrtDarstellung(String name, Color farbe, int breite, LineType typ)
+	public FahrtDarstellung(FahrtFilter filter, String muster, Color farbe, int breite, LineType typ)
 	{
-		this.name = name;
+		this.filter = filter;
+		this.muster = muster;
 		this.farbe = farbe;
 		this.breite = breite;
 		this.typ = typ;
 	}
-
-	public String getName()
+	
+	public FahrtFilter getFilter()
 	{
-		return name;
+		return filter;
 	}
-	public void setName(String name)
+	public void setFilter(FahrtFilter filter)
 	{
-		this.name = name;
+		this.filter = filter;
+	}
+	public String getMuster()
+	{
+		return muster;
+	}
+	public void setMuster(String muster)
+	{
+		this.muster = muster;
 	}
 	public Color getFarbe()
 	{
@@ -53,6 +64,6 @@ public class FahrtDarstellung
 	
 	public Object[] toArray()
 	{
-		return new Object[]{name, farbe, Integer.toString(breite), typ};
+		return new Object[]{filter, muster, farbe, Integer.toString(breite), typ};
 	}
 }

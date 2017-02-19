@@ -33,7 +33,6 @@ public class TemplateBuilderGUIController extends GUIController
 	
 	private Hashtable<String, Boolean> windowLocks = new Hashtable<>();
 	
-	// TODO: allgemeines Config-Objekt
 	protected BildfahrplanConfig config;
 	
 	public TemplateBuilderGUIController(BildfahrplanConfig config, String version, boolean dev)

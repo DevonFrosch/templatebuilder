@@ -4,6 +4,8 @@ import java.awt.Color;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
+import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.FahrtDarstellungSettingsGUI;
+import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.filter.FahrtFilter;
 import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.linetype.LineType;
 import de.stsFanGruppe.templatebuilder.zug.FahrtDarstellung;
 
@@ -32,28 +34,37 @@ public class FahrtDarstellungTable extends JTable
 		super(dm);
 	}
 	
-	public String getNameAt(int row)
+	public FahrtFilter getFilterAt(int row)
 	{
-		return (String) this.getValueAt(row, 0);
+		return (FahrtFilter) this.getValueAt(row, FahrtDarstellungSettingsGUI.REGELN_FILTER_SPALTE);
 	}
-	public void setNameAt(String name, int row)
+	public void setFilterAt(FahrtFilter filter, int row)
 	{
-		this.setValueAt(name, row, 0);
+		this.setValueAt(filter, row, FahrtDarstellungSettingsGUI.REGELN_FILTER_SPALTE);
+	}
+	
+	public String getMusterAt(int row)
+	{
+		return (String) this.getValueAt(row, FahrtDarstellungSettingsGUI.REGELN_MUSTER_SPALTE);
+	}
+	public void setMusterAt(String muster, int row)
+	{
+		this.setValueAt(muster, row, FahrtDarstellungSettingsGUI.REGELN_MUSTER_SPALTE);
 	}
 	
 	public Color getFarbeAt(int row)
 	{
-		return (Color) this.getValueAt(row, 1);
+		return (Color) this.getValueAt(row, FahrtDarstellungSettingsGUI.REGELN_FARBE_SPALTE);
 	}
 	public void setFarbeAt(Color farbe, int row)
 	{
-		this.setValueAt(farbe, row, 1);
+		this.setValueAt(farbe, row, FahrtDarstellungSettingsGUI.REGELN_FARBE_SPALTE);
 	}
 	
 	public int getBreiteAt(int row) throws NumberFormatException
 	{
 		// throws NumberFormatException
-		int breite = Integer.parseInt((String) this.getValueAt(row, 2));
+		int breite = Integer.parseInt((String) this.getValueAt(row, FahrtDarstellungSettingsGUI.REGELN_BREITE_SPALTE));
 		if(breite < 0)
 		{
 			throw new NumberFormatException("Number below 0");
@@ -62,29 +73,30 @@ public class FahrtDarstellungTable extends JTable
 	}
 	public void setBreiteAt(int breite, int row)
 	{
-		this.setValueAt(breite+"", row, 2);
+		this.setValueAt(Integer.toString(breite), row, FahrtDarstellungSettingsGUI.REGELN_BREITE_SPALTE);
 	}
 	public void setBreiteAt(String breite, int row)
 	{
-		this.setValueAt(breite, row, 2);
+		this.setValueAt(breite, row, FahrtDarstellungSettingsGUI.REGELN_BREITE_SPALTE);
 	}
 	
 	public LineType getLineTypeAt(int row)
 	{
-		return (LineType) this.getValueAt(row, 3);
+		return (LineType) this.getValueAt(row, FahrtDarstellungSettingsGUI.REGELN_TYP_SPALTE);
 	}
 	public void setLineTypeAt(LineType lineType, int row)
 	{
-		this.setValueAt(lineType, row, 3);
+		this.setValueAt(lineType, row, FahrtDarstellungSettingsGUI.REGELN_TYP_SPALTE);
 	}
 	
 	public FahrtDarstellung getRow(int row) throws NumberFormatException
 	{
-		return new FahrtDarstellung(getNameAt(row), getFarbeAt(row), getBreiteAt(row), getLineTypeAt(row));
+		return new FahrtDarstellung(getFilterAt(row), getMusterAt(row), getFarbeAt(row), getBreiteAt(row), getLineTypeAt(row));
 	}
 	public void setRow(FahrtDarstellung darstellung, int row)
 	{
-		this.setNameAt(darstellung.getName(), row);
+		this.setFilterAt(darstellung.getFilter(), row);
+		this.setMusterAt(darstellung.getMuster(), row);
 		this.setFarbeAt(darstellung.getFarbe(), row);
 		this.setBreiteAt(darstellung.getBreite(), row);
 		this.setLineTypeAt(darstellung.getTyp(), row);
