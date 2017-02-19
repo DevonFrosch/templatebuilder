@@ -50,8 +50,8 @@ public class BildfahrplanConfig extends ConfigController
 	public static final String CONFIG_F_SCHACHTELUNG = "bildfahrplan/darstellung/fahrten/schachtelung";
 	
 	private static final int DEFAULT_F_HOEHEPROSTUNDE = 400; // Minuten
-	private static final double DEFAULT_F_MINZEIT = 360; // Minuten
-	private static final double DEFAULT_F_MAXZEIT = 1260; // Minuten
+	private static final double DEFAULT_F_MINZEIT = 270; // Minuten, 4:30
+	private static final double DEFAULT_F_MAXZEIT = 1290; // Minuten, 21:30
 	private static final boolean DEFAULT_F_AUTOSIZE = true;
 	private static final int DEFAULT_F_SCHACHTELUNG = 1440; // Minuten
 	
