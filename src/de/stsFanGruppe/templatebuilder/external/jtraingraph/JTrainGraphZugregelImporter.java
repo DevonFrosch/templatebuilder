@@ -34,16 +34,17 @@ protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(JTrain
 			config.setStandardLinienFarbe(stringToColor(tJtgR.getAttribute("defaultcl"), config.getStandardLinienFarbe()));
 			
 			// StandardBreite
-			String defaultsz = null;
-			try
+			String defaultsz = tJtgR.getAttribute("defaultsz");
+			if(!defaultsz.equalsIgnoreCase("keine"))
 			{
-				defaultsz = tJtgR.getAttribute("defaultsz");
-				config.setStandardLinienBreite(Integer.parseInt(defaultsz));
-			}
-			catch(NumberFormatException e)
-			{
-				log.error("jTrainGraph_rules defaultsz: {} ist kein Int.", defaultsz);
-				throw e;
+				try
+				{
+					config.setStandardLinienBreite(Integer.parseInt(defaultsz));
+				}
+				catch(NumberFormatException e)
+				{
+					log.error("jTrainGraph_rules defaultsz: {} ist kein Int.", defaultsz);
+				}
 			}
 			
 			// StandardTyp
@@ -56,7 +57,6 @@ protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(JTrain
 			// suche alle rule
 			while((rule = xml.findTagUntil("jTrainGraph_rules", "rule")) != null)
 			{
-				log.debug("rule gefunden");
 				FahrtFilter filter = stringToFilter(rule.getAttribute("type"), defaultDarstellung.getFilter());
 				String muster = rule.getAttribute("text");
 				Color farbe = stringToColor(rule.getAttribute("cl"), defaultDarstellung.getFarbe());
@@ -155,7 +155,7 @@ protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(JTrain
 	}
 	protected LineType stringToLineType(String input, LineType defaultValue)
 	{
-		switch(input)
+		switch(input.toLowerCase())
 		{
 			case "0":
 				// Normal
@@ -176,7 +176,6 @@ protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(JTrain
 				// Lang gestrichelt
 				return LineType.SHORT_LONG_LONG_LINE;
 			case "keine":
-				break;
 			default:
 				log.info("Linientyp {} ignoriert.", input);
 				break;
