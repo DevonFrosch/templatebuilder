@@ -22,9 +22,9 @@ public class FahrtDarstellungConfig extends ConfigController
 	
 	// Farbeinstellungen
 	public static final String CONFIG_STANDARD_LINIEN_PREFIX = "bildfahrplan/darstellung/linie/standard";
-	public static final String CONFIG_STANDARD_LINIEN_MUSTER = CONFIG_STANDARD_LINIEN_PREFIX+CONFIG_FAHRTDARSTELLUNG_POSTFIX_MUSTER;
-	public static final String CONFIG_STANDARD_LINIEN_BREITE = CONFIG_STANDARD_LINIEN_PREFIX+CONFIG_FAHRTDARSTELLUNG_POSTFIX_FARBE;
-	public static final String CONFIG_STANDARD_LINIEN_TYP = CONFIG_STANDARD_LINIEN_PREFIX+CONFIG_FAHRTDARSTELLUNG_POSTFIX_BREITE;
+	public static final String CONFIG_STANDARD_LINIEN_FARBE = CONFIG_STANDARD_LINIEN_PREFIX+CONFIG_FAHRTDARSTELLUNG_POSTFIX_FARBE;
+	public static final String CONFIG_STANDARD_LINIEN_BREITE = CONFIG_STANDARD_LINIEN_PREFIX+CONFIG_FAHRTDARSTELLUNG_POSTFIX_BREITE;
+	public static final String CONFIG_STANDARD_LINIEN_TYP = CONFIG_STANDARD_LINIEN_PREFIX+CONFIG_FAHRTDARSTELLUNG_POSTFIX_TYP;
 	
 	public static final Color DEFAULT_FAHRTDARSTELLUNG_FARBE = Color.BLACK;
 	public static final int DEFAULT_FAHRTDARSTELLUNG_BREITE = 1;
@@ -45,19 +45,19 @@ public class FahrtDarstellungConfig extends ConfigController
 	// Getter / Setter
 	public Color getStandardLinienFarbe()
 	{
-		return prefs.getColor(CONFIG_STANDARD_LINIEN_MUSTER, DEFAULT_FAHRTDARSTELLUNG_FARBE);
+		return prefs.getColor(CONFIG_STANDARD_LINIEN_FARBE, DEFAULT_FAHRTDARSTELLUNG_FARBE);
 	}
 	public void setStandardLinienFarbe(Color standardLinienFarbe)
 	{
-		prefs.setColor("standardLinienFarbe", CONFIG_STANDARD_LINIEN_MUSTER, standardLinienFarbe);
+		prefs.setColor("standardLinienFarbe", CONFIG_STANDARD_LINIEN_FARBE, standardLinienFarbe);
 	}
-	public int getStandardLinienStärke()
+	public int getStandardLinienBreite()
 	{
 		return prefs.getInt(CONFIG_STANDARD_LINIEN_BREITE, DEFAULT_FAHRTDARSTELLUNG_BREITE);
 	}
-	public void setStandardLinienBreite(int standardLinienStärke)
+	public void setStandardLinienBreite(int standardLinienBreite)
 	{
-		prefs.setInt("standardLinienStärke", CONFIG_STANDARD_LINIEN_BREITE, standardLinienStärke);
+		prefs.setInt("standardLinienBreite", CONFIG_STANDARD_LINIEN_BREITE, standardLinienBreite);
 	}
 	public LineType getStandardLinienTyp()
 	{

@@ -276,7 +276,7 @@ public class FahrtDarstellungSettingsGUIController extends GUIController
 	public void ladeStandards()
 	{
 		gui.setStandardFarbe(config.getStandardLinienFarbe());
-		gui.setStandardBreite(config.getStandardLinienStärke()+"");
+		gui.setStandardBreite(config.getStandardLinienBreite()+"");
 		gui.setStandardLineType(config.getStandardLinienTyp());
 	}
 	
