@@ -138,7 +138,7 @@ public class FahrtDarstellungConfig extends ConfigController
 		return defaultValue;
 	}
 	// Fahrtdarstellungen = xxx/count, xxx/i/muster, xxx/i/farbe
-	protected void setFahrtDarstellungen(FahrtDarstellung[] values)
+	public void setFahrtDarstellungen(FahrtDarstellung[] values)
 	{
 		int i=0;
 		for(FahrtDarstellung fd: values)
@@ -148,7 +148,7 @@ public class FahrtDarstellungConfig extends ConfigController
 		}
 		prefs.setInt("Anzahl FahrtDarstellungen", CONFIG_REGEL_FAHRTNAME_PREFIX+"/count", i);
 	}
-	protected FahrtDarstellung[] getFahrtDarstellungen()
+	public FahrtDarstellung[] getFahrtDarstellungen()
 	{
 		int count = prefs.getInt(CONFIG_REGEL_FAHRTNAME_PREFIX+"/count", 0);
 		

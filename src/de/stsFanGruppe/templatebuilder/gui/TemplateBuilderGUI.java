@@ -99,6 +99,11 @@ public class TemplateBuilderGUI implements GUI
 		mntmImportAusJtraingraph.addActionListener((ActionEvent arg0) -> controller.menuAction(arg0));
 		mnImport.add(mntmImportAusJtraingraph);
 		
+		JMenuItem mntmRegelimportAusJtraingraph = new JMenuItem("Regelimport aus JTrainGraph");
+		mntmRegelimportAusJtraingraph.setActionCommand("importRulesFromJTG");
+		mntmRegelimportAusJtraingraph.addActionListener((ActionEvent arg0) -> controller.menuAction(arg0));
+		mnImport.add(mntmRegelimportAusJtraingraph);
+		
 		JMenu mnExport = new JMenu("Export");
 		mnDatei.add(mnExport);
 		

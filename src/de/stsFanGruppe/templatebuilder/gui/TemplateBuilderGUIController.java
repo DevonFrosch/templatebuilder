@@ -108,6 +108,35 @@ public class TemplateBuilderGUIController extends GUIController
 					GUILocker.unlock(JTrainGraphImportGUI.class);
 				});
 				break;
+			case "importRulesFromJTG":
+				if(!GUILocker.lock(JTrainGraphZugregelImportGUI.class)) break;
+				new JTrainGraphZugregelImportGUI(gui.getFrame(), (ergebnis) -> {
+					assert ergebnis != null;
+					
+					if(ergebnis.success())
+					{
+						log.info("JTG-Regelimport von {}", ergebnis.getPfad());
+						try
+						{
+							JTrainGraphZugregelImporter importer = new JTrainGraphZugregelImporter();
+							
+							InputStream input = new java.io.FileInputStream(ergebnis.getPfad());
+							importer.importRegeln(input);
+						}
+						catch(FileNotFoundException e)
+						{
+							log.error("JTG-Regelimport", e);
+							gui.errorMessage("Datei nicht gefunden!");
+						}
+						catch(ImportException e)
+						{
+							log.error("JTG-Regelimport", e);
+							gui.errorMessage("Fehler beim Import!");
+						}
+					}
+					GUILocker.unlock(JTrainGraphZugregelImportGUI.class);
+				});
+				break;
 			case "exportToJTG":
 				if(!GUILocker.lock(JTrainGraphExportGUI.class)) break;
 				JTrainGraphExportGUI jtge = new JTrainGraphExportGUI(gui.getFrame(), (ergebnis) -> {

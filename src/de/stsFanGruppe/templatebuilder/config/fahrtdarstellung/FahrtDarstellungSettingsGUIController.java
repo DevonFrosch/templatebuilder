@@ -315,8 +315,7 @@ public class FahrtDarstellungSettingsGUIController extends GUIController
 		{
 			darstellungen.add(gui.table.getRow(i));
 		}
-		FahrtDarstellung[] array = darstellungen.toArray(new FahrtDarstellung[darstellungen.size()]);
-		config.setFahrtDarstellungen(array);
+		config.setFahrtDarstellungen(FahrtDarstellung.toArray(darstellungen));
 	}
 	
 	public boolean speichertest()

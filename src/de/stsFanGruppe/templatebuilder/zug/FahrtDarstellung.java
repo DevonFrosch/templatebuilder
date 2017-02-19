@@ -1,6 +1,7 @@
 package de.stsFanGruppe.templatebuilder.zug;
 
 import java.awt.Color;
+import java.util.Collection;
 import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.filter.FahrtFilter;
 import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.linetype.LineType;
 
@@ -65,5 +66,9 @@ public class FahrtDarstellung
 	public Object[] toArray()
 	{
 		return new Object[]{filter, muster, farbe, Integer.toString(breite), typ};
+	}
+	public static FahrtDarstellung[] toArray(Collection<FahrtDarstellung> collection)
+	{
+		return collection.toArray(new FahrtDarstellung[collection.size()]);
 	}
 }
