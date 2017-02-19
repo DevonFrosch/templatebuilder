@@ -1,7 +1,6 @@
 package de.stsFanGruppe.templatebuilder.gui;
 
 import javax.swing.*;
-import javax.swing.tree.*;
 import de.stsFanGruppe.templatebuilder.bildfahrplan.BildfahrplanGUI;
 import de.stsFanGruppe.templatebuilder.bildfahrplan.BildfahrplanGUIController;
 import de.stsFanGruppe.templatebuilder.bildfahrplan.BildfahrplanSpaltenheaderGUI;
@@ -171,7 +170,10 @@ public class TemplateBuilderGUI implements GUI
 			mnHilfe.add(mntmLocks);
 		}
 		
+		/*
+		// TODO
 		JSplitPane splitPane = new JSplitPane();
+		
 		frmTemplatebauer.getContentPane().add(splitPane, BorderLayout.CENTER);
 		
 		JTree tree = new JTree();
@@ -187,11 +189,13 @@ public class TemplateBuilderGUI implements GUI
 				}
 			}
 		));
-		splitPane.setLeftComponent(tree);
+		splitPane.setLeftComponent(tree); //*/
 		
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		controller.setTabbedPane(tabbedPane);
-		splitPane.setRightComponent(tabbedPane);
+		// TODO
+		// splitPane.setRightComponent(tabbedPane);
+		frmTemplatebauer.getContentPane().add(tabbedPane, BorderLayout.CENTER);
 		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.getVerticalScrollBar().setUnitIncrement(20);
@@ -206,11 +210,11 @@ public class TemplateBuilderGUI implements GUI
 		scrollPane.setRowHeaderView(new BildfahrplanZeilenheaderGUI(bildfahrplanZeichner, bfpController));
 		bildfahrplanZeichner.setLayout(null);
 		
-		JToolBar toolBar = new JToolBar();
+		// TODO
+		/*JToolBar toolBar = new JToolBar();
 		frmTemplatebauer.getContentPane().add(toolBar, BorderLayout.NORTH);
 		
-		JButton button = new JButton("");
-		toolBar.add(button);
+		toolBar.add(button); //*/
 		
 		initialized = true;
 	}
