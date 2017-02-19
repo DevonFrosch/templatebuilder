@@ -29,7 +29,7 @@ public abstract class ConfigController
 	{
 		NullTester.test(callback);
 		Object handlerID = Integer.valueOf(callbackCounter++);
-		log.debug("registerChangeHandler (ID {})", handlerID);
+		log.debug("registerChangeHandler (ID {}) auf {}", handlerID, this.getClass().getName());
 		callbacks.put(handlerID, callback);
 		return handlerID;
 	}

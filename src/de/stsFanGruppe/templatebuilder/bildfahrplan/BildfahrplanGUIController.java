@@ -29,6 +29,7 @@ public class BildfahrplanGUIController
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(BildfahrplanGUIController.class);
 
 	protected BildfahrplanConfig config;
+	private Object changeHandleId;
 	protected BildfahrplanGUI gui = null;
 	protected BildfahrplanSpaltenheaderGUI spaltenGui = null;
 	protected BildfahrplanZeilenheaderGUI zeilenGui = null;
@@ -47,10 +48,17 @@ public class BildfahrplanGUIController
 		NullTester.test(parent);
 		this.config = config;
 		this.parent = parent;
-		config.registerChangeHandler(() -> {
-			gui.recalculatePanelSize();
-			repaint();
-		});
+		this.changeHandleId = config.registerChangeHandler(() -> configChanged());
+	}
+	
+	public void configChanged()
+	{
+		gui.recalculatePanelSize();
+		repaint();
+	}
+	public void close()
+	{
+		config.unregisterChangeHandler(changeHandleId);
 	}
 	
 	// Offizielle Funktionen
