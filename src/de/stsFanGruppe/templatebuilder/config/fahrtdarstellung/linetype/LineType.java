@@ -6,37 +6,37 @@ import java.awt.Stroke;
 public enum LineType
 {
 	SOLID_LINE {
-		public Stroke getStroke() {
-			return new BasicStroke(3);
+		public Stroke getStroke(float width) {
+			return new BasicStroke(width);
 		}
 	},
 	DOTTED_LINE {
-		public Stroke getStroke() {
-			return new BasicStroke(3, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, 1.0f, new float[]{10, 10}, 1);
+		public Stroke getStroke(float width) {
+			return new BasicStroke(width, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, 1.0f, new float[]{10, 10}, 1);
 		}
 	},
 	DASEHED_LINE {
-		public Stroke getStroke() {
-			return new BasicStroke(3, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, 1.0f, new float[]{30, 10}, 1);
+		public Stroke getStroke(float width) {
+			return new BasicStroke(width, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, 1.0f, new float[]{30, 10}, 1);
 		}
 	},
 	SHORT_LONG_LINE {
-		public Stroke getStroke() {
-			return new BasicStroke(3, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, 1.0f, new float[]{10, 10, 30, 10}, 1);
+		public Stroke getStroke(float width) {
+			return new BasicStroke(width, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, 1.0f, new float[]{10, 10, 30, 10}, 1);
 		}
 	},
 	SHORT_SHORT_LONG_LINE {
-		public Stroke getStroke() {
-			return new BasicStroke(3, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, 1.0f, new float[]{10, 10, 10, 10, 30, 10}, 1);
+		public Stroke getStroke(float width) {
+			return new BasicStroke(width, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, 1.0f, new float[]{10, 10, 10, 10, 30, 10}, 1);
 		}
 	},
 	SHORT_LONG_LONG_LINE {
-		public Stroke getStroke() {
-			return new BasicStroke(3, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, 1.0f, new float[]{10, 10, 30, 10, 30, 10}, 1);
+		public Stroke getStroke(float width) {
+			return new BasicStroke(width, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, 1.0f, new float[]{10, 10, 30, 10, 30, 10}, 1);
 		}
 	};
 	
-	public abstract Stroke getStroke();
+	public abstract Stroke getStroke(float width);
 	
 	public static LineType valueOf(String name, LineType defaultValue)
 	{

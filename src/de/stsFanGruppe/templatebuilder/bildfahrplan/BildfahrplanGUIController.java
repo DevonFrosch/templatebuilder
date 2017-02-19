@@ -10,12 +10,15 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanConfig;
+import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.FahrtDarstellungConfig;
+import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.FahrtDarstellungHandler;
 import de.stsFanGruppe.templatebuilder.gui.GUI;
 import de.stsFanGruppe.templatebuilder.strecken.Betriebsstelle;
 import de.stsFanGruppe.templatebuilder.strecken.Strecke;
 import de.stsFanGruppe.templatebuilder.strecken.Streckenabschnitt;
 import de.stsFanGruppe.templatebuilder.zug.Fahrplanhalt;
 import de.stsFanGruppe.templatebuilder.zug.Fahrt;
+import de.stsFanGruppe.templatebuilder.zug.FahrtDarstellung;
 import de.stsFanGruppe.tools.FirstLastLinkedList;
 import de.stsFanGruppe.tools.FirstLastList;
 import de.stsFanGruppe.tools.NullTester;
@@ -314,8 +317,9 @@ public class BildfahrplanGUIController
 		
 		// ### Fahrten-Linien ###
 		{
-			// TODO Dynamik einbauen (BT105)
-			Color c = Color.BLACK;
+			FahrtDarstellungConfig darstellungConfig = new FahrtDarstellungConfig();
+			FahrtDarstellungHandler darstellungHandler = new FahrtDarstellungHandler(darstellungConfig);
+			
 			int schachtelung = config.getSchachtelung();
 			int zeigeZugnamen = config.getZeigeZugnamen();
 			boolean zeigeZeiten = config.getZeigeZeiten();
@@ -363,6 +367,10 @@ public class BildfahrplanGUIController
 						int abVerschiebungY = diffY;
 						int anVerschiebungY = stringHeight + diffY;
 						
+						// Darstellung
+						FahrtDarstellung fahrtDarstellung = darstellungHandler.getFahrtDarstellung(name);
+						Color fahrtFarbe = fahrtDarstellung.getFarbe();
+						
 						// erst ab dem 2. Fahrplanhalt zeichnen (die Linie, die zum Fahrplanhalt hinführt)
 						if(letzteZeit >= 0 && letzterKm >= 0 && letzteZeit >= minZeit && kmAb >= 0)
 						{
@@ -387,7 +395,7 @@ public class BildfahrplanGUIController
 										int y1 = ph.getZeitPos(ab - sch);
 										int y2 = ph.getZeitPos(an - sch);
 										
-										ph.paintLine(g, x1, y1, x2, y2, c);
+										ph.paintLine(g, x1, y1, x2, y2, fahrtDarstellung);
 										
 										// Zeiten zeichnen, wenn in der Config, dies aktiv ist.
 										if(zeigeZeiten)
@@ -396,14 +404,14 @@ public class BildfahrplanGUIController
 											if(x1 < x2)
 											{
 												// Wenn die Linie von Links nach Rechts gezeichnet wird.
-												ph.paintText(g, zeitenLTRx1, y1 + diffY, c, abMinute);
-												ph.paintText(g, zeitenLTRx2, y2 + stringHeight + diffY, c, anMinute);
+												ph.paintText(g, zeitenLTRx1, y1 + diffY, fahrtFarbe, abMinute);
+												ph.paintText(g, zeitenLTRx2, y2 + stringHeight + diffY, fahrtFarbe, anMinute);
 											}
 											else
 											{
 												// Wenn die Linie von Rechts nach Links gezeichnet wird.
-												ph.paintText(g, zeitenRTLx1, y1 + diffY, c, abMinute);
-												ph.paintText(g, zeitenRTLx2, y2 + stringHeight + diffY, c, anMinute);
+												ph.paintText(g, zeitenRTLx1, y1 + diffY, fahrtFarbe, abMinute);
+												ph.paintText(g, zeitenRTLx2, y2 + stringHeight + diffY, fahrtFarbe, anMinute);
 											}
 										}
 										
@@ -425,7 +433,7 @@ public class BildfahrplanGUIController
 										
 										if(zeichneZugnamen)
 										{
-											ph.paintRotatedText(g, x1, y1, x2, y2, c, name, -2);
+											ph.paintRotatedText(g, x1, y1, x2, y2, fahrtFarbe, name, -2);
 										}
 										
 										if(schachtelung == 0)

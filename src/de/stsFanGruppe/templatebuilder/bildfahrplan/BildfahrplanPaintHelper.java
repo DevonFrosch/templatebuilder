@@ -7,6 +7,7 @@ import java.awt.Graphics2D;
 import java.awt.Stroke;
 import java.awt.geom.AffineTransform;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanConfig;
+import de.stsFanGruppe.templatebuilder.zug.FahrtDarstellung;
 import de.stsFanGruppe.tools.NullTester;
 
 public class BildfahrplanPaintHelper
@@ -82,6 +83,10 @@ public class BildfahrplanPaintHelper
 	public void paintLine(Graphics2D g, int x1, int y1, int x2, int y2, Color c)
 	{
 		this.paintLine(g, x1, y1, x2, y2, c, new BasicStroke(1));
+	}
+	public void paintLine(Graphics2D g, int x1, int y1, int x2, int y2, FahrtDarstellung d)
+	{
+		this.paintLine(g, x1, y1, x2, y2, d.getFarbe(), d.getTyp().getStroke(d.getBreite()));
 	}
 	public void paintLine(Graphics2D g, int x1, int y1, int x2, int y2, Color c, Stroke s)
 	{

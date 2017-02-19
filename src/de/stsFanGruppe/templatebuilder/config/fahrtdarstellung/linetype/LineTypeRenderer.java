@@ -62,7 +62,7 @@ public class LineTypeRenderer extends JPanel implements ListCellRenderer<LineTyp
 		Graphics2D g2 = (Graphics2D) g;
 		if(value != null)
 		{
-			g2.setStroke(value.getStroke());
+			g2.setStroke(value.getStroke(3));
 			g.drawLine(0, getHeight() / 2, getWidth(), getHeight() / 2);
 		}
 	}
