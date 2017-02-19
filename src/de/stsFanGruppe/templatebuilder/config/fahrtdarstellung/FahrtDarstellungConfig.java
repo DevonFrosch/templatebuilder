@@ -12,7 +12,6 @@ import de.stsFanGruppe.tools.PreferenceHandler;
 public class FahrtDarstellungConfig extends ConfigController
 {
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(FahrtDarstellungConfig.class);
-	private static FahrtDarstellungSettingsGUI gui;
 	
 	public static final String CONFIG_FAHRTDARSTELLUNG_POSTFIX_FILTER = "/filter";
 	public static final String CONFIG_FAHRTDARSTELLUNG_POSTFIX_MUSTER = "/muster";
@@ -90,6 +89,12 @@ public class FahrtDarstellungConfig extends ConfigController
 		prefs.setString("standardLinienFarbe", CONFIG_STANDARD_LINIEN_TYP, standardLinienFarbe);
 	}
 	
+	public FahrtDarstellung getStandardFahrtDarstellung()
+	{
+		return new FahrtDarstellung(DEFAULT_FAHRTDARSTELLUNG_FILTER, DEFAULT_FAHRTDARSTELLUNG_MUSTER,
+				DEFAULT_FAHRTDARSTELLUNG_FARBE, DEFAULT_FAHRTDARSTELLUNG_BREITE, DEFAULT_FAHRTDARSTELLUNG_TYP);
+	}
+	
 	protected void setFahrtDarstellung(String logName, String configName, FahrtDarstellung value)
 	{
 		assert value != null;
@@ -147,8 +152,7 @@ public class FahrtDarstellungConfig extends ConfigController
 	{
 		int count = prefs.getInt(CONFIG_REGEL_FAHRTNAME_PREFIX+"/count", 0);
 		
-		FahrtDarstellung defaultValue = new FahrtDarstellung(DEFAULT_FAHRTDARSTELLUNG_FILTER, DEFAULT_FAHRTDARSTELLUNG_MUSTER,
-				DEFAULT_FAHRTDARSTELLUNG_FARBE, DEFAULT_FAHRTDARSTELLUNG_BREITE, DEFAULT_FAHRTDARSTELLUNG_TYP);
+		FahrtDarstellung defaultValue = getStandardFahrtDarstellung();
 		FirstLastList<FahrtDarstellung> list = new FirstLastLinkedList<>();
 		
 		for(int i=0; i < count; i++)

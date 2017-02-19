@@ -1,8 +1,6 @@
 package de.stsFanGruppe.templatebuilder.config;
 
 import java.awt.Color;
-import java.util.HashMap;
-import java.util.Map;
 import javax.swing.JComponent;
 import de.stsFanGruppe.tools.NullTester;
 import de.stsFanGruppe.tools.PreferenceHandler;
@@ -10,9 +8,6 @@ import de.stsFanGruppe.tools.PreferenceHandler;
 public class BildfahrplanConfig extends ConfigController
 {
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(BildfahrplanConfig.class);
-	
-	private Map<Object, Runnable> callbacks = new HashMap<>();
-	private int callbackCounter = 0;
 	
 	// Bildfahrplan-Ränder
 	public static final String CONFIG_MAR_RIGHT = "bildfahrplan/darstellung/margin/right";
