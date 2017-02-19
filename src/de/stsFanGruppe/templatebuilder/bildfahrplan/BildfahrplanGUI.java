@@ -1,15 +1,14 @@
 package de.stsFanGruppe.templatebuilder.bildfahrplan;
 
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
+import java.awt.*;
 import javax.swing.JComponent;
+import de.stsFanGruppe.templatebuilder.editor.EditorGUI;
+import de.stsFanGruppe.templatebuilder.editor.EditorGUIController;
 import de.stsFanGruppe.templatebuilder.gui.TemplateBuilderGUI;
 import de.stsFanGruppe.tools.FirstLastLinkedList;
 import de.stsFanGruppe.tools.NullTester;
 
-public class BildfahrplanGUI extends JComponent
+public class BildfahrplanGUI extends JComponent implements EditorGUI
 {
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(BildfahrplanGUI.class);
 	
@@ -23,12 +22,15 @@ public class BildfahrplanGUI extends JComponent
 	
 	public BildfahrplanGUI(BildfahrplanGUIController controller, TemplateBuilderGUI parent)
 	{
+		NullTester.test(controller);
 		NullTester.test(parent);
 		
 		this.controller = controller;
-		controller.setBildfahrplanGUI(this);
-		
 		this.parent = parent;
+	}
+	public EditorGUIController getController()
+	{
+		return controller;
 	}
 	
 	public void setPaintables(FirstLastLinkedList<Paintable> paintables)

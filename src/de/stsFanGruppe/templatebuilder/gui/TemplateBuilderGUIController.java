@@ -1,5 +1,6 @@
 package de.stsFanGruppe.templatebuilder.gui;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -7,16 +8,21 @@ import java.io.OutputStream;
 import java.util.Hashtable;
 import java.util.Set;
 import java.util.StringJoiner;
-import javax.swing.JTabbedPane;
+import javax.swing.Icon;
+import javax.swing.JScrollPane;
+import de.stsFanGruppe.templatebuilder.bildfahrplan.BildfahrplanGUI;
 import de.stsFanGruppe.templatebuilder.bildfahrplan.BildfahrplanGUIController;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanConfig;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanSettingsGUI;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanSettingsGUIController;
+import de.stsFanGruppe.templatebuilder.editor.EditorGUI;
+import de.stsFanGruppe.templatebuilder.editor.EditorGUIController;
 import de.stsFanGruppe.templatebuilder.external.*;
 import de.stsFanGruppe.templatebuilder.external.jtraingraph.*;
 import de.stsFanGruppe.templatebuilder.gui.TemplateBuilderGUI;
 import de.stsFanGruppe.templatebuilder.strecken.Streckenabschnitt;
 import de.stsFanGruppe.templatebuilder.zug.Fahrt;
+import de.stsFanGruppe.tools.FirstLastLinkedList;
 import de.stsFanGruppe.tools.GUILocker;
 import de.stsFanGruppe.tools.NullTester;
 
@@ -27,13 +33,11 @@ public class TemplateBuilderGUIController extends GUIController
 	public final String version;
 	public final boolean dev;
 	
-	private TemplateBuilderGUI gui = null;
-	private BildfahrplanGUIController bildfahrplanController = null;
-	private JTabbedPane tabs = null;
+	protected Hashtable<String, Boolean> windowLocks = new Hashtable<>();
 	
-	private Hashtable<String, Boolean> windowLocks = new Hashtable<>();
-	
+	protected TemplateBuilderGUI gui = null;
 	protected BildfahrplanConfig config;
+	protected FirstLastLinkedList<TabController> tabController = new FirstLastLinkedList<>();
 	
 	public TemplateBuilderGUIController(BildfahrplanConfig config, String version, boolean dev)
 	{
@@ -47,15 +51,6 @@ public class TemplateBuilderGUIController extends GUIController
 	{
 		this.gui = gui;
 	}
-	public void setBildfahrplanController(BildfahrplanGUIController controller)
-	{
-		NullTester.test(controller);
-		this.bildfahrplanController = controller;
-	}
-	public void setTabbedPane(JTabbedPane tabbedPane)
-	{
-		this.tabs = tabbedPane;
-	}
 	public BildfahrplanConfig getConfig()
 	{
 		return config;
@@ -64,17 +59,27 @@ public class TemplateBuilderGUIController extends GUIController
 	// ActionHandler
 	public void menuAction(ActionEvent event)
 	{
+		assert gui != null;
+		
 		switch(event.getActionCommand())
 		{
+			case "neu":
+			{
+				addBildfahrplanTab(null, null, null, new BildfahrplanGUIController(config, gui));
+				break;
+			}
 			case "importFromJTG":
+			{
 				if(!GUILocker.lock(JTrainGraphImportGUI.class)) break;
 				JTrainGraphImportGUI jtgi = new JTrainGraphImportGUI(gui.getFrame(), (ergebnis) -> {
-					assert bildfahrplanController != null;
 					assert ergebnis != null;
 					
 					if(ergebnis.success())
 					{
 						log.info("JTG-Import von {}", ergebnis.getPfad());
+						BildfahrplanGUIController bfpController = new BildfahrplanGUIController(config, gui);
+						String name = "Import";
+						
 						try
 						{
 							JTrainGraphImporter importer = new JTrainGraphImporter();
@@ -82,33 +87,41 @@ public class TemplateBuilderGUIController extends GUIController
 							InputStream input = new java.io.FileInputStream(ergebnis.getPfad());
 							Streckenabschnitt streckenabschnitt = importer.importStreckenabschnitt(input);
 							assert streckenabschnitt != null;
-							assert bildfahrplanController != null;
 							
-							bildfahrplanController.ladeStreckenabschnitt(streckenabschnitt);
+							bfpController.ladeStreckenabschnitt(streckenabschnitt);
+							name = streckenabschnitt.getName();
 							
 							if(ergebnis.importZuege())
 							{
 								assert ergebnis.getPfad() != null;
 								input = new java.io.FileInputStream(ergebnis.getPfad());
 								Set<Fahrt> fahrten = importer.importFahrten(input, streckenabschnitt, ergebnis.getLinie());
-								bildfahrplanController.ladeZüge(fahrten);
+								bfpController.ladeZüge(fahrten);
 							}
 						}
 						catch(FileNotFoundException e)
 						{
 							log.error("JTG-Import", e);
 							gui.errorMessage("Datei nicht gefunden!");
+							return;
 						}
 						catch(ImportException e)
 						{
 							log.error("JTG-Import", e);
 							gui.errorMessage("Fehler beim Import!");
+							return;
 						}
+						
+						// Zum Panel hinzufügen
+						addBildfahrplanTab(name, null, null, bfpController);
 					}
+					
 					GUILocker.unlock(JTrainGraphImportGUI.class);
 				});
 				break;
+			}
 			case "importRulesFromJTG":
+			{
 				if(!GUILocker.lock(JTrainGraphZugregelImportGUI.class)) break;
 				new JTrainGraphZugregelImportGUI(gui.getFrame(), (ergebnis) -> {
 					assert ergebnis != null;
@@ -137,10 +150,34 @@ public class TemplateBuilderGUIController extends GUIController
 					GUILocker.unlock(JTrainGraphZugregelImportGUI.class);
 				});
 				break;
+			}
 			case "exportToJTG":
+			{
+				EditorGUI bfpGUI = null;
+				Component com = getSelectedGUI();
+				
+				if(!com.getClass().isAssignableFrom(EditorGUI.class))
+				{
+					log.info("exportToJTG: Aktueller Tab ist keine EditorGUI.");
+					gui.errorMessage("Aktueller Tab ist nicht exportierbar.\nBitte anderen Tab auswählen.");
+					return;
+				}
+				
+				try
+				{
+					
+					bfpGUI = (EditorGUI) com;
+				}
+				catch(ClassCastException e)
+				{
+					// Das ist wohl klein 
+					return;
+				}
+				
+				EditorGUIController bfpController = bfpGUI.getController();
+				
 				if(!GUILocker.lock(JTrainGraphExportGUI.class)) break;
 				JTrainGraphExportGUI jtge = new JTrainGraphExportGUI(gui.getFrame(), (ergebnis) -> {
-					assert bildfahrplanController != null;
 					assert ergebnis != null;
 					
 					if(ergebnis.success())
@@ -151,14 +188,14 @@ public class TemplateBuilderGUIController extends GUIController
 							JTrainGraphExporter exporter = new JTrainGraphExporter(ergebnis.useDS100());
 							OutputStream output = new java.io.FileOutputStream(ergebnis.getPfad());
 							
-							Streckenabschnitt streckenabschnitt = bildfahrplanController.getStreckenabschnitt();
+							Streckenabschnitt streckenabschnitt = bfpController.getStreckenabschnitt();
 							
 							assert streckenabschnitt != null;
 							
 							Set<Fahrt> fahrten = null;
 							if(ergebnis.exportZuege())
 							{
-								fahrten = bildfahrplanController.getFahrten();
+								fahrten = bfpController.getFahrten();
 								exporter.exportFahrten(output, streckenabschnitt, fahrten);
 							}
 							else
@@ -180,6 +217,7 @@ public class TemplateBuilderGUIController extends GUIController
 					GUILocker.unlock(JTrainGraphExportGUI.class);
 				});
 				break;
+			}
 			case "options":
 				if(!GUILocker.lock(BildfahrplanSettingsGUI.class)) break;
 				BildfahrplanSettingsGUI sg = new BildfahrplanSettingsGUI(new BildfahrplanSettingsGUIController(config, () -> GUILocker.unlock(BildfahrplanSettingsGUI.class)), gui.getFrame());
@@ -202,5 +240,22 @@ public class TemplateBuilderGUIController extends GUIController
 				log.error("Menü: nicht erkannt");
 				break;
 		}
+	}
+	
+	public int addBildfahrplanTab(String name, Icon icon, String toolTip, BildfahrplanGUIController bfpController)
+	{
+		return gui.addTab(name, icon, toolTip, bfpController.getBildfahrplanGUI(),
+				bfpController.getBildfahrplanSpaltenHeaderGUI(), bfpController.getBildfahrplanZeilenHeaderGUI());
+	}
+	public boolean selectedTabIsBildfahrplan()
+	{
+		Component tab = gui.getSelectedTab();
+		return tab.getClass().equals(BildfahrplanGUI.class);
+	}
+	
+	public Component getSelectedGUI()
+	{
+		JScrollPane scrollPane = (JScrollPane) gui.getSelectedTab();
+		return scrollPane.getViewport().getView();
 	}
 }

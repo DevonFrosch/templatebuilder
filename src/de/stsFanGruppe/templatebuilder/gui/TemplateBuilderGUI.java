@@ -1,14 +1,13 @@
 package de.stsFanGruppe.templatebuilder.gui;
 
 import javax.swing.*;
+import components.ButtonTabComponent;
 import de.stsFanGruppe.templatebuilder.bildfahrplan.BildfahrplanGUI;
-import de.stsFanGruppe.templatebuilder.bildfahrplan.BildfahrplanGUIController;
-import de.stsFanGruppe.templatebuilder.bildfahrplan.BildfahrplanSpaltenheaderGUI;
-import de.stsFanGruppe.templatebuilder.bildfahrplan.BildfahrplanZeilenheaderGUI;
 import de.stsFanGruppe.tools.NullTester;
 import java.awt.Dimension;
 import java.awt.event.*;
 import java.awt.BorderLayout;
+import java.awt.Component;
 
 public class TemplateBuilderGUI implements GUI
 {
@@ -18,7 +17,8 @@ public class TemplateBuilderGUI implements GUI
 	protected BildfahrplanGUI bildfahrplanZeichner;
 	private boolean initialized = false;
 	
-	private JFrame frmTemplatebauer;
+	protected JFrame frmTemplatebauer;
+	protected JTabbedPane tabbedPane;
 
 	/**
 	 * Create the application.
@@ -49,6 +49,7 @@ public class TemplateBuilderGUI implements GUI
 		{
 			throw new IllegalStateException("GUI bereits initialisiert!");
 		}
+		initialized = true;
 		
 		frmTemplatebauer = new JFrame();
 		frmTemplatebauer.setTitle("TemplateBauer");
@@ -65,13 +66,16 @@ public class TemplateBuilderGUI implements GUI
 		menuBar.add(mnDatei);
 		
 		JMenuItem mntmNeu = new JMenuItem("Neu...");
-		mntmNeu.setEnabled(false);
 		mntmNeu.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_MASK));
+		mntmNeu.setActionCommand("neu");
+		mntmNeu.addActionListener((ActionEvent arg0) -> controller.menuAction(arg0));
 		mnDatei.add(mntmNeu);
 		
 		JMenuItem mntmffnen = new JMenuItem("\u00D6ffnen...");
 		mntmffnen.setEnabled(false);
 		mntmffnen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_MASK));
+		mntmffnen.setActionCommand("öffnen");
+		mntmffnen.addActionListener((ActionEvent arg0) -> controller.menuAction(arg0));
 		mnDatei.add(mntmffnen);
 		
 		JSeparator separator_2 = new JSeparator();
@@ -80,11 +84,15 @@ public class TemplateBuilderGUI implements GUI
 		JMenuItem mntmSpeichern = new JMenuItem("Speichern");
 		mntmSpeichern.setEnabled(false);
 		mntmSpeichern.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK));
+		mntmSpeichern.setActionCommand("speichern");
+		mntmSpeichern.addActionListener((ActionEvent arg0) -> controller.menuAction(arg0));
 		mnDatei.add(mntmSpeichern);
 		
 		JMenuItem mntmSpeichernUnter = new JMenuItem("Speichern unter...");
 		mntmSpeichernUnter.setEnabled(false);
 		mntmSpeichernUnter.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK));
+		mntmSpeichernUnter.setActionCommand("speichernUnter");
+		mntmSpeichernUnter.addActionListener((ActionEvent arg0) -> controller.menuAction(arg0));
 		mnDatei.add(mntmSpeichernUnter);
 		
 		JSeparator separator = new JSeparator();
@@ -191,44 +199,69 @@ public class TemplateBuilderGUI implements GUI
 		));
 		splitPane.setLeftComponent(tree); //*/
 		
-		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		controller.setTabbedPane(tabbedPane);
+		tabbedPane = new JTabbedPane(JTabbedPane.TOP, JTabbedPane.SCROLL_TAB_LAYOUT);
+		
 		// TODO
 		// splitPane.setRightComponent(tabbedPane);
 		frmTemplatebauer.getContentPane().add(tabbedPane, BorderLayout.CENTER);
-		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.getVerticalScrollBar().setUnitIncrement(20);
-		tabbedPane.addTab("New tab", null, scrollPane, null);
-		
-		BildfahrplanGUIController bfpController = new BildfahrplanGUIController(controller.getConfig(), this);
-		bildfahrplanZeichner = new BildfahrplanGUI(bfpController, this);
-		controller.setBildfahrplanController(bfpController);
-		
-		scrollPane.setViewportView(bildfahrplanZeichner);
-		scrollPane.setColumnHeaderView(new BildfahrplanSpaltenheaderGUI(bildfahrplanZeichner, bfpController));
-		scrollPane.setRowHeaderView(new BildfahrplanZeilenheaderGUI(bildfahrplanZeichner, bfpController));
-		bildfahrplanZeichner.setLayout(null);
 		
 		// TODO
 		/*JToolBar toolBar = new JToolBar();
 		frmTemplatebauer.getContentPane().add(toolBar, BorderLayout.NORTH);
 		
-		toolBar.add(button); //*/
-		
-		initialized = true;
+		toolBar.add(new JButton()); //*/
 	}
 	
 	public JFrame getFrame()
 	{
 		return frmTemplatebauer;
 	}
-	
 	public void setVisible(boolean arg0)
 	{
 		this.frmTemplatebauer.setVisible(arg0);
 	}
-
+	
+	public int addTab(String name, Icon icon, String toolTip, Component view, Component columnHeader, Component rowHeader)
+	{
+		assert view != null;
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.getVerticalScrollBar().setUnitIncrement(20);
+		scrollPane.setViewportView(view);
+		if(columnHeader != null)
+		{
+			scrollPane.setColumnHeaderView(columnHeader);
+		}
+		if(rowHeader != null)
+		{
+			scrollPane.setRowHeaderView(rowHeader);
+		}
+		
+		boolean keinName = (name == null);
+		if(keinName)
+		{
+			name = "Neuer Fahrplan";
+		}
+		
+		int tabIndex = 0;
+		synchronized(tabbedPane)
+		{
+			tabbedPane.addTab(name, icon, scrollPane, toolTip);
+			tabIndex = tabbedPane.getTabCount() - 1;
+			tabbedPane.setTabComponentAt(tabIndex, new ButtonTabComponent(tabbedPane));
+			
+			if(keinName)
+			{
+				tabbedPane.setTitleAt(tabIndex, "Neuer Fahrplan ("+tabIndex+")");
+			}
+		}
+		return tabIndex;
+	}
+	public Component getSelectedTab()
+	{
+		return tabbedPane.getComponentAt(tabbedPane.getSelectedIndex());
+	}
+	
 	public void errorMessage(String text, String titel)
 	{
 		JOptionPane.showMessageDialog(frmTemplatebauer, text, titel, JOptionPane.ERROR_MESSAGE);

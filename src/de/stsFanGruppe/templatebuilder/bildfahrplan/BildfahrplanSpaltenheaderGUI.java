@@ -30,7 +30,6 @@ public class BildfahrplanSpaltenheaderGUI extends JComponent
 		
 		this.gui = gui;
 		this.controller = controller;
-		controller.setBildfahrplanSpaltenHeaderGUI(this);
 	}
 	
 	public void setPaintables(FirstLastLinkedList<Paintable> paintables)
