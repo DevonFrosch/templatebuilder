@@ -16,6 +16,7 @@ import de.stsFanGruppe.templatebuilder.fahrtenFarbe.FahrtenFarbeConfig;
 import de.stsFanGruppe.templatebuilder.fahrtenFarbe.FahrtenFarbeSettingsGUIController;
 import de.stsFanGruppe.templatebuilder.gui.GUI;
 import de.stsFanGruppe.templatebuilder.strecken.Betriebsstelle;
+import de.stsFanGruppe.templatebuilder.strecken.Strecke;
 import de.stsFanGruppe.templatebuilder.strecken.Streckenabschnitt;
 import de.stsFanGruppe.tools.FirstLastList;
 import de.stsFanGruppe.tools.NullTester;
@@ -33,7 +34,7 @@ public class BildfahrplanSettingsStreckenGUI extends JDialog implements GUI
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(BildfahrplanSettingsStreckenGUI.class);
 	
 	protected static Streckenabschnitt streckenabschnitt;
-	private BildfahrplanGUIController bildfahrplanController = null;
+	private BildfahrplanGUIController bildfahrplanController;
 	protected BildfahrplanSettingsStreckenGUIController controller;
 	protected BildfahrplanStreckenConfig config;
 	boolean saveEnabled = false;
@@ -154,23 +155,24 @@ public class BildfahrplanSettingsStreckenGUI extends JDialog implements GUI
             }
         };
         
+        streckenabschnitt = bildfahrplanController.getStreckenabschnitt();
+        
 		if(streckenabschnitt == null)
 		{
 			return model;
 		}
-		
-		Streckenabschnitt streckenabschnitt = bildfahrplanController.getStreckenabschnitt();
-        
-		for(Betriebsstelle bs: streckenabschnitt.getBetriebsstellen())
+		else 
 		{
-			double km = streckenKm.get(bs);
-			String name = bs.getName();
-			Object[] row = {km, name};
-			
-			model.addRow(row);
-		}
-		
+			for(Betriebsstelle bs: streckenabschnitt.getBetriebsstellen())
+			{
+				double km = streckenKm.get(bs);
+				String name = bs.getName();
+				Object[] row = {km, name};
+				
+				model.addRow(row);
+			}
 		return model;
+		}
 	}
 
 	public void close()
