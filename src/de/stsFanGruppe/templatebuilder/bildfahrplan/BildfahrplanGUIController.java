@@ -331,6 +331,11 @@ public class BildfahrplanGUIController
 				{
 					double letzteZeit = -1;
 					double letzterKm = -1;
+					String zugName = fahrt.getName();
+					
+					// Darstellung
+					FahrtDarstellung fahrtDarstellung = darstellungHandler.getFahrtDarstellung(zugName);
+					Color fahrtFarbe = fahrtDarstellung.getFarbe();
 					
 					for(Fahrplanhalt fh: fahrt.getFahrplanhalte())
 					{
@@ -340,7 +345,6 @@ public class BildfahrplanGUIController
 							continue;
 						}
 						
-						String zugName = fahrt.getName();
 						double kmAn = streckenKm.get(fh.getGleisabschnitt().getParent().getParent());
 						
 						if(!config.getZeigeZugnamenKommentare() && zugName.indexOf('%') >= 0)
@@ -366,10 +370,6 @@ public class BildfahrplanGUIController
 						int anMinuteBreite = fontMetrics.stringWidth(anMinute) - 2;
 						int abVerschiebungY = diffY;
 						int anVerschiebungY = stringHeight + diffY;
-						
-						// Darstellung
-						FahrtDarstellung fahrtDarstellung = darstellungHandler.getFahrtDarstellung(name);
-						Color fahrtFarbe = fahrtDarstellung.getFarbe();
 						
 						// erst ab dem 2. Fahrplanhalt zeichnen (die Linie, die zum Fahrplanhalt hinführt)
 						if(letzteZeit >= 0 && letzterKm >= 0 && letzteZeit >= minZeit && kmAb >= 0)
