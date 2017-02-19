@@ -121,6 +121,12 @@ public class PreferenceHandler
 	{
 		int[] def = {defaultValue.getRed(), defaultValue.getGreen(), defaultValue.getBlue(), defaultValue.getAlpha()};
 		int[] rgba = getIntArray(configName, def);
+		
+		if(rgba.length < 4)
+		{
+			return defaultValue;
+		}
+		
 		return new Color(rgba[0], rgba[1], rgba[2], rgba[3]);
 	}
 	
