@@ -2,6 +2,8 @@ package de.stsFanGruppe.templatebuilder.external.jtraingraph;
 
 import java.awt.Color;
 import java.io.InputStream;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.xml.stream.XMLStreamException;
 import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.FahrtDarstellungConfig;
 import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.filter.FahrtFilter;
@@ -123,6 +125,33 @@ protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(JTrain
 	}
 	private Color stringToColor(String input, Color defaultValue)
 	{
+		if(input.startsWith("c("))
+		{
+			// c(r,g,b)
+			int[] rgb = new int[3];
+			
+			Matcher matcher = Pattern.compile("\\d+").matcher(input);
+			
+			for(int i=0; i<3; i++)
+			{
+				if(!matcher.find())
+				{
+					return defaultValue;
+				}
+				
+				try
+				{
+					rgb[i] = Integer.parseInt(matcher.group());
+				}
+				catch(NullPointerException|NumberFormatException e)
+				{
+					return defaultValue;
+				}
+			}
+			
+			return new Color(rgb[0], rgb[1], rgb[2]);
+		}
+		
 		switch(input)
 		{
 			case "schwarz":
