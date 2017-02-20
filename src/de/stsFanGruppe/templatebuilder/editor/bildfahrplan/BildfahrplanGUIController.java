@@ -1,4 +1,4 @@
-package de.stsFanGruppe.templatebuilder.bildfahrplan;
+package de.stsFanGruppe.templatebuilder.editor.bildfahrplan;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -17,6 +17,7 @@ import de.stsFanGruppe.templatebuilder.zug.Fahrt;
 import de.stsFanGruppe.templatebuilder.zug.FahrtDarstellung;
 import de.stsFanGruppe.tools.FirstLastLinkedList;
 import de.stsFanGruppe.tools.FirstLastList;
+import de.stsFanGruppe.tools.Paintable;
 import de.stsFanGruppe.tools.TimeFormater;
 
 public class BildfahrplanGUIController extends EditorGUIController

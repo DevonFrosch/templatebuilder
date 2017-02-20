@@ -2,7 +2,7 @@ package de.stsFanGruppe.templatebuilder.gui;
 
 import javax.swing.*;
 import components.ButtonTabComponent;
-import de.stsFanGruppe.templatebuilder.bildfahrplan.BildfahrplanGUI;
+import de.stsFanGruppe.templatebuilder.editor.bildfahrplan.BildfahrplanGUI;
 import de.stsFanGruppe.tools.NullTester;
 import java.awt.Dimension;
 import java.awt.event.*;

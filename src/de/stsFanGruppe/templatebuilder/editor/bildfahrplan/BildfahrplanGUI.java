@@ -1,4 +1,4 @@
-package de.stsFanGruppe.templatebuilder.bildfahrplan;
+package de.stsFanGruppe.templatebuilder.editor.bildfahrplan;
 
 import java.awt.*;
 import javax.swing.JComponent;
@@ -7,6 +7,7 @@ import de.stsFanGruppe.templatebuilder.editor.EditorGUIController;
 import de.stsFanGruppe.templatebuilder.gui.TemplateBuilderGUI;
 import de.stsFanGruppe.tools.FirstLastLinkedList;
 import de.stsFanGruppe.tools.NullTester;
+import de.stsFanGruppe.tools.Paintable;
 
 public class BildfahrplanGUI extends JComponent implements EditorGUI
 {

@@ -1,4 +1,4 @@
-package de.stsFanGruppe.templatebuilder.bildfahrplan;
+package de.stsFanGruppe.templatebuilder.editor.bildfahrplan;
 
 import java.awt.BasicStroke;
 import java.awt.Color;

@@ -1,4 +1,4 @@
-package de.stsFanGruppe.templatebuilder.bildfahrplan;
+package de.stsFanGruppe.templatebuilder.editor.bildfahrplan;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -7,10 +7,11 @@ import java.awt.RenderingHints;
 import javax.swing.JComponent;
 import de.stsFanGruppe.tools.FirstLastLinkedList;
 import de.stsFanGruppe.tools.NullTester;
+import de.stsFanGruppe.tools.Paintable;
 
-public class BildfahrplanSpaltenheaderGUI extends JComponent
+public class BildfahrplanZeilenheaderGUI extends JComponent
 {
-	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(BildfahrplanSpaltenheaderGUI.class);
+	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(BildfahrplanZeilenheaderGUI.class);
 	
 	protected BildfahrplanGUI gui;
 	protected BildfahrplanGUIController controller;
@@ -20,10 +21,10 @@ public class BildfahrplanSpaltenheaderGUI extends JComponent
 	boolean paint = true;
 	
 	/**
-	 * Anzeigen der GUI mit einer festen Spaltenanzahl
+	 * Anzeigen der GUI mit einer festen Zeilenzahl
 	 * @param gui
 	 */
-	public BildfahrplanSpaltenheaderGUI(BildfahrplanGUI gui, BildfahrplanGUIController controller)
+	public BildfahrplanZeilenheaderGUI(BildfahrplanGUI gui, BildfahrplanGUIController controller)
 	{
 		NullTester.test(gui);
 		NullTester.test(controller);
@@ -78,6 +79,6 @@ public class BildfahrplanSpaltenheaderGUI extends JComponent
 	
 	public Dimension getPreferredSize()
 	{
-		return new Dimension((int) gui.getPreferredSize().getWidth(), controller.getSpaltenHeaderHoehe());
+		return new Dimension(controller.getZeilenHeaderBreite(), (int) gui.getPreferredSize().getHeight());
 	}
 }
