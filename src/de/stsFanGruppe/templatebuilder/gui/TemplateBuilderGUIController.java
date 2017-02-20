@@ -13,10 +13,11 @@ import javax.swing.JScrollPane;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanConfig;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanSettingsGUI;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanSettingsGUIController;
+import de.stsFanGruppe.templatebuilder.editor.EditorData;
 import de.stsFanGruppe.templatebuilder.editor.EditorGUI;
-import de.stsFanGruppe.templatebuilder.editor.EditorGUIController;
 import de.stsFanGruppe.templatebuilder.editor.bildfahrplan.BildfahrplanGUI;
 import de.stsFanGruppe.templatebuilder.editor.bildfahrplan.BildfahrplanGUIController;
+import de.stsFanGruppe.templatebuilder.editor.tabEditor.TabEditorGUI;
 import de.stsFanGruppe.templatebuilder.external.*;
 import de.stsFanGruppe.templatebuilder.external.jtraingraph.*;
 import de.stsFanGruppe.templatebuilder.gui.TemplateBuilderGUI;
@@ -156,7 +157,7 @@ public class TemplateBuilderGUIController extends GUIController
 				EditorGUI bfpGUI = null;
 				Component com = getSelectedGUI();
 				
-				if(!com.getClass().isAssignableFrom(EditorGUI.class))
+				if(com == null || !com.getClass().isAssignableFrom(EditorGUI.class))
 				{
 					log.info("exportToJTG: Aktueller Tab ist keine EditorGUI.");
 					gui.errorMessage("Aktueller Tab ist nicht exportierbar.\nBitte anderen Tab auswählen.");
@@ -174,7 +175,7 @@ public class TemplateBuilderGUIController extends GUIController
 					return;
 				}
 				
-				EditorGUIController bfpController = bfpGUI.getController();
+				EditorData editoData = bfpGUI.getController().getEditorData();
 				
 				if(!GUILocker.lock(JTrainGraphExportGUI.class)) break;
 				JTrainGraphExportGUI jtge = new JTrainGraphExportGUI(gui.getFrame(), (ergebnis) -> {
@@ -188,14 +189,14 @@ public class TemplateBuilderGUIController extends GUIController
 							JTrainGraphExporter exporter = new JTrainGraphExporter(ergebnis.useDS100());
 							OutputStream output = new java.io.FileOutputStream(ergebnis.getPfad());
 							
-							Streckenabschnitt streckenabschnitt = bfpController.getStreckenabschnitt();
+							Streckenabschnitt streckenabschnitt = editoData.getStreckenabschnitt();
 							
 							assert streckenabschnitt != null;
 							
 							Set<Fahrt> fahrten = null;
 							if(ergebnis.exportZuege())
 							{
-								fahrten = bfpController.getFahrten();
+								fahrten = editoData.getFahrten();
 								exporter.exportFahrten(output, streckenabschnitt, fahrten);
 							}
 							else
@@ -249,13 +250,31 @@ public class TemplateBuilderGUIController extends GUIController
 	}
 	public boolean selectedTabIsBildfahrplan()
 	{
-		Component tab = gui.getSelectedTab();
-		return tab.getClass().equals(BildfahrplanGUI.class);
+		Class<? extends Component> tab = gui.getSelectedTab().getClass();
+		if(tab == null)
+		{
+			return false;
+		}
+		return tab.equals(BildfahrplanGUI.class);
+	}
+	
+	public boolean selectedTabIsTabEditor()
+	{
+		Class<? extends Component> tab = gui.getSelectedTab().getClass();
+		if(tab == null)
+		{
+			return false;
+		}
+		return tab.equals(TabEditorGUI.class);
 	}
 	
 	public Component getSelectedGUI()
 	{
 		JScrollPane scrollPane = (JScrollPane) gui.getSelectedTab();
+		if(scrollPane == null || scrollPane.getViewport() == null)
+		{
+			return null;
+		}
 		return scrollPane.getViewport().getView();
 	}
 }

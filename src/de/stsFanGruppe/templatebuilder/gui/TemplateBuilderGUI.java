@@ -1,6 +1,7 @@
 package de.stsFanGruppe.templatebuilder.gui;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
 import components.ButtonTabComponent;
 import de.stsFanGruppe.templatebuilder.editor.bildfahrplan.BildfahrplanGUI;
 import de.stsFanGruppe.tools.NullTester;
@@ -13,9 +14,15 @@ public class TemplateBuilderGUI implements GUI
 {
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(TemplateBuilderGUI.class);
 	
+	public static final int ANSICHT_BILDFAHRPLAN = 0;
+	public static final int ANSICHT_TABELLARISCH = 1;
+	
 	protected TemplateBuilderGUIController controller;
 	protected BildfahrplanGUI bildfahrplanZeichner;
 	private boolean initialized = false;
+	
+	protected JCheckBoxMenuItem mntmBildfahrplan;
+	protected JCheckBoxMenuItem mntmTabellarisch;
 	
 	protected JFrame frmTemplatebauer;
 	protected JTabbedPane tabbedPane;
@@ -143,10 +150,17 @@ public class TemplateBuilderGUI implements GUI
 		JMenu mnAnsicht = new JMenu("Ansicht");
 		menuBar.add(mnAnsicht);
 		
-		JCheckBoxMenuItem mntmBildfahrplan = new JCheckBoxMenuItem("Bildfahrplan");
-		mntmBildfahrplan.setSelected(true);
-		mntmBildfahrplan.setActionCommand("bfpOptions");
+		mntmBildfahrplan = new JCheckBoxMenuItem("Bildfahrplan");
+		mntmBildfahrplan.setActionCommand("zeigeBildfahrplan");
+		mntmBildfahrplan.addActionListener((ActionEvent arg0) -> controller.menuAction(arg0));
+		mntmBildfahrplan.addActionListener((ActionEvent arg0) -> updateAnsichtAuswahl());
 		mnAnsicht.add(mntmBildfahrplan);
+		
+		mntmTabellarisch = new JCheckBoxMenuItem("Tabellarisch");
+		mntmTabellarisch.setActionCommand("zeigeTabEditor");
+		mntmTabellarisch.addActionListener((ActionEvent arg0) -> controller.menuAction(arg0));
+		mntmTabellarisch.addActionListener((ActionEvent arg0) -> updateAnsichtAuswahl());
+		mnAnsicht.add(mntmTabellarisch);
 		
 		JMenu mnEinstellungen = new JMenu("Einstellungen");
 		menuBar.add(mnEinstellungen);
@@ -200,6 +214,7 @@ public class TemplateBuilderGUI implements GUI
 		splitPane.setLeftComponent(tree); //*/
 		
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP, JTabbedPane.SCROLL_TAB_LAYOUT);
+		tabbedPane.addChangeListener((ChangeEvent event) -> tabChanged(event));
 		
 		// TODO
 		// splitPane.setRightComponent(tabbedPane);
@@ -259,7 +274,22 @@ public class TemplateBuilderGUI implements GUI
 	}
 	public Component getSelectedTab()
 	{
+		if(tabbedPane.getTabCount() == 0)
+		{
+			return null;
+		}
+		
 		return tabbedPane.getComponentAt(tabbedPane.getSelectedIndex());
+	}
+	public void tabChanged(ChangeEvent e)
+	{
+		
+	}
+	
+	public void updateAnsichtAuswahl()
+	{
+		mntmBildfahrplan.setSelected(controller.selectedTabIsBildfahrplan());
+		mntmTabellarisch.setSelected(controller.selectedTabIsTabEditor());
 	}
 	
 	public void errorMessage(String text, String titel)

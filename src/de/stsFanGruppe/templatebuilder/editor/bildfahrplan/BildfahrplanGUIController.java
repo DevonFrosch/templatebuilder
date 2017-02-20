@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Stroke;
 import java.util.Collection;
+import java.util.Set;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanConfig;
 import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.FahrtDarstellungConfig;
 import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.FahrtDarstellungHandler;
@@ -75,18 +76,18 @@ public class BildfahrplanGUIController extends EditorGUIController
 	// Funktionen von EditorGUIController
 	public void ladeStreckenabschnitt(Streckenabschnitt streckenabschnitt)
 	{
-		super.ladeStreckenabschnitt(streckenabschnitt);
-		ph.setDiffKm(diffKm);
+		editorData.ladeStreckenabschnitt(streckenabschnitt);
+		ph.setDiffKm(editorData.getDiffKm());
 		gui.recalculatePanelSize();
 	}
 	public void ladeZüge(Collection<? extends Fahrt> fahrten)
 	{
-		super.ladeZüge(fahrten);
+		editorData.ladeZüge(fahrten);
 		gui.recalculatePanelSize();
 	}
 	protected void reset()
 	{
-		super.reset();
+		editorData.reset();
 		ph.setDiffKm(-1);
 	}
 	
@@ -114,18 +115,14 @@ public class BildfahrplanGUIController extends EditorGUIController
 	// Interne Funktionen
 	protected void optimizeHeight()
 	{
-		if(gui == null || fahrten == null || fahrten.isEmpty())
+		if(gui == null || editorData.hasFahrten())
 		{
 			return;
 		}
 		log.trace("optimizeHeight()");
 		
-		double minZeit, maxZeit;
-		synchronized(fahrten)
-		{
-			minZeit = fahrten.stream().min((a, b) -> Double.compare(a.getMinZeit(), b.getMinZeit())).get().getMinZeit();
-			maxZeit = fahrten.stream().max((a, b) -> Double.compare(a.getMaxZeit(), b.getMaxZeit())).get().getMaxZeit();
-		}
+		double minZeit = editorData.getMinZeit();
+		double maxZeit = editorData.getMaxZeit();
 		
 		assert minZeit <= maxZeit;
 		config.setZeiten(minZeit, maxZeit);
@@ -144,8 +141,8 @@ public class BildfahrplanGUIController extends EditorGUIController
 		 * Schleifenzähler müssen innerhalb der Schleife in eine lokale Variable kopiert werden, letztere kann dann verwendet werden. 
 		 */
 		
-		if(config == null || streckenabschnitt == null || streckenKm == null || fahrten == null
-				|| gui == null || spaltenGui == null || zeilenGui == null)
+		if(!editorData.hasStreckenabschnitt() || !editorData.hasFahrten()
+				|| config == null || gui == null || spaltenGui == null || zeilenGui == null)
 		{
 			return;
 		}
@@ -177,12 +174,12 @@ public class BildfahrplanGUIController extends EditorGUIController
 		// ### Betriebsstellen-Linien ###
 		{
 			Color c = config.getBetriebsstellenFarbe();
-			FirstLastList<Betriebsstelle> betriebsstellen = streckenabschnitt.getBetriebsstellen();
+			FirstLastList<Betriebsstelle> betriebsstellen = editorData.getStreckenabschnitt().getBetriebsstellen();
 			
 			int bsCounter = 0;
-			for(Betriebsstelle bs: streckenabschnitt.getBetriebsstellen())
+			for(Betriebsstelle bs: betriebsstellen)
 			{
-				double km = streckenKm.get(bs);
+				double km = editorData.getStreckenKm(bs);
 				int lineHeight = config.getLineHeight();
 				final int offsetX = config.getOffsetX();
 				final int textY = config.getTextMarginTop() + ((stringHeight + config.getOffsetY()) * (bsCounter % config.getZeilenAnzahl())) + config.getTextMarginBottom();
@@ -259,6 +256,8 @@ public class BildfahrplanGUIController extends EditorGUIController
 			boolean zeigeZeiten = config.getZeigeZeiten();
 			int zeigeRichtung = config.getZeigeRichtung();
 			
+			Set<Fahrt> fahrten = editorData.getFahrtenCopy();
+			
 			synchronized(fahrten)
 			{
 				for(Fahrt fahrt: fahrten)
@@ -279,7 +278,7 @@ public class BildfahrplanGUIController extends EditorGUIController
 							continue;
 						}
 						
-						double kmAn = streckenKm.get(fh.getGleisabschnitt().getParent().getParent());
+						double kmAn = editorData.getStreckenKm(fh.getGleisabschnitt().getParent().getParent());
 						
 						if(!config.getZeigeZugnamenKommentare() && zugName.indexOf('%') >= 0)
 						{
@@ -382,7 +381,7 @@ public class BildfahrplanGUIController extends EditorGUIController
 						
 						// für nächsten Eintrag
 						letzteZeit = fh.getAbfahrt();
-						letzterKm = streckenKm.get(fh.getGleisabschnitt().getParent().getParent()).doubleValue();
+						letzterKm = editorData.getStreckenKm(fh.getGleisabschnitt().getParent().getParent());
 						
 					} // for(Fahrplanhalt fh: fahrt.getFahrplanhalte())
 				} // for(Fahrt fahrt: fahrten)
