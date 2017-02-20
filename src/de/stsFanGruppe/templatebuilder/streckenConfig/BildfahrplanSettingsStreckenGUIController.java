@@ -5,7 +5,11 @@ import java.awt.event.ActionEvent;
 import javax.swing.JColorChooser;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
-
+import de.stsFanGruppe.templatebuilder.editor.EditorData;
+import de.stsFanGruppe.templatebuilder.gui.GUI;
+import de.stsFanGruppe.templatebuilder.gui.TemplateBuilderGUIController;
+import de.stsFanGruppe.templatebuilder.strecken.Betriebsstelle;
+import de.stsFanGruppe.templatebuilder.strecken.Streckenabschnitt;
 import de.stsFanGruppe.tools.NullTester;
 import de.stsFanGruppe.tools.TimeFormater;
 
@@ -13,14 +17,18 @@ public class BildfahrplanSettingsStreckenGUIController
 {
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(BildfahrplanSettingsStreckenGUIController.class);
 	
+	protected EditorData editorDaten;
+	protected static Streckenabschnitt streckenabschnitt;
 	private BildfahrplanSettingsStreckenGUI gui;
 	private BildfahrplanStreckenConfig config;
 	private Runnable onClose;
 	
-	public BildfahrplanSettingsStreckenGUIController(BildfahrplanStreckenConfig config, Runnable onClose)
+	public BildfahrplanSettingsStreckenGUIController(EditorData editorDaten, BildfahrplanStreckenConfig config, Runnable onClose)
 	{
+		NullTester.test(editorDaten);
 		NullTester.test(config);
 		NullTester.test(onClose);
+		this.editorDaten = editorDaten;
 		this.config = config;
 		this.onClose = onClose;
 	}
@@ -167,7 +175,7 @@ public class BildfahrplanSettingsStreckenGUIController
 			case "load":
 				config.importSettings(gui, gui);
 				// Einstellungen neu laden
-				gui.loadSettings();
+				ladeStrecken();
 				break;
 			case "cancel":
 				close();
@@ -202,8 +210,39 @@ public class BildfahrplanSettingsStreckenGUIController
 				log.error("actionButton: actionCommand nicht erkannt: {}", event.getActionCommand());
 		}
 	}
+	
+	public void ladeStrecken() {
+		assert editorDaten != null;
 		
-	protected void speichereStrecken()
+		DefaultTableModel model = new DefaultTableModel(BildfahrplanSettingsStreckenGUI.columnName, 0)
+		{
+            @Override
+            public Class<?> getColumnClass( int column ) {
+                switch( column ){
+                    case 0: return Integer.class;
+                    case 1: return String.class;
+                    default: return Object.class;
+                }
+            }
+        };
+        
+        streckenabschnitt = editorDaten.getStreckenabschnitt();
+        
+		if(streckenabschnitt != null)
+		{
+			for(Betriebsstelle bs: streckenabschnitt.getBetriebsstellen())
+			{
+				double km = editorDaten.getStreckenKm(bs);
+				String name = bs.getName();
+				Object[] row = {km, name};
+				
+				model.addRow(row);
+			}
+		}
+		gui.table.setModel(model);
+	}
+	
+	public void speichereStrecken()
 	{
 		
 	}

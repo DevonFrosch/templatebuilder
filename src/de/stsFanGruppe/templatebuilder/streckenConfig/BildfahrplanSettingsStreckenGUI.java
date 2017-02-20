@@ -11,16 +11,13 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
 
-import de.stsFanGruppe.templatebuilder.bildfahrplan.BildfahrplanGUIController;
-import de.stsFanGruppe.templatebuilder.fahrtenFarbe.FahrtenFarbeConfig;
-import de.stsFanGruppe.templatebuilder.fahrtenFarbe.FahrtenFarbeSettingsGUIController;
+import de.stsFanGruppe.templatebuilder.editor.EditorData;
 import de.stsFanGruppe.templatebuilder.gui.GUI;
 import de.stsFanGruppe.templatebuilder.strecken.Betriebsstelle;
 import de.stsFanGruppe.templatebuilder.strecken.Strecke;
 import de.stsFanGruppe.templatebuilder.strecken.Streckenabschnitt;
 import de.stsFanGruppe.tools.FirstLastList;
 import de.stsFanGruppe.tools.NullTester;
-import de.stsFanGruppe.tools.TableModel;
 
 import javax.swing.event.ChangeEvent;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -33,13 +30,10 @@ public class BildfahrplanSettingsStreckenGUI extends JDialog implements GUI
 {
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(BildfahrplanSettingsStreckenGUI.class);
 	
-	protected static Streckenabschnitt streckenabschnitt;
-	private BildfahrplanGUIController bildfahrplanController;
+	protected EditorData editorDaten;
 	protected BildfahrplanSettingsStreckenGUIController controller;
 	protected BildfahrplanStreckenConfig config;
 	boolean saveEnabled = false;
-	
-	protected static Map<Betriebsstelle, Double> streckenKm;
 	
 	JLabel lblDescription;
 	JTable table;
@@ -56,7 +50,8 @@ public class BildfahrplanSettingsStreckenGUI extends JDialog implements GUI
 	{
 		try
 		{
-			BildfahrplanSettingsStreckenGUI dialog = new BildfahrplanSettingsStreckenGUI(new BildfahrplanSettingsStreckenGUIController(new BildfahrplanStreckenConfig(), () -> {}), null);
+			BildfahrplanSettingsStreckenGUI dialog = new BildfahrplanSettingsStreckenGUI(new BildfahrplanSettingsStreckenGUIController(
+					new EditorData(), new BildfahrplanStreckenConfig(), () -> {}), null);
 		}
 		catch(Exception e)
 		{
@@ -95,7 +90,7 @@ public class BildfahrplanSettingsStreckenGUI extends JDialog implements GUI
 						.setText("<html>Hier kannst du die Strecke bearbeiten.</html>");
 			}
 			{				
-				table = new JTable(tableModel());
+				table = new JTable();
 				table.getTableHeader().setReorderingAllowed(false);
 				
 				table.setDefaultRenderer( Point.class, new PointRender());
@@ -138,42 +133,10 @@ public class BildfahrplanSettingsStreckenGUI extends JDialog implements GUI
 				}
 			}
 		}
-		loadSettings();
+		controller.ladeStrecken();
 		setVisible(true);
 	}
 	
-	private DefaultTableModel tableModel() {
-		
-		DefaultTableModel model = new DefaultTableModel(columnName, 0){
-            @Override
-            public Class<?> getColumnClass( int column ) {
-                switch( column ){
-                    case 0: return Integer.class;
-                    case 1: return String.class;
-                    default: return Object.class;
-                }
-            }
-        };
-        
-        streckenabschnitt = bildfahrplanController.getStreckenabschnitt();
-        
-		if(streckenabschnitt == null)
-		{
-			return model;
-		}
-		else 
-		{
-			for(Betriebsstelle bs: streckenabschnitt.getBetriebsstellen())
-			{
-				double km = streckenKm.get(bs);
-				String name = bs.getName();
-				Object[] row = {km, name};
-				
-				model.addRow(row);
-			}
-		return model;
-		}
-	}
 
 	public void close()
 	{
@@ -195,13 +158,6 @@ public class BildfahrplanSettingsStreckenGUI extends JDialog implements GUI
 		JOptionPane.showMessageDialog(contentPanel, text, titel, JOptionPane.INFORMATION_MESSAGE);
 	}
 	
-	/**
-	 * Beim Öffnen der GUI werden die Strecken für die Tabelle ausgelesen und korrekt dargestellt.
-	 */
-	public void loadSettings() {
-		// TODO Auto-generated method stub
-		
-	}
 	public class PointRender extends DefaultTableCellRenderer{
 	    /**
 		 * 

@@ -228,8 +228,33 @@ public class TemplateBuilderGUIController extends GUIController
 			}
 
 			case "streckenEdit":
-				if(!lock(event.getActionCommand())) break;
-				BildfahrplanSettingsStreckenGUI bssg = new BildfahrplanSettingsStreckenGUI(new BildfahrplanSettingsStreckenGUIController(streckenConfig, () -> unlock(event.getActionCommand())), gui.getFrame());
+				if(!GUILocker.lock(BildfahrplanSettingsStreckenGUI.class)) break;
+				Component com = getSelectedGUI();
+				
+				/*if(com == null || !com.getClass().isAssignableFrom(EditorGUI.class))
+				{
+					log.info("streckenEdit: Aktueller Tab ist keine EditorGUI.");
+					gui.errorMessage("Aktueller Tab kann nicht bearbeitet werden.\nBitte anderen Tab auswählen.");
+					return;
+				}*/
+				
+				EditorGUI eGUI;
+				try
+				{
+					
+					eGUI = (EditorGUI) com;
+				}
+				catch(ClassCastException e)
+				{
+					// Das ist wohl klein 
+					throw e;
+				}
+				
+				EditorData editorData = eGUI.getController().getEditorData();
+				
+				BildfahrplanSettingsStreckenGUIController controller = new BildfahrplanSettingsStreckenGUIController(
+						editorData, streckenConfig, () -> GUILocker.unlock(BildfahrplanSettingsStreckenGUI.class));
+				BildfahrplanSettingsStreckenGUI bssg = new BildfahrplanSettingsStreckenGUI(controller, gui.getFrame());
 				break;
 			case "options":
 				if(!GUILocker.lock(BildfahrplanSettingsGUI.class)) break;
