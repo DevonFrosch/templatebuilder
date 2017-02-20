@@ -2,6 +2,8 @@ package de.stsFanGruppe.templatebuilder.streckenConfig;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -70,7 +72,10 @@ public class BildfahrplanSettingsStreckenGUI extends JDialog implements GUI
 		this.config = controller.getConfig();
 		controller.setSettingsGUI(this);
 		
-		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+		addWindowListener(new WindowAdapter() { public void windowClosing(WindowEvent e) {
+			controller.close();
+		}});
 		setBounds(0, 0, 500, 500);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
