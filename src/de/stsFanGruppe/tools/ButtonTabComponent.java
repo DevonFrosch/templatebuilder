@@ -51,11 +51,11 @@ public class ButtonTabComponent extends JPanel
 
     public ButtonTabComponent(final JTabbedPane pane)
     {
-    	this(pane, null);
+        this(pane, null);
     }
     public ButtonTabComponent(final JTabbedPane pane, CloseCallback closeCallback)
     {
-    	this(pane, closeCallback, null);
+        this(pane, closeCallback, null);
     }
     public ButtonTabComponent(final JTabbedPane pane, CloseCallback closeCallback, final String toolTip)
     {
@@ -63,7 +63,7 @@ public class ButtonTabComponent extends JPanel
         super(new FlowLayout(FlowLayout.LEFT, 0, 0));
         if(pane == null)
         {
-        	throw new NullPointerException("Parameter pane is null.");
+            throw new NullPointerException("Parameter pane is null.");
         }
         
         this.pane = pane;
@@ -95,9 +95,21 @@ public class ButtonTabComponent extends JPanel
         //add more space to the top of the component
         setBorder(BorderFactory.createEmptyBorder(2, 0, 0, 0));
     }
+    
+    public void closeTab()
+    {
+        int i = pane.indexOfTabComponent(ButtonTabComponent.this);
+        if (i != -1)
+        {
+            if(closeCallback == null || closeCallback.tabClosed(i))
+            {
+                pane.remove(i);
+            }
+        }
+    }
 
     private class TabButton extends JButton implements ActionListener
-	{
+    {
         public TabButton()
         {
             int size = 17;
@@ -121,14 +133,7 @@ public class ButtonTabComponent extends JPanel
 
         public void actionPerformed(ActionEvent e)
         {
-            int i = pane.indexOfTabComponent(ButtonTabComponent.this);
-            if (i != -1)
-            {
-            	if(closeCallback == null || closeCallback.tabClosed(i))
-            	{
-            		pane.remove(i);
-            	}
-            }
+            closeTab();
         }
 
         //we don't want to update UI for this button
@@ -159,7 +164,7 @@ public class ButtonTabComponent extends JPanel
         }
     }
 
-    private final static MouseListener buttonMouseListener = new MouseAdapter()
+    private MouseListener buttonMouseListener = new MouseAdapter()
     {
         public void mouseEntered(MouseEvent e)
         {
@@ -184,13 +189,13 @@ public class ButtonTabComponent extends JPanel
     
     public interface CloseCallback
     {
-    	/**
-    	 * Function is called when a tab is to be closed, return value decides whether the tab is closed or not.
-    	 * 
-    	 * This just covers closing by the close button provided by this class.
-    	 * @param index Tab index to be closed.
-    	 * @return true if the tab can be closed safely.
-    	 */
-    	public boolean tabClosed(int index);
+        /**
+         * Function is called when a tab is to be closed, return value decides whether the tab is closed or not.
+         * 
+         * This just covers closing by the close button provided by this class.
+         * @param index Tab index to be closed.
+         * @return true if the tab can be closed safely.
+         */
+        public boolean tabClosed(int index);
     }
 }
