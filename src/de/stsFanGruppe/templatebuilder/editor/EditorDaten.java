@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.BooleanSupplier;
 import de.stsFanGruppe.templatebuilder.editor.bildfahrplan.BildfahrplanGUIController;
+import de.stsFanGruppe.templatebuilder.editor.tabEditor.TabEditorGUIController;
 import de.stsFanGruppe.templatebuilder.strecken.Betriebsstelle;
 import de.stsFanGruppe.templatebuilder.strecken.Strecke;
 import de.stsFanGruppe.templatebuilder.strecken.Streckenabschnitt;
@@ -21,6 +22,8 @@ public class EditorDaten
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(EditorDaten.class);
 	
 	protected BildfahrplanGUIController bfpController = null;
+	protected TabEditorGUIController tabHinController = null;
+	protected TabEditorGUIController tabRückController = null;
 	protected BooleanSupplier noEditorCallback = null;
 	
 	protected Streckenabschnitt streckenabschnitt;
@@ -46,6 +49,16 @@ public class EditorDaten
 		this(controller);
 		this.addNoEditorCallback(noEditorCallback);
 	}
+	public EditorDaten(TabEditorGUIController controller, boolean richtungAufsteigend)
+	{
+		this();
+		this.setTabEditor(controller, richtungAufsteigend);
+	}
+	public EditorDaten(TabEditorGUIController controller, boolean richtungAufsteigend, BooleanSupplier noEditorCallback)
+	{
+		this(controller, richtungAufsteigend);
+		this.addNoEditorCallback(noEditorCallback);
+	}
 	
 	public boolean hasBildfahrplan()
 	{
@@ -60,9 +73,64 @@ public class EditorDaten
 		this.bfpController = controller;
 	}
 	
+	public boolean hasTabEditor(boolean richtungAufsteigend)
+	{
+		return getTabEditor(richtungAufsteigend) != null;
+	}
+	public TabEditorGUIController getTabEditor(boolean richtungAufsteigend)
+	{
+		return ((richtungAufsteigend) ? tabHinController : tabRückController);
+	}
+	public void setTabEditor(TabEditorGUIController controller, boolean richtungAufsteigend)
+	{
+		if(richtungAufsteigend)
+		{
+			// Wenn das der letzte Editor ist, nachfragen
+			if(!hasBildfahrplan() && !hasTabEditorRück() && noEditorCallback.getAsBoolean())
+			{
+				return;
+			}
+			this.tabHinController = controller;
+		}
+		else
+		{
+			// Wenn das der letzte Editor ist, nachfragen
+			if(!hasBildfahrplan() && !hasTabEditorHin() && noEditorCallback.getAsBoolean())
+			{
+				return;
+			}
+			this.tabRückController = controller;
+		}
+	}
+
+	public boolean hasTabEditorHin()
+	{
+		return hasTabEditor(true);
+	}
+	public boolean hasTabEditorRück()
+	{
+		return hasTabEditor(false);
+	}
+	public TabEditorGUIController getTabEditorHin()
+	{
+		return getTabEditor(true);
+	}
+	public TabEditorGUIController getTabEditorRück()
+	{
+		return getTabEditor(false);
+	}
+	public void setTabEditorHin(TabEditorGUIController controller)
+	{
+		setTabEditor(controller, true);
+	}
+	public void setTabEditorRück(TabEditorGUIController controller)
+	{
+		setTabEditor(controller, false);
+	}
+	
 	public boolean hasEditoren()
 	{
-		return hasBildfahrplan();
+		return hasBildfahrplan() || hasTabEditorHin() || hasTabEditorRück();
 	}
 	
 	public void addNoEditorCallback(BooleanSupplier noEditorCallback)

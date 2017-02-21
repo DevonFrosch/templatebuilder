@@ -7,7 +7,9 @@ import de.stsFanGruppe.templatebuilder.gui.TemplateBuilderGUI;
 import de.stsFanGruppe.tools.NullTester;
 import javax.swing.JTable;
 import java.awt.BorderLayout;
+import java.util.Collection;
 import javax.swing.ListSelectionModel;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.JButton;
 
 public class TabEditorGUI extends JPanel implements EditorGUI
@@ -56,6 +58,11 @@ public class TabEditorGUI extends JPanel implements EditorGUI
 		
 	}
 	
+	public boolean isRichtungAufsteigend()
+	{
+		return controller.richtungAufsteigend;
+	}
+	
 	public int getColumnCount()
 	{
 		return table.getColumnCount();
@@ -93,7 +100,12 @@ public class TabEditorGUI extends JPanel implements EditorGUI
 	{
 		
 	}
-	public void addRow()
+	public void setRows(Collection<String> names)
+	{
+		DefaultTableModel model = new DefaultTableModel();
+		
+	}
+	public void addRow(String name)
 	{
 		
 	}

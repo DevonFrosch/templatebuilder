@@ -204,6 +204,17 @@ public class TemplateBuilderGUIController extends GUIController
 				});
 				break;
 			}
+			case "zeigeBildfahrplan":
+				break;
+			case "zeigeTabEditorHin":
+				if(!selectedTabIsTabEditor())
+				{
+					break;
+				}
+				
+				break;
+			case "zeigeTabEditorRück":
+				break;
 			case "options":
 				if(!GUILocker.lock(BildfahrplanSettingsGUI.class)) break;
 				BildfahrplanSettingsGUI sg = new BildfahrplanSettingsGUI(new BildfahrplanSettingsGUIController(config, () -> GUILocker.unlock(BildfahrplanSettingsGUI.class)), gui.getFrame());
@@ -242,6 +253,36 @@ public class TemplateBuilderGUIController extends GUIController
 	{
 		return ClassTester.isAssignableFrom(gui.getSelectedTab(), BildfahrplanGUI.class);
 	}
+	public boolean selectedTabIsTabEditor()
+	{
+		return ClassTester.isAssignableFrom(gui.getSelectedTab(), TabEditorGUI.class);
+	}
+	public boolean selectedTabIsTabEditorHin()
+	{
+		if(selectedTabIsTabEditor())
+		{
+			try
+			{
+				return ((TabEditorGUI) gui.getSelectedTab()).isRichtungAufsteigend();
+			}
+			catch(ClassCastException e)
+			{}
+		}
+		return false;
+	}
+	public boolean selectedTabIsTabEditorRück()
+	{
+		if(selectedTabIsTabEditor())
+		{
+			try
+			{
+				return ! ((TabEditorGUI) gui.getSelectedTab()).isRichtungAufsteigend();
+			}
+			catch(ClassCastException e)
+			{}
+		}
+		return false;
+	}
 	
 	/**
 	 * Holt das EditorDaten-Objekt des aktuellen Tabs.
@@ -265,16 +306,6 @@ public class TemplateBuilderGUIController extends GUIController
 		{}
 		
 		return null;
-	}
-	
-	public boolean selectedTabIsTabEditor()
-	{
-		Class<? extends Component> tab = gui.getSelectedTab().getClass();
-		if(tab == null)
-		{
-			return false;
-		}
-		return tab.equals(TabEditorGUI.class);
 	}
 	
 	public Component getSelectedGUI()

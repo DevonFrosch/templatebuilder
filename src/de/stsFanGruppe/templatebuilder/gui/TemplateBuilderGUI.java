@@ -22,7 +22,8 @@ public class TemplateBuilderGUI implements GUI
 	private boolean initialized = false;
 	
 	protected JCheckBoxMenuItem mntmBildfahrplan;
-	protected JCheckBoxMenuItem mntmTabellarisch;
+	protected JCheckBoxMenuItem mntmTabellarischHin;
+	protected JCheckBoxMenuItem mntmTabellarischRück;
 	
 	protected JFrame frmTemplatebauer;
 	protected JTabbedPane tabbedPane;
@@ -156,11 +157,17 @@ public class TemplateBuilderGUI implements GUI
 		mntmBildfahrplan.addActionListener((ActionEvent arg0) -> updateAnsichtAuswahl());
 		mnAnsicht.add(mntmBildfahrplan);
 		
-		mntmTabellarisch = new JCheckBoxMenuItem("Tabellarisch");
-		mntmTabellarisch.setActionCommand("zeigeTabEditor");
-		mntmTabellarisch.addActionListener((ActionEvent arg0) -> controller.menuAction(arg0));
-		mntmTabellarisch.addActionListener((ActionEvent arg0) -> updateAnsichtAuswahl());
-		mnAnsicht.add(mntmTabellarisch);
+		mntmTabellarischHin = new JCheckBoxMenuItem("Tabellarisch (hin)");
+		mntmTabellarischHin.setActionCommand("zeigeTabEditorHin");
+		mntmTabellarischHin.addActionListener((ActionEvent arg0) -> controller.menuAction(arg0));
+		mntmTabellarischHin.addActionListener((ActionEvent arg0) -> updateAnsichtAuswahl());
+		mnAnsicht.add(mntmTabellarischHin);
+		
+		mntmTabellarischRück = new JCheckBoxMenuItem("Tabellarisch (zurück)");
+		mntmTabellarischRück.setActionCommand("zeigeTabEditorRück");
+		mntmTabellarischRück.addActionListener((ActionEvent arg0) -> controller.menuAction(arg0));
+		mntmTabellarischRück.addActionListener((ActionEvent arg0) -> updateAnsichtAuswahl());
+		mnAnsicht.add(mntmTabellarischRück);
 		
 		JMenu mnEinstellungen = new JMenu("Einstellungen");
 		menuBar.add(mnEinstellungen);
@@ -289,7 +296,8 @@ public class TemplateBuilderGUI implements GUI
 	public void updateAnsichtAuswahl()
 	{
 		mntmBildfahrplan.setSelected(controller.selectedTabIsBildfahrplan());
-		mntmTabellarisch.setSelected(controller.selectedTabIsTabEditor());
+		mntmTabellarischHin.setSelected(controller.selectedTabIsTabEditorHin());
+		mntmTabellarischRück.setSelected(controller.selectedTabIsTabEditorRück());
 	}
 	
 	public void errorMessage(String text, String titel)
