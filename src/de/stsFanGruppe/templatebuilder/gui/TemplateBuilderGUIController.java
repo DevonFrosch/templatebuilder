@@ -32,6 +32,7 @@ public class TemplateBuilderGUIController extends GUIController
 	
 	protected TemplateBuilderGUI gui = null;
 	protected BildfahrplanConfig config;
+	protected TemplateBuilderTabs tabs = null;
 	
 	public TemplateBuilderGUIController(BildfahrplanConfig config, String version, boolean dev)
 	{
@@ -39,12 +40,10 @@ public class TemplateBuilderGUIController extends GUIController
 		this.config = config;
 		this.version = version;
 		this.dev = dev;
+		this.gui = new TemplateBuilderGUI(this);
+		this.tabs = new TemplateBuilderTabs(gui.tabbedPane);
 	}
 	
-	public void setGUI(TemplateBuilderGUI gui)
-	{
-		this.gui = gui;
-	}
 	public BildfahrplanConfig getConfig()
 	{
 		return config;
@@ -53,13 +52,11 @@ public class TemplateBuilderGUIController extends GUIController
 	// ActionHandler
 	public void menuAction(ActionEvent event)
 	{
-		assert gui != null;
-		
 		switch(event.getActionCommand())
 		{
 			case "neu":
 			{
-				gui.tabs.addBildfahrplanTab(null, null, null, new BildfahrplanGUIController(config, gui));
+				tabs.addTabEditorTab(null, null, null, new TabEditorGUIController(config, gui, true));
 				break;
 			}
 			case "importFromJTG":
@@ -107,7 +104,7 @@ public class TemplateBuilderGUIController extends GUIController
 						}
 						
 						// Zum Panel hinzufügen
-						gui.tabs.addBildfahrplanTab(name, null, null, bfpController);
+						tabs.addBildfahrplanTab(name, null, null, bfpController);
 					}
 					
 					GUILocker.unlock(JTrainGraphImportGUI.class);
@@ -147,7 +144,7 @@ public class TemplateBuilderGUIController extends GUIController
 			}
 			case "exportToJTG":
 			{
-				EditorDaten editorDaten = gui.tabs.getSelectedEditorDaten();
+				EditorDaten editorDaten = tabs.getSelectedEditorDaten();
 				if(editorDaten == null)
 				{
 					log.info("exportToJTG: Aktueller Tab ist keine EditorGUI.");
@@ -197,27 +194,60 @@ public class TemplateBuilderGUIController extends GUIController
 				break;
 			}
 			case "zeigeBildfahrplan":
+			{
+				if(!tabs.selectedTabIsEditor() || tabs.selectedTabIsBildfahrplan())
+				{
+					break;
+				}
+				EditorDaten editorDaten = tabs.getSelectedEditorDaten();
+				if(editorDaten.hasBildfahrplan())
+				{
+					tabs.setSelectedTab(tabs.getTabIndexOf(editorDaten.getBildfahrplan().getBildfahrplanGUI()));
+					break;
+				}
+				
+				int index = tabs.addBildfahrplanTab(editorDaten.getName(), null, null,
+						new BildfahrplanGUIController(editorDaten, config, gui));
+				tabs.setSelectedTab(index);
 				break;
+			}
 			case "zeigeTabEditorHin":
-				if(!gui.tabs.selectedTabIsEditor() || gui.tabs.selectedTabIsTabEditorHin())
+			{
+				if(!tabs.selectedTabIsEditor() || tabs.selectedTabIsTabEditorHin())
 				{
 					break;
 				}
+				EditorDaten editorDaten = tabs.getSelectedEditorDaten();
+				if(editorDaten.hasTabEditorHin())
+				{
+					log.info("Wechseln auf EditorHin");
+					tabs.setSelectedTab(tabs.getTabIndexOf(editorDaten.getTabEditorHin().getTabEditorGUI()));
+					break;
+				}
 				
-				gui.tabs.addTabEditorTab(gui.tabs.getSelectedEditorDaten().getName(), null, null, new TabEditorGUIController(config, gui, true));
+				int index = tabs.addTabEditorTab(tabs.getSelectedEditorDaten().getName(), null, null,
+						new TabEditorGUIController(editorDaten, config, gui, true));
+				tabs.setSelectedTab(index);
 				break;
+			}
 			case "zeigeTabEditorRück":
-				if(!gui.tabs.selectedTabIsEditor())
+			{
+				if(!tabs.selectedTabIsEditor() || tabs.selectedTabIsTabEditorRück())
 				{
 					break;
 				}
-				if(gui.tabs.selectedTabIsTabEditorRück())
+				EditorDaten editorDaten = tabs.getSelectedEditorDaten();
+				if(editorDaten.hasTabEditorRück())
 				{
-					
+					tabs.setSelectedTab(tabs.getTabIndexOf(editorDaten.getTabEditorRück().getTabEditorGUI()));
+					break;
 				}
 				
-				gui.tabs.addTabEditorTab(gui.tabs.getSelectedEditorDaten().getName(), null, null, new TabEditorGUIController(config, gui, false));
+				int index = tabs.addTabEditorTab(tabs.getSelectedEditorDaten().getName(), null, null,
+						new TabEditorGUIController(editorDaten, config, gui, false));
+				tabs.setSelectedTab(index);
 				break;
+			}
 			case "options":
 				if(!GUILocker.lock(BildfahrplanSettingsGUI.class)) break;
 				BildfahrplanSettingsGUI sg = new BildfahrplanSettingsGUI(new BildfahrplanSettingsGUIController(config, () -> GUILocker.unlock(BildfahrplanSettingsGUI.class)), gui.getFrame());

@@ -1,6 +1,7 @@
 package de.stsFanGruppe.templatebuilder.editor.tabEditor;
 
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanConfig;
+import de.stsFanGruppe.templatebuilder.editor.EditorDaten;
 import de.stsFanGruppe.templatebuilder.editor.EditorGUIController;
 import de.stsFanGruppe.templatebuilder.gui.TemplateBuilderGUI;
 import de.stsFanGruppe.templatebuilder.strecken.Betriebsstelle;
@@ -15,10 +16,19 @@ public class TabEditorGUIController extends EditorGUIController
 	
 	protected boolean richtungAufsteigend;
 	
+	public TabEditorGUIController(EditorDaten daten, BildfahrplanConfig config, TemplateBuilderGUI parent, boolean richtungAufsteigend)
+	{
+		super(daten, config, parent);
+		initVariables(config, parent, richtungAufsteigend);
+	}
 	public TabEditorGUIController(BildfahrplanConfig config, TemplateBuilderGUI parent, boolean richtungAufsteigend)
 	{
 		super(config, parent);
-		
+		initVariables(config, parent, richtungAufsteigend);
+	}
+	private void initVariables(BildfahrplanConfig config, TemplateBuilderGUI parent, boolean richtungAufsteigend)
+	{
+		super.getEditorDaten().setTabEditor(this, richtungAufsteigend);
 		this.gui = new TabEditorGUI(this, parent);
 		this.richtungAufsteigend = richtungAufsteigend;
 	}

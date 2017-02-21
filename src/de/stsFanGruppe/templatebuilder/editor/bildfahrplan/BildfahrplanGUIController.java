@@ -9,6 +9,7 @@ import java.util.Set;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanConfig;
 import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.FahrtDarstellungConfig;
 import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.FahrtDarstellungHandler;
+import de.stsFanGruppe.templatebuilder.editor.EditorDaten;
 import de.stsFanGruppe.templatebuilder.editor.EditorGUIController;
 import de.stsFanGruppe.templatebuilder.gui.TemplateBuilderGUI;
 import de.stsFanGruppe.templatebuilder.strecken.Betriebsstelle;
@@ -32,12 +33,21 @@ public class BildfahrplanGUIController extends EditorGUIController
 	protected BildfahrplanPaintHelper ph;
 	protected int stringHeight = 0;
 	
+	public BildfahrplanGUIController(EditorDaten daten, BildfahrplanConfig config, TemplateBuilderGUI parent)
+	{
+		super(daten, config, parent);
+		initVariables(config, parent);
+	}
 	public BildfahrplanGUIController(BildfahrplanConfig config, TemplateBuilderGUI parent)
 	{
 		super(config, parent);
-		
+		initVariables(config, parent);
+	}
+	private void initVariables(BildfahrplanConfig config, TemplateBuilderGUI parent)
+	{
+		super.getEditorDaten().setBildfahrplan(this);
 		this.gui = new BildfahrplanGUI(this, parent);
-		this.ph = new BildfahrplanPaintHelper(config, gui);
+		this.ph = new BildfahrplanPaintHelper(config, this.gui);
 		this.spaltenGui = new BildfahrplanSpaltenheaderGUI(this.gui, this);
 		this.zeilenGui = new BildfahrplanZeilenheaderGUI(this.gui, this);
 	}

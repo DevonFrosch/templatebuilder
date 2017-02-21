@@ -124,7 +124,6 @@ public class TabEditorGUI extends JPanel implements EditorGUI
 	
 	public EditorGUIController getController()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return controller;
 	}
 }

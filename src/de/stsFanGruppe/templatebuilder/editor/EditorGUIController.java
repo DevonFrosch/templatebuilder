@@ -12,24 +12,33 @@ public abstract class EditorGUIController
 	protected BildfahrplanConfig config;
 	private Object changeHandleId;
 	protected GUI parent;
-	protected EditorDaten editorDaten;
+	protected EditorDaten editorDaten = null;
 	
-	protected EditorGUIController(EditorDaten editorDaten, BildfahrplanConfig config, TemplateBuilderGUI parent)
+	/**
+	 * Erzeugt ein neues Objekt. Dieser Konstruktor wird verwendet, um ein neues 
+	 * @param config
+	 * @param parent
+	 */
+	protected EditorGUIController(BildfahrplanConfig config, TemplateBuilderGUI parent)
 	{
-		NullTester.test(editorDaten);
 		NullTester.test(config);
 		NullTester.test(parent);
 		
-		this.editorDaten = editorDaten;
 		this.config = config;
 		this.changeHandleId = config.registerChangeHandler(() -> configChanged());
 		this.parent = parent;
+		this.editorDaten = new EditorDaten();
 	}
-	protected EditorGUIController(BildfahrplanConfig config, TemplateBuilderGUI parent)
+	protected EditorGUIController(EditorDaten editorDaten, BildfahrplanConfig config, TemplateBuilderGUI parent)
 	{
-		this(new EditorDaten(), config, parent);
+		this(config, parent);
+		this.editorDaten = editorDaten;
 	}
 	
+	protected void setEditorDaten(EditorDaten daten)
+	{
+		this.editorDaten = daten;
+	}
 	public abstract void configChanged();
 	public void close()
 	{
@@ -38,6 +47,10 @@ public abstract class EditorGUIController
 	
 	public EditorDaten getEditorDaten()
 	{
+		if(editorDaten == null)
+		{
+			throw new IllegalStateException("editorDaten ist null");
+		}
 		return editorDaten;
 	}
 }

@@ -12,9 +12,6 @@ public class TemplateBuilderGUI implements GUI
 {
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(TemplateBuilderGUI.class);
 	
-	public static final int ANSICHT_BILDFAHRPLAN = 0;
-	public static final int ANSICHT_TABELLARISCH = 1;
-	
 	protected TemplateBuilderGUIController controller;
 	protected BildfahrplanGUI bildfahrplanZeichner;
 	private boolean initialized = false;
@@ -24,8 +21,8 @@ public class TemplateBuilderGUI implements GUI
 	protected JCheckBoxMenuItem mntmTabellarischRück;
 	
 	protected JFrame frmTemplatebauer;
-	protected TemplateBuilderTabbedPane tabs;
-
+	protected JTabbedPane tabbedPane;
+	
 	/**
 	 * Create the application.
 	 * @wbp.parser.entryPoint
@@ -34,7 +31,6 @@ public class TemplateBuilderGUI implements GUI
 	{
 		NullTester.test(controller);
 		this.controller = controller;
-		controller.setGUI(this);
 		initialize();
 	}
 	
@@ -218,39 +214,37 @@ public class TemplateBuilderGUI implements GUI
 		));
 		splitPane.setLeftComponent(tree); //*/
 		
-		tabs = new TemplateBuilderTabbedPane(JTabbedPane.TOP, JTabbedPane.SCROLL_TAB_LAYOUT);
-		tabs.addChangeListener((ChangeEvent event) -> tabChanged(event));
+		tabbedPane = new JTabbedPane(JTabbedPane.TOP, JTabbedPane.SCROLL_TAB_LAYOUT);
+		tabbedPane.addChangeListener((ChangeEvent event) -> tabChanged(event));
 		
 		// TODO
-		// splitPane.setRightComponent(tabs);
-		frmTemplatebauer.getContentPane().add(tabs, BorderLayout.CENTER);
+		// splitPane.setRightComponent(tabbedPane);
+		frmTemplatebauer.getContentPane().add(tabbedPane, BorderLayout.CENTER);
 		
 		// TODO
 		/*JToolBar toolBar = new JToolBar();
 		frmTemplatebauer.getContentPane().add(toolBar, BorderLayout.NORTH);
 		
 		toolBar.add(new JButton()); //*/
+		
+		frmTemplatebauer.setVisible(true);
 	}
 	
 	public JFrame getFrame()
 	{
 		return frmTemplatebauer;
 	}
-	public void setVisible(boolean arg0)
-	{
-		this.frmTemplatebauer.setVisible(arg0);
-	}
 	
 	public void tabChanged(ChangeEvent e)
 	{
-		
+		updateAnsichtAuswahl();
 	}
 	
 	public void updateAnsichtAuswahl()
 	{
-		mntmBildfahrplan.setSelected(tabs.selectedTabIsBildfahrplan());
-		mntmTabellarischHin.setSelected(tabs.selectedTabIsTabEditorHin());
-		mntmTabellarischRück.setSelected(tabs.selectedTabIsTabEditorRück());
+		mntmBildfahrplan.setSelected(controller.tabs.selectedTabIsBildfahrplan());
+		mntmTabellarischHin.setSelected(controller.tabs.selectedTabIsTabEditorHin());
+		mntmTabellarischRück.setSelected(controller.tabs.selectedTabIsTabEditorRück());
 	}
 	
 	public void errorMessage(String text, String titel)

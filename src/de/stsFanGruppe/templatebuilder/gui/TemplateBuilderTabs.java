@@ -12,23 +12,21 @@ import de.stsFanGruppe.templatebuilder.editor.tabEditor.TabEditorGUI;
 import de.stsFanGruppe.templatebuilder.editor.tabEditor.TabEditorGUIController;
 import de.stsFanGruppe.tools.ButtonTabComponent;
 import de.stsFanGruppe.tools.ClassTester;
+import de.stsFanGruppe.tools.NullTester;
 
-public class TemplateBuilderTabbedPane extends JTabbedPane
+public class TemplateBuilderTabs
 {
-	public TemplateBuilderTabbedPane()
+	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(TemplateBuilderTabs.class);
+	
+	protected JTabbedPane pane;
+	
+	public TemplateBuilderTabs(JTabbedPane pane)
 	{
-		super();
-	}
-	public TemplateBuilderTabbedPane(int tabLayoutPolicy)
-	{
-		super(tabLayoutPolicy);
-	}
-	public TemplateBuilderTabbedPane(int tabPlacement, int tabLayoutPolicy)
-	{
-		super(tabPlacement, tabLayoutPolicy);
+		NullTester.test(pane);
+		this.pane = pane;
 	}
 	
-	public int addTab(String name, Icon icon, String toolTip, Component view, Component columnHeader, Component rowHeader)
+	protected int addTab(String name, Icon icon, String toolTip, Component view, Component columnHeader, Component rowHeader)
 	{
 		assert view != null;
 		
@@ -44,34 +42,45 @@ public class TemplateBuilderTabbedPane extends JTabbedPane
 			scrollPane.setRowHeaderView(rowHeader);
 		}
 		
-		boolean keinName = (name == null);
-		if(keinName)
+		if(name == null)
 		{
-			name = "Neuer Fahrplan";
+			name = "Leer";
 		}
 		
 		int tabIndex = 0;
 		synchronized(this)
 		{
-			addTab(name, icon, scrollPane, toolTip);
-			tabIndex = getTabCount() - 1;
-			setTabComponentAt(tabIndex, new ButtonTabComponent(this, (int index) -> {return true;}));
-			
-			if(keinName)
-			{
-				setTitleAt(tabIndex, "Neuer Fahrplan ("+tabIndex+")");
-			}
+			pane.addTab(name, icon, scrollPane, toolTip);
+			tabIndex = pane.getTabCount() - 1;
+			pane.setTabComponentAt(tabIndex, new ButtonTabComponent(pane, (int index) -> {return true;}));
 		}
 		return tabIndex;
 	}
-	public Component getSelectedTab()
+	public int getSelectedTab()
 	{
-		if(getTabCount() == 0)
+		return pane.getSelectedIndex();
+	}
+	public void setSelectedTab(int index)
+	{
+		pane.setSelectedIndex(index);
+	}
+	
+	public Component getSelectedGUI()
+	{
+		return getGUIAt(getSelectedTab());
+	}
+	public Component getGUIAt(int index)
+	{
+		if(index < 0)
 		{
 			return null;
 		}
-		
-		return getComponentAt(getSelectedIndex());
+		JScrollPane scrollPane = (JScrollPane) pane.getComponentAt(index);
+		if(scrollPane == null || scrollPane.getViewport() == null)
+		{
+			return null;
+		}
+		return scrollPane.getViewport().getView();
 	}
 	
 	public int addBildfahrplanTab(String name, Icon icon, String toolTip, BildfahrplanGUIController bfpController)
@@ -86,15 +95,16 @@ public class TemplateBuilderTabbedPane extends JTabbedPane
 	
 	public boolean selectedTabIsEditor()
 	{
-		return ClassTester.isAssignableFrom(getSelectedTab(), EditorGUI.class);
+		boolean test = getSelectedGUI() instanceof EditorGUI;
+		return test;
 	}
 	public boolean selectedTabIsBildfahrplan()
 	{
-		return ClassTester.isAssignableFrom(getSelectedTab(), BildfahrplanGUI.class);
+		return ClassTester.isAssignableFrom(getSelectedGUI(), BildfahrplanGUI.class);
 	}
 	public boolean selectedTabIsTabEditor()
 	{
-		return ClassTester.isAssignableFrom(getSelectedTab(), TabEditorGUI.class);
+		return ClassTester.isAssignableFrom(getSelectedGUI(), TabEditorGUI.class);
 	}
 	public boolean selectedTabIsTabEditorHin()
 	{
@@ -102,10 +112,12 @@ public class TemplateBuilderTabbedPane extends JTabbedPane
 		{
 			try
 			{
-				return ((TabEditorGUI) getSelectedTab()).isRichtungAufsteigend();
+				return ((TabEditorGUI) getSelectedGUI()).isRichtungAufsteigend();
 			}
 			catch(ClassCastException e)
-			{}
+			{
+				log.warn("ClassCastException", e);
+			}
 		}
 		return false;
 	}
@@ -115,12 +127,26 @@ public class TemplateBuilderTabbedPane extends JTabbedPane
 		{
 			try
 			{
-				return ! ((TabEditorGUI) getSelectedTab()).isRichtungAufsteigend();
+				return ! ((TabEditorGUI) getSelectedGUI()).isRichtungAufsteigend();
 			}
 			catch(ClassCastException e)
-			{}
+			{
+				log.warn("ClassCastException", e);
+			}
 		}
 		return false;
+	}
+	
+	public int getTabIndexOf(Component gui)
+	{
+		for(int i=0; i < pane.getTabCount(); i++)
+		{
+			if(gui.equals(getGUIAt(i)))
+			{
+				return i;
+			}
+		}
+		return -1;
 	}
 	
 	/**
@@ -133,7 +159,7 @@ public class TemplateBuilderTabbedPane extends JTabbedPane
 		{
 			Component com = getSelectedGUI();
 			
-			if(com == null || !com.getClass().isAssignableFrom(EditorGUI.class))
+			if(com == null || !(com instanceof EditorGUI))
 			{
 				return null;
 			}
@@ -142,18 +168,10 @@ public class TemplateBuilderTabbedPane extends JTabbedPane
 			return bfpGUI.getController().getEditorDaten();
 		}
 		catch(ClassCastException e)
-		{}
+		{
+			log.warn("ClassCastException", e);
+		}
 		
 		return null;
-	}
-	
-	public Component getSelectedGUI()
-	{
-		JScrollPane scrollPane = (JScrollPane) getSelectedTab();
-		if(scrollPane == null || scrollPane.getViewport() == null)
-		{
-			return null;
-		}
-		return scrollPane.getViewport().getView();
 	}
 }
