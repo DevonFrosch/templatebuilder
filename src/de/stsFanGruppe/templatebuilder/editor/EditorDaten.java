@@ -5,11 +5,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.BooleanSupplier;
+import de.stsFanGruppe.templatebuilder.editor.bildfahrplan.BildfahrplanGUIController;
 import de.stsFanGruppe.templatebuilder.strecken.Betriebsstelle;
 import de.stsFanGruppe.templatebuilder.strecken.Strecke;
 import de.stsFanGruppe.templatebuilder.strecken.Streckenabschnitt;
 import de.stsFanGruppe.templatebuilder.zug.Fahrt;
-import de.stsFanGruppe.tools.FirstLastLinkedList;
 import de.stsFanGruppe.tools.NullTester;
 
 /**
@@ -19,7 +20,8 @@ public class EditorDaten
 {
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(EditorDaten.class);
 	
-	protected FirstLastLinkedList<EditorGUIController> editoren = new FirstLastLinkedList<>();
+	protected BildfahrplanGUIController bfpController = null;
+	protected BooleanSupplier noEditorCallback = null;
 	
 	protected Streckenabschnitt streckenabschnitt;
 	protected Map<Betriebsstelle, Double> streckenKm;
@@ -30,32 +32,42 @@ public class EditorDaten
 	{
 		
 	}
-	public EditorDaten(EditorGUIController controller)
+	public EditorDaten(BooleanSupplier noEditorCallback)
+	{
+		this.addNoEditorCallback(noEditorCallback);
+	}
+	public EditorDaten(BildfahrplanGUIController controller)
 	{
 		this();
-		addEditor(controller);
+		this.setBildfahrplan(controller);
+	}
+	public EditorDaten(BildfahrplanGUIController controller, BooleanSupplier noEditorCallback)
+	{
+		this(controller);
+		this.addNoEditorCallback(noEditorCallback);
 	}
 	
-	public void addEditor(EditorGUIController controller)
+	public boolean hasBildfahrplan()
 	{
-		editoren.add(controller);
+		return bfpController != null;
 	}
-	public void removeEditor(EditorGUIController controller)
+	public BildfahrplanGUIController getBildfahrplan()
 	{
-		if(!editoren.contains(controller))
-		{
-			log.warn("Versuche {} zu entfernen, aber nicht in Liste.", controller);
-		}
-		if(editoren.size() < 0)
-		{
-			log.error("removeEditor bei leerer Editoren-Liste");
-			throw new IllegalStateException("Editoren-Liste ist leer");
-		}
-		if(editoren.size() < 1)
-		{
-			// TODO Letzter Tab hierzu, nachfrage, ob man speichern möchte
-		}
-		editoren.remove(controller);
+		return bfpController;
+	}
+	public void setBildfahrplan(BildfahrplanGUIController controller)
+	{
+		this.bfpController = controller;
+	}
+	
+	public boolean hasEditoren()
+	{
+		return hasBildfahrplan();
+	}
+	
+	public void addNoEditorCallback(BooleanSupplier noEditorCallback)
+	{
+		this.noEditorCallback = noEditorCallback;
 	}
 	
 	public void ladeStreckenabschnitt(Streckenabschnitt streckenabschnitt)
@@ -137,6 +149,10 @@ public class EditorDaten
 	}
 	public double getMinZeit()
 	{
+		if(!hasFahrten())
+		{
+			throw new NullPointerException();
+		}
 		synchronized(fahrten)
 		{
 			return fahrten.stream().min((a, b) -> Double.compare(a.getMinZeit(), b.getMinZeit())).get().getMinZeit();
@@ -144,6 +160,10 @@ public class EditorDaten
 	}
 	public double getMaxZeit()
 	{
+		if(!hasFahrten())
+		{
+			throw new NullPointerException();
+		}
 		synchronized(fahrten)
 		{
 			return fahrten.stream().max((a, b) -> Double.compare(a.getMaxZeit(), b.getMaxZeit())).get().getMaxZeit();
