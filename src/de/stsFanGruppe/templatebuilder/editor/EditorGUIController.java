@@ -13,22 +13,22 @@ public abstract class EditorGUIController implements TabController
 	protected BildfahrplanConfig config;
 	private Object changeHandleId;
 	protected GUI parent;
-	protected EditorData editorData;
+	protected EditorDaten editorDaten;
 	
-	protected EditorGUIController(EditorData editorData, BildfahrplanConfig config, TemplateBuilderGUI parent)
+	protected EditorGUIController(EditorDaten editorDaten, BildfahrplanConfig config, TemplateBuilderGUI parent)
 	{
-		NullTester.test(editorData);
+		NullTester.test(editorDaten);
 		NullTester.test(config);
 		NullTester.test(parent);
 		
-		this.editorData = editorData;
+		this.editorDaten = editorDaten;
 		this.config = config;
 		this.changeHandleId = config.registerChangeHandler(() -> configChanged());
 		this.parent = parent;
 	}
 	protected EditorGUIController(BildfahrplanConfig config, TemplateBuilderGUI parent)
 	{
-		this(new EditorData(), config, parent);
+		this(new EditorDaten(), config, parent);
 	}
 	
 	public abstract void configChanged();
@@ -37,8 +37,8 @@ public abstract class EditorGUIController implements TabController
 		config.unregisterChangeHandler(changeHandleId);
 	}
 	
-	public EditorData getEditorData()
+	public EditorDaten getEditorDaten()
 	{
-		return editorData;
+		return editorDaten;
 	}
 }

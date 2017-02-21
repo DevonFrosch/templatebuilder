@@ -13,7 +13,7 @@ import javax.swing.JScrollPane;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanConfig;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanSettingsGUI;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanSettingsGUIController;
-import de.stsFanGruppe.templatebuilder.editor.EditorData;
+import de.stsFanGruppe.templatebuilder.editor.EditorDaten;
 import de.stsFanGruppe.templatebuilder.editor.EditorGUI;
 import de.stsFanGruppe.templatebuilder.editor.bildfahrplan.BildfahrplanGUI;
 import de.stsFanGruppe.templatebuilder.editor.bildfahrplan.BildfahrplanGUIController;
@@ -175,7 +175,7 @@ public class TemplateBuilderGUIController extends GUIController
 					return;
 				}
 				
-				EditorData editoData = bfpGUI.getController().getEditorData();
+				EditorDaten editorDaten = bfpGUI.getController().getEditorDaten();
 				
 				if(!GUILocker.lock(JTrainGraphExportGUI.class)) break;
 				JTrainGraphExportGUI jtge = new JTrainGraphExportGUI(gui.getFrame(), (ergebnis) -> {
@@ -189,14 +189,14 @@ public class TemplateBuilderGUIController extends GUIController
 							JTrainGraphExporter exporter = new JTrainGraphExporter(ergebnis.useDS100());
 							OutputStream output = new java.io.FileOutputStream(ergebnis.getPfad());
 							
-							Streckenabschnitt streckenabschnitt = editoData.getStreckenabschnitt();
+							Streckenabschnitt streckenabschnitt = editorDaten.getStreckenabschnitt();
 							
 							assert streckenabschnitt != null;
 							
 							Set<Fahrt> fahrten = null;
 							if(ergebnis.exportZuege())
 							{
-								fahrten = editoData.getFahrten();
+								fahrten = editorDaten.getFahrten();
 								exporter.exportFahrten(output, streckenabschnitt, fahrten);
 							}
 							else
