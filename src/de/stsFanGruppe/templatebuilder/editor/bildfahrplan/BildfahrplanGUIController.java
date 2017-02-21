@@ -115,7 +115,7 @@ public class BildfahrplanGUIController extends EditorGUIController
 	// Interne Funktionen
 	protected void optimizeHeight()
 	{
-		if(gui == null || editorDaten.hasFahrten())
+		if(gui == null || !editorDaten.hasFahrten())
 		{
 			return;
 		}
