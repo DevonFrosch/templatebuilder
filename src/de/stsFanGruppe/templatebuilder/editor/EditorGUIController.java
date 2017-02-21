@@ -2,11 +2,10 @@ package de.stsFanGruppe.templatebuilder.editor;
 
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanConfig;
 import de.stsFanGruppe.templatebuilder.gui.GUI;
-import de.stsFanGruppe.templatebuilder.gui.TabController;
 import de.stsFanGruppe.templatebuilder.gui.TemplateBuilderGUI;
 import de.stsFanGruppe.tools.NullTester;
 
-public abstract class EditorGUIController implements TabController
+public abstract class EditorGUIController
 {
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(EditorGUIController.class);
 	

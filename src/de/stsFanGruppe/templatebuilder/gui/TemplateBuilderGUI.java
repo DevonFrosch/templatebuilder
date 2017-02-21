@@ -3,12 +3,10 @@ package de.stsFanGruppe.templatebuilder.gui;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import de.stsFanGruppe.templatebuilder.editor.bildfahrplan.BildfahrplanGUI;
-import de.stsFanGruppe.tools.ButtonTabComponent;
 import de.stsFanGruppe.tools.NullTester;
 import java.awt.Dimension;
 import java.awt.event.*;
 import java.awt.BorderLayout;
-import java.awt.Component;
 
 public class TemplateBuilderGUI implements GUI
 {
@@ -26,7 +24,7 @@ public class TemplateBuilderGUI implements GUI
 	protected JCheckBoxMenuItem mntmTabellarischRück;
 	
 	protected JFrame frmTemplatebauer;
-	protected JTabbedPane tabbedPane;
+	protected TemplateBuilderTabbedPane tabs;
 
 	/**
 	 * Create the application.
@@ -220,12 +218,12 @@ public class TemplateBuilderGUI implements GUI
 		));
 		splitPane.setLeftComponent(tree); //*/
 		
-		tabbedPane = new JTabbedPane(JTabbedPane.TOP, JTabbedPane.SCROLL_TAB_LAYOUT);
-		tabbedPane.addChangeListener((ChangeEvent event) -> tabChanged(event));
+		tabs = new TemplateBuilderTabbedPane(JTabbedPane.TOP, JTabbedPane.SCROLL_TAB_LAYOUT);
+		tabs.addChangeListener((ChangeEvent event) -> tabChanged(event));
 		
 		// TODO
-		// splitPane.setRightComponent(tabbedPane);
-		frmTemplatebauer.getContentPane().add(tabbedPane, BorderLayout.CENTER);
+		// splitPane.setRightComponent(tabs);
+		frmTemplatebauer.getContentPane().add(tabs, BorderLayout.CENTER);
 		
 		// TODO
 		/*JToolBar toolBar = new JToolBar();
@@ -243,51 +241,6 @@ public class TemplateBuilderGUI implements GUI
 		this.frmTemplatebauer.setVisible(arg0);
 	}
 	
-	public int addTab(String name, Icon icon, String toolTip, Component view, Component columnHeader, Component rowHeader)
-	{
-		assert view != null;
-		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.getVerticalScrollBar().setUnitIncrement(20);
-		scrollPane.setViewportView(view);
-		if(columnHeader != null)
-		{
-			scrollPane.setColumnHeaderView(columnHeader);
-		}
-		if(rowHeader != null)
-		{
-			scrollPane.setRowHeaderView(rowHeader);
-		}
-		
-		boolean keinName = (name == null);
-		if(keinName)
-		{
-			name = "Neuer Fahrplan";
-		}
-		
-		int tabIndex = 0;
-		synchronized(tabbedPane)
-		{
-			tabbedPane.addTab(name, icon, scrollPane, toolTip);
-			tabIndex = tabbedPane.getTabCount() - 1;
-			tabbedPane.setTabComponentAt(tabIndex, new ButtonTabComponent(tabbedPane, (int index) -> {return true;}));
-			
-			if(keinName)
-			{
-				tabbedPane.setTitleAt(tabIndex, "Neuer Fahrplan ("+tabIndex+")");
-			}
-		}
-		return tabIndex;
-	}
-	public Component getSelectedTab()
-	{
-		if(tabbedPane.getTabCount() == 0)
-		{
-			return null;
-		}
-		
-		return tabbedPane.getComponentAt(tabbedPane.getSelectedIndex());
-	}
 	public void tabChanged(ChangeEvent e)
 	{
 		
@@ -295,9 +248,9 @@ public class TemplateBuilderGUI implements GUI
 	
 	public void updateAnsichtAuswahl()
 	{
-		mntmBildfahrplan.setSelected(controller.selectedTabIsBildfahrplan());
-		mntmTabellarischHin.setSelected(controller.selectedTabIsTabEditorHin());
-		mntmTabellarischRück.setSelected(controller.selectedTabIsTabEditorRück());
+		mntmBildfahrplan.setSelected(tabs.selectedTabIsBildfahrplan());
+		mntmTabellarischHin.setSelected(tabs.selectedTabIsTabEditorHin());
+		mntmTabellarischRück.setSelected(tabs.selectedTabIsTabEditorRück());
 	}
 	
 	public void errorMessage(String text, String titel)

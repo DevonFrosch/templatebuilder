@@ -23,6 +23,11 @@ public class TabEditorGUIController extends EditorGUIController
 		this.richtungAufsteigend = richtungAufsteigend;
 	}
 	
+	public TabEditorGUI getTabEditorGUI()
+	{
+		return this.gui;
+	}
+	
 	public int getColumnCount()
 	{
 		return 0;

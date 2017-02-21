@@ -12,6 +12,7 @@ import de.stsFanGruppe.templatebuilder.strecken.Betriebsstelle;
 import de.stsFanGruppe.templatebuilder.strecken.Strecke;
 import de.stsFanGruppe.templatebuilder.strecken.Streckenabschnitt;
 import de.stsFanGruppe.templatebuilder.zug.Fahrt;
+import de.stsFanGruppe.tools.FirstLastLinkedList;
 import de.stsFanGruppe.tools.NullTester;
 
 /**
@@ -24,8 +25,11 @@ public class EditorDaten
 	protected BildfahrplanGUIController bfpController = null;
 	protected TabEditorGUIController tabHinController = null;
 	protected TabEditorGUIController tabRückController = null;
-	protected BooleanSupplier noEditorCallback = null;
 	
+	protected FirstLastLinkedList<BooleanSupplier> noEditorCallbacks = new FirstLastLinkedList<>();
+	protected FirstLastLinkedList<Runnable> nameChangedCallbacks = new FirstLastLinkedList<>();
+	
+	protected String name = null;
 	protected Streckenabschnitt streckenabschnitt;
 	protected Map<Betriebsstelle, Double> streckenKm;
 	protected double diffKm = -1;
@@ -35,29 +39,30 @@ public class EditorDaten
 	{
 		
 	}
-	public EditorDaten(BooleanSupplier noEditorCallback)
+	public EditorDaten(String name)
 	{
-		this.addNoEditorCallback(noEditorCallback);
+		this();
+		this.name = name;
 	}
 	public EditorDaten(BildfahrplanGUIController controller)
 	{
 		this();
 		this.setBildfahrplan(controller);
 	}
-	public EditorDaten(BildfahrplanGUIController controller, BooleanSupplier noEditorCallback)
+	public EditorDaten(BildfahrplanGUIController controller, String name)
 	{
 		this(controller);
-		this.addNoEditorCallback(noEditorCallback);
+		this.name = name;
 	}
 	public EditorDaten(TabEditorGUIController controller, boolean richtungAufsteigend)
 	{
 		this();
 		this.setTabEditor(controller, richtungAufsteigend);
 	}
-	public EditorDaten(TabEditorGUIController controller, boolean richtungAufsteigend, BooleanSupplier noEditorCallback)
+	public EditorDaten(TabEditorGUIController controller, boolean richtungAufsteigend, String name)
 	{
 		this(controller, richtungAufsteigend);
-		this.addNoEditorCallback(noEditorCallback);
+		this.name = name;
 	}
 	
 	public boolean hasBildfahrplan()
@@ -86,7 +91,7 @@ public class EditorDaten
 		if(richtungAufsteigend)
 		{
 			// Wenn das der letzte Editor ist, nachfragen
-			if(!hasBildfahrplan() && !hasTabEditorRück() && noEditorCallback.getAsBoolean())
+			if(!hasBildfahrplan() && !hasTabEditorRück() && noEditor())
 			{
 				return;
 			}
@@ -95,7 +100,7 @@ public class EditorDaten
 		else
 		{
 			// Wenn das der letzte Editor ist, nachfragen
-			if(!hasBildfahrplan() && !hasTabEditorHin() && noEditorCallback.getAsBoolean())
+			if(!hasBildfahrplan() && !hasTabEditorHin() && noEditor())
 			{
 				return;
 			}
@@ -133,9 +138,40 @@ public class EditorDaten
 		return hasBildfahrplan() || hasTabEditorHin() || hasTabEditorRück();
 	}
 	
+	protected boolean noEditor()
+	{
+		for(BooleanSupplier callback: noEditorCallbacks)
+		{
+			if(!callback.getAsBoolean())
+			{
+				return false;
+			}
+		}
+		return true;
+	}
 	public void addNoEditorCallback(BooleanSupplier noEditorCallback)
 	{
-		this.noEditorCallback = noEditorCallback;
+		noEditorCallbacks.add(noEditorCallback);
+	}
+	protected void nameChanged()
+	{
+		for(Runnable callback: nameChangedCallbacks)
+		{
+			callback.run();
+		}
+	}
+	public void addNameChangedCallback(Runnable callback)
+	{
+		nameChangedCallbacks.add(callback);
+	}
+	
+	public void setName(String name)
+	{
+		this.name = name;
+	}
+	public String getName()
+	{
+		return name;
 	}
 	
 	public void ladeStreckenabschnitt(Streckenabschnitt streckenabschnitt)
@@ -169,6 +205,8 @@ public class EditorDaten
 			letzterNeuerKm = neuerKm;
 		}
 		diffKm = neuerKm;
+		
+		this.name = streckenabschnitt.getName();
 	}
 	public void ladeZüge(Collection<? extends Fahrt> fahrten)
 	{
