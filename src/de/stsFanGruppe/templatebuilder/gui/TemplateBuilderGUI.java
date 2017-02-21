@@ -2,8 +2,8 @@ package de.stsFanGruppe.templatebuilder.gui;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
-import components.ButtonTabComponent;
 import de.stsFanGruppe.templatebuilder.editor.bildfahrplan.BildfahrplanGUI;
+import de.stsFanGruppe.tools.ButtonTabComponent;
 import de.stsFanGruppe.tools.NullTester;
 import java.awt.Dimension;
 import java.awt.event.*;
@@ -263,7 +263,7 @@ public class TemplateBuilderGUI implements GUI
 		{
 			tabbedPane.addTab(name, icon, scrollPane, toolTip);
 			tabIndex = tabbedPane.getTabCount() - 1;
-			tabbedPane.setTabComponentAt(tabIndex, new ButtonTabComponent(tabbedPane));
+			tabbedPane.setTabComponentAt(tabIndex, new ButtonTabComponent(tabbedPane, (int index) -> {return true;}));
 			
 			if(keinName)
 			{
