@@ -272,7 +272,8 @@ public class BildfahrplanGUIController extends EditorGUIController
 					
 					for(Fahrplanhalt fh: fahrt.getFahrplanhalte())
 					{
-						double an = fh.getAnkunft();
+						double an;
+						an = fh.getMinZeit();
 						if(an > maxZeit)
 						{
 							continue;
@@ -380,7 +381,7 @@ public class BildfahrplanGUIController extends EditorGUIController
 						}
 						
 						// für nächsten Eintrag
-						letzteZeit = fh.getAbfahrt();
+						letzteZeit = fh.getMaxZeit();
 						letzterKm = editorData.getStreckenKm(fh.getGleisabschnitt().getParent().getParent());
 						
 					} // for(Fahrplanhalt fh: fahrt.getFahrplanhalte())

@@ -13,18 +13,18 @@ import de.stsFanGruppe.tools.NullTester;
 public class Fahrplanhalt implements Comparable<Fahrplanhalt>
 {
 	protected Gleisabschnitt gleisabschnitt;
-	protected double ankunft;
-	protected double abfahrt;
+	protected OptionalDouble ankunft;
+	protected OptionalDouble abfahrt;
 	protected FahrplanhaltEigenschaften eigenschaften;
 	protected Fahrt parent = null;
 
-	public Fahrplanhalt(Gleisabschnitt gleisabschnitt, double ankunft, double abfahrt, FahrplanhaltEigenschaften eigenschaften)
+	public Fahrplanhalt(Gleisabschnitt gleisabschnitt, OptionalDouble ankunft, OptionalDouble abfahrt, FahrplanhaltEigenschaften eigenschaften)
 	{
 		this.setGleisabschnitt(gleisabschnitt);
 		this.setZeiten(ankunft, abfahrt);
 		this.setEigenschaften(eigenschaften);
 	}
-	protected Fahrplanhalt(Fahrt parent, Gleisabschnitt gleisabschnitt, double ankunft, double abfahrt, FahrplanhaltEigenschaften eigenschaften)
+	protected Fahrplanhalt(Fahrt parent, Gleisabschnitt gleisabschnitt, OptionalDouble ankunft, OptionalDouble abfahrt, FahrplanhaltEigenschaften eigenschaften)
 	{
 		this(gleisabschnitt, ankunft, abfahrt, eigenschaften);
 		this.setParent(parent);
@@ -39,7 +39,7 @@ public class Fahrplanhalt implements Comparable<Fahrplanhalt>
 		NullTester.test(gleisabschnitt);
 		this.gleisabschnitt = gleisabschnitt;
 	}
-	public double getAnkunft()
+	public OptionalDouble getAnkunft()
 	{
 		return ankunft;
 	}
@@ -48,19 +48,22 @@ public class Fahrplanhalt implements Comparable<Fahrplanhalt>
 	 * @param ankunft Die Ankunft am Gleisabschnitt.
 	 * @throws IllegalArgumentException Falls eine Zeit kleiner 0 oder die Abfahrt kleiner als (vor der) Ankunft ist.
 	 */
-	public void setAnkunft(double ankunft)
+	public void setAnkunft(OptionalDouble ankunft)
 	{
-		if(ankunft < 0)
+		if(ankunft.isPresent())
 		{
-			throw new IllegalArgumentException("Zeit muss größer gleich 0 sein");
-		}
-		if(ankunft > abfahrt)
-		{
-			throw new IllegalArgumentException("Abfahrt vor Ankunft");
+			if(ankunft.getAsDouble() < 0)
+			{
+				throw new IllegalArgumentException("Zeit muss größer gleich 0 sein");
+			}
+			if(abfahrt.isPresent() && ankunft.getAsDouble() > abfahrt.getAsDouble())
+			{
+				throw new IllegalArgumentException("Abfahrt vor Ankunft");
+			}
 		}
 		this.ankunft = ankunft;
 	}
-	public double getAbfahrt()
+	public OptionalDouble getAbfahrt()
 	{
 		return abfahrt;
 	}
@@ -69,15 +72,18 @@ public class Fahrplanhalt implements Comparable<Fahrplanhalt>
 	 * @param abfahrt Die Abfahrt am Gleisabschnitt.
 	 * @throws IllegalArgumentException Falls eine Zeit kleiner 0 oder die Abfahrt kleiner als (vor der) Ankunft ist.
 	 */
-	public void setAbfahrt(double abfahrt)
+	public void setAbfahrt(OptionalDouble abfahrt)
 	{
-		if(abfahrt < 0)
+		if(abfahrt.isPresent())
 		{
-			throw new IllegalArgumentException("Zeit muss größer gleich 0 sein");
-		}
-		if(ankunft > abfahrt)
-		{
-			throw new IllegalArgumentException("Abfahrt vor Ankunft");
+			if(abfahrt.getAsDouble() < 0)
+			{
+				throw new IllegalArgumentException("Zeit muss größer gleich 0 sein");
+			}
+			if(ankunft.isPresent() && ankunft.getAsDouble() > abfahrt.getAsDouble())
+			{
+				throw new IllegalArgumentException("Abfahrt vor Ankunft");
+			}
 		}
 		this.abfahrt = abfahrt;
 	}
@@ -87,19 +93,40 @@ public class Fahrplanhalt implements Comparable<Fahrplanhalt>
 	 * @param abfahrt Die Abfahrt am Gleisabschnitt.
 	 * @throws IllegalArgumentException Falls eine Zeit kleiner 0 oder die Abfahrt kleiner als (vor der) Ankunft ist.
 	 */
-	public void setZeiten(double ankunft, double abfahrt)
+	public void setZeiten(OptionalDouble ankunft, OptionalDouble abfahrt)
 	{
-		if(abfahrt < 0 || ankunft < 0)
+		if(!ankunft.isPresent() && !abfahrt.isPresent())
+		{
+			throw new IllegalArgumentException("Keine Ankunft und keine Abfahrt");
+		}
+		if((abfahrt.isPresent() && abfahrt.getAsDouble() < 0) || (ankunft.isPresent() && ankunft.getAsDouble() < 0))
 		{
 			throw new IllegalArgumentException("Zeit muss größer gleich 0 sein");
 		}
-		if(ankunft > abfahrt)
+		if(ankunft.getAsDouble() > abfahrt.getAsDouble())
 		{
 			throw new IllegalArgumentException("Abfahrt vor Ankunft");
 		}
 		this.ankunft = ankunft;
 		this.abfahrt = abfahrt;
 	}
+	public double getMinZeit()
+	{
+		if(ankunft.isPresent())
+		{
+			return ankunft.getAsDouble();
+		}
+		return abfahrt.getAsDouble();
+	}
+	public double getMaxZeit()
+	{
+		if(abfahrt.isPresent())
+		{
+			return abfahrt.getAsDouble();
+		}
+		return ankunft.getAsDouble();
+	}
+	
 	public FahrplanhaltEigenschaften getEigenschaften()
 	{
 		return eigenschaften;
@@ -120,7 +147,10 @@ public class Fahrplanhalt implements Comparable<Fahrplanhalt>
 	
 	public String toString()
 	{
-		return "Fahrplanhalt { gleisabschnitt: "+gleisabschnitt.getName()+", ankunft: "+ankunft+", abfahrt: "+abfahrt+", "+eigenschaften.toString()+" }";
+		return "Fahrplanhalt { gleisabschnitt: "+gleisabschnitt.getName()
+			+((ankunft.isPresent()) ? ", ankunft: "+ankunft.getAsDouble() : "")
+			+((abfahrt.isPresent()) ? ", abfahrt: "+abfahrt.getAsDouble() : "")
+			+", "+eigenschaften.toString()+" }";
 	}
 	public String toXML()
 	{
@@ -129,7 +159,10 @@ public class Fahrplanhalt implements Comparable<Fahrplanhalt>
 	public String toXML(String indent)
 	{
 		StringJoiner xml = new StringJoiner("\n");
-		xml.add(indent+"<fahrplanhalt gleisabschnitt=\""+gleisabschnitt.getName()+"\" ankunft=\""+ankunft+"\" abfahrt=\""+abfahrt+"\">");
+		xml.add(indent+"<fahrplanhalt gleisabschnitt=\""+gleisabschnitt.getName()
+			+"\" ankunft=\""+(ankunft.isPresent() ? ankunft.getAsDouble() : "")
+			+"\" abfahrt=\""+(abfahrt.isPresent() ? abfahrt.getAsDouble() : "")
+			+"\">");
 		xml.add(eigenschaften.toXML(indent+"  "));
 		xml.add(indent+"</fahrplanhalt>");
 		return xml.toString();
@@ -144,16 +177,37 @@ public class Fahrplanhalt implements Comparable<Fahrplanhalt>
 	 */
 	public int compareTo(Fahrplanhalt other)
 	{
-		NullTester.test(other);
+		if(other == null)
+		{
+			throw new NullPointerException();
+		}
 		
 		// Sortiere erst nach Ankunft...
-		if(Double.compare(this.ankunft, other.ankunft) != 0)
+		if(this.ankunft.isPresent() && other.ankunft.isPresent())
 		{
-			return Double.compare(this.ankunft, other.ankunft);
+			if(Double.compare(this.ankunft.getAsDouble(), other.ankunft.getAsDouble()) != 0)
+			{
+				return Double.compare(this.ankunft.getAsDouble(), other.ankunft.getAsDouble());
+			}
 		}
 		// ... dann nach Abfahrt
-		return Double.compare(this.abfahrt, other.abfahrt);
+		if(this.abfahrt.isPresent() && other.abfahrt.isPresent())
+		{
+			return Double.compare(this.abfahrt.getAsDouble(), other.abfahrt.getAsDouble());
+		}
+		// Bei unterschiedlichen Zeiten einfach so sortieren
+		if(this.ankunft.isPresent() && other.abfahrt.isPresent())
+		{
+			return Double.compare(this.ankunft.getAsDouble(), other.abfahrt.getAsDouble());
+		}
+		if(this.abfahrt.isPresent() && other.ankunft.isPresent())
+		{
+			return Double.compare(this.abfahrt.getAsDouble(), other.ankunft.getAsDouble());
+		}
+		
+		throw new IllegalStateException("Einer der Halte hat weder Ankunft noch Abfahrt");
 	}
+	
 	public static class StrictComparator implements Comparator<Fahrplanhalt>
 	{
 		/**
@@ -169,8 +223,9 @@ public class Fahrplanhalt implements Comparable<Fahrplanhalt>
 		{
 			int comp = a.compareTo(b);
 			
-			if(comp < 0 && a.abfahrt > b.ankunft
-				|| comp > 0 && a.abfahrt < b.ankunft)
+			if(a.abfahrt.isPresent() && b.ankunft.isPresent()
+				&& (comp < 0 && a.abfahrt.getAsDouble() > b.ankunft.getAsDouble()
+					|| comp > 0 && a.abfahrt.getAsDouble() < b.ankunft.getAsDouble()))
 			{
 				throw new IllegalStateException("Abfahrt vor Ankunft");
 			}
