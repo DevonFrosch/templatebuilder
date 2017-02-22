@@ -86,11 +86,11 @@ public class Fahrt
 	
 	public double getMinZeit()
 	{
-		return fahrplanhalte.stream().min((a, b) -> Double.compare(a.getAnkunft(), b.getAnkunft())).get().getAnkunft();
+		return fahrplanhalte.stream().min((a, b) -> Double.compare(a.getMinZeit(), b.getMinZeit())).get().getMinZeit();
 	}
 	public double getMaxZeit()
 	{
-		return fahrplanhalte.stream().max((a, b) -> Double.compare(a.getAbfahrt(), b.getAbfahrt())).get().getAbfahrt();
+		return fahrplanhalte.stream().max((a, b) -> Double.compare(a.getMaxZeit(), b.getMaxZeit())).get().getMaxZeit();
 	}
 	
 	public String toString()

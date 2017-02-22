@@ -1,20 +1,26 @@
 package de.stsFanGruppe.tools;
 
+import java.util.OptionalDouble;
+
 public class TimeFormater
 {
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(TimeFormater.class);
 	
-	public static double stringToDouble(String input) throws NumberFormatException
+	public static OptionalDouble stringToOptionalDouble(String input) throws NumberFormatException
 	{
-		// String vorhanden und hat genau ein :
-		if(isEmpty(input) || !input.contains(":") || (input.indexOf(':') != input.lastIndexOf(':')))
+		if(isEmpty(input))
 		{
-			log.error("strinToDouble: String leer oder nicht genau ein Doppelpunkt");
+			return OptionalDouble.empty();
+		}
+		
+		// String hat genau ein :
+		if(!input.contains(":") || (input.indexOf(':') != input.lastIndexOf(':')))
+		{
+			log.error("strinToDouble: Zahl hat nicht genau ein Doppelpunkt");
 			throw new NumberFormatException("Zeit falsch formatiert");
 		}
 		
 		String[] ts = input.split(":");
-		double output;
 		try
 		{
 			int stunden = Integer.parseInt(ts[0]);
@@ -24,14 +30,32 @@ public class TimeFormater
 				log.error("strinToDouble: Stunde- oder Minutenwert auﬂerhalb des zul‰ssigen Bereichs");
 				throw new NumberFormatException("Zeit falsch formatiert");
 			}
-			output = (stunden * 60) + minuten;
+			return OptionalDouble.of((stunden * 60) + minuten);
 		}
 		catch(NumberFormatException e)
 		{
 			log.error("strinToDouble: NumberFormatException", e);
 			throw new NumberFormatException("Zeit falsch formatiert");
 		}
-		return output;
+	}
+	public static double stringToDouble(String input) throws NumberFormatException
+	{
+		OptionalDouble output = stringToOptionalDouble(input);
+		if(output.isPresent())
+		{
+			return output.getAsDouble();
+		}
+		
+		log.error("strinToDouble: String ist leer");
+		throw new NumberFormatException("Zeit falsch formatiert");
+	}
+	public static String optionalDoubleToString(OptionalDouble input)
+	{
+		if(input.isPresent())
+		{
+			return doubleToString(input.getAsDouble());
+		}
+		return "";
 	}
 	public static String doubleToString(double input)
 	{

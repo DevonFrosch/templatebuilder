@@ -110,7 +110,7 @@ public class JTrainGraphExporter
 							}
 							else
 							{
-								ankunft = TimeFormater.doubleToString(fh.getAnkunft());
+								ankunft = TimeFormater.optionalDoubleToString(fh.getAnkunft());
 							}
 							if(fh == fahrt.getFahrplanhalte().last())
 							{
@@ -118,7 +118,7 @@ public class JTrainGraphExporter
 							}
 							else
 							{
-								abfahrt = TimeFormater.doubleToString(fh.getAbfahrt());
+								abfahrt = TimeFormater.optionalDoubleToString(fh.getAbfahrt());
 							}
 						}
 						

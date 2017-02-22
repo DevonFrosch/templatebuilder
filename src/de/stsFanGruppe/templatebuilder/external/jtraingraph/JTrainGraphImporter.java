@@ -118,26 +118,15 @@ public class JTrainGraphImporter
 					String an = tTime.getAttribute("a");
 					String ab = tTime.getAttribute("d");
 					
-					if(isEmpty(an))
+					if(isEmpty(an) && isEmpty(ab))
 					{
-						if(isEmpty(ab))
-						{
-							continue;
-						}
-						else
-						{
-							an = ab;
-						}
-					}
-					if(isEmpty(ab))
-					{
-						ab = an;
+						continue;
 					}
 					
 					try
 					{
-						double doubleAn = TimeFormater.stringToDouble(an);
-						double doubleAb = TimeFormater.stringToDouble(ab);
+						OptionalDouble doubleAn = TimeFormater.stringToOptionalDouble(an);
+						OptionalDouble doubleAb = TimeFormater.stringToOptionalDouble(ab);
 						Fahrplanhalt f = new Fahrplanhalt(gleisabschnitte.get(i), doubleAn, doubleAb, new FahrplanhaltEigenschaften());
 						fahrplanhalte.add(f);
 					}
