@@ -8,7 +8,7 @@ import de.stsFanGruppe.tools.NullTester;
 public class TabEditorTabellenZeile implements Comparable<TabEditorTabellenZeile>
 {
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(TabEditorTabellenZeile.class);
-			
+	
 	protected Betriebsstelle bs;
 	protected boolean richtungAufsteigend;
 	protected boolean isAnkunft;

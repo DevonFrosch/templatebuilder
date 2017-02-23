@@ -90,7 +90,7 @@ public class TemplateBuilderTabs
 	}
 	public int addTabEditorTab(String name, Icon icon, String toolTip, TabEditorGUIController teController)
 	{
-		return addTab(name, icon, toolTip, teController.getTabEditorGUI(), null, null);
+		return addTab(name, icon, toolTip, teController.getTabEditorGUI(), teController.getTableHeader(), teController.getZeilenheaderGUI());
 	}
 	
 	public boolean selectedTabIsEditor()

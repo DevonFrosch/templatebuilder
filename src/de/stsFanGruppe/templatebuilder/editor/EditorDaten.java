@@ -335,6 +335,10 @@ public class EditorDaten
 	{
 		synchronized(fahrtenLock)
 		{
+			if(fahrten == null)
+			{
+				return null;
+			}
 			return new HashSet<>(fahrten);
 		}
 	}

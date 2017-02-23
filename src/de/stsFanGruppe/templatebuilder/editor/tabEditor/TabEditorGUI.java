@@ -7,10 +7,9 @@ import de.stsFanGruppe.templatebuilder.gui.TemplateBuilderGUI;
 import de.stsFanGruppe.tools.NullTester;
 import javax.swing.JTable;
 import java.awt.BorderLayout;
-import java.util.Collection;
 import javax.swing.ListSelectionModel;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.JButton;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableModel;
 
 public class TabEditorGUI extends JPanel implements EditorGUI
 {
@@ -47,79 +46,26 @@ public class TabEditorGUI extends JPanel implements EditorGUI
 		table.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 		table.setColumnSelectionAllowed(true);
 		table.setCellSelectionEnabled(true);
-		//table.setModel(new DefaultTableModel(new String[] {"Zug 1"}, 1));
+		//table.setModel(new DefaultTableModel(new String[] {"", "Zug 1"}, 1));
 		add(table);
-		
-		JButton button = new JButton("+");
-		add(button, BorderLayout.EAST);
-		
-		JButton button_1 = new JButton("+");
-		add(button_1, BorderLayout.SOUTH);
-		
+	}
+	
+	public JTableHeader getTableHeader()
+	{
+		return table.getTableHeader();
 	}
 	
 	public boolean isRichtungAufsteigend()
 	{
 		return controller.richtungAufsteigend;
 	}
-	
-	public int getColumnCount()
+	public void setTableModel(TableModel model)
 	{
-		return table.getColumnCount();
+		table.setModel(model);
 	}
-	public String getColumnName(int index)
+	public void setTableValueAt(String content, int row, int column)
 	{
-		return table.getColumnName(index);
-	}
-	public void getColumn(int index)
-	{
-		
-	}
-	public void addColumn()
-	{
-		
-	}
-	public void insertColumn(int index)
-	{
-		
-	}
-	public void removeColumn(int index)
-	{
-		
-	}
-	public void removeAllColumns()
-	{
-		
-	}
-	
-	public int getRowCount()
-	{
-		return table.getRowCount();
-	}
-	public void getRow(int index)
-	{
-		
-	}
-	public void setRows(Collection<String> names)
-	{
-		DefaultTableModel model = new DefaultTableModel();
-		
-	}
-	public void addRow(String name)
-	{
-		
-	}
-	public void insertRow(int index)
-	{
-		
-	}
-	public void removeRow(int index)
-	{
-		
-	}
-	public void removeAllRows()
-	{
-		
+		table.setValueAt(content, row, column);
 	}
 	
 	public EditorGUIController getController()
