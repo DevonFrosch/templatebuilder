@@ -1,5 +1,6 @@
 package de.stsFanGruppe.templatebuilder.editor;
 
+import java.awt.EventQueue;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -28,12 +29,21 @@ public class EditorDaten
 	
 	protected FirstLastLinkedList<BooleanSupplier> noEditorCallbacks = new FirstLastLinkedList<>();
 	protected FirstLastLinkedList<Runnable> nameChangedCallbacks = new FirstLastLinkedList<>();
+	protected FirstLastLinkedList<Runnable> fahrtenGeladenCallbacks = new FirstLastLinkedList<>();
+	protected FirstLastLinkedList<Runnable> streckeGeladenCallbacks = new FirstLastLinkedList<>();
 	
 	protected String name = null;
+	
 	protected Streckenabschnitt streckenabschnitt;
+	protected Object saLock = new Object();
+	
 	protected Map<Betriebsstelle, Double> streckenKm;
+	protected Object streckenKmLock = new Object();
+	
 	protected double diffKm = -1;
+	
 	protected Set<Fahrt> fahrten;
+	protected Object fahrtenLock = new Object();
 	
 	public EditorDaten()
 	{
@@ -140,29 +150,75 @@ public class EditorDaten
 	
 	protected boolean noEditor()
 	{
-		for(BooleanSupplier callback: noEditorCallbacks)
+		synchronized(noEditorCallbacks)
 		{
-			if(!callback.getAsBoolean())
+			for(BooleanSupplier callback: noEditorCallbacks)
 			{
-				return false;
+				if(!callback.getAsBoolean())
+				{
+					return false;
+				}
 			}
 		}
 		return true;
 	}
 	public void addNoEditorCallback(BooleanSupplier noEditorCallback)
 	{
-		noEditorCallbacks.add(noEditorCallback);
+		synchronized(noEditorCallbacks)
+		{
+			noEditorCallbacks.add(noEditorCallback);
+		}
 	}
 	protected void nameChanged()
 	{
-		for(Runnable callback: nameChangedCallbacks)
+		synchronized(nameChangedCallbacks)
 		{
-			callback.run();
+			for(Runnable callback: nameChangedCallbacks)
+			{
+				EventQueue.invokeLater(callback);
+			}
 		}
 	}
 	public void addNameChangedCallback(Runnable callback)
 	{
-		nameChangedCallbacks.add(callback);
+		synchronized(nameChangedCallbacks)
+		{
+			nameChangedCallbacks.add(callback);
+		}
+	}
+	protected void fahrtenGeladen()
+	{
+		synchronized(fahrtenGeladenCallbacks)
+		{
+			for(Runnable callback: fahrtenGeladenCallbacks)
+			{
+				EventQueue.invokeLater(callback);
+			}
+		}
+	}
+	public void addFahrtenGeladenCallback(Runnable callback)
+	{
+		synchronized(fahrtenGeladenCallbacks)
+		{
+			fahrtenGeladenCallbacks.add(callback);
+		}
+	}
+	protected void streckeGeladen()
+	{
+		synchronized(streckeGeladenCallbacks)
+		{
+			for(Runnable callback: streckeGeladenCallbacks)
+			{
+				EventQueue.invokeLater(callback);
+			}
+		}
+	}
+	public void addStreckeGeladenCallback(Runnable callback)
+	{
+		synchronized(streckeGeladenCallbacks)
+		{
+			streckeGeladenCallbacks.add(callback);
+		}
 	}
 	
 	public void setName(String name)
@@ -186,11 +242,19 @@ public class EditorDaten
 		// Setzte Strecke und Fahrten zurück
 		reset();
 		
-		this.streckenabschnitt = streckenabschnitt;
+		synchronized(saLock)
+		{
+			this.streckenabschnitt = streckenabschnitt;
+		}
 		
 		// km für Betriebsstelle: Mittelwert aus getMinKm und getMaxKm: (max+min)/2
 		Betriebsstelle b = streckenabschnitt.getStrecken().first().getAnfang();
-		streckenKm.put(b, new Double(0.0));
+		
+		synchronized(streckenKmLock)
+		{
+			streckenKm.put(b, new Double(0.0));
+		}
+		
 		letzterAlterKm = (b.getMaxKm() + b.getMinKm()) / 2;
 		
 		// Vorbereitung für unterschiedliche Strecken-km
@@ -200,54 +264,86 @@ public class EditorDaten
 			b = s.getEnde();
 			double alterKm = (b.getMaxKm() + b.getMinKm()) / 2;
 			neuerKm = alterKm - letzterAlterKm + letzterNeuerKm;
-			streckenKm.put(b, new Double(neuerKm));
+			
+			synchronized(streckenKmLock)
+			{
+				streckenKm.put(b, new Double(neuerKm));
+			}
+			
 			letzterAlterKm = alterKm;
 			letzterNeuerKm = neuerKm;
 		}
 		diffKm = neuerKm;
 		
 		this.name = streckenabschnitt.getName();
+		
+		streckeGeladen();
 	}
 	public void ladeZüge(Collection<? extends Fahrt> fahrten)
 	{
 		NullTester.test(fahrten);
-		if(this.fahrten == null)
+		synchronized(fahrtenLock)
 		{
-			this.fahrten = new HashSet<>();
+			if(this.fahrten == null)
+			{
+				this.fahrten = new HashSet<>();
+			}
+			log.trace("ladeZüge()");
+			
+			fahrten.forEach((f) -> {
+				NullTester.test(f);
+				this.fahrten.add(f);
+			});
 		}
-		log.trace("ladeZüge()");
 		
-		fahrten.forEach((f) -> {
-			NullTester.test(f);
-			this.fahrten.add(f);
-		});
+		fahrtenGeladen();
 	}
 	
 	public Streckenabschnitt getStreckenabschnitt()
 	{
-		return streckenabschnitt;
+		synchronized(saLock)
+		{
+			return streckenabschnitt;
+		}
 	}
 	public boolean hasStreckenabschnitt()
 	{
-		return streckenabschnitt != null && streckenKm != null;
+		synchronized(saLock)
+		{
+			if(streckenabschnitt == null)
+			{
+				return false;
+			}
+		}
+		synchronized(streckenKmLock)
+		{
+			if(streckenKm == null)
+			{
+				return false;
+			}
+		}
+		return true;
 	}
 	public Set<Fahrt> getFahrten()
 	{
-		synchronized(fahrten)
+		synchronized(fahrtenLock)
 		{
 			return fahrten;
 		}
 	}
 	public Set<Fahrt> getFahrtenCopy()
 	{
-		synchronized(fahrten)
+		synchronized(fahrtenLock)
 		{
 			return new HashSet<>(fahrten);
 		}
 	}
 	public boolean hasFahrten()
 	{
-		return fahrten != null && !fahrten.isEmpty();
+		synchronized(fahrtenLock)
+		{
+			return fahrten != null && !fahrten.isEmpty();
+		}
 	}
 	public double getDiffKm()
 	{
@@ -259,7 +355,7 @@ public class EditorDaten
 		{
 			throw new NullPointerException();
 		}
-		synchronized(fahrten)
+		synchronized(fahrtenLock)
 		{
 			return fahrten.stream().min((a, b) -> Double.compare(a.getMinZeit(), b.getMinZeit())).get().getMinZeit();
 		}
@@ -270,22 +366,31 @@ public class EditorDaten
 		{
 			throw new NullPointerException();
 		}
-		synchronized(fahrten)
+		synchronized(fahrtenLock)
 		{
 			return fahrten.stream().max((a, b) -> Double.compare(a.getMaxZeit(), b.getMaxZeit())).get().getMaxZeit();
 		}
 	}
 	public double getStreckenKm(Betriebsstelle index)
 	{
-		return streckenKm.get(index);
+		synchronized(streckenKmLock)
+		{
+			return streckenKm.get(index);
+		}
 	}
 	
 	public void reset()
 	{
-		synchronized(this)
+		synchronized(saLock)
 		{
 			streckenabschnitt = null;
+		}
+		synchronized(streckenKmLock)
+		{
 			streckenKm = new HashMap<>();
+		}
+		synchronized(fahrtenLock)
+		{
 			fahrten = null;
 		}
 	}
