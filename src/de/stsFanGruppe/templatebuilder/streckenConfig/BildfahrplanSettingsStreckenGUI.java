@@ -101,8 +101,8 @@ public class BildfahrplanSettingsStreckenGUI extends JDialog implements GUI
 				table.setDefaultRenderer( Point.class, new PointRender());
 				
 				JScrollPane scrollPane = new JScrollPane(table);
-				scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-				scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+				scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+				scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 				contentPanel.add(scrollPane, "2, 4");
 			}
 			{

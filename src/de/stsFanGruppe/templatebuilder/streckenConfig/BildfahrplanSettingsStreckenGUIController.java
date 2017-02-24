@@ -295,7 +295,7 @@ public class BildfahrplanSettingsStreckenGUIController
 			Betriebsstelle ende = betriebsstellen.get(i+1);
 			streckenabschnitt.addStrecke(new Strecke(makeName(anfang, ende), anfang, ende));
 		}
-						
+		editorDaten.ladeStreckenabschnitt(streckenabschnitt);			
 	}
 	
 	protected void close()
