@@ -6,7 +6,7 @@ import javax.swing.JColorChooser;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
-import de.stsFanGruppe.templatebuilder.editor.EditorData;
+import de.stsFanGruppe.templatebuilder.editor.EditorDaten;
 import de.stsFanGruppe.templatebuilder.external.ImportException;
 import de.stsFanGruppe.templatebuilder.gui.GUI;
 import de.stsFanGruppe.templatebuilder.gui.TemplateBuilderGUIController;
@@ -24,13 +24,13 @@ public class BildfahrplanSettingsStreckenGUIController
 {
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(BildfahrplanSettingsStreckenGUIController.class);
 	
-	protected EditorData editorDaten;
+	protected EditorDaten editorDaten;
 	protected static Streckenabschnitt streckenabschnitt;
 	private BildfahrplanSettingsStreckenGUI gui;
 	private BildfahrplanStreckenConfig config;
 	private Runnable onClose;
 	
-	public BildfahrplanSettingsStreckenGUIController(EditorData editorDaten, BildfahrplanStreckenConfig config, Runnable onClose)
+	public BildfahrplanSettingsStreckenGUIController(EditorDaten editorDaten, BildfahrplanStreckenConfig config, Runnable onClose)
 	{
 		NullTester.test(editorDaten);
 		NullTester.test(config);

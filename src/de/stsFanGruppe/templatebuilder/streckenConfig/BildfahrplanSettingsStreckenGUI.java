@@ -4,8 +4,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.ArrayList;
-import java.util.Map;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -13,18 +11,11 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
 
-import de.stsFanGruppe.templatebuilder.editor.EditorData;
+import de.stsFanGruppe.templatebuilder.editor.EditorDaten;
 import de.stsFanGruppe.templatebuilder.gui.GUI;
-import de.stsFanGruppe.templatebuilder.strecken.Betriebsstelle;
-import de.stsFanGruppe.templatebuilder.strecken.Strecke;
-import de.stsFanGruppe.templatebuilder.strecken.Streckenabschnitt;
-import de.stsFanGruppe.tools.FirstLastList;
 import de.stsFanGruppe.tools.NullTester;
 
-import javax.swing.event.ChangeEvent;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableRowSorter;
 
 import com.jgoodies.forms.layout.FormSpecs;
 
@@ -32,7 +23,7 @@ public class BildfahrplanSettingsStreckenGUI extends JDialog implements GUI
 {
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(BildfahrplanSettingsStreckenGUI.class);
 	
-	protected EditorData editorDaten;
+	protected EditorDaten editorDaten;
 	protected BildfahrplanSettingsStreckenGUIController controller;
 	protected BildfahrplanStreckenConfig config;
 	boolean saveEnabled = false;
@@ -53,7 +44,7 @@ public class BildfahrplanSettingsStreckenGUI extends JDialog implements GUI
 		try
 		{
 			BildfahrplanSettingsStreckenGUI dialog = new BildfahrplanSettingsStreckenGUI(new BildfahrplanSettingsStreckenGUIController(
-					new EditorData(), new BildfahrplanStreckenConfig(), () -> {}), null);
+					new EditorDaten(), new BildfahrplanStreckenConfig(), () -> {}), null);
 		}
 		catch(Exception e)
 		{

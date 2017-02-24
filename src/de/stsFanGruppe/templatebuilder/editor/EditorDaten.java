@@ -15,9 +15,9 @@ import de.stsFanGruppe.tools.NullTester;
 /**
  * Enthält die Daten einer Bildfahrplanstrecke für verschiedene Ansichten
  */
-public class EditorData
+public class EditorDaten
 {
-	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(EditorData.class);
+	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(EditorDaten.class);
 	
 	protected FirstLastLinkedList<EditorGUIController> editoren = new FirstLastLinkedList<>();
 	
@@ -26,11 +26,11 @@ public class EditorData
 	protected double diffKm = -1;
 	protected Set<Fahrt> fahrten;
 	
-	public EditorData()
+	public EditorDaten()
 	{
 		
 	}
-	public EditorData(EditorGUIController controller)
+	public EditorDaten(EditorGUIController controller)
 	{
 		this();
 		addEditor(controller);

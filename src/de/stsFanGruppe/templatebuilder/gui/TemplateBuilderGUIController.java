@@ -14,7 +14,7 @@ import javax.swing.JScrollPane;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanConfig;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanSettingsGUI;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanSettingsGUIController;
-import de.stsFanGruppe.templatebuilder.editor.EditorData;
+import de.stsFanGruppe.templatebuilder.editor.EditorDaten;
 import de.stsFanGruppe.templatebuilder.editor.EditorGUI;
 import de.stsFanGruppe.templatebuilder.editor.bildfahrplan.BildfahrplanGUI;
 import de.stsFanGruppe.templatebuilder.editor.bildfahrplan.BildfahrplanGUIController;
@@ -182,7 +182,7 @@ public class TemplateBuilderGUIController extends GUIController
 					return;
 				}
 				
-				EditorData editoData = bfpGUI.getController().getEditorData();
+				EditorDaten editoData = bfpGUI.getController().geteditorDaten();
 				
 				if(!GUILocker.lock(JTrainGraphExportGUI.class)) break;
 				JTrainGraphExportGUI jtge = new JTrainGraphExportGUI(gui.getFrame(), (ergebnis) -> {
@@ -250,10 +250,10 @@ public class TemplateBuilderGUIController extends GUIController
 					throw e;
 				}
 				
-				EditorData editorData = eGUI.getController().getEditorData();
+				EditorDaten editorDaten = eGUI.getController().geteditorDaten();
 				
 				BildfahrplanSettingsStreckenGUIController controller = new BildfahrplanSettingsStreckenGUIController(
-						editorData, streckenConfig, () -> GUILocker.unlock(BildfahrplanSettingsStreckenGUI.class));
+						editorDaten, streckenConfig, () -> GUILocker.unlock(BildfahrplanSettingsStreckenGUI.class));
 				BildfahrplanSettingsStreckenGUI bssg = new BildfahrplanSettingsStreckenGUI(controller, gui.getFrame());
 				break;
 			case "options":
