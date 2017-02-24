@@ -226,7 +226,7 @@ public class BildfahrplanSettingsStreckenGUIController
             @Override
             public Class<?> getColumnClass( int column ) {
                 switch( column ){
-                    case 0: return Integer.class;
+                    case 0: return Double.class;
                     case 1: return String.class;
                     default: return Object.class;
                 }
@@ -269,6 +269,7 @@ public class BildfahrplanSettingsStreckenGUIController
 			
 			// Ortsangabe
 			String km = model.getValueAt(rowIndex, 0).toString();
+			km = km.substring(0, km.indexOf('.')+2);
 			if(isEmpty(km))
 			{
 				throw new NullPointerException("Keine Km-Angabe für Station "+stName);
