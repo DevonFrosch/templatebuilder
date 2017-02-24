@@ -103,7 +103,7 @@ public class Fahrplanhalt implements Comparable<Fahrplanhalt>
 		{
 			throw new IllegalArgumentException("Zeit muss größer gleich 0 sein");
 		}
-		if(ankunft.getAsDouble() > abfahrt.getAsDouble())
+		if(ankunft.isPresent() && abfahrt.isPresent() && ankunft.getAsDouble() > abfahrt.getAsDouble())
 		{
 			throw new IllegalArgumentException("Abfahrt vor Ankunft");
 		}
@@ -195,17 +195,21 @@ public class Fahrplanhalt implements Comparable<Fahrplanhalt>
 		{
 			return Double.compare(this.abfahrt.getAsDouble(), other.abfahrt.getAsDouble());
 		}
-		// Bei unterschiedlichen Zeiten einfach so sortieren
-		if(this.ankunft.isPresent() && other.abfahrt.isPresent())
+		// Eindeutigkeiten bei nicht definierten Zeiten
+		if(this.getMinZeit() > other.getMaxZeit())
 		{
-			return Double.compare(this.ankunft.getAsDouble(), other.abfahrt.getAsDouble());
+			return 1;
 		}
-		if(this.abfahrt.isPresent() && other.ankunft.isPresent())
+		if(this.getMaxZeit() < other.getMinZeit())
 		{
-			return Double.compare(this.abfahrt.getAsDouble(), other.ankunft.getAsDouble());
+			return -1;
 		}
-		
-		throw new IllegalStateException("Einer der Halte hat weder Ankunft noch Abfahrt");
+		// Bei unterschiedlichen Zeittypen einfach so sortieren
+		if(Double.compare(this.getMinZeit(), other.getMinZeit()) != 0)
+		{
+			return Double.compare(this.getMinZeit(), other.getMinZeit());
+		}
+		return Double.compare(this.getMaxZeit(), other.getMaxZeit());
 	}
 	
 	public static class StrictComparator implements Comparator<Fahrplanhalt>
