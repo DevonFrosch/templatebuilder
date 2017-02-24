@@ -5,11 +5,18 @@ import java.awt.event.ActionEvent;
 import javax.swing.JColorChooser;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 import de.stsFanGruppe.templatebuilder.editor.EditorData;
+import de.stsFanGruppe.templatebuilder.external.ImportException;
 import de.stsFanGruppe.templatebuilder.gui.GUI;
 import de.stsFanGruppe.templatebuilder.gui.TemplateBuilderGUIController;
 import de.stsFanGruppe.templatebuilder.strecken.Betriebsstelle;
+import de.stsFanGruppe.templatebuilder.strecken.Gleis;
+import de.stsFanGruppe.templatebuilder.strecken.Gleisabschnitt;
+import de.stsFanGruppe.templatebuilder.strecken.Strecke;
 import de.stsFanGruppe.templatebuilder.strecken.Streckenabschnitt;
+import de.stsFanGruppe.tools.FirstLastLinkedList;
+import de.stsFanGruppe.tools.FirstLastList;
 import de.stsFanGruppe.tools.NullTester;
 import de.stsFanGruppe.tools.TimeFormater;
 
@@ -242,9 +249,53 @@ public class BildfahrplanSettingsStreckenGUIController
 		gui.table.setModel(model);
 	}
 	
-	public void speichereStrecken()
+	public void speichereStrecken() throws NullPointerException
 	{
+		log.info("Speichere Strecken");
 		
+		FirstLastList<Gleisabschnitt> gleisabschnitte = new FirstLastLinkedList<>();
+		FirstLastList<Strecke> strecken = streckenabschnitt.getStrecken();
+		gleisabschnitte.add(getGleisabschnitt(strecken.first().getAnfang()));
+		strecken.forEach((Strecke s) -> gleisabschnitte.add(getGleisabschnitt(s.getEnde())));
+		
+		TableModel model = gui.table.getModel();
+		FirstLastList<Betriebsstelle> betriebsstellen = new FirstLastLinkedList<>();
+		
+		int rowIndex = 0;
+		while (rowIndex < model.getRowCount())
+		{
+			String stName = model.getValueAt(rowIndex, 1).toString();
+			Betriebsstelle betriebsstelle = new Betriebsstelle(stName);
+			
+			// Ortsangabe
+			String km = model.getValueAt(rowIndex, 0).toString();
+			if(isEmpty(km))
+			{
+				throw new NullPointerException("Keine Km-Angabe für Station "+stName);
+			}
+			
+			Gleis gleis = new Gleis(stName, Double.parseDouble(km.replace(',', '.')));
+			Gleisabschnitt gleisabschnitt = gleis.getGleisabschnitte().first();
+			
+			betriebsstelle.addGleis(gleis);
+			betriebsstellen.add(betriebsstelle);
+			
+			rowIndex++;
+		}
+		
+		betriebsstellen.sort((Betriebsstelle a, Betriebsstelle b) -> a.compareByKM(b));		
+		
+		String strName = makeName(betriebsstellen.first(), betriebsstellen.last());
+		
+		// Strecken erzeugen
+		streckenabschnitt = new Streckenabschnitt(strName);
+		for(int i=0; i <= betriebsstellen.size()-2; i++)
+		{
+			Betriebsstelle anfang = betriebsstellen.get(i);
+			Betriebsstelle ende = betriebsstellen.get(i+1);
+			streckenabschnitt.addStrecke(new Strecke(makeName(anfang, ende), anfang, ende));
+		}
+						
 	}
 	
 	protected void close()
@@ -279,5 +330,26 @@ public class BildfahrplanSettingsStreckenGUIController
 			gui.errorMessage(name+": Nur positive ganze Zahlen erlaubt.");
 			throw new NumberFormatException();
 		}
+	}
+	
+	private static String makeName(Betriebsstelle anfang, Betriebsstelle ende)
+	{
+		assert anfang != null;
+		assert ende != null;
+		
+		// Anfang - Ende
+		return anfang.getName()+" - "+ende.getName();
+	}
+	
+	private static boolean isEmpty(String str)
+	{
+		return str == null || str.isEmpty();
+	}
+	
+	private static Gleisabschnitt getGleisabschnitt(Betriebsstelle betriebsstelle)
+	{
+		assert betriebsstelle != null;
+		
+		return betriebsstelle.getGleise().get(0).getGleisabschnitte().first();
 	}
 }

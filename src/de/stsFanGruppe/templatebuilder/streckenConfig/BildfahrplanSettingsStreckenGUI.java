@@ -137,6 +137,22 @@ public class BildfahrplanSettingsStreckenGUI extends JDialog implements GUI
 					buttonTablePane.add(btnRemoveRow, "1, 8");
 				}
 			}
+			{
+				JPanel buttonPane = new JPanel();
+				contentPanel.add(buttonPane, "2, 6, 3, 1, right, center");
+				{
+					JButton btnSaveRoute = new JButton("Speichern");
+					btnSaveRoute.setActionCommand("ok");
+					btnSaveRoute.addActionListener((ActionEvent arg0) -> controller.actionButton(arg0));
+					buttonPane.add(btnSaveRoute, "1,1");
+				}
+				{
+					JButton btnSaveRoute = new JButton("Abbrechen");
+					btnSaveRoute.setActionCommand("cancel");
+					btnSaveRoute.addActionListener((ActionEvent arg0) -> controller.actionButton(arg0));
+					buttonPane.add(btnSaveRoute, "3,1");
+				}
+			}
 		}
 		controller.ladeStrecken();
 		setVisible(true);
