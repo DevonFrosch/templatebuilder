@@ -10,7 +10,7 @@ import de.stsFanGruppe.tools.*;
  * 
  * Weiterhin dürfen keine Sprünge enthalten sein. Sind Sprünge vorhanden, verhalten sich einige Funktionen undefiniert.
  */
-public class Streckenabschnitt
+public class Streckenabschnitt implements Cloneable
 {	
 	protected String name;
 	protected FirstLastList<Strecke> strecken = new FirstLastLinkedList<>();
@@ -90,6 +90,11 @@ public class Streckenabschnitt
 		}
 		
 		return bs;
+	}
+	
+	public Object clone()
+	{
+		return new Streckenabschnitt(name, new FirstLastLinkedList<Strecke>(strecken));
 	}
 	
 	// String-Produkte

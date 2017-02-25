@@ -303,7 +303,11 @@ public class EditorDaten
 	{
 		synchronized(saLock)
 		{
-			return streckenabschnitt;
+			if(streckenabschnitt == null)
+			{
+				return null;
+			}
+			return (Streckenabschnitt) streckenabschnitt.clone();
 		}
 	}
 	public boolean hasStreckenabschnitt()
@@ -325,13 +329,6 @@ public class EditorDaten
 		return true;
 	}
 	public Set<Fahrt> getFahrten()
-	{
-		synchronized(fahrtenLock)
-		{
-			return fahrten;
-		}
-	}
-	public Set<Fahrt> getFahrtenCopy()
 	{
 		synchronized(fahrtenLock)
 		{

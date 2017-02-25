@@ -266,7 +266,7 @@ public class BildfahrplanGUIController extends EditorGUIController
 			boolean zeigeZeiten = config.getZeigeZeiten();
 			int zeigeRichtung = config.getZeigeRichtung();
 			
-			Set<Fahrt> fahrten = editorDaten.getFahrtenCopy();
+			Set<Fahrt> fahrten = editorDaten.getFahrten();
 			
 			synchronized(fahrten)
 			{

@@ -53,7 +53,7 @@ public class TabEditorGUIController extends EditorGUIController
 	public void ladeFahrten()
 	{
 		Streckenabschnitt str = editorDaten.getStreckenabschnitt();
-		Set<Fahrt> unsortiert = editorDaten.getFahrtenCopy();
+		Set<Fahrt> unsortiert = editorDaten.getFahrten();
 		
 		if(str == null || !str.hasStrecken() || unsortiert == null)
 		{
