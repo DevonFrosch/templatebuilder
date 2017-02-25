@@ -98,7 +98,7 @@ public class JTrainGraphExporter extends Exporter
 					
 					for(Betriebsstelle bs : betriebsstellen)
 					{
-						Optional<Fahrplanhalt> ofh = fahrplanhalte.stream().filter((a) -> a.getGleisabschnitt().getParent().getParent().equals(bs)).findFirst();
+						Optional<Fahrplanhalt> ofh = fahrplanhalte.stream().filter((a) -> a.getBetriebsstelle().equals(bs)).findFirst();
 						
 						String ankunft = "";
 						String abfahrt = "";

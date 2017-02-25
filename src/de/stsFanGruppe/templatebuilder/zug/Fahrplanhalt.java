@@ -1,6 +1,7 @@
 package de.stsFanGruppe.templatebuilder.zug;
 
 import java.util.*;
+import de.stsFanGruppe.templatebuilder.strecken.Betriebsstelle;
 import de.stsFanGruppe.templatebuilder.strecken.Gleisabschnitt;
 import de.stsFanGruppe.tools.NullTester;
 
@@ -41,6 +42,11 @@ public class Fahrplanhalt implements Comparable<Fahrplanhalt>
 	{
 		NullTester.test(gleisabschnitt);
 		this.gleisabschnitt = gleisabschnitt;
+	}
+	
+	public Betriebsstelle getBetriebsstelle()
+	{
+		return gleisabschnitt.getParent().getParent();
 	}
 	
 	public OptionalDouble getAnkunft()

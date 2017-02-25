@@ -4,7 +4,6 @@ import java.awt.*;
 import javax.swing.JComponent;
 import de.stsFanGruppe.templatebuilder.editor.EditorGUI;
 import de.stsFanGruppe.templatebuilder.editor.EditorGUIController;
-import de.stsFanGruppe.templatebuilder.gui.TemplateBuilderGUI;
 import de.stsFanGruppe.tools.FirstLastLinkedList;
 import de.stsFanGruppe.tools.NullTester;
 import de.stsFanGruppe.tools.Paintable;
@@ -14,20 +13,16 @@ public class BildfahrplanGUI extends JComponent implements EditorGUI
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(BildfahrplanGUI.class);
 	
 	protected BildfahrplanGUIController controller;
-	protected TemplateBuilderGUI parent;
 	
 	protected Object paintLock = new Object();
 	protected FirstLastLinkedList<Paintable> paintables = null;
 	boolean paint = true;
 	protected boolean forceRepaint = true;
 	
-	public BildfahrplanGUI(BildfahrplanGUIController controller, TemplateBuilderGUI parent)
+	public BildfahrplanGUI(BildfahrplanGUIController controller)
 	{
 		NullTester.test(controller);
-		NullTester.test(parent);
-		
 		this.controller = controller;
-		this.parent = parent;
 	}
 	
 	public EditorGUIController getController()

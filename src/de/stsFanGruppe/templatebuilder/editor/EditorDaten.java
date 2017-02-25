@@ -365,6 +365,26 @@ public class EditorDaten
 		}
 	}
 	
+	public String[] getFahrtTreffer(String suchmuster)
+	{
+		synchronized(fahrtenLock)
+		{
+			return fahrten.stream().filter(f -> f.getName().toLowerCase().contains(suchmuster.toLowerCase())).map(Fahrt::getName).toArray(String[]::new);
+		}
+	}
+	
+	public Fahrt getFahrt(String name)
+	{
+		if(name == null)
+		{
+			return null;
+		}
+		synchronized(fahrtenLock)
+		{
+			return fahrten.stream().filter((f) -> f.getName().equals(name)).findFirst().orElse(null);
+		}
+	}
+	
 	public boolean hasFahrten()
 	{
 		synchronized(fahrtenLock)

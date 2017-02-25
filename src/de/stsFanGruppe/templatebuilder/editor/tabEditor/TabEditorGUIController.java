@@ -10,7 +10,6 @@ import javax.swing.table.JTableHeader;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanConfig;
 import de.stsFanGruppe.templatebuilder.editor.EditorDaten;
 import de.stsFanGruppe.templatebuilder.editor.EditorGUIController;
-import de.stsFanGruppe.templatebuilder.gui.TemplateBuilderGUI;
 import de.stsFanGruppe.templatebuilder.strecken.Betriebsstelle;
 import de.stsFanGruppe.templatebuilder.strecken.Streckenabschnitt;
 import de.stsFanGruppe.templatebuilder.zug.Fahrplanhalt;
@@ -29,22 +28,22 @@ public class TabEditorGUIController extends EditorGUIController
 	
 	protected boolean richtungAufsteigend;
 	
-	public TabEditorGUIController(EditorDaten daten, BildfahrplanConfig config, TemplateBuilderGUI parent, boolean richtungAufsteigend)
+	public TabEditorGUIController(EditorDaten daten, BildfahrplanConfig config, boolean richtungAufsteigend)
 	{
-		super(daten, config, parent);
-		initVariables(config, parent, richtungAufsteigend);
+		super(daten, config);
+		initVariables(config, richtungAufsteigend);
 	}
 	
-	public TabEditorGUIController(BildfahrplanConfig config, TemplateBuilderGUI parent, boolean richtungAufsteigend)
+	public TabEditorGUIController(BildfahrplanConfig config, boolean richtungAufsteigend)
 	{
-		super(config, parent);
-		initVariables(config, parent, richtungAufsteigend);
+		super(config);
+		initVariables(config, richtungAufsteigend);
 	}
 	
-	private void initVariables(BildfahrplanConfig config, TemplateBuilderGUI parent, boolean richtungAufsteigend)
+	private void initVariables(BildfahrplanConfig config, boolean richtungAufsteigend)
 	{
 		super.getEditorDaten().setTabEditor(this, richtungAufsteigend);
-		this.gui = new TabEditorGUI(this, parent);
+		this.gui = new TabEditorGUI(this);
 		this.zeilenGui = new TabEditorZeilenheaderGUI(this);
 		editorDaten.addFahrtenGeladenCallback(() -> ladeFahrten());
 		this.richtungAufsteigend = richtungAufsteigend;

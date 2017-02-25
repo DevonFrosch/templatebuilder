@@ -132,8 +132,12 @@ public class TemplateBuilderGUI implements GUI
 		mnDatei.add(mntmSchliessen);
 		
 		JMenu mnBearbeiten = new JMenu("Bearbeiten");
-		mnBearbeiten.setEnabled(false);
 		menuBar.add(mnBearbeiten);
+		
+		JMenuItem mntmFahrten = new JCheckBoxMenuItem("Fahrten...");
+		mntmFahrten.setActionCommand("bearbeiteFahrten");
+		mntmFahrten.addActionListener((ActionEvent arg0) -> controller.menuAction(arg0));
+		mnBearbeiten.add(mntmFahrten);
 		
 		JMenu mnStrecken = new JMenu("Strecken");
 		menuBar.add(mnStrecken);

@@ -11,7 +11,6 @@ import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.FahrtDarstellungC
 import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.FahrtDarstellungHandler;
 import de.stsFanGruppe.templatebuilder.editor.EditorDaten;
 import de.stsFanGruppe.templatebuilder.editor.EditorGUIController;
-import de.stsFanGruppe.templatebuilder.gui.TemplateBuilderGUI;
 import de.stsFanGruppe.templatebuilder.strecken.Betriebsstelle;
 import de.stsFanGruppe.templatebuilder.strecken.Streckenabschnitt;
 import de.stsFanGruppe.templatebuilder.zug.Fahrplanhalt;
@@ -33,22 +32,22 @@ public class BildfahrplanGUIController extends EditorGUIController
 	protected BildfahrplanPaintHelper ph;
 	protected int stringHeight = 0;
 	
-	public BildfahrplanGUIController(EditorDaten daten, BildfahrplanConfig config, TemplateBuilderGUI parent)
+	public BildfahrplanGUIController(EditorDaten daten, BildfahrplanConfig config)
 	{
-		super(daten, config, parent);
-		initVariables(config, parent);
+		super(daten, config);
+		initVariables(config);
 	}
 	
-	public BildfahrplanGUIController(BildfahrplanConfig config, TemplateBuilderGUI parent)
+	public BildfahrplanGUIController(BildfahrplanConfig config)
 	{
-		super(config, parent);
-		initVariables(config, parent);
+		super(config);
+		initVariables(config);
 	}
 	
-	private void initVariables(BildfahrplanConfig config, TemplateBuilderGUI parent)
+	private void initVariables(BildfahrplanConfig config)
 	{
 		super.getEditorDaten().setBildfahrplan(this);
-		this.gui = new BildfahrplanGUI(this, parent);
+		this.gui = new BildfahrplanGUI(this);
 		this.ph = new BildfahrplanPaintHelper(config, this.gui);
 		this.spaltenGui = new BildfahrplanSpaltenheaderGUI(this.gui, this);
 		this.zeilenGui = new BildfahrplanZeilenheaderGUI(this.gui, this);

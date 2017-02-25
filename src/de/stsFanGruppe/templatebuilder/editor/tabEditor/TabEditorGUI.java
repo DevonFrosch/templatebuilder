@@ -3,7 +3,6 @@ package de.stsFanGruppe.templatebuilder.editor.tabEditor;
 import javax.swing.JPanel;
 import de.stsFanGruppe.templatebuilder.editor.EditorGUI;
 import de.stsFanGruppe.templatebuilder.editor.EditorGUIController;
-import de.stsFanGruppe.templatebuilder.gui.TemplateBuilderGUI;
 import de.stsFanGruppe.tools.NullTester;
 import javax.swing.JTable;
 import java.awt.BorderLayout;
@@ -16,16 +15,13 @@ public class TabEditorGUI extends JPanel implements EditorGUI
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(TabEditorGUI.class);
 	
 	protected TabEditorGUIController controller;
-	protected TemplateBuilderGUI parent;
 	private JTable table;
 	
-	public TabEditorGUI(TabEditorGUIController controller, TemplateBuilderGUI parent)
+	public TabEditorGUI(TabEditorGUIController controller)
 	{
 		NullTester.test(controller);
-		NullTester.test(parent);
 		
 		this.controller = controller;
-		this.parent = parent;
 		
 		init();
 	}
@@ -50,14 +46,14 @@ public class TabEditorGUI extends JPanel implements EditorGUI
 		add(table);
 	}
 	
-	public JTableHeader getTableHeader()
-	{
-		return table.getTableHeader();
-	}
-	
 	public boolean isRichtungAufsteigend()
 	{
 		return controller.richtungAufsteigend;
+	}
+	
+	public JTableHeader getTableHeader()
+	{
+		return table.getTableHeader();
 	}
 	
 	public void setTableModel(TableModel model)

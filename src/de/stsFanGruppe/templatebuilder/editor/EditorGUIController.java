@@ -1,8 +1,6 @@
 package de.stsFanGruppe.templatebuilder.editor;
 
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanConfig;
-import de.stsFanGruppe.templatebuilder.gui.GUI;
-import de.stsFanGruppe.templatebuilder.gui.TemplateBuilderGUI;
 import de.stsFanGruppe.tools.NullTester;
 
 public abstract class EditorGUIController
@@ -11,7 +9,6 @@ public abstract class EditorGUIController
 	
 	protected BildfahrplanConfig config;
 	private Object changeHandleId;
-	protected GUI parent;
 	protected EditorDaten editorDaten = null;
 	
 	/**
@@ -20,20 +17,18 @@ public abstract class EditorGUIController
 	 * @param config
 	 * @param parent
 	 */
-	protected EditorGUIController(BildfahrplanConfig config, TemplateBuilderGUI parent)
+	protected EditorGUIController(BildfahrplanConfig config)
 	{
 		NullTester.test(config);
-		NullTester.test(parent);
 		
 		this.config = config;
 		this.changeHandleId = config.registerChangeHandler(() -> configChanged());
-		this.parent = parent;
 		this.editorDaten = new EditorDaten();
 	}
 	
-	protected EditorGUIController(EditorDaten editorDaten, BildfahrplanConfig config, TemplateBuilderGUI parent)
+	protected EditorGUIController(EditorDaten editorDaten, BildfahrplanConfig config)
 	{
-		this(config, parent);
+		this(config);
 		this.editorDaten = editorDaten;
 	}
 	

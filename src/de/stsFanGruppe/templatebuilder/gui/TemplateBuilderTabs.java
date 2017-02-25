@@ -31,7 +31,12 @@ public class TemplateBuilderTabs
 		assert view != null;
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.getVerticalScrollBar().setUnitIncrement(20);
+		
+		if(view.getClass().isAssignableFrom(BildfahrplanGUI.class))
+		{
+			scrollPane.getVerticalScrollBar().setUnitIncrement(20);
+		}
+		
 		scrollPane.setViewportView(view);
 		if(columnHeader != null)
 		{
