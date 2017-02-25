@@ -216,8 +216,4 @@ protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(JTrain
 		}
 		return defaultValue;
 	}
-	private static boolean isEmpty(String str)
-	{
-		return str == null || str.isEmpty();
-	}
 }

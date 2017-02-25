@@ -7,7 +7,7 @@ import de.stsFanGruppe.templatebuilder.strecken.*;
 import de.stsFanGruppe.templatebuilder.zug.*;
 import de.stsFanGruppe.tools.*;
 
-public class JTrainGraphExporter
+public class JTrainGraphExporter extends Exporter
 {
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(JTrainGraphExporter.class);
 	protected boolean useDS100;

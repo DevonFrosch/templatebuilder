@@ -12,7 +12,7 @@ import de.stsFanGruppe.tools.FirstLastList;
 import de.stsFanGruppe.tools.NullTester;
 import de.stsFanGruppe.tools.TimeFormater;
 
-public class JTrainGraphImporter
+public class JTrainGraphImporter extends Importer
 {
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(JTrainGraphImporter.class);
 	
@@ -152,18 +152,6 @@ public class JTrainGraphImporter
 		return fahrten;
 	}
 	
-	private static String makeName(Betriebsstelle anfang, Betriebsstelle ende)
-	{
-		assert anfang != null;
-		assert ende != null;
-		
-		// Anfang - Ende
-		return anfang.getName()+" - "+ende.getName();
-	}
-	private static boolean isEmpty(String str)
-	{
-		return str == null || str.isEmpty();
-	}
 	private static Gleisabschnitt getGleisabschnitt(Betriebsstelle betriebsstelle)
 	{
 		assert betriebsstelle != null;
