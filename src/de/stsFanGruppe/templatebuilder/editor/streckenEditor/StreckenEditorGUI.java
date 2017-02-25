@@ -21,7 +21,7 @@ public class StreckenEditorGUI extends JDialog implements GUI
 	protected EditorDaten editorDaten;
 	protected StreckenEditorGUIController controller;
 	boolean saveEnabled = false;
-
+	
 	protected final JPanel contentPanel = new JPanel();
 	public JTable table;
 	public static final String[] columnNames = {"km", "Bestriebsstelle"};
@@ -33,8 +33,7 @@ public class StreckenEditorGUI extends JDialog implements GUI
 	{
 		try
 		{
-			StreckenEditorGUI dialog = new StreckenEditorGUI(
-					new StreckenEditorGUIController(new EditorDaten(), () -> {}), null);
+			StreckenEditorGUI dialog = new StreckenEditorGUI(new StreckenEditorGUIController(new EditorDaten(), () -> {}), null);
 		}
 		catch(Exception e)
 		{
@@ -65,12 +64,10 @@ public class StreckenEditorGUI extends JDialog implements GUI
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		{
 			FormLayout fl_panel = new FormLayout(
-					new ColumnSpec[] {FormSpecs.RELATED_GAP_COLSPEC, ColumnSpec.decode("default:grow"),
-							FormSpecs.RELATED_GAP_COLSPEC, FormSpecs.DEFAULT_COLSPEC,
-							FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,},
-					new RowSpec[] {FormSpecs.RELATED_GAP_ROWSPEC, RowSpec.decode("default:grow"),
-							FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, FormSpecs.UNRELATED_GAP_ROWSPEC,
-							RowSpec.decode("default:grow"), FormSpecs.RELATED_GAP_ROWSPEC,});
+					new ColumnSpec[] {FormSpecs.RELATED_GAP_COLSPEC, ColumnSpec.decode("default:grow"), FormSpecs.RELATED_GAP_COLSPEC,
+							FormSpecs.DEFAULT_COLSPEC, FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,},
+					new RowSpec[] {FormSpecs.RELATED_GAP_ROWSPEC, RowSpec.decode("default:grow"), FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC,
+							FormSpecs.UNRELATED_GAP_ROWSPEC, RowSpec.decode("default:grow"), FormSpecs.RELATED_GAP_ROWSPEC,});
 			contentPanel.setLayout(fl_panel);
 			{
 				JLabel lblDiscription = new JLabel();
@@ -90,11 +87,9 @@ public class StreckenEditorGUI extends JDialog implements GUI
 				JPanel buttonTablePane = new JPanel();
 				contentPanel.add(buttonTablePane, "4, 4, default, top");
 				buttonTablePane.setLayout(new FormLayout(new ColumnSpec[] {FormSpecs.DEFAULT_COLSPEC,},
-						new RowSpec[] {FormSpecs.LABEL_COMPONENT_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC,
-								FormSpecs.LABEL_COMPONENT_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC,
-								FormSpecs.LABEL_COMPONENT_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC,
-								FormSpecs.LABEL_COMPONENT_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC,
-								FormSpecs.LABEL_COMPONENT_GAP_ROWSPEC,}));
+						new RowSpec[] {FormSpecs.LABEL_COMPONENT_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, FormSpecs.LABEL_COMPONENT_GAP_ROWSPEC,
+								FormSpecs.DEFAULT_ROWSPEC, FormSpecs.LABEL_COMPONENT_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC,
+								FormSpecs.LABEL_COMPONENT_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, FormSpecs.LABEL_COMPONENT_GAP_ROWSPEC,}));
 				{
 					JButton btnMoveUp = new JButton("Oben");
 					btnMoveUp.setActionCommand("moveUpRow");
@@ -147,6 +142,7 @@ public class StreckenEditorGUI extends JDialog implements GUI
 		setVisible(false);
 		controller = null;
 	}
+	
 	public StreckenEditorGUIController getController()
 	{
 		return controller;

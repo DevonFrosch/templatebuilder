@@ -12,7 +12,6 @@ import javax.swing.table.TableCellRenderer;
 
 /**
  * Ändern die Darstellung der Combobox so, dass Linien eingezeichnet werden.
- *
  * Um dies aufzurufen, wird an der Combobox die Darstellung neu gesetzt:
  * combobox.setRenderer(new LineTypeRenderer());
  */
@@ -50,7 +49,7 @@ public class LineTypeRenderer extends JPanel implements ListCellRenderer<LineTyp
 		}
 		else
 		{
-			this.setBackground(table.getBackground());		
+			this.setBackground(table.getBackground());
 			this.setForeground(table.getForeground());
 		}
 		return this;

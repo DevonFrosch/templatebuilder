@@ -11,6 +11,7 @@ public class Exporter
 	{
 		throw new ExportException("Nicht implementiert");
 	}
+	
 	public void exportFahrten(OutputStream output, Streckenabschnitt streckenabschnitt, Set<Fahrt> fahrten) throws ExportException
 	{
 		throw new ExportException("Nicht implementiert");

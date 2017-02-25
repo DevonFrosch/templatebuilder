@@ -20,23 +20,28 @@ public class Gleisabschnitt implements Comparable<Gleisabschnitt>
 	{
 		return name;
 	}
+	
 	public void setName(String name)
 	{
 		NullTester.test(name);
 		this.name = name;
 	}
+	
 	public double getKm()
 	{
 		return km;
 	}
+	
 	public void setKm(double km)
 	{
 		this.km = km;
 	}
+	
 	public Gleis getParent()
 	{
 		return parent;
 	}
+	
 	void setParent(Gleis parent)
 	{
 		this.parent = parent;
@@ -44,15 +49,17 @@ public class Gleisabschnitt implements Comparable<Gleisabschnitt>
 	
 	public String toString()
 	{
-		return "Gleisabschnitt "+getName()+" { km = "+km+" }";
+		return "Gleisabschnitt " + getName() + " { km = " + km + " }";
 	}
+	
 	public String toXML()
 	{
 		return toXML("");
 	}
+	
 	public String toXML(String indent)
 	{
-		return indent+"<gleisabschnitt name=\""+getName()+"\" km=\""+getKm()+"\" />";
+		return indent + "<gleisabschnitt name=\"" + getName() + "\" km=\"" + getKm() + "\" />";
 	}
 	
 	/**
@@ -60,9 +67,10 @@ public class Gleisabschnitt implements Comparable<Gleisabschnitt>
 	 * Sind Ortsangaben gegeben, sind die Gleisabschnitte nach kmAnfang und dann nach kmEnde geordnet.
 	 * Ohne Ortsangaben sind die Orte gleich. Dies gilt auch, wenn bei einem der Anfang und bei einem
 	 * das Ende angegeben ist.
+	 * 
 	 * @param other der andere Gleisabschnitt
 	 * @return einen Wert kleiner, gleich oder größer Null, wenn dieser Gleisabschnitt kleiner, gleich
-	 * oder größer als der andere ist.
+	 *         oder größer als der andere ist.
 	 * @throws NullPointerException falls other gleich null ist.
 	 */
 	public int compareTo(Gleisabschnitt other)

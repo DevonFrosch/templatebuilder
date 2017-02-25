@@ -11,6 +11,7 @@ public class Fahrzeit
 	
 	/**
 	 * Legt eine neue Fahrzeit an
+	 * 
 	 * @param name Name der Fahrzeit
 	 * @param streckenabschnitt Streckenabschnitt, für die die Fahrtzeit gilt
 	 * @param tempo Zugtempo, für das die Fahrtzeit gilt
@@ -28,24 +29,29 @@ public class Fahrzeit
 	{
 		return name;
 	}
+	
 	public void setName(String name)
 	{
 		NullTester.test(name);
 		this.name = name;
 	}
+	
 	public Streckenabschnitt getStreckenabschnitt()
 	{
 		return streckenabschnitt;
 	}
+	
 	protected void setStreckenabschnitt(Streckenabschnitt streckenabschnitt)
 	{
 		NullTester.test(streckenabschnitt);
 		this.streckenabschnitt = streckenabschnitt;
 	}
+	
 	public int getTempo()
 	{
 		return tempo;
 	}
+	
 	public void setTempo(int tempo)
 	{
 		if(tempo < 0)
@@ -54,10 +60,12 @@ public class Fahrzeit
 		}
 		this.tempo = tempo;
 	}
+	
 	public double getDauer()
 	{
 		return dauer;
 	}
+	
 	public void setDauer(double dauer)
 	{
 		if(dauer < 0)
@@ -69,14 +77,17 @@ public class Fahrzeit
 	
 	public String toString()
 	{
-		return "Fahrzeit "+getName()+" { tempo: "+getTempo()+", dauer: "+getDauer()+", streckenabschnitt: "+streckenabschnitt.getName()+" }";
+		return "Fahrzeit " + getName() + " { tempo: " + getTempo() + ", dauer: " + getDauer() + ", streckenabschnitt: " + streckenabschnitt.getName() + " }";
 	}
+	
 	public String toXML()
 	{
 		return toXML("");
 	}
+	
 	public String toXML(String indent)
 	{
-		return indent+"<fahrzeit name=\""+getName()+"\" tempo=\""+getTempo()+"\" dauer=\""+getDauer()+"\" streckenabschnitt=\""+streckenabschnitt.getName()+"\" />";
+		return indent + "<fahrzeit name=\"" + getName() + "\" tempo=\"" + getTempo() + "\" dauer=\"" + getDauer() + "\" streckenabschnitt=\""
+				+ streckenabschnitt.getName() + "\" />";
 	}
 }

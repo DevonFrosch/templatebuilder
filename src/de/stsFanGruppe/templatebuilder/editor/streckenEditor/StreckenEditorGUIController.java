@@ -16,8 +16,7 @@ import de.stsFanGruppe.tools.NullTester;
 
 public class StreckenEditorGUIController
 {
-	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory
-			.getLogger(StreckenEditorGUIController.class);
+	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(StreckenEditorGUIController.class);
 	
 	protected EditorDaten editorDaten;
 	private StreckenEditorGUI gui;
@@ -67,8 +66,7 @@ public class StreckenEditorGUIController
 			case "moveUpRow":
 				if(rows[0] == 0)
 				{
-					gui.infoMessage("Erste Zeile kann nicht nach oben verschoben werden.",
-							"Info: Zeile nach oben verschieben");
+					gui.infoMessage("Erste Zeile kann nicht nach oben verschoben werden.", "Info: Zeile nach oben verschieben");
 				}
 				else
 				{
@@ -219,7 +217,10 @@ public class StreckenEditorGUIController
 			// Ortsangabe
 			String km = model.getValueAt(i, 0).toString();
 			km = km.replace(',', '.').substring(0, km.indexOf('.') + 2);
-			if(isEmpty(km)) { throw new NullPointerException("Keine Km-Angabe für Station " + stName); }
+			if(isEmpty(km))
+			{
+				throw new NullPointerException("Keine Km-Angabe für Station " + stName);
+			}
 			
 			Gleis gleis = new Gleis(stName, Double.parseDouble(km));
 			Gleisabschnitt gleisabschnitt = gleis.getGleisabschnitte().first();

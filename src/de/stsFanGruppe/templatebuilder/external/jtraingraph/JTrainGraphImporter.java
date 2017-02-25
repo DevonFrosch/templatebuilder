@@ -43,7 +43,7 @@ public class JTrainGraphImporter extends Importer
 				String km = tSta.getAttribute("km");
 				if(isEmpty(km))
 				{
-					throw new ImportException("Keine Ortsangabe für Station "+stName);
+					throw new ImportException("Keine Ortsangabe für Station " + stName);
 				}
 				
 				Gleis gleis = new Gleis(stName, Double.parseDouble(km.replace(',', '.')));
@@ -61,10 +61,10 @@ public class JTrainGraphImporter extends Importer
 			
 			// Strecken erzeugen
 			streckenabschnitt = new Streckenabschnitt(strName);
-			for(int i=0; i <= betriebsstellen.size()-2; i++)
+			for(int i = 0; i <= betriebsstellen.size() - 2; i++)
 			{
 				Betriebsstelle anfang = betriebsstellen.get(i);
-				Betriebsstelle ende = betriebsstellen.get(i+1);
+				Betriebsstelle ende = betriebsstellen.get(i + 1);
 				streckenabschnitt.addStrecke(new Strecke(makeName(anfang, ende), anfang, ende));
 			}
 		}
@@ -113,7 +113,7 @@ public class JTrainGraphImporter extends Importer
 				boolean richtung = train.getName().toLowerCase() == "ti";
 				NavigableSet<Fahrplanhalt> fahrplanhalte = new TreeSet<>();
 				
-				for(int i=0; (tTime = xml.findTagUntil(train.getName().toLowerCase(), "t")) != null; i++)
+				for(int i = 0; (tTime = xml.findTagUntil(train.getName().toLowerCase(), "t")) != null; i++)
 				{
 					String an = tTime.getAttribute("a");
 					String ab = tTime.getAttribute("d");

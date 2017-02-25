@@ -49,26 +49,31 @@ public class EditorDaten
 	{
 		
 	}
+	
 	public EditorDaten(String name)
 	{
 		this();
 		this.name = name;
 	}
+	
 	public EditorDaten(BildfahrplanGUIController controller)
 	{
 		this();
 		this.setBildfahrplan(controller);
 	}
+	
 	public EditorDaten(BildfahrplanGUIController controller, String name)
 	{
 		this(controller);
 		this.name = name;
 	}
+	
 	public EditorDaten(TabEditorGUIController controller, boolean richtungAufsteigend)
 	{
 		this();
 		this.setTabEditor(controller, richtungAufsteigend);
 	}
+	
 	public EditorDaten(TabEditorGUIController controller, boolean richtungAufsteigend, String name)
 	{
 		this(controller, richtungAufsteigend);
@@ -79,10 +84,12 @@ public class EditorDaten
 	{
 		return bfpController != null;
 	}
+	
 	public BildfahrplanGUIController getBildfahrplan()
 	{
 		return bfpController;
 	}
+	
 	public void setBildfahrplan(BildfahrplanGUIController controller)
 	{
 		this.bfpController = controller;
@@ -92,10 +99,12 @@ public class EditorDaten
 	{
 		return getTabEditor(richtungAufsteigend) != null;
 	}
+	
 	public TabEditorGUIController getTabEditor(boolean richtungAufsteigend)
 	{
-		return ((richtungAufsteigend) ? tabHinController : tabRückController);
+		return((richtungAufsteigend) ? tabHinController : tabRückController);
 	}
+	
 	public void setTabEditor(TabEditorGUIController controller, boolean richtungAufsteigend)
 	{
 		if(richtungAufsteigend)
@@ -117,27 +126,32 @@ public class EditorDaten
 			this.tabRückController = controller;
 		}
 	}
-
+	
 	public boolean hasTabEditorHin()
 	{
 		return hasTabEditor(true);
 	}
+	
 	public boolean hasTabEditorRück()
 	{
 		return hasTabEditor(false);
 	}
+	
 	public TabEditorGUIController getTabEditorHin()
 	{
 		return getTabEditor(true);
 	}
+	
 	public TabEditorGUIController getTabEditorRück()
 	{
 		return getTabEditor(false);
 	}
+	
 	public void setTabEditorHin(TabEditorGUIController controller)
 	{
 		setTabEditor(controller, true);
 	}
+	
 	public void setTabEditorRück(TabEditorGUIController controller)
 	{
 		setTabEditor(controller, false);
@@ -152,7 +166,7 @@ public class EditorDaten
 	{
 		synchronized(noEditorCallbacks)
 		{
-			for(BooleanSupplier callback: noEditorCallbacks)
+			for(BooleanSupplier callback : noEditorCallbacks)
 			{
 				if(!callback.getAsBoolean())
 				{
@@ -162,6 +176,7 @@ public class EditorDaten
 		}
 		return true;
 	}
+	
 	public void addNoEditorCallback(BooleanSupplier noEditorCallback)
 	{
 		synchronized(noEditorCallbacks)
@@ -169,16 +184,18 @@ public class EditorDaten
 			noEditorCallbacks.add(noEditorCallback);
 		}
 	}
+	
 	protected void nameChanged()
 	{
 		synchronized(nameChangedCallbacks)
 		{
-			for(Runnable callback: nameChangedCallbacks)
+			for(Runnable callback : nameChangedCallbacks)
 			{
 				EventQueue.invokeLater(callback);
 			}
 		}
 	}
+	
 	public void addNameChangedCallback(Runnable callback)
 	{
 		synchronized(nameChangedCallbacks)
@@ -186,16 +203,18 @@ public class EditorDaten
 			nameChangedCallbacks.add(callback);
 		}
 	}
+	
 	protected void fahrtenGeladen()
 	{
 		synchronized(fahrtenGeladenCallbacks)
 		{
-			for(Runnable callback: fahrtenGeladenCallbacks)
+			for(Runnable callback : fahrtenGeladenCallbacks)
 			{
 				EventQueue.invokeLater(callback);
 			}
 		}
 	}
+	
 	public void addFahrtenGeladenCallback(Runnable callback)
 	{
 		synchronized(fahrtenGeladenCallbacks)
@@ -203,16 +222,18 @@ public class EditorDaten
 			fahrtenGeladenCallbacks.add(callback);
 		}
 	}
+	
 	protected void streckeGeladen()
 	{
 		synchronized(streckeGeladenCallbacks)
 		{
-			for(Runnable callback: streckeGeladenCallbacks)
+			for(Runnable callback : streckeGeladenCallbacks)
 			{
 				EventQueue.invokeLater(callback);
 			}
 		}
 	}
+	
 	public void addStreckeGeladenCallback(Runnable callback)
 	{
 		synchronized(streckeGeladenCallbacks)
@@ -225,6 +246,7 @@ public class EditorDaten
 	{
 		this.name = name;
 	}
+	
 	public String getName()
 	{
 		return name;
@@ -259,7 +281,7 @@ public class EditorDaten
 		
 		// Vorbereitung für unterschiedliche Strecken-km
 		double neuerKm = -1;
-		for(Strecke s: streckenabschnitt.getStrecken())
+		for(Strecke s : streckenabschnitt.getStrecken())
 		{
 			b = s.getEnde();
 			double alterKm = (b.getMaxKm() + b.getMinKm()) / 2;
@@ -279,6 +301,7 @@ public class EditorDaten
 		
 		streckeGeladen();
 	}
+	
 	public void ladeZüge(Collection<? extends Fahrt> fahrten)
 	{
 		NullTester.test(fahrten);
@@ -310,6 +333,7 @@ public class EditorDaten
 			return (Streckenabschnitt) streckenabschnitt.clone();
 		}
 	}
+	
 	public boolean hasStreckenabschnitt()
 	{
 		synchronized(saLock)
@@ -328,6 +352,7 @@ public class EditorDaten
 		}
 		return true;
 	}
+	
 	public Set<Fahrt> getFahrten()
 	{
 		synchronized(fahrtenLock)
@@ -339,6 +364,7 @@ public class EditorDaten
 			return new HashSet<>(fahrten);
 		}
 	}
+	
 	public boolean hasFahrten()
 	{
 		synchronized(fahrtenLock)
@@ -346,10 +372,12 @@ public class EditorDaten
 			return fahrten != null && !fahrten.isEmpty();
 		}
 	}
+	
 	public double getDiffKm()
 	{
 		return diffKm;
 	}
+	
 	public double getMinZeit()
 	{
 		if(!hasFahrten())
@@ -361,6 +389,7 @@ public class EditorDaten
 			return fahrten.stream().min((a, b) -> Double.compare(a.getMinZeit(), b.getMinZeit())).get().getMinZeit();
 		}
 	}
+	
 	public double getMaxZeit()
 	{
 		if(!hasFahrten())
@@ -372,6 +401,7 @@ public class EditorDaten
 			return fahrten.stream().max((a, b) -> Double.compare(a.getMaxZeit(), b.getMaxZeit())).get().getMaxZeit();
 		}
 	}
+	
 	public double getStreckenKm(Betriebsstelle index)
 	{
 		synchronized(streckenKmLock)

@@ -26,6 +26,7 @@ public class Strecke
 	
 	/**
 	 * Erzeugt eine zweigleisige Strecke
+	 * 
 	 * @param name Name der Strecke
 	 * @param anfang
 	 * @param ende
@@ -37,8 +38,10 @@ public class Strecke
 		this.setEnde(ende);
 		this.setAnzahlGleise(2);
 	}
+	
 	/**
 	 * Erzeugt eine Strecke
+	 * 
 	 * @param name
 	 * @param anfang
 	 * @param ende
@@ -54,33 +57,40 @@ public class Strecke
 	{
 		return name;
 	}
+	
 	public void setName(String name)
 	{
 		NullTester.test(name);
 		this.name = name;
 	}
+	
 	public Betriebsstelle getAnfang()
 	{
 		return anfang;
 	}
+	
 	public void setAnfang(Betriebsstelle anfang)
 	{
 		NullTester.test(anfang);
 		this.anfang = anfang;
 	}
+	
 	public Betriebsstelle getEnde()
 	{
 		return ende;
 	}
+	
 	public void setEnde(Betriebsstelle ende)
 	{
 		NullTester.test(ende);
 		this.ende = ende;
 	}
+	
 	public int getAnzahlGleise()
 	{
 		return anzahlGleise;
 	}
+	
 	public void setAnzahlGleise(int anzahlGleise)
 	{
 		if(anzahlGleise <= 0)
@@ -89,7 +99,7 @@ public class Strecke
 		}
 		this.anzahlGleise = anzahlGleise;
 	}
-
+	
 	public double getMinKm()
 	{
 		double anfangKm = getOrDefault(() -> anfang.getMinKm(), Double.MAX_VALUE);
@@ -97,6 +107,7 @@ public class Strecke
 		
 		return Double.min(anfangKm, endeKm);
 	}
+	
 	public double getMaxKm()
 	{
 		double anfangKm = getOrDefault(() -> anfang.getMaxKm(), Double.MIN_VALUE);
@@ -104,6 +115,7 @@ public class Strecke
 		
 		return Double.max(anfangKm, endeKm);
 	}
+	
 	protected double getOrDefault(DoubleSupplier func, double defaultValue)
 	{
 		try
@@ -119,6 +131,7 @@ public class Strecke
 	
 	/**
 	 * Vergleicht diese Strecke mit einer anderen Strecke anhand ihrer Namen.
+	 * 
 	 * @param other Die andere Strecke.
 	 * @return true, wenn other nicht null ist und den selben Namen hat.
 	 */
@@ -129,36 +142,39 @@ public class Strecke
 			return false;
 		}
 		Strecke o = (Strecke) other;
-		return this.name == o.name; 
+		return this.name == o.name;
 	}
+	
 	public String toString()
 	{
-		return "Strecke "+getName()+" { Anfang: "+anfang.getName()+", Ende: "+ende.getName()+", Anzahl Gleise: "+anzahlGleise+" }";
+		return "Strecke " + getName() + " { Anfang: " + anfang.getName() + ", Ende: " + ende.getName() + ", Anzahl Gleise: " + anzahlGleise + " }";
 	}
+	
 	public String toXML()
 	{
 		return toXML("");
 	}
+	
 	public String toXML(String indent)
 	{
 		StringJoiner xml = new StringJoiner("\n");
-		xml.add(indent+"<strecke name=\""+getName()+"\" anzahlGleise=\""+anzahlGleise+"\">");
+		xml.add(indent + "<strecke name=\"" + getName() + "\" anzahlGleise=\"" + anzahlGleise + "\">");
 		
 		if(ende != null)
 		{
-			xml.add(indent+"  <verbindung typ=\"anfang\">");
-			xml.add(anfang.toXML(indent+"    "));
-			xml.add(indent+"  </verbindung>");
+			xml.add(indent + "  <verbindung typ=\"anfang\">");
+			xml.add(anfang.toXML(indent + "    "));
+			xml.add(indent + "  </verbindung>");
 		}
 		
 		if(ende != null)
 		{
-			xml.add(indent+"  <verbindung typ=\"ende\">");
-			xml.add(ende.toXML(indent+"    "));
-			xml.add(indent+"  </verbindung>");
+			xml.add(indent + "  <verbindung typ=\"ende\">");
+			xml.add(ende.toXML(indent + "    "));
+			xml.add(indent + "  </verbindung>");
 		}
 		
-		xml.add(indent+"</strecke>");
+		xml.add(indent + "</strecke>");
 		return xml.toString();
 	}
 }

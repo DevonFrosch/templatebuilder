@@ -31,10 +31,12 @@ public class PreferenceHandler
 		log.trace("Config: {} = {}", logName, value);
 		setCallback.run();
 	}
+	
 	public String getString(String configName, String defaultValue)
 	{
 		return prefs.get(configName, defaultValue);
 	}
+	
 	// boolean
 	public void setBoolean(String logName, String configName, boolean value)
 	{
@@ -42,10 +44,12 @@ public class PreferenceHandler
 		log.trace("Config: {} = {}", logName, value);
 		setCallback.run();
 	}
+	
 	public boolean getBoolean(String configName, boolean defaultValue)
 	{
 		return prefs.getBoolean(configName, defaultValue);
 	}
+	
 	// int
 	public void setInt(String logName, String configName, int value)
 	{
@@ -53,10 +57,12 @@ public class PreferenceHandler
 		log.trace("Config: {} = {}", logName, value);
 		setCallback.run();
 	}
+	
 	public int getInt(String configName, int defaultValue)
 	{
 		return prefs.getInt(configName, defaultValue);
 	}
+	
 	// double
 	public void setDouble(String logName, String configName, double value)
 	{
@@ -64,21 +70,24 @@ public class PreferenceHandler
 		log.trace("Config: {} = {}", logName, value);
 		setCallback.run();
 	}
+	
 	public double getDouble(String configName, double defaultValue)
 	{
 		return prefs.getDouble(configName, defaultValue);
 	}
+	
 	// int[]
 	public void setIntArray(String logName, String configName, int[] value)
 	{
 		StringJoiner arr = new StringJoiner(",");
-		for(int val: value)
+		for(int val : value)
 		{
 			arr.add(String.valueOf(val));
 		}
 		setString(logName, configName, arr.toString());
 		setCallback.run();
 	}
+	
 	public int[] getIntArray(String configName, int[] defaultValue)
 	{
 		String value = getString(configName, null);
@@ -99,17 +108,18 @@ public class PreferenceHandler
 		int[] rgba = new int[strArray.length];
 		try
 		{
-			for(int i=0; i < strArray.length; i++)
+			for(int i = 0; i < strArray.length; i++)
 			{
 				rgba[i] = Integer.parseInt(strArray[i]);
 			}
 		}
 		catch(NumberFormatException e)
 		{
-			log.error("NumberFormatException beim Lesen von "+configName, e);
+			log.error("NumberFormatException beim Lesen von " + configName, e);
 		}
 		return rgba;
 	}
+	
 	// Color = int[4]
 	public void setColor(String logName, String configName, Color value)
 	{
@@ -117,6 +127,7 @@ public class PreferenceHandler
 		setIntArray(logName, configName, rgba);
 		setCallback.run();
 	}
+	
 	public Color getColor(String configName, Color defaultValue)
 	{
 		int[] def = {defaultValue.getRed(), defaultValue.getGreen(), defaultValue.getBlue(), defaultValue.getAlpha()};
@@ -147,8 +158,10 @@ public class PreferenceHandler
 		}
 		return false;
 	}
+	
 	/**
 	 * Stellt sicher, dass alle Einstellungen dauerhaft gespeichert sind.
+	 * 
 	 * @return false, falls ein Fehler aufgetreten ist, sonst true
 	 */
 	public boolean schreibeEinstellungen()
@@ -167,6 +180,7 @@ public class PreferenceHandler
 	
 	/**
 	 * Speichert die Einstellungen im OutputStream als Preferences-XML
+	 * 
 	 * @param os Stream, auf den das XML geschrieben wird
 	 * @return false, falls ein Fehler aufgetreten ist, sonst true
 	 */
@@ -183,8 +197,10 @@ public class PreferenceHandler
 		}
 		return false;
 	}
+	
 	/**
 	 * Läd die Einstellungen aus dem InputStream als Preferences-XML
+	 * 
 	 * @param is Stream, von dem das XML gelesen wird
 	 * @return false, falls ein Fehler aufgetreten ist, sonst true
 	 */

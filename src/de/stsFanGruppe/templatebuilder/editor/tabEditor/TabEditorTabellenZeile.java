@@ -26,18 +26,22 @@ public class TabEditorTabellenZeile implements Comparable<TabEditorTabellenZeile
 	{
 		return bs;
 	}
+	
 	public boolean isAbfahrt()
 	{
 		return !isAnkunft;
 	}
+	
 	public boolean isAnkunft()
 	{
 		return isAnkunft;
 	}
+	
 	public String getName()
 	{
 		return bs.getName();
 	}
+	
 	public String getDS100()
 	{
 		return bs.getDS100();
@@ -58,7 +62,7 @@ public class TabEditorTabellenZeile implements Comparable<TabEditorTabellenZeile
 		}
 		else if(this.isAnkunft)
 		{
-			return (- richtungsFaktor);
+			return(-richtungsFaktor);
 		}
 		else
 		{
@@ -70,6 +74,7 @@ public class TabEditorTabellenZeile implements Comparable<TabEditorTabellenZeile
 	{
 		testCompareTo();
 	}
+	
 	public static void testCompareTo()
 	{
 		boolean richtung = true;
@@ -105,16 +110,18 @@ public class TabEditorTabellenZeile implements Comparable<TabEditorTabellenZeile
 		test(0, o.compareTo(new TabEditorTabellenZeile(getBs(1), richtung, false)));
 		test(1, o.compareTo(new TabEditorTabellenZeile(getBs(2), richtung, true)));
 		test(1, o.compareTo(new TabEditorTabellenZeile(getBs(2), richtung, false)));
-
+		
 		log.info("Erfolgreich getestet!");
 	}
+	
 	private static void test(int soll, int ist) throws AssertionError
 	{
 		if(soll != ist)
 		{
-			throw new AssertionError(soll+" != "+ist);
+			throw new AssertionError(soll + " != " + ist);
 		}
 	}
+	
 	private static Betriebsstelle getBs(double km)
 	{
 		LinkedList<Gleis> gleise = new LinkedList<Gleis>();

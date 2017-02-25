@@ -15,13 +15,14 @@ public class BildfahrplanZeilenheaderGUI extends JComponent
 	
 	protected BildfahrplanGUI gui;
 	protected BildfahrplanGUIController controller;
-
+	
 	protected Object paintLock = new Object();
 	protected FirstLastLinkedList<Paintable> paintables = null;
 	boolean paint = true;
 	
 	/**
 	 * Anzeigen der GUI mit einer festen Zeilenzahl
+	 * 
 	 * @param gui
 	 */
 	public BildfahrplanZeilenheaderGUI(BildfahrplanGUI gui, BildfahrplanGUIController controller)

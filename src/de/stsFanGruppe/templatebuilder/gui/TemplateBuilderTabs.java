@@ -52,14 +52,18 @@ public class TemplateBuilderTabs
 		{
 			pane.addTab(name, icon, scrollPane, toolTip);
 			tabIndex = pane.getTabCount() - 1;
-			pane.setTabComponentAt(tabIndex, new ButtonTabComponent(pane, (int index) -> {return true;}));
+			pane.setTabComponentAt(tabIndex, new ButtonTabComponent(pane, (int index) -> {
+				return true;
+			}));
 		}
 		return tabIndex;
 	}
+	
 	public int getSelectedTab()
 	{
 		return pane.getSelectedIndex();
 	}
+	
 	public void setSelectedTab(int index)
 	{
 		pane.setSelectedIndex(index);
@@ -69,6 +73,7 @@ public class TemplateBuilderTabs
 	{
 		return getGUIAt(getSelectedTab());
 	}
+	
 	public Component getGUIAt(int index)
 	{
 		if(index < 0)
@@ -85,9 +90,10 @@ public class TemplateBuilderTabs
 	
 	public int addBildfahrplanTab(String name, Icon icon, String toolTip, BildfahrplanGUIController bfpController)
 	{
-		return addTab(name, icon, toolTip, bfpController.getBildfahrplanGUI(),
-				bfpController.getBildfahrplanSpaltenHeaderGUI(), bfpController.getBildfahrplanZeilenHeaderGUI());
+		return addTab(name, icon, toolTip, bfpController.getBildfahrplanGUI(), bfpController.getBildfahrplanSpaltenHeaderGUI(),
+				bfpController.getBildfahrplanZeilenHeaderGUI());
 	}
+	
 	public int addTabEditorTab(String name, Icon icon, String toolTip, TabEditorGUIController teController)
 	{
 		return addTab(name, icon, toolTip, teController.getTabEditorGUI(), teController.getTableHeader(), teController.getZeilenheaderGUI());
@@ -98,14 +104,17 @@ public class TemplateBuilderTabs
 		boolean test = getSelectedGUI() instanceof EditorGUI;
 		return test;
 	}
+	
 	public boolean selectedTabIsBildfahrplan()
 	{
 		return ClassTester.isAssignableFrom(getSelectedGUI(), BildfahrplanGUI.class);
 	}
+	
 	public boolean selectedTabIsTabEditor()
 	{
 		return ClassTester.isAssignableFrom(getSelectedGUI(), TabEditorGUI.class);
 	}
+	
 	public boolean selectedTabIsTabEditorHin()
 	{
 		if(selectedTabIsTabEditor())
@@ -121,13 +130,14 @@ public class TemplateBuilderTabs
 		}
 		return false;
 	}
+	
 	public boolean selectedTabIsTabEditorRück()
 	{
 		if(selectedTabIsTabEditor())
 		{
 			try
 			{
-				return ! ((TabEditorGUI) getSelectedGUI()).isRichtungAufsteigend();
+				return !((TabEditorGUI) getSelectedGUI()).isRichtungAufsteigend();
 			}
 			catch(ClassCastException e)
 			{
@@ -139,7 +149,7 @@ public class TemplateBuilderTabs
 	
 	public int getTabIndexOf(Component gui)
 	{
-		for(int i=0; i < pane.getTabCount(); i++)
+		for(int i = 0; i < pane.getTabCount(); i++)
 		{
 			if(gui.equals(getGUIAt(i)))
 			{
@@ -151,6 +161,7 @@ public class TemplateBuilderTabs
 	
 	/**
 	 * Holt das EditorDaten-Objekt des aktuellen Tabs.
+	 * 
 	 * @return Das EditorDaten-Objekt oder null falls der Tab keine EditorDaten hat
 	 */
 	public EditorDaten getSelectedEditorDaten()

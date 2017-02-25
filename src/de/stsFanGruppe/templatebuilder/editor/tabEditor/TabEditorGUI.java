@@ -46,7 +46,7 @@ public class TabEditorGUI extends JPanel implements EditorGUI
 		table.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 		table.setColumnSelectionAllowed(true);
 		table.setCellSelectionEnabled(true);
-		//table.setModel(new DefaultTableModel(new String[] {"", "Zug 1"}, 1));
+		// table.setModel(new DefaultTableModel(new String[] {"", "Zug 1"}, 1));
 		add(table);
 	}
 	
@@ -59,10 +59,12 @@ public class TabEditorGUI extends JPanel implements EditorGUI
 	{
 		return controller.richtungAufsteigend;
 	}
+	
 	public void setTableModel(TableModel model)
 	{
 		table.setModel(model);
 	}
+	
 	public void setTableValueAt(String content, int row, int column)
 	{
 		table.setValueAt(content, row, column);

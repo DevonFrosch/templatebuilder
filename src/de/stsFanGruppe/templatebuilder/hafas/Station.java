@@ -19,6 +19,6 @@ public class Station
 	
 	public String toString()
 	{
-		return "'"+name+"' (nr="+externalStationNr+", pos="+position+")";
+		return "'" + name + "' (nr=" + externalStationNr + ", pos=" + position + ")";
 	}
 }

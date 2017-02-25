@@ -15,7 +15,8 @@ public abstract class EditorGUIController
 	protected EditorDaten editorDaten = null;
 	
 	/**
-	 * Erzeugt ein neues Objekt. Dieser Konstruktor wird verwendet, um ein neues 
+	 * Erzeugt ein neues Objekt. Dieser Konstruktor wird verwendet, um ein neues
+	 * 
 	 * @param config
 	 * @param parent
 	 */
@@ -29,6 +30,7 @@ public abstract class EditorGUIController
 		this.parent = parent;
 		this.editorDaten = new EditorDaten();
 	}
+	
 	protected EditorGUIController(EditorDaten editorDaten, BildfahrplanConfig config, TemplateBuilderGUI parent)
 	{
 		this(config, parent);
@@ -39,7 +41,9 @@ public abstract class EditorGUIController
 	{
 		this.editorDaten = daten;
 	}
+	
 	public abstract void configChanged();
+	
 	public void close()
 	{
 		config.unregisterChangeHandler(changeHandleId);

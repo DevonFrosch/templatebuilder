@@ -18,13 +18,13 @@ public class FahrtDarstellungHandler
 	{
 		assert darstellungen != null;
 		
-		for(FahrtDarstellung dar: darstellungen)
+		for(FahrtDarstellung dar : darstellungen)
 		{
 			if(dar.getFilter().testZugname(zugname, dar.getMuster()))
 			{
 				return dar;
 			}
-		};
+		}
 		
 		return config.getStandardFahrtDarstellung();
 	}

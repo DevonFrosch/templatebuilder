@@ -45,7 +45,7 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 	JRadioButton radioZeigeRichtungZurueck;
 	JRadioButton radioZeigeRichtungBeide;
 	
-	// Farben 
+	// Farben
 	JPanel panelBfpZeitenFarbeVorschau;
 	JPanel panelBfpBetriebsstellenFarbeVorschau;
 	JPanel panelBfpHintergrundFarbeVorschau;
@@ -75,11 +75,14 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 		this.controller = controller;
 		this.config = controller.getConfig();
 		controller.setSettingsGUI(this);
-
+		
 		setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-		addWindowListener(new WindowAdapter() { public void windowClosing(WindowEvent e) {
-			controller.close();
-		}});
+		addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e)
+			{
+				controller.close();
+			}
+		});
 		
 		setBounds(100, 100, 450, 500);
 		getContentPane().setLayout(new BorderLayout());
@@ -93,8 +96,7 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 				JPanel panelAllgemein = new JPanel();
 				tabbedPane.addTab("Allgemein", null, panelAllgemein, null);
 				tabbedPane.setEnabledAt(0, false);
-				panelAllgemein.setLayout(new FormLayout(new ColumnSpec[] {},
-					new RowSpec[] {}));
+				panelAllgemein.setLayout(new FormLayout(new ColumnSpec[] {}, new RowSpec[] {}));
 			}
 			{
 				JPanel panelStreckeneditor = new JPanel();
@@ -110,34 +112,19 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 				JPanel panelBfp = new JPanel();
 				tabbedPane.addTab("Bildfahrplan", null, panelBfp, null);
 				tabbedPane.setEnabledAt(3, true);
-				panelBfp.setLayout(new FormLayout(new ColumnSpec[] {
-						FormSpecs.RELATED_GAP_COLSPEC,
-						ColumnSpec.decode("default:grow"),
-						FormSpecs.RELATED_GAP_COLSPEC,},
-					new RowSpec[] {
-						FormSpecs.RELATED_GAP_ROWSPEC,
-						FormSpecs.DEFAULT_ROWSPEC,
-						FormSpecs.RELATED_GAP_ROWSPEC,
-						FormSpecs.DEFAULT_ROWSPEC,
-						FormSpecs.RELATED_GAP_ROWSPEC,}));
+				panelBfp.setLayout(
+						new FormLayout(new ColumnSpec[] {FormSpecs.RELATED_GAP_COLSPEC, ColumnSpec.decode("default:grow"), FormSpecs.RELATED_GAP_COLSPEC,},
+								new RowSpec[] {FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, FormSpecs.RELATED_GAP_ROWSPEC,
+										FormSpecs.DEFAULT_ROWSPEC, FormSpecs.RELATED_GAP_ROWSPEC,}));
 				{
 					JPanel panelZeiten = new JPanel();
 					panelZeiten.setBorder(BorderFactory.createTitledBorder("Zeiten"));
 					panelBfp.add(panelZeiten, "2, 2, fill, fill");
-					panelZeiten.setLayout(new FormLayout(new ColumnSpec[] {
-							FormSpecs.RELATED_GAP_COLSPEC,
-							ColumnSpec.decode("right:default"),
-							FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
-							ColumnSpec.decode("default:grow"),
-							FormSpecs.RELATED_GAP_COLSPEC,},
-						new RowSpec[] {
-							FormSpecs.RELATED_GAP_ROWSPEC,
-							FormSpecs.DEFAULT_ROWSPEC,
-							FormSpecs.UNRELATED_GAP_ROWSPEC,
-							FormSpecs.DEFAULT_ROWSPEC,
-							FormSpecs.UNRELATED_GAP_ROWSPEC,
-							FormSpecs.DEFAULT_ROWSPEC,
-							FormSpecs.RELATED_GAP_ROWSPEC,}));
+					panelZeiten.setLayout(new FormLayout(
+							new ColumnSpec[] {FormSpecs.RELATED_GAP_COLSPEC, ColumnSpec.decode("right:default"), FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
+									ColumnSpec.decode("default:grow"), FormSpecs.RELATED_GAP_COLSPEC,},
+							new RowSpec[] {FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, FormSpecs.UNRELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC,
+									FormSpecs.UNRELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, FormSpecs.RELATED_GAP_ROWSPEC,}));
 					{
 						JLabel lblHheProStunde = new JLabel("H\u00F6he pro Stunde");
 						panelZeiten.add(lblHheProStunde, "2, 2");
@@ -145,13 +132,10 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 					{
 						JPanel panelHoeheProStunde = new JPanel();
 						panelZeiten.add(panelHoeheProStunde, "4, 2");
-						panelHoeheProStunde.setLayout(new FormLayout(new ColumnSpec[] {
-								com.jgoodies.forms.layout.FormSpecs.UNRELATED_GAP_COLSPEC,
-								ColumnSpec.decode("default:grow"),
-								com.jgoodies.forms.layout.FormSpecs.RELATED_GAP_COLSPEC,
-								com.jgoodies.forms.layout.FormSpecs.DEFAULT_COLSPEC,},
-							new RowSpec[] {
-								com.jgoodies.forms.layout.FormSpecs.DEFAULT_ROWSPEC,}));
+						panelHoeheProStunde.setLayout(new FormLayout(
+								new ColumnSpec[] {com.jgoodies.forms.layout.FormSpecs.UNRELATED_GAP_COLSPEC, ColumnSpec.decode("default:grow"),
+										com.jgoodies.forms.layout.FormSpecs.RELATED_GAP_COLSPEC, com.jgoodies.forms.layout.FormSpecs.DEFAULT_COLSPEC,},
+								new RowSpec[] {com.jgoodies.forms.layout.FormSpecs.DEFAULT_ROWSPEC,}));
 						{
 							inputHoeheProStunde = new JTextField();
 							inputHoeheProStunde.addActionListener((ActionEvent arg0) -> {
@@ -167,7 +151,9 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 						}
 						{
 							sliderHoeheProStunde = new JSlider();
-							sliderHoeheProStunde.addChangeListener((ChangeEvent arg0) -> { inputHoeheProStunde.setText(sliderHoeheProStunde.getValue()+""); });
+							sliderHoeheProStunde.addChangeListener((ChangeEvent arg0) -> {
+								inputHoeheProStunde.setText(sliderHoeheProStunde.getValue() + "");
+							});
 							sliderHoeheProStunde.setSnapToTicks(true);
 							sliderHoeheProStunde.setPaintTicks(true);
 							sliderHoeheProStunde.setMinorTickSpacing(100);
@@ -183,16 +169,13 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 					{
 						JPanel panelZeit = new JPanel();
 						panelZeiten.add(panelZeit, "4, 4");
-						panelZeit.setLayout(new FormLayout(new ColumnSpec[] {
-								ColumnSpec.decode("default:grow"),
-								FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
-								FormSpecs.DEFAULT_COLSPEC,
-								FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
-								ColumnSpec.decode("default:grow"),
-								FormSpecs.RELATED_GAP_COLSPEC,
-								FormSpecs.DEFAULT_COLSPEC,},
-							new RowSpec[] {
-								FormSpecs.DEFAULT_ROWSPEC,}));
+						panelZeit
+								.setLayout(
+										new FormLayout(
+												new ColumnSpec[] {ColumnSpec.decode("default:grow"), FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
+														FormSpecs.DEFAULT_COLSPEC, FormSpecs.LABEL_COMPONENT_GAP_COLSPEC, ColumnSpec.decode("default:grow"),
+														FormSpecs.RELATED_GAP_COLSPEC, FormSpecs.DEFAULT_COLSPEC,},
+												new RowSpec[] {FormSpecs.DEFAULT_ROWSPEC,}));
 						{
 							inputMinZeit = new JTextField();
 							panelZeit.add(inputMinZeit, "1, 1");
@@ -247,22 +230,12 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 					JPanel panelDarstellung = new JPanel();
 					panelDarstellung.setBorder(BorderFactory.createTitledBorder("Darstellung"));
 					panelBfp.add(panelDarstellung, "2, 4, fill, fill");
-					panelDarstellung.setLayout(new FormLayout(new ColumnSpec[] {
-							FormSpecs.RELATED_GAP_COLSPEC,
-							ColumnSpec.decode("right:default"),
-							FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
-							ColumnSpec.decode("default:grow"),
-							FormSpecs.RELATED_GAP_COLSPEC,},
-						new RowSpec[] {
-							FormSpecs.RELATED_GAP_ROWSPEC,
-							FormSpecs.DEFAULT_ROWSPEC,
-							FormSpecs.RELATED_GAP_ROWSPEC,
-							FormSpecs.DEFAULT_ROWSPEC,
-							FormSpecs.RELATED_GAP_ROWSPEC,
-							FormSpecs.DEFAULT_ROWSPEC,
-							FormSpecs.RELATED_GAP_ROWSPEC,
-							RowSpec.decode("default:grow"),
-							FormSpecs.RELATED_GAP_ROWSPEC,}));
+					panelDarstellung.setLayout(new FormLayout(
+							new ColumnSpec[] {FormSpecs.RELATED_GAP_COLSPEC, ColumnSpec.decode("right:default"), FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
+									ColumnSpec.decode("default:grow"), FormSpecs.RELATED_GAP_COLSPEC,},
+							new RowSpec[] {FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC,
+									FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, FormSpecs.RELATED_GAP_ROWSPEC, RowSpec.decode("default:grow"),
+									FormSpecs.RELATED_GAP_ROWSPEC,}));
 					{
 						JLabel lblZeigeZugnamen = new JLabel("Zeige Zugnamen");
 						panelDarstellung.add(lblZeigeZugnamen, "2, 2");
@@ -331,7 +304,7 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 							panelZeigeRichtung.add(radioZeigeRichtungZurueck);
 						}
 						{
-
+							
 							radioZeigeRichtungBeide = new JRadioButton("beide");
 							rdbtngrpZeigeRichtung.add(radioZeigeRichtungBeide);
 							radioZeigeRichtungBeide.setActionCommand("beide");
@@ -344,34 +317,19 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 				JPanel panelFarben = new JPanel();
 				tabbedPane.addTab("Farben", null, panelFarben, null);
 				tabbedPane.setEnabledAt(4, true);
-				panelFarben.setLayout(new FormLayout(new ColumnSpec[] {
-						FormSpecs.RELATED_GAP_COLSPEC,
-						ColumnSpec.decode("default:grow"),
-						FormSpecs.RELATED_GAP_COLSPEC,},
-					new RowSpec[] {
-						FormSpecs.RELATED_GAP_ROWSPEC,
-						FormSpecs.DEFAULT_ROWSPEC,
-						FormSpecs.RELATED_GAP_ROWSPEC,
-						FormSpecs.DEFAULT_ROWSPEC,
-						FormSpecs.RELATED_GAP_ROWSPEC,}));
+				panelFarben.setLayout(
+						new FormLayout(new ColumnSpec[] {FormSpecs.RELATED_GAP_COLSPEC, ColumnSpec.decode("default:grow"), FormSpecs.RELATED_GAP_COLSPEC,},
+								new RowSpec[] {FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, FormSpecs.RELATED_GAP_ROWSPEC,
+										FormSpecs.DEFAULT_ROWSPEC, FormSpecs.RELATED_GAP_ROWSPEC,}));
 				{
 					JPanel panelFarbenBfp = new JPanel();
 					panelFarbenBfp.setBorder(BorderFactory.createTitledBorder("Bildfahrplan"));
 					panelFarben.add(panelFarbenBfp, "2, 2, fill, fill");
-					panelFarbenBfp.setLayout(new FormLayout(new ColumnSpec[] {
-							FormSpecs.RELATED_GAP_COLSPEC,
-							ColumnSpec.decode("right:default"),
-							FormSpecs.UNRELATED_GAP_COLSPEC,
-							ColumnSpec.decode("left:default:grow"),
-							FormSpecs.RELATED_GAP_COLSPEC,},
-						new RowSpec[] {
-							FormSpecs.RELATED_GAP_ROWSPEC,
-							FormSpecs.DEFAULT_ROWSPEC,
-							FormSpecs.RELATED_GAP_ROWSPEC,
-							FormSpecs.DEFAULT_ROWSPEC,
-							FormSpecs.RELATED_GAP_ROWSPEC,
-							FormSpecs.DEFAULT_ROWSPEC,
-							FormSpecs.RELATED_GAP_ROWSPEC,}));
+					panelFarbenBfp.setLayout(new FormLayout(
+							new ColumnSpec[] {FormSpecs.RELATED_GAP_COLSPEC, ColumnSpec.decode("right:default"), FormSpecs.UNRELATED_GAP_COLSPEC,
+									ColumnSpec.decode("left:default:grow"), FormSpecs.RELATED_GAP_COLSPEC,},
+							new RowSpec[] {FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC,
+									FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, FormSpecs.RELATED_GAP_ROWSPEC,}));
 					{
 						JLabel lblBfpZeitenFarbe = new JLabel("Zeiten");
 						panelFarbenBfp.add(lblBfpZeitenFarbe, "2, 2");
@@ -442,14 +400,9 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 						JPanel panelZugregeln = new JPanel();
 						panelZugregeln.setBorder(BorderFactory.createTitledBorder("Zugregeln"));
 						panelFarben.add(panelZugregeln, "2, 4, fill, fill");
-						panelZugregeln.setLayout(new FormLayout(new ColumnSpec[] {
-								FormSpecs.RELATED_GAP_COLSPEC,
-								ColumnSpec.decode("default:grow"),
-								FormSpecs.RELATED_GAP_COLSPEC,},
-							new RowSpec[] {
-								FormSpecs.RELATED_GAP_ROWSPEC,
-								FormSpecs.DEFAULT_ROWSPEC,
-								FormSpecs.RELATED_GAP_ROWSPEC,}));
+						panelZugregeln.setLayout(new FormLayout(
+								new ColumnSpec[] {FormSpecs.RELATED_GAP_COLSPEC, ColumnSpec.decode("default:grow"), FormSpecs.RELATED_GAP_COLSPEC,},
+								new RowSpec[] {FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, FormSpecs.RELATED_GAP_ROWSPEC,}));
 						{
 							JButton btnZugregeln = new JButton("Zugformatierungsregeln...");
 							btnZugregeln.setActionCommand("format");
@@ -459,7 +412,7 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 					}
 				}
 			}
-		
+			
 			// TODO entfernen, wenn Tab Allgemein vorhanden ist
 			tabbedPane.setSelectedIndex(3);
 		}
@@ -467,22 +420,11 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 			JPanel buttonPane = new JPanel();
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
-				buttonPane.setLayout(new FormLayout(new ColumnSpec[] {
-						FormSpecs.UNRELATED_GAP_COLSPEC,
-						FormSpecs.DEFAULT_COLSPEC,
-						FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
-						FormSpecs.DEFAULT_COLSPEC,
-						ColumnSpec.decode("3dlu:grow"),
-						FormSpecs.DEFAULT_COLSPEC,
-						FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
-						FormSpecs.DEFAULT_COLSPEC,
-						FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
-						FormSpecs.DEFAULT_COLSPEC,
-						FormSpecs.UNRELATED_GAP_COLSPEC,},
-					new RowSpec[] {
-						FormSpecs.LINE_GAP_ROWSPEC,
-						FormSpecs.DEFAULT_ROWSPEC,
-						FormSpecs.UNRELATED_GAP_ROWSPEC,}));
+				buttonPane.setLayout(new FormLayout(
+						new ColumnSpec[] {FormSpecs.UNRELATED_GAP_COLSPEC, FormSpecs.DEFAULT_COLSPEC, FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
+								FormSpecs.DEFAULT_COLSPEC, ColumnSpec.decode("3dlu:grow"), FormSpecs.DEFAULT_COLSPEC, FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
+								FormSpecs.DEFAULT_COLSPEC, FormSpecs.LABEL_COMPONENT_GAP_COLSPEC, FormSpecs.DEFAULT_COLSPEC, FormSpecs.UNRELATED_GAP_COLSPEC,},
+						new RowSpec[] {FormSpecs.LINE_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, FormSpecs.UNRELATED_GAP_ROWSPEC,}));
 				
 				boolean saveEnabled = controller.speichertest();
 				
@@ -540,10 +482,12 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 			throw e;
 		}
 	}
+	
 	public boolean getAutoSizeSelected()
 	{
 		return chckbxAuto.isSelected();
 	}
+	
 	public double getMinZeit() throws NumberFormatException
 	{
 		try
@@ -557,6 +501,7 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 			throw e;
 		}
 	}
+	
 	public double getMaxZeit() throws NumberFormatException
 	{
 		try
@@ -570,6 +515,7 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 			throw e;
 		}
 	}
+	
 	public int getSchachtelung()
 	{
 		if(!chckbxSchachtelung.isSelected())
@@ -611,6 +557,7 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 				log.error("ZeigeZugnamen: Ung\u00FCltiger Wert {}", config.getZeigeZugnamen());
 		}
 	}
+	
 	public void setRichtung(int richtung)
 	{
 		switch(config.getZeigeRichtung())
@@ -635,18 +582,20 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 	public void close()
 	{
 		dispose();
-        setVisible(false);
-        controller = null;
+		setVisible(false);
+		controller = null;
 	}
 	
 	public void errorMessage(String text, String titel)
 	{
 		JOptionPane.showMessageDialog(contentPanel, text, titel, JOptionPane.ERROR_MESSAGE);
 	}
+	
 	public void warningMessage(String text, String titel)
 	{
 		JOptionPane.showMessageDialog(contentPanel, text, titel, JOptionPane.WARNING_MESSAGE);
 	}
+	
 	public void infoMessage(String text, String titel)
 	{
 		JOptionPane.showMessageDialog(contentPanel, text, titel, JOptionPane.INFORMATION_MESSAGE);

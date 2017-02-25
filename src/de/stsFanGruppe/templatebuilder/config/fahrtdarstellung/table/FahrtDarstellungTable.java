@@ -17,18 +17,22 @@ public class FahrtDarstellungTable extends JTable
 	{
 		super();
 	}
+	
 	public FahrtDarstellungTable(int numRows, int numColumns)
 	{
 		super(numRows, numColumns);
 	}
+	
 	public FahrtDarstellungTable(Object[] columnNames, int numRows)
 	{
 		super(new DefaultTableModel(columnNames, numRows));
 	}
+	
 	public FahrtDarstellungTable(Object[][] rowData, Object[] columnNames)
 	{
 		super(rowData, columnNames);
 	}
+	
 	public FahrtDarstellungTable(TableModel dm)
 	{
 		super(dm);
@@ -38,6 +42,7 @@ public class FahrtDarstellungTable extends JTable
 	{
 		return (FahrtFilter) this.getValueAt(row, FahrtDarstellungSettingsGUI.REGELN_FILTER_SPALTE);
 	}
+	
 	public void setFilterAt(FahrtFilter filter, int row)
 	{
 		this.setValueAt(filter, row, FahrtDarstellungSettingsGUI.REGELN_FILTER_SPALTE);
@@ -47,6 +52,7 @@ public class FahrtDarstellungTable extends JTable
 	{
 		return (String) this.getValueAt(row, FahrtDarstellungSettingsGUI.REGELN_MUSTER_SPALTE);
 	}
+	
 	public void setMusterAt(String muster, int row)
 	{
 		this.setValueAt(muster, row, FahrtDarstellungSettingsGUI.REGELN_MUSTER_SPALTE);
@@ -56,6 +62,7 @@ public class FahrtDarstellungTable extends JTable
 	{
 		return (Color) this.getValueAt(row, FahrtDarstellungSettingsGUI.REGELN_FARBE_SPALTE);
 	}
+	
 	public void setFarbeAt(Color farbe, int row)
 	{
 		this.setValueAt(farbe, row, FahrtDarstellungSettingsGUI.REGELN_FARBE_SPALTE);
@@ -71,10 +78,12 @@ public class FahrtDarstellungTable extends JTable
 		}
 		return breite;
 	}
+	
 	public void setBreiteAt(int breite, int row)
 	{
 		this.setValueAt(Integer.toString(breite), row, FahrtDarstellungSettingsGUI.REGELN_BREITE_SPALTE);
 	}
+	
 	public void setBreiteAt(String breite, int row)
 	{
 		this.setValueAt(breite, row, FahrtDarstellungSettingsGUI.REGELN_BREITE_SPALTE);
@@ -84,6 +93,7 @@ public class FahrtDarstellungTable extends JTable
 	{
 		return (LineType) this.getValueAt(row, FahrtDarstellungSettingsGUI.REGELN_TYP_SPALTE);
 	}
+	
 	public void setLineTypeAt(LineType lineType, int row)
 	{
 		this.setValueAt(lineType, row, FahrtDarstellungSettingsGUI.REGELN_TYP_SPALTE);
@@ -93,6 +103,7 @@ public class FahrtDarstellungTable extends JTable
 	{
 		return new FahrtDarstellung(getFilterAt(row), getMusterAt(row), getFarbeAt(row), getBreiteAt(row), getLineTypeAt(row));
 	}
+	
 	public void setRow(FahrtDarstellung darstellung, int row)
 	{
 		this.setFilterAt(darstellung.getFilter(), row);
@@ -107,20 +118,23 @@ public class FahrtDarstellungTable extends JTable
 		DefaultTableModel model = (DefaultTableModel) getModel();
 		model.addRow(darstellung.toArray());
 	}
+	
 	public void insertRow(int row, FahrtDarstellung darstellung)
 	{
 		DefaultTableModel model = (DefaultTableModel) getModel();
 		model.insertRow(row, darstellung.toArray());
 	}
+	
 	public void removeRow(int row)
 	{
 		DefaultTableModel model = (DefaultTableModel) getModel();
 		model.removeRow(row);
 	}
+	
 	public void removeAllRows()
 	{
 		DefaultTableModel model = (DefaultTableModel) getModel();
-		for(int i=0; i < model.getRowCount(); i++)
+		for(int i = 0; i < model.getRowCount(); i++)
 		{
 			model.removeRow(0);
 		}

@@ -37,6 +37,7 @@ public class BildfahrplanPaintHelper
 		this.gui = gui;
 		this.diffKm = 0;
 	}
+	
 	public void setDiffKm(double diffKm)
 	{
 		this.diffKm = diffKm;
@@ -57,7 +58,7 @@ public class BildfahrplanPaintHelper
 		
 		isCalculated = true;
 	}
-
+	
 	public int getZeitPos(double zeit)
 	{
 		if(!isCalculated)
@@ -70,6 +71,7 @@ public class BildfahrplanPaintHelper
 		
 		return (int) ((zeit / diffZeit * (gui.getHeight() - zeichenHoehe)) + minHoehe);
 	}
+	
 	public int getWegPos(double km)
 	{
 		if(!isCalculated)
@@ -84,10 +86,12 @@ public class BildfahrplanPaintHelper
 	{
 		this.paintLine(g, x1, y1, x2, y2, c, new BasicStroke(1));
 	}
+	
 	public void paintLine(Graphics2D g, int x1, int y1, int x2, int y2, FahrtDarstellung d)
 	{
 		this.paintLine(g, x1, y1, x2, y2, d.getFarbe(), d.getTyp().getStroke(d.getBreite()));
 	}
+	
 	public void paintLine(Graphics2D g, int x1, int y1, int x2, int y2, Color c, Stroke s)
 	{
 		g.setStroke(s);
@@ -105,6 +109,7 @@ public class BildfahrplanPaintHelper
 		// Text einzeichnen
 		g.drawString(beschriftung, x, y);
 	}
+	
 	public void paintRotatedText(Graphics2D g, int x1, int y1, int x2, int y2, Color c, String beschriftung, int offset)
 	{
 		g.setColor(c);

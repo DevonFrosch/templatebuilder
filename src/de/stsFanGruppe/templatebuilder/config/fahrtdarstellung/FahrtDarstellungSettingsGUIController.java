@@ -88,7 +88,7 @@ public class FahrtDarstellungSettingsGUIController extends GUIController
 				break;
 			// Zeile(n) nach unten verschieben
 			case "moveDownRow":
-				if(rows.length <= 0 || rows[rows.length-1] >= gui.table.getRowCount()-1)
+				if(rows.length <= 0 || rows[rows.length - 1] >= gui.table.getRowCount() - 1)
 				{
 					// TODO: Visuelles Feedback ohne Bestätigung
 					log.debug("tableButtonAction(moveDownRow): Keine oder unterste Zeile markiert.");
@@ -106,7 +106,8 @@ public class FahrtDarstellungSettingsGUIController extends GUIController
 				}
 				
 				break;
-			/* Zeile(n) hinzufügen
+			/*
+			 * Zeile(n) hinzufügen
 			 * Zeile(n) wird/ werden nach ausgewählten Zeilen hinzugefügt oder nach der letzten Zeile
 			 */
 			case "addRow":
@@ -123,7 +124,8 @@ public class FahrtDarstellungSettingsGUIController extends GUIController
 					gui.table.addRow(getDefaultRowData());
 				}
 				break;
-			/* Zeile(n) löschen
+			/*
+			 * Zeile(n) löschen
 			 * Wenn keine Zeile ausgewählt, erscheint Fehlerfenster.
 			 */
 			case "removeRow":
@@ -231,6 +233,7 @@ public class FahrtDarstellungSettingsGUIController extends GUIController
 	{
 		return new FahrtDarstellung(FahrtFilter.BEGINNT_MIT, "", gui.getStandardFarbe(), gui.getStandardBreiteInt(), gui.getStandardLineType());
 	}
+	
 	public TableCellEditor getDoNothingCellEditor()
 	{
 		return new DefaultCellEditor(new JTextField()) {
@@ -240,10 +243,10 @@ public class FahrtDarstellungSettingsGUIController extends GUIController
 			}
 		};
 	}
+	
 	public MouseListener getMouseListener()
 	{
-		return new MouseAdapter()
-		{
+		return new MouseAdapter() {
 			public void mouseClicked(MouseEvent e)
 			{
 				JTable target = (JTable) e.getSource();
@@ -276,7 +279,7 @@ public class FahrtDarstellungSettingsGUIController extends GUIController
 	public void ladeStandards()
 	{
 		gui.setStandardFarbe(config.getStandardLinienFarbe());
-		gui.setStandardBreite(config.getStandardLinienBreite()+"");
+		gui.setStandardBreite(config.getStandardLinienBreite() + "");
 		gui.setStandardLineType(config.getStandardLinienTyp());
 	}
 	
@@ -303,15 +306,16 @@ public class FahrtDarstellungSettingsGUIController extends GUIController
 	public void ladeRegeln()
 	{
 		gui.table.removeAllRows();
-		for(FahrtDarstellung darstellung: config.getFahrtDarstellungen())
+		for(FahrtDarstellung darstellung : config.getFahrtDarstellungen())
 		{
 			gui.table.addRow(darstellung);
 		}
 	}
+	
 	public void speichereRegeln()
 	{
 		FirstLastLinkedList<FahrtDarstellung> darstellungen = new FirstLastLinkedList<>();
-		for(int i=0; i < gui.table.getRowCount(); i++)
+		for(int i = 0; i < gui.table.getRowCount(); i++)
 		{
 			darstellungen.add(gui.table.getRow(i));
 		}

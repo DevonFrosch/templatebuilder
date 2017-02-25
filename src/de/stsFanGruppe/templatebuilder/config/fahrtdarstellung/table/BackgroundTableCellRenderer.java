@@ -9,7 +9,6 @@ import javax.swing.table.TableCellRenderer;
 /**
  * Anhand der ArrayList (aktuell) testFarben erhält jede Zelle in seiner Zeile die Hintergrundfarbe definiert,
  * die ihm gegeben wird.
- * 
  * Um dies aufzurufen, wird an der Tabelle die Spalte gesucht und die Zelldarstellung neu gesetzt:
  * table.getColumnModel().getColumn(n).setCellRenderer(new BackgroundTableCellRenderer());
  */

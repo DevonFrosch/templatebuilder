@@ -15,16 +15,17 @@ public class Startup
 	public static void main(String[] args)
 	{
 		String v = version;
-		if(dev) v += " (dev)";
+		if(dev)
+			v += " (dev)";
 		
 		log.info("Templatebuilder gestartet.");
 		log.info("Version {}", v);
 		
 		try
 		{
-			javax.swing.UIManager.setLookAndFeel( javax.swing.UIManager.getSystemLookAndFeelClassName() );
+			javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getSystemLookAndFeelClassName());
 		}
-		catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex)
+		catch(ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex)
 		{
 			log.info("Setzten des L&F fehlgeschlagen", ex);
 		}

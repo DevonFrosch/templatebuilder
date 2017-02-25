@@ -11,9 +11,10 @@ public class Gleis
 	protected NavigableSet<Gleisabschnitt> gleisabschnitte;
 	protected boolean verwendetGleisabschnitte;
 	protected Betriebsstelle parent;
-
+	
 	/**
 	 * Erstellt ein Gleis ohne Gleisabschnitte.
+	 * 
 	 * @param name der Name des Gleises.
 	 */
 	public Gleis(String name, double km)
@@ -21,8 +22,10 @@ public class Gleis
 		this.setName(name);
 		this.resetGleisabschnitte(km);
 	}
+	
 	/**
 	 * Erstellt ein Gleis mit den gegebenen Gleisabschnitten.
+	 * 
 	 * @param name der Name des Gleises.
 	 * @param gleisabschnitte die Gleisabschnitte, die das Gleis umfasst.
 	 * @thows NullPointerException falls die Liste der Gleisabschnitte null ist.
@@ -37,19 +40,23 @@ public class Gleis
 	{
 		return name;
 	}
+	
 	public void setName(String name)
 	{
 		NullTester.test(name);
 		this.name = name;
 	}
+	
 	public boolean hasGleisabschnitte()
 	{
 		return verwendetGleisabschnitte;
 	}
+	
 	public NavigableSet<Gleisabschnitt> getGleisabschnitte()
 	{
 		return gleisabschnitte;
 	}
+	
 	public void addGleisabschnitt(Gleisabschnitt gleisabschnitt)
 	{
 		NullTester.test(gleisabschnitt);
@@ -72,7 +79,7 @@ public class Gleis
 		// Parent prüfen und setzten
 		if(gleisabschnitt.getParent() != null)
 		{
-			log.error("addGleisabschnitt: Gleisabschnitt hat schon parent: "+gleisabschnitt.getParent().getName());
+			log.error("addGleisabschnitt: Gleisabschnitt hat schon parent: " + gleisabschnitt.getParent().getName());
 			throw new IllegalStateException("Gleisabschnitt wird schon verwendet!");
 		}
 		
@@ -80,11 +87,13 @@ public class Gleis
 		gleisabschnitt.setParent(this);
 		this.verwendetGleisabschnitte = true;
 	}
+	
 	protected void addGleisabschnitte(Collection<? extends Gleisabschnitt> gleisabschnitte)
 	{
 		NullTester.test(gleisabschnitte);
 		gleisabschnitte.forEach((Gleisabschnitt g) -> this.addGleisabschnitt(g));
 	}
+	
 	public boolean removeGleisabschnitt(Gleisabschnitt gleisabschnitt)
 	{
 		NullTester.test(gleisabschnitt);
@@ -110,16 +119,19 @@ public class Gleis
 		}
 		return erfolg;
 	}
+	
 	public void resetGleisabschnitte(double km)
 	{
 		this.gleisabschnitte = new TreeSet<>();
 		this.gleisabschnitte.add(new Gleisabschnitt(name, this, km));
 		this.verwendetGleisabschnitte = false;
 	}
+	
 	public Betriebsstelle getParent()
 	{
 		return parent;
 	}
+	
 	void setParent(Betriebsstelle parent)
 	{
 		this.parent = parent;
@@ -127,42 +139,45 @@ public class Gleis
 	
 	public double getMinKm()
 	{
-		return gleisabschnitte.stream().min((a,b) -> Double.compare(a.getKm(), b.getKm())).get().getKm();
+		return gleisabschnitte.stream().min((a, b) -> Double.compare(a.getKm(), b.getKm())).get().getKm();
 	}
+	
 	public double getMaxKm()
 	{
-		return gleisabschnitte.stream().min((a,b) -> Double.compare(a.getKm(), b.getKm())).get().getKm();
+		return gleisabschnitte.stream().min((a, b) -> Double.compare(a.getKm(), b.getKm())).get().getKm();
 	}
 	
 	public String toString()
 	{
 		if(verwendetGleisabschnitte)
 		{
-			return "Gleis "+getName();
+			return "Gleis " + getName();
 		}
 		else
 		{
-			return "Gleis "+getName()+" { "+gleisabschnitte.size()+" Gleisabschnitte }";
+			return "Gleis " + getName() + " { " + gleisabschnitte.size() + " Gleisabschnitte }";
 		}
 	}
+	
 	public String toXML()
 	{
 		return toXML("");
 	}
+	
 	public String toXML(String indent)
 	{
 		StringJoiner xml = new StringJoiner("\n");
-		xml.add(indent+"<gleis name=\""+getName()+"\">");
+		xml.add(indent + "<gleis name=\"" + getName() + "\">");
 		
 		if(!gleisabschnitte.isEmpty())
 		{
-			for(Gleisabschnitt ga: gleisabschnitte)
+			for(Gleisabschnitt ga : gleisabschnitte)
 			{
-				xml.add(ga.toXML(indent+"  "));
+				xml.add(ga.toXML(indent + "  "));
 			}
 		}
 		
-		xml.add(indent+"</gleis>");
+		xml.add(indent + "</gleis>");
 		return xml.toString();
 	}
 }

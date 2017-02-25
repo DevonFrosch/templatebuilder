@@ -29,6 +29,7 @@ public class BildfahrplanGUI extends JComponent implements EditorGUI
 		this.controller = controller;
 		this.parent = parent;
 	}
+	
 	public EditorGUIController getController()
 	{
 		return controller;

@@ -7,6 +7,7 @@ import javax.swing.table.TableCellRenderer;
 public class TableHeaderRenderer implements TableCellRenderer
 {
 	TableCellRenderer renderer;
+	
 	public TableHeaderRenderer(JTable table)
 	{
 		renderer = table.getTableHeader().getDefaultRenderer();

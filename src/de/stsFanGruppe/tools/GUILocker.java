@@ -11,6 +11,7 @@ public abstract class GUILocker
 	
 	/**
 	 * Locks the lock, returning after first try.
+	 * 
 	 * @param reference Class reference.
 	 * @return true if lock was acquired, else false.
 	 */
@@ -37,6 +38,7 @@ public abstract class GUILocker
 	
 	/**
 	 * Locks the lock, retrying until it is locked or timeout is reached.
+	 * 
 	 * @param reference Class reference.
 	 * @param timeout Timeout in milliseconds.
 	 * @return true if lock was acquired, false if timeout is reached.
@@ -68,6 +70,7 @@ public abstract class GUILocker
 	
 	/**
 	 * Unlocks the lock.
+	 * 
 	 * @param reference Class reference.
 	 */
 	public static void unlock(Class<?> reference)
@@ -83,6 +86,7 @@ public abstract class GUILocker
 	
 	/**
 	 * Returns a String with information about the locks currently active.
+	 * 
 	 * @returns Printable String
 	 */
 	public static String lockInfo()
@@ -98,9 +102,7 @@ public abstract class GUILocker
 			else
 			{
 				text.add("Locks:");
-				locks.forEach((reference, locked) ->
-					text.add(reference.toString()+": "+((locked) ? "locked" : "unlocked"))
-				);
+				locks.forEach((reference, locked) -> text.add(reference.toString() + ": " + ((locked) ? "locked" : "unlocked")));
 			}
 		}
 		return text.toString();

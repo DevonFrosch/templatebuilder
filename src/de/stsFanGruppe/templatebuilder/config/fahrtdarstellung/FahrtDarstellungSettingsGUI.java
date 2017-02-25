@@ -42,7 +42,8 @@ public class FahrtDarstellungSettingsGUI extends JDialog implements GUI
 	{
 		try
 		{
-			FahrtDarstellungSettingsGUI dialog = new FahrtDarstellungSettingsGUI(new FahrtDarstellungSettingsGUIController(new FahrtDarstellungConfig(), () -> {}), null);
+			FahrtDarstellungSettingsGUI dialog = new FahrtDarstellungSettingsGUI(
+					new FahrtDarstellungSettingsGUIController(new FahrtDarstellungConfig(), () -> {}), null);
 		}
 		catch(Exception e)
 		{
@@ -64,26 +65,16 @@ public class FahrtDarstellungSettingsGUI extends JDialog implements GUI
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		{
-			FormLayout fl_panel = new FormLayout(new ColumnSpec[] {
-					FormSpecs.RELATED_GAP_COLSPEC,
-					ColumnSpec.decode("default:grow"),
-					FormSpecs.RELATED_GAP_COLSPEC,
-					FormSpecs.DEFAULT_COLSPEC,
-					FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,},
-				new RowSpec[] {
-					FormSpecs.RELATED_GAP_ROWSPEC,
-					FormSpecs.DEFAULT_ROWSPEC,
-					FormSpecs.RELATED_GAP_ROWSPEC,
-					RowSpec.decode("default:grow"),
-					FormSpecs.UNRELATED_GAP_ROWSPEC,
-					FormSpecs.DEFAULT_ROWSPEC,
-					FormSpecs.RELATED_GAP_ROWSPEC,});
+			FormLayout fl_panel = new FormLayout(
+					new ColumnSpec[] {FormSpecs.RELATED_GAP_COLSPEC, ColumnSpec.decode("default:grow"), FormSpecs.RELATED_GAP_COLSPEC,
+							FormSpecs.DEFAULT_COLSPEC, FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,},
+					new RowSpec[] {FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, FormSpecs.RELATED_GAP_ROWSPEC, RowSpec.decode("default:grow"),
+							FormSpecs.UNRELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, FormSpecs.RELATED_GAP_ROWSPEC,});
 			contentPanel.setLayout(fl_panel);
 			{
 				JLabel lblDiscription = new JLabel();
 				contentPanel.add(lblDiscription, "2, 2, 3, 1, fill, fill");
-				lblDiscription
-						.setText("<html>Für eine bessere Darstellung können Linien hier nach festgelegten Kriterien hervorgehoben werden.</html>");
+				lblDiscription.setText("<html>Für eine bessere Darstellung können Linien hier nach festgelegten Kriterien hervorgehoben werden.</html>");
 			}
 			{
 				table = new FahrtDarstellungTable(RULES_COLUMNS, 0);
@@ -148,20 +139,11 @@ public class FahrtDarstellungSettingsGUI extends JDialog implements GUI
 			JPanel standardConfigLabel = new JPanel();
 			standardConfigLabel.setBorder(BorderFactory.createTitledBorder("Standardeinstellung"));
 			contentPanel.add(standardConfigLabel, "2, 6, 3, 1, left, fill");
-			FormLayout fl_standardConfigLabel = new FormLayout(new ColumnSpec[] {
-					FormSpecs.RELATED_GAP_COLSPEC,
-					FormSpecs.DEFAULT_COLSPEC,
-					FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
-					ColumnSpec.decode("default:grow"),
-					FormSpecs.RELATED_GAP_COLSPEC,},
-				new RowSpec[] {
-					FormSpecs.RELATED_GAP_ROWSPEC,
-					FormSpecs.DEFAULT_ROWSPEC,
-					FormSpecs.RELATED_GAP_ROWSPEC,
-					FormSpecs.DEFAULT_ROWSPEC,
-					FormSpecs.RELATED_GAP_ROWSPEC,
-					RowSpec.decode("max(15dlu;default)"),
-					RowSpec.decode("4dlu:grow"),});
+			FormLayout fl_standardConfigLabel = new FormLayout(
+					new ColumnSpec[] {FormSpecs.RELATED_GAP_COLSPEC, FormSpecs.DEFAULT_COLSPEC, FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
+							ColumnSpec.decode("default:grow"), FormSpecs.RELATED_GAP_COLSPEC,},
+					new RowSpec[] {FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC,
+							FormSpecs.RELATED_GAP_ROWSPEC, RowSpec.decode("max(15dlu;default)"), RowSpec.decode("4dlu:grow"),});
 			standardConfigLabel.setLayout(fl_standardConfigLabel);
 			/*
 			 * Standardlinienfarbe
@@ -237,9 +219,9 @@ public class FahrtDarstellungSettingsGUI extends JDialog implements GUI
 				{
 					buttonPane.setLayout(new FormLayout(
 							new ColumnSpec[] {FormSpecs.UNRELATED_GAP_COLSPEC, FormSpecs.DEFAULT_COLSPEC, FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
-									FormSpecs.DEFAULT_COLSPEC, ColumnSpec.decode("3dlu:grow"), FormSpecs.DEFAULT_COLSPEC,
-									FormSpecs.LABEL_COMPONENT_GAP_COLSPEC, FormSpecs.DEFAULT_COLSPEC, FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
-									FormSpecs.DEFAULT_COLSPEC, FormSpecs.UNRELATED_GAP_COLSPEC,},
+									FormSpecs.DEFAULT_COLSPEC, ColumnSpec.decode("3dlu:grow"), FormSpecs.DEFAULT_COLSPEC, FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
+									FormSpecs.DEFAULT_COLSPEC, FormSpecs.LABEL_COMPONENT_GAP_COLSPEC, FormSpecs.DEFAULT_COLSPEC,
+									FormSpecs.UNRELATED_GAP_COLSPEC,},
 							new RowSpec[] {FormSpecs.LINE_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, FormSpecs.UNRELATED_GAP_ROWSPEC,}));
 					
 					boolean saveEnabled = controller.speichertest();
@@ -292,14 +274,17 @@ public class FahrtDarstellungSettingsGUI extends JDialog implements GUI
 	{
 		return vorschauStandardFarbe.getBackground();
 	}
+	
 	public void setStandardFarbe(Color farbe)
 	{
 		vorschauStandardFarbe.setBackground(farbe);
 	}
+	
 	public String getStandardBreite()
 	{
 		return inputStandardBreite.getText();
 	}
+	
 	public int getStandardBreiteInt()
 	{
 		try
@@ -311,15 +296,18 @@ public class FahrtDarstellungSettingsGUI extends JDialog implements GUI
 			return FahrtDarstellungConfig.DEFAULT_FAHRTDARSTELLUNG_BREITE;
 		}
 	}
+	
 	public void setStandardBreite(String breite)
 	{
 		inputStandardBreite.setText(breite);
 	}
+	
 	public LineType getStandardLineType()
 	{
 		int typIndex = inputStandardLineType.getSelectedIndex();
 		return LineType.values()[typIndex];
 	}
+	
 	public void setStandardLineType(LineType lineType)
 	{
 		inputStandardLineType.setSelectedItem(lineType);

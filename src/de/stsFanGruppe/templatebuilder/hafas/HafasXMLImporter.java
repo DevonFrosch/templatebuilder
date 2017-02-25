@@ -17,11 +17,8 @@ public class HafasXMLImporter
 		String url = "http://reiseauskunft.bahn.de/bin/query.exe/dn";
 		
 		String charset = "UTF-8";
-		String xmlData = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>"
-				+ "<ReqC ver=\"1.1\" prod=\"String\" lang=\"DE\">"
-				+ "<LocValReq id=\"001\" maxNr=\""+maxResults+"\" sMode=\"1\">"
-				+ "<ReqLoc type=\"ST\" match=\"" + match + "*\"></rule>"
-				+ "</LocValReq>" + "</ReqC>";
+		String xmlData = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>" + "<ReqC ver=\"1.1\" prod=\"String\" lang=\"DE\">" + "<LocValReq id=\"001\" maxNr=\""
+				+ maxResults + "\" sMode=\"1\">" + "<ReqLoc type=\"ST\" match=\"" + match + "*\"></rule>" + "</LocValReq>" + "</ReqC>";
 		
 		InputStream result = getAnswer(url, xmlData, charset);
 		
@@ -79,26 +76,24 @@ public class HafasXMLImporter
 		
 		return stations;
 	}
+	
 	public static List<Station> getStations(String match) throws IOException, XMLStreamException
 	{
 		return getStations(match, 20);
 	}
 	
-	protected static InputStream getAnswer(String url, String xmlData,
-			String charset) throws IOException
+	protected static InputStream getAnswer(String url, String xmlData, String charset) throws IOException
 	{
 		URLConnection urlConnection = new URL(url).openConnection();
 		urlConnection.setUseCaches(false);
 		urlConnection.setDoOutput(true); // Triggers POST.
 		urlConnection.setRequestProperty("accept-charset", charset);
-		urlConnection.setRequestProperty("content-type",
-				"application/xml; charset=" + charset);
+		urlConnection.setRequestProperty("content-type", "application/xml; charset=" + charset);
 		
 		OutputStreamWriter writer = null;
 		try
 		{
-			writer = new OutputStreamWriter(urlConnection.getOutputStream(),
-					charset);
+			writer = new OutputStreamWriter(urlConnection.getOutputStream(), charset);
 			writer.write(xmlData);
 		}
 		finally

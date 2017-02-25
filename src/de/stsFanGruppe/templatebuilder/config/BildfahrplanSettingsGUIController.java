@@ -42,6 +42,7 @@ public class BildfahrplanSettingsGUIController extends GUIController
 	{
 		return TimeFormater.doubleToString(config.getMinZeit());
 	}
+	
 	public String getMaxZeit()
 	{
 		return TimeFormater.doubleToString(config.getMaxZeit());
@@ -86,6 +87,7 @@ public class BildfahrplanSettingsGUIController extends GUIController
 				log.error("farbButton: actionCommand nicht erkannt: {}", event.getActionCommand());
 		}
 	}
+	
 	public void actionButton(ActionEvent event)
 	{
 		assert config != null;
@@ -108,10 +110,11 @@ public class BildfahrplanSettingsGUIController extends GUIController
 				ladeDaten();
 				break;
 			case "format":
-				if(!GUILocker.lock(FahrtDarstellungSettingsGUI.class)) break;
-				FahrtDarstellungSettingsGUIController ffsgc = new FahrtDarstellungSettingsGUIController(
-						new FahrtDarstellungConfig(), () -> {GUILocker.unlock(FahrtDarstellungSettingsGUI.class);}
-				);
+				if(!GUILocker.lock(FahrtDarstellungSettingsGUI.class))
+					break;
+				FahrtDarstellungSettingsGUIController ffsgc = new FahrtDarstellungSettingsGUIController(new FahrtDarstellungConfig(), () -> {
+					GUILocker.unlock(FahrtDarstellungSettingsGUI.class);
+				});
 				FahrtDarstellungSettingsGUI ffsg = new FahrtDarstellungSettingsGUI(ffsgc, gui);
 				break;
 			case "cancel":
@@ -144,7 +147,7 @@ public class BildfahrplanSettingsGUIController extends GUIController
 				if(event.getActionCommand() == "ok")
 				{
 					close();
-			        return;
+					return;
 				}
 				break;
 			default:
@@ -168,15 +171,17 @@ public class BildfahrplanSettingsGUIController extends GUIController
 	{
 		
 	}
+	
 	protected void speichereTabStreckeneditor()
 	{
 		
 	}
+	
 	protected void speichereTabZugeditor()
 	{
 		
 	}
-
+	
 	public void ladeTabBildfahrplan()
 	{
 		
@@ -192,6 +197,7 @@ public class BildfahrplanSettingsGUIController extends GUIController
 		gui.chckbxZeigeZeiten.setSelected(config.getZeigeZeiten());
 		gui.setRichtung(config.getZeigeRichtung());
 	}
+	
 	protected void speichereTabBildfahrplan() throws NumberFormatException
 	{
 		config.setHoeheProStunde(gui.getHoeheProStunde());
@@ -219,6 +225,7 @@ public class BildfahrplanSettingsGUIController extends GUIController
 		gui.panelBfpBetriebsstellenFarbeVorschau.setBackground(config.getBetriebsstellenFarbe());
 		gui.panelBfpHintergrundFarbeVorschau.setBackground(config.getHintergrundFarbe());
 	}
+	
 	protected void speichereTabFarben()
 	{
 		config.setZeitenFarbe(gui.panelBfpZeitenFarbeVorschau.getBackground());
@@ -234,7 +241,7 @@ public class BildfahrplanSettingsGUIController extends GUIController
 	protected void close()
 	{
 		gui.close();
-        gui = null;
-        onClose.run();
+		gui = null;
+		onClose.run();
 	}
 }

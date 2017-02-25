@@ -23,8 +23,10 @@ public class XMLReader
 	{
 		return findTagUntil(null, searchNames);
 	}
+	
 	/**
 	 * Sucht nach Tags, bis es auf das Dateiende oder untilName stößt
+	 * 
 	 * @param untilName Tag-Name, bei dem die Suche abgebrochen wird (als öffnender oder schließender Tag).
 	 * @param searchNames Beliebig viele Namen von Tags, die gefunden werden sollen. Wird kein Name angegeben, ist jeder Tag-Name außer untilName ein Treffer.
 	 * @return Der gefundene Tag mit einem Namen aus searchNames oder null, falls untilName oder das Ende des XML erreicht wurden.
@@ -45,7 +47,7 @@ public class XMLReader
 		{
 			untilName = untilName.toLowerCase();
 		}
-		for(int i=0; i<tagNames.size(); i++)
+		for(int i = 0; i < tagNames.size(); i++)
 		{
 			tagNames.set(i, tagNames.get(i).toLowerCase());
 		}
@@ -60,7 +62,7 @@ public class XMLReader
 			{
 				case XMLStreamConstants.START_ELEMENT:
 					element = new XMLElement(event.asStartElement());
-					elementName =  element.getName().toLowerCase();
+					elementName = element.getName().toLowerCase();
 					
 					if(untilName != null && elementName == untilName)
 					{
@@ -73,7 +75,7 @@ public class XMLReader
 					}
 					break;
 				case XMLStreamConstants.END_ELEMENT:
-					elementName =  event.asEndElement().getName().getLocalPart().toLowerCase();
+					elementName = event.asEndElement().getName().getLocalPart().toLowerCase();
 					if(untilName != null && elementName == untilName)
 					{
 						return null;

@@ -5,95 +5,106 @@ import java.util.regex.Pattern;
 
 public enum FahrtFilter
 {
-	BEGINNT_MIT("beginnt mit") {
+	BEGINNT_MIT("beginnt mit")
+	{
 		public boolean testZugname(String zugname, String muster)
 		{
 			return zugname.startsWith(muster);
 		}
 	},
-	BEGINNT_NICHT_MIT("beginnt nicht mit") {
+	BEGINNT_NICHT_MIT("beginnt nicht mit")
+	{
 		public boolean testZugname(String zugname, String muster)
 		{
 			return !zugname.startsWith(muster);
 		}
 	},
-	ENTHAELT("enthält") {
+	ENTHAELT("enthält")
+	{
 		public boolean testZugname(String zugname, String muster)
 		{
 			return zugname.contains(muster);
 		}
 	},
-	ENTHAELT_NICHT("enthält nicht") {
+	ENTHAELT_NICHT("enthält nicht")
+	{
 		public boolean testZugname(String zugname, String muster)
 		{
 			return !zugname.contains(muster);
 		}
 	},
-	GLEICH("ist gleich") {
+	GLEICH("ist gleich")
+	{
 		public boolean testZugname(String zugname, String muster)
 		{
 			return zugname.equals(muster);
 		}
 	},
-	ENDET_MIT("endet mit") {
+	ENDET_MIT("endet mit")
+	{
 		public boolean testZugname(String zugname, String muster)
 		{
 			return zugname.endsWith(muster);
 		}
 	},
-	ENDET_NICHT_MIT("endet nicht mit") {
+	ENDET_NICHT_MIT("endet nicht mit")
+	{
 		public boolean testZugname(String zugname, String muster)
 		{
 			return !zugname.endsWith(muster);
 		}
 	},
-	GROESSER_ALS("Zugnummer größer als") {
+	GROESSER_ALS("Zugnummer größer als")
+	{
 		public boolean testZugname(String zugname, String muster)
 		{
 			try
 			{
 				return getZugnummer(zugname) > Integer.parseInt(muster);
 			}
-			catch(NumberFormatException|NullPointerException e)
+			catch(NumberFormatException | NullPointerException e)
 			{
 				return false;
 			}
 		}
 	},
-	KLEINER_ALS("Zugnummer kleiner als") {
+	KLEINER_ALS("Zugnummer kleiner als")
+	{
 		public boolean testZugname(String zugname, String muster)
 		{
 			try
 			{
 				return getZugnummer(zugname) < Integer.parseInt(muster);
 			}
-			catch(NumberFormatException|NullPointerException e)
+			catch(NumberFormatException | NullPointerException e)
 			{
 				return false;
 			}
 		}
 	},
-	GERADE("Zugnummer gerade") {
+	GERADE("Zugnummer gerade")
+	{
 		public boolean testZugname(String zugname, String muster)
 		{
 			try
 			{
 				return getZugnummer(zugname) % 2 == 0;
 			}
-			catch(NumberFormatException|NullPointerException e)
+			catch(NumberFormatException | NullPointerException e)
 			{
 				return false;
 			}
 		}
 	},
-	UNGERADE("Zugnummer ungerade") {
+	UNGERADE("Zugnummer ungerade")
+	{
 		public boolean testZugname(String zugname, String muster)
 		{
 			try
 			{
 				return getZugnummer(zugname) % 2 == 1;
 			}
-			catch(NumberFormatException|NullPointerException e)
+			catch(NumberFormatException | NullPointerException e)
 			{
 				return false;
 			}
@@ -101,6 +112,7 @@ public enum FahrtFilter
 	};
 	
 	private String printName;
+	
 	public abstract boolean testZugname(String zugname, String muster);
 	
 	private FahrtFilter(String printName)

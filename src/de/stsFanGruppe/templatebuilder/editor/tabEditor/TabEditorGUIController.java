@@ -34,11 +34,13 @@ public class TabEditorGUIController extends EditorGUIController
 		super(daten, config, parent);
 		initVariables(config, parent, richtungAufsteigend);
 	}
+	
 	public TabEditorGUIController(BildfahrplanConfig config, TemplateBuilderGUI parent, boolean richtungAufsteigend)
 	{
 		super(config, parent);
 		initVariables(config, parent, richtungAufsteigend);
 	}
+	
 	private void initVariables(BildfahrplanConfig config, TemplateBuilderGUI parent, boolean richtungAufsteigend)
 	{
 		super.getEditorDaten().setTabEditor(this, richtungAufsteigend);
@@ -78,41 +80,40 @@ public class TabEditorGUIController extends EditorGUIController
 		{
 			Betriebsstelle bs = betriebsstellen.first();
 			
-			bsNamen.add(bs.getName()+" (ab)");
+			bsNamen.add(bs.getName() + " (ab)");
 			bsIndexAb.put(bs.getName(), 0);
 		}
 		
-		
-		for(int i=1; i < anzahlBs-1; i++)
+		for(int i = 1; i < anzahlBs - 1; i++)
 		{
 			Betriebsstelle bs = betriebsstellen.get(i);
-
-			bsNamen.add(bs.getName()+" (an)");
-			bsNamen.add(bs.getName()+" (ab)");
-			bsIndexAn.put(bs.getName(), i*2-1);
-			bsIndexAb.put(bs.getName(), i*2);
+			
+			bsNamen.add(bs.getName() + " (an)");
+			bsNamen.add(bs.getName() + " (ab)");
+			bsIndexAn.put(bs.getName(), i * 2 - 1);
+			bsIndexAb.put(bs.getName(), i * 2);
 		}
 		
 		// Letzter Zug
 		{
 			Betriebsstelle bs = betriebsstellen.last();
 			
-			bsNamen.add(bs.getName()+" (an)");
-			bsIndexAn.put(bs.getName(), (anzahlBs-1)*2-1);
+			bsNamen.add(bs.getName() + " (an)");
+			bsIndexAn.put(bs.getName(), (anzahlBs - 1) * 2 - 1);
 		}
 		
 		zeilenGui.setRows(bsNamen.toArray(new String[bsNamen.size()]));
 		
 		String[] fahrtNamen = fahrten.stream().map(f -> f.getName()).toArray(String[]::new);
 		HashMap<String, Integer> fahrtIndex = new HashMap<>();
-		for(int j=0; j < fahrtNamen.length; j++)
+		for(int j = 0; j < fahrtNamen.length; j++)
 		{
 			fahrtIndex.put(fahrtNamen[j], j);
 		}
 		
 		gui.setTableModel(new DefaultTableModel(fahrtNamen, bsNamen.size()));
 		
-		for(Fahrt fahrt: fahrten)
+		for(Fahrt fahrt : fahrten)
 		{
 			String fahrtName = fahrt.getName();
 			NavigableSet<Fahrplanhalt> halte = fahrt.getFahrplanhalte();
@@ -124,7 +125,7 @@ public class TabEditorGUIController extends EditorGUIController
 				break;
 			}
 			
-			for(Fahrplanhalt fh: halte)
+			for(Fahrplanhalt fh : halte)
 			{
 				String b = fh.getGleisabschnitt().getParent().getParent().getName();
 				
@@ -147,10 +148,12 @@ public class TabEditorGUIController extends EditorGUIController
 	{
 		return this.gui;
 	}
+	
 	public TabEditorZeilenheaderGUI getZeilenheaderGUI()
 	{
 		return this.zeilenGui;
 	}
+	
 	public JTableHeader getTableHeader()
 	{
 		return this.gui.getTableHeader();
@@ -160,26 +163,32 @@ public class TabEditorGUIController extends EditorGUIController
 	{
 		return 0;
 	}
+	
 	public String getColumnName(int index)
 	{
 		return "";
 	}
+	
 	public void getColumn(int index)
 	{
 		
 	}
+	
 	public void addColumn()
 	{
 		
 	}
+	
 	public void insertColumn(int index)
 	{
 		
 	}
+	
 	public void removeColumn(int index)
 	{
 		
 	}
+	
 	public void removeAllColumns()
 	{
 		
@@ -189,26 +198,32 @@ public class TabEditorGUIController extends EditorGUIController
 	{
 		return zeilen.size();
 	}
+	
 	public String getRowName(int index)
 	{
 		return zeilen.get(index).getName();
 	}
+	
 	public Betriebsstelle getRowBetriebsstelle(int index)
 	{
 		return zeilen.get(index).getBetriebsstelle();
 	}
+	
 	public void addRow(Betriebsstelle bs, boolean isAnkunft)
 	{
 		new TabEditorTabellenZeile(bs, richtungAufsteigend, isAnkunft);
 	}
+	
 	public void insertRow(int index)
 	{
 		
 	}
+	
 	public void removeRow(int index)
 	{
 		
 	}
+	
 	public void removeAllRows()
 	{
 		

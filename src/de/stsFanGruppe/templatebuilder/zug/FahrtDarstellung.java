@@ -26,38 +26,47 @@ public class FahrtDarstellung
 	{
 		return filter;
 	}
+	
 	public void setFilter(FahrtFilter filter)
 	{
 		this.filter = filter;
 	}
+	
 	public String getMuster()
 	{
 		return muster;
 	}
+	
 	public void setMuster(String muster)
 	{
 		this.muster = muster;
 	}
+	
 	public Color getFarbe()
 	{
 		return farbe;
 	}
+	
 	public void setFarbe(Color farbe)
 	{
 		this.farbe = farbe;
 	}
+	
 	public int getBreite()
 	{
 		return breite;
 	}
+	
 	public void setBreite(int breite)
 	{
 		this.breite = breite;
 	}
+	
 	public LineType getTyp()
 	{
 		return typ;
 	}
+	
 	public void setTyp(LineType typ)
 	{
 		this.typ = typ;
@@ -65,8 +74,9 @@ public class FahrtDarstellung
 	
 	public Object[] toArray()
 	{
-		return new Object[]{filter, muster, farbe, Integer.toString(breite), typ};
+		return new Object[] {filter, muster, farbe, Integer.toString(breite), typ};
 	}
+	
 	public static FahrtDarstellung[] toArray(Collection<FahrtDarstellung> collection)
 	{
 		return collection.toArray(new FahrtDarstellung[collection.size()]);

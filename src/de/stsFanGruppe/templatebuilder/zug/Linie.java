@@ -3,7 +3,7 @@ package de.stsFanGruppe.templatebuilder.zug;
 import de.stsFanGruppe.tools.NullTester;
 
 public class Linie
-{	
+{
 	protected String name;
 	protected String nummer;
 	
@@ -12,6 +12,7 @@ public class Linie
 		this.setName(name);
 		this.setNummer(nummer);
 	}
+	
 	/**
 	 * Legt eine neue Linie mit Namen = Nummer an
 	 */
@@ -24,15 +25,18 @@ public class Linie
 	{
 		return name;
 	}
+	
 	public void setName(String name)
 	{
 		NullTester.test(name);
 		this.name = name;
 	}
+	
 	public String getNummer()
 	{
 		return nummer;
 	}
+	
 	public void setNummer(String nummer)
 	{
 		NullTester.test(nummer);
@@ -43,12 +47,14 @@ public class Linie
 	{
 		return getName();
 	}
+	
 	public String toXML()
 	{
 		return toXML("");
 	}
+	
 	public String toXML(String indent)
 	{
-		return indent+"<linie name=\""+getName()+"\" nummer=\""+getNummer()+"\" />";
+		return indent + "<linie name=\"" + getName() + "\" nummer=\"" + getNummer() + "\" />";
 	}
 }

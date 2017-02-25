@@ -27,9 +27,11 @@ public class JTrainGraphExporter extends Exporter
 		log.info("JTrainGraphExport");
 		NullTester.test(output);
 		NullTester.test(streckenabschnitt);
-
-		if(streckenabschnitt.getBetriebsstellen().isEmpty()) log.info("Export ohne Betriebsstellen!");
-		if(fahrten == null || fahrten.isEmpty()) log.trace("Export ohne Fahrten");
+		
+		if(streckenabschnitt.getBetriebsstellen().isEmpty())
+			log.info("Export ohne Betriebsstellen!");
+		if(fahrten == null || fahrten.isEmpty())
+			log.trace("Export ohne Fahrten");
 		
 		StringJoiner xml = new StringJoiner("\n");
 		xml.add("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
@@ -52,16 +54,16 @@ public class JTrainGraphExporter extends Exporter
 		
 		// Enthält diverse Werte aus einer Original-Datei, deren Zweck nicht geklärt ist
 		// Formatierungen sind aber auch nicht Ziel des Exports
-		xml.add("<jTrainGraph_timetable version=\"008\" name=\""+streckenabschnitt.getName()+"\" tMin=\""+tMin+"\" tMax=\""+tMax+"\" d=\"1111111\" "
-				+"bgC=\"weiß\" sFont=\"font(SansSerif;0;12)\" trFont=\"font(SansSerif;0;12)\" hFont=\"font(SansSerif;0;12)\" "
-				+"tFont=\"font(SansSerif;0;12)\" sHor=\"true\" sLine=\"0\" shKm=\"false\" sStation=\"-1\" eStation=\"-1\" "
-				+"cNr=\"1\" exW=\"-1\" exH=\"-1\" shV=\"false\">");
+		xml.add("<jTrainGraph_timetable version=\"008\" name=\"" + streckenabschnitt.getName() + "\" tMin=\"" + tMin + "\" tMax=\"" + tMax + "\" d=\"1111111\" "
+				+ "bgC=\"weiß\" sFont=\"font(SansSerif;0;12)\" trFont=\"font(SansSerif;0;12)\" hFont=\"font(SansSerif;0;12)\" "
+				+ "tFont=\"font(SansSerif;0;12)\" sHor=\"true\" sLine=\"0\" shKm=\"false\" sStation=\"-1\" eStation=\"-1\" "
+				+ "cNr=\"1\" exW=\"-1\" exH=\"-1\" shV=\"false\">");
 		
 		xml.add("<stations>");
-
+		
 		FirstLastList<Betriebsstelle> betriebsstellen = streckenabschnitt.getBetriebsstellen();
 		
-		for(Betriebsstelle b: betriebsstellen)
+		for(Betriebsstelle b : betriebsstellen)
 		{
 			assert b != null;
 			String name = (useDS100 && b.getDS100() != null ? b.getDS100() : b.getName());
@@ -72,10 +74,10 @@ public class JTrainGraphExporter extends Exporter
 			}
 			catch(NoSuchElementException e)
 			{
-				throw new ExportException("Ungültige Betriebsstelle "+b.getName(), e);
+				throw new ExportException("Ungültige Betriebsstelle " + b.getName(), e);
 			}
 			// enthält wie jTrainGraph_timetable ungeklärte Formatierungen
-			xml.add("<sta name=\""+name+"\" km=\""+km+"\" cl=\"schwarz\" sh=\"true\" sz=\"1\" sy=\"0\"></sta>");
+			xml.add("<sta name=\"" + name + "\" km=\"" + km + "\" cl=\"schwarz\" sh=\"true\" sz=\"1\" sy=\"0\"></sta>");
 		}
 		
 		xml.add("</stations>");
@@ -86,7 +88,7 @@ public class JTrainGraphExporter extends Exporter
 			
 			if(!fahrten.isEmpty() && !betriebsstellen.isEmpty())
 			{
-				for(Fahrt fahrt: fahrten)
+				for(Fahrt fahrt : fahrten)
 				{
 					assert fahrt != null;
 					NavigableSet<Fahrplanhalt> fahrplanhalte = fahrt.getFahrplanhalte();
@@ -94,7 +96,7 @@ public class JTrainGraphExporter extends Exporter
 					Betriebsstelle anfang = null;
 					Betriebsstelle ende = null;
 					
-					for(Betriebsstelle bs: betriebsstellen)
+					for(Betriebsstelle bs : betriebsstellen)
 					{
 						Optional<Fahrplanhalt> ofh = fahrplanhalte.stream().filter((a) -> a.getGleisabschnitt().getParent().getParent().equals(bs)).findFirst();
 						
@@ -123,20 +125,20 @@ public class JTrainGraphExporter extends Exporter
 						}
 						
 						// Halt an sta, Reihenfolge und Anzahl exakt wie unter stations angegeben, egal in welcher Richtung
-						halte.add("<t a=\""+ankunft+"\" d=\""+abfahrt+"\"></t>");
+						halte.add("<t a=\"" + ankunft + "\" d=\"" + abfahrt + "\"></t>");
 					}
 					
 					// ti = hin, ta = rück
 					// hängt hier an Anfangs- und Endbetriebsstelle der Fahrt, bei an=ab ist es ti
 					String richtung = (betriebsstellen.indexOf(anfang) <= betriebsstellen.indexOf(ende)) ? "ti" : "ta";
-
+					
 					// enthält wie jTrainGraph_timetable ungeklärte Formatierungen
-					xml.add("<"+richtung+" name=\""+fahrt.getName()+"\" cm=\"\" cl=\"schwarz\" sh=\"true\" sz=\"1\" sy=\"0\" d=\"1111111\" id=\"\">");
-					for(String halt: halte)
+					xml.add("<" + richtung + " name=\"" + fahrt.getName() + "\" cm=\"\" cl=\"schwarz\" sh=\"true\" sz=\"1\" sy=\"0\" d=\"1111111\" id=\"\">");
+					for(String halt : halte)
 					{
 						xml.add(halt);
 					}
-					xml.add("</"+richtung+">");
+					xml.add("</" + richtung + ">");
 				}
 			}
 			xml.add("</trains>");

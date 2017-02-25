@@ -9,17 +9,19 @@ public class FahrplanhaltEigenschaften
 	protected boolean hasRichtungswechsel = false;
 	protected boolean hasNamenswechsel = false;
 	protected Fahrt namenswechsel = null;
-
+	
 	public FahrplanhaltEigenschaften(boolean hasDurchfahrt, boolean hasRichtungswechsel, Fahrt namenswechsel)
 	{
 		this(hasDurchfahrt, hasRichtungswechsel);
 		this.setNamenswechselNachfolger(namenswechsel);
 	}
+	
 	public FahrplanhaltEigenschaften(boolean hasDurchfahrt, boolean hasRichtungswechsel)
 	{
 		this.setDurchfahrt(hasDurchfahrt);
 		this.setRichtungswechsel(hasRichtungswechsel);
 	}
+	
 	public FahrplanhaltEigenschaften()
 	{
 		
@@ -29,24 +31,30 @@ public class FahrplanhaltEigenschaften
 	{
 		return hasDurchfahrt;
 	}
+	
 	public void setDurchfahrt(boolean hasDurchfahrt)
 	{
 		this.hasDurchfahrt = hasDurchfahrt;
 	}
+	
 	public boolean hasRichtungswechsel()
 	{
 		return hasRichtungswechsel;
 	}
+	
 	public void setRichtungswechsel(boolean hasRichtungswechsel)
 	{
 		this.hasRichtungswechsel = hasRichtungswechsel;
 	}
+	
 	public boolean hasNamenswechsel()
 	{
 		return hasNamenswechsel;
 	}
+	
 	/**
 	 * Gibt den Nachfolger zurück. Ist kein Namenswechsel aktiv, oder ist kein Nachfolger gesetzt, wird null zurück gegeben.
+	 * 
 	 * @return Die Fahrt, auf die der Name geändert wird, oder null
 	 */
 	public Fahrt getNamenswechselNachfolger()
@@ -56,11 +64,13 @@ public class FahrplanhaltEigenschaften
 		else
 			return null;
 	}
+	
 	public void setNamenswechselNachfolger(Fahrt namenswechsel)
 	{
 		this.hasNamenswechsel = true;
 		this.namenswechsel = namenswechsel;
 	}
+	
 	public void removeNamenswechsel()
 	{
 		this.namenswechsel = null;
@@ -83,7 +93,7 @@ public class FahrplanhaltEigenschaften
 		{
 			if(namenswechsel != null)
 			{
-				str.add("ändert Name zu "+namenswechsel.getName());
+				str.add("ändert Name zu " + namenswechsel.getName());
 			}
 			else
 			{
@@ -93,13 +103,15 @@ public class FahrplanhaltEigenschaften
 		
 		return str.toString();
 	}
+	
 	public String toXML()
 	{
 		return toXML("");
 	}
+	
 	public String toXML(String indent)
 	{
-		StringJoiner xml = new StringJoiner(" ", indent+"<fahrplanhaltEigenschaften", " />");
+		StringJoiner xml = new StringJoiner(" ", indent + "<fahrplanhaltEigenschaften", " />");
 		
 		if(hasDurchfahrt)
 		{
@@ -113,7 +125,7 @@ public class FahrplanhaltEigenschaften
 		{
 			if(namenswechsel != null)
 			{
-				xml.add("namenswechsel=\""+namenswechsel.getName()+"\"");
+				xml.add("namenswechsel=\"" + namenswechsel.getName() + "\"");
 			}
 			else
 			{

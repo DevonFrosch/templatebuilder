@@ -18,7 +18,7 @@ public class XMLElement
 		NullTester.test(elem);
 		this.elem = elem;
 		
-		for(Iterator<?> it = elem.getAttributes(); it.hasNext(); )
+		for(Iterator<?> it = elem.getAttributes(); it.hasNext();)
 		{
 			Attribute attr = (Attribute) it.next();
 			if(attr.isSpecified())
@@ -27,15 +27,18 @@ public class XMLElement
 			}
 		}
 	}
+	
 	public String getName()
 	{
 		return elem.getName().getLocalPart();
 	}
+	
 	public String getAttribute(String name)
 	{
 		NullTester.test(name);
 		return attrs.get(name.toLowerCase());
 	}
+	
 	public Map<String, String> getAttributes()
 	{
 		return attrs;
@@ -44,7 +47,7 @@ public class XMLElement
 	public String toString()
 	{
 		StringJoiner str = new StringJoiner(", ");
-		attrs.forEach((String key, String value) -> str.add(key+"='"+value+"'"));
-		return "XMLElement "+getName()+" {"+str.toString()+"}";
+		attrs.forEach((String key, String value) -> str.add(key + "='" + value + "'"));
+		return "XMLElement " + getName() + " {" + str.toString() + "}";
 	}
 }

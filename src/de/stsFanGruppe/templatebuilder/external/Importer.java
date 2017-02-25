@@ -13,10 +13,12 @@ public class Importer
 	{
 		throw new ImportException("Nicht implementiert");
 	}
+	
 	public Set<Fahrt> importFahrten(InputStream input, Streckenabschnitt streckenabschnitt, Linie linie) throws ImportException
 	{
 		throw new ImportException("Nicht implementiert");
 	}
+	
 	public void importRegeln(InputStream input) throws ImportException
 	{
 		throw new ImportException("Nicht implementiert");
@@ -28,8 +30,9 @@ public class Importer
 		assert ende != null;
 		
 		// Anfang - Ende
-		return anfang.getName()+" - "+ende.getName();
+		return anfang.getName() + " - " + ende.getName();
 	}
+	
 	protected static boolean isEmpty(String str)
 	{
 		return str == null || str.isEmpty();

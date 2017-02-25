@@ -25,6 +25,7 @@ public class TemplateBuilderGUI implements GUI
 	
 	/**
 	 * Create the application.
+	 * 
 	 * @wbp.parser.entryPoint
 	 */
 	public TemplateBuilderGUI(TemplateBuilderGUIController controller)
@@ -198,25 +199,24 @@ public class TemplateBuilderGUI implements GUI
 		}
 		
 		/*
-		// TODO
-		JSplitPane splitPane = new JSplitPane();
-		
-		frmTemplatebauer.getContentPane().add(splitPane, BorderLayout.CENTER);
-		
-		JTree tree = new JTree();
-		tree.setRootVisible(false);
-		tree.setShowsRootHandles(true);
-		tree.setModel(new DefaultTreeModel(
-			new DefaultMutableTreeNode("Strecken") {
-				{
-					DefaultMutableTreeNode node_1;
-					node_1 = new DefaultMutableTreeNode("Heerlen - D\u00FCren");
-						node_1.add(new DefaultMutableTreeNode("RB 20"));
-					add(node_1);
-				}
-			}
-		));
-		splitPane.setLeftComponent(tree); //*/
+		 * // TODO
+		 * JSplitPane splitPane = new JSplitPane();
+		 * frmTemplatebauer.getContentPane().add(splitPane, BorderLayout.CENTER);
+		 * JTree tree = new JTree();
+		 * tree.setRootVisible(false);
+		 * tree.setShowsRootHandles(true);
+		 * tree.setModel(new DefaultTreeModel(
+		 * new DefaultMutableTreeNode("Strecken") {
+		 * {
+		 * DefaultMutableTreeNode node_1;
+		 * node_1 = new DefaultMutableTreeNode("Heerlen - D\u00FCren");
+		 * node_1.add(new DefaultMutableTreeNode("RB 20"));
+		 * add(node_1);
+		 * }
+		 * }
+		 * ));
+		 * splitPane.setLeftComponent(tree); //
+		 */
 		
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP, JTabbedPane.SCROLL_TAB_LAYOUT);
 		tabbedPane.addChangeListener((ChangeEvent event) -> tabChanged(event));
@@ -226,10 +226,11 @@ public class TemplateBuilderGUI implements GUI
 		frmTemplatebauer.getContentPane().add(tabbedPane, BorderLayout.CENTER);
 		
 		// TODO
-		/*JToolBar toolBar = new JToolBar();
-		frmTemplatebauer.getContentPane().add(toolBar, BorderLayout.NORTH);
-		
-		toolBar.add(new JButton()); //*/
+		/*
+		 * JToolBar toolBar = new JToolBar();
+		 * frmTemplatebauer.getContentPane().add(toolBar, BorderLayout.NORTH);
+		 * toolBar.add(new JButton()); //
+		 */
 		
 		frmTemplatebauer.setVisible(true);
 	}
@@ -255,10 +256,12 @@ public class TemplateBuilderGUI implements GUI
 	{
 		JOptionPane.showMessageDialog(frmTemplatebauer, text, titel, JOptionPane.ERROR_MESSAGE);
 	}
+	
 	public void warningMessage(String text, String titel)
 	{
 		JOptionPane.showMessageDialog(frmTemplatebauer, text, titel, JOptionPane.WARNING_MESSAGE);
 	}
+	
 	public void infoMessage(String text, String titel)
 	{
 		JOptionPane.showMessageDialog(frmTemplatebauer, text, titel, JOptionPane.INFORMATION_MESSAGE);

@@ -18,6 +18,7 @@ public class StationBuilder
 	{
 		return name;
 	}
+	
 	public void setName(String name)
 	{
 		this.name = name;
@@ -27,6 +28,7 @@ public class StationBuilder
 	{
 		return externalId;
 	}
+	
 	public void setExternalId(String externalId)
 	{
 		this.externalId = externalId;
@@ -36,6 +38,7 @@ public class StationBuilder
 	{
 		return externalStationNr;
 	}
+	
 	public void setExternalStationNr(String externalStationNr)
 	{
 		this.externalStationNr = externalStationNr;
@@ -45,6 +48,7 @@ public class StationBuilder
 	{
 		return type;
 	}
+	
 	public void setType(String type)
 	{
 		this.type = type;
@@ -54,10 +58,12 @@ public class StationBuilder
 	{
 		return x;
 	}
+	
 	public void setX(double x)
 	{
 		this.x = x;
 	}
+	
 	public void setX(int x)
 	{
 		this.x = x / 1000000.0;
@@ -67,10 +73,12 @@ public class StationBuilder
 	{
 		return y;
 	}
+	
 	public void setY(double y)
 	{
 		this.y = y;
 	}
+	
 	public void setY(int y)
 	{
 		this.y = y / 1000000.0;

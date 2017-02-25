@@ -9,7 +9,6 @@ import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.linetype.LineType
 
 /**
  * Zelleneditoreinstellung für die Spalte, die eine Combobox erhalten soll, wo die Linientypen gezeichnet werden.
- *
  * Um dies aufzurufen, wird an der Tabelle die Spalte gesucht und die Zelleditordarstellung neu gesetzt:
  * table.getColumnModel().getColumn(n).setCellEditor(new LineTypeCellEditor());
  */

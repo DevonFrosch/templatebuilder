@@ -38,11 +38,13 @@ public class BildfahrplanGUIController extends EditorGUIController
 		super(daten, config, parent);
 		initVariables(config, parent);
 	}
+	
 	public BildfahrplanGUIController(BildfahrplanConfig config, TemplateBuilderGUI parent)
 	{
 		super(config, parent);
 		initVariables(config, parent);
 	}
+	
 	private void initVariables(BildfahrplanConfig config, TemplateBuilderGUI parent)
 	{
 		super.getEditorDaten().setBildfahrplan(this);
@@ -63,15 +65,17 @@ public class BildfahrplanGUIController extends EditorGUIController
 	{
 		return gui;
 	}
+	
 	public BildfahrplanSpaltenheaderGUI getBildfahrplanSpaltenHeaderGUI()
 	{
 		return spaltenGui;
 	}
+	
 	public BildfahrplanZeilenheaderGUI getBildfahrplanZeilenHeaderGUI()
 	{
 		return zeilenGui;
 	}
-
+	
 	public void repaint()
 	{
 		if(gui == null)
@@ -90,11 +94,13 @@ public class BildfahrplanGUIController extends EditorGUIController
 		ph.setDiffKm(editorDaten.getDiffKm());
 		gui.recalculatePanelSize();
 	}
+	
 	public void ladeZüge(Collection<? extends Fahrt> fahrten)
 	{
 		editorDaten.ladeZüge(fahrten);
 		gui.recalculatePanelSize();
 	}
+	
 	protected void reset()
 	{
 		editorDaten.reset();
@@ -109,14 +115,17 @@ public class BildfahrplanGUIController extends EditorGUIController
 			optimizeHeight();
 		}
 	}
+	
 	int getPanelHeight()
 	{
 		return config.getPanelHeight();
 	}
+	
 	int getSpaltenHeaderHoehe()
 	{
 		return config.getSpaltenHeaderHoehe(stringHeight);
 	}
+	
 	int getZeilenHeaderBreite()
 	{
 		return config.getZeilenHeaderBreite();
@@ -142,17 +151,17 @@ public class BildfahrplanGUIController extends EditorGUIController
 	// alle Grafikobjekte neu berechnen
 	protected void recalculate(FontMetrics fontMetrics)
 	{
-		/* Berechnet alles neu
+		/*
+		 * Berechnet alles neu
 		 * Wichtig: Die Berechnung ist aufgeteilt:
 		 * - hier wird (außerhalb der Lambdas) berechnet, was nicht von der GUI abhängig ist
 		 * - in den Lambdas und im BildfahrplanPaintHelper ph wird berechnet, was von der GUI abhängig ist
 		 * Alles, was aus der Config kommt etc. wird also vorberechnet und in Variablen gespeichert, die dann im Lambda verwendet werden können.
 		 * Die im Lambda verwendeten Variablen müssen "quasi final" sein, also für mehrere Aufrufe des selben Lambdas nicht verändert werden.
-		 * Schleifenzähler müssen innerhalb der Schleife in eine lokale Variable kopiert werden, letztere kann dann verwendet werden. 
+		 * Schleifenzähler müssen innerhalb der Schleife in eine lokale Variable kopiert werden, letztere kann dann verwendet werden.
 		 */
 		
-		if(!editorDaten.hasStreckenabschnitt() || !editorDaten.hasFahrten()
-				|| config == null || gui == null || spaltenGui == null || zeilenGui == null)
+		if(!editorDaten.hasStreckenabschnitt() || !editorDaten.hasFahrten() || config == null || gui == null || spaltenGui == null || zeilenGui == null)
 		{
 			return;
 		}
@@ -187,12 +196,13 @@ public class BildfahrplanGUIController extends EditorGUIController
 			FirstLastList<Betriebsstelle> betriebsstellen = editorDaten.getStreckenabschnitt().getBetriebsstellen();
 			
 			int bsCounter = 0;
-			for(Betriebsstelle bs: betriebsstellen)
+			for(Betriebsstelle bs : betriebsstellen)
 			{
 				double km = editorDaten.getStreckenKm(bs);
 				int lineHeight = config.getLineHeight();
 				final int offsetX = config.getOffsetX();
-				final int textY = config.getTextMarginTop() + ((stringHeight + config.getOffsetY()) * (bsCounter % config.getZeilenAnzahl())) + config.getTextMarginBottom();
+				final int textY = config.getTextMarginTop() + ((stringHeight + config.getOffsetY()) * (bsCounter % config.getZeilenAnzahl()))
+						+ config.getTextMarginBottom();
 				String name = bs.getName();
 				int stringWidth = fontMetrics.stringWidth(name);
 				
@@ -243,14 +253,14 @@ public class BildfahrplanGUIController extends EditorGUIController
 			while(zeit <= maxZeit)
 			{
 				int thisZeit = zeit;
-				Stroke s = (thisZeit % 60 == 0) ?  dickeLinie : duenneLinie;
+				Stroke s = (thisZeit % 60 == 0) ? dickeLinie : duenneLinie;
 				String text = TimeFormater.doubleToString(zeit);
 				
 				// Linie in gui
 				guiPaints.add(g -> ph.paintLine(g, zeitLinienStart, ph.getZeitPos(thisZeit), gui.getWidth(), ph.getZeitPos(thisZeit), c, s));
 				
 				// Text in zeilenGui
-				zeilenGuiPaints.add(g -> ph.paintText(g, textPosX , ph.getZeitPos(thisZeit) + (stringHeight/3), c, text));
+				zeilenGuiPaints.add(g -> ph.paintText(g, textPosX, ph.getZeitPos(thisZeit) + (stringHeight / 3), c, text));
 				
 				zeit += zeitIntervall;
 			}
@@ -270,7 +280,7 @@ public class BildfahrplanGUIController extends EditorGUIController
 			
 			synchronized(fahrten)
 			{
-				for(Fahrt fahrt: fahrten)
+				for(Fahrt fahrt : fahrten)
 				{
 					double letzteZeit = -1;
 					double letzterKm = -1;
@@ -280,7 +290,7 @@ public class BildfahrplanGUIController extends EditorGUIController
 					FahrtDarstellung fahrtDarstellung = darstellungHandler.getFahrtDarstellung(zugName);
 					Color fahrtFarbe = fahrtDarstellung.getFarbe();
 					
-					for(Fahrplanhalt fh: fahrt.getFahrplanhalte())
+					for(Fahrplanhalt fh : fahrt.getFahrplanhalte())
 					{
 						double an = fh.getMinZeit();
 						if(an > maxZeit)
@@ -318,11 +328,9 @@ public class BildfahrplanGUIController extends EditorGUIController
 						if(letzteZeit >= 0 && letzterKm >= 0 && letzteZeit >= minZeit && kmAb >= 0)
 						{
 							// nicht zeichnen, wenn Richtung ausgeblendet
-							if((kmAb < kmAn && (zeigeRichtung & 1) != 0)
-									|| (kmAb > kmAn && (zeigeRichtung & 2) != 0))
+							if((kmAb < kmAn && (zeigeRichtung & 1) != 0) || (kmAb > kmAn && (zeigeRichtung & 2) != 0))
 							{
-								guiPaints.add(g ->
-								{
+								guiPaints.add(g -> {
 									int x1 = ph.getWegPos(kmAb);
 									int x2 = ph.getWegPos(kmAn);
 									
@@ -332,8 +340,8 @@ public class BildfahrplanGUIController extends EditorGUIController
 									int zeitenRTLx2 = x2 + diffX;
 									
 									// Schachtelung der Züge nach Minuten
-									//for(int schachtelungVerschiebung = (int) minZeit; schachtelungVerschiebung <= maxZeit;)
-									for(int sch=0; sch < diffZeit; sch += schachtelung)
+									// for(int schachtelungVerschiebung = (int) minZeit; schachtelungVerschiebung <= maxZeit;)
+									for(int sch = 0; sch < diffZeit; sch += schachtelung)
 									{
 										int y1 = ph.getZeitPos(ab - sch);
 										int y2 = ph.getZeitPos(an - sch);
@@ -402,7 +410,7 @@ public class BildfahrplanGUIController extends EditorGUIController
 		gui.setPaintables(guiPaints);
 		spaltenGui.setPaintables(spaltenGuiPaints);
 		zeilenGui.setPaintables(zeilenGuiPaints);
-
+		
 		log.trace("recalc fertig");
 	}
 }

@@ -51,37 +51,31 @@ public class JTrainGraphImportGUI extends JDialog implements GUI
 		this.callback = callback;
 		
 		setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-		addWindowListener(new WindowAdapter() { public void windowClosing(WindowEvent e) {
-			close();
-		}});
+		addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e)
+			{
+				close();
+			}
+		});
 		
 		setBounds(100, 100, 450, 300);
 		getContentPane().setLayout(new BorderLayout(0, 0));
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		contentPanel.setLayout(new FormLayout(new ColumnSpec[] {
-				com.jgoodies.forms.layout.FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("center:default:grow"),
-				com.jgoodies.forms.layout.FormSpecs.UNRELATED_GAP_COLSPEC,
-				ColumnSpec.decode("default:grow"),
-				com.jgoodies.forms.layout.FormSpecs.RELATED_GAP_COLSPEC,
-				com.jgoodies.forms.layout.FormSpecs.DEFAULT_COLSPEC,
-				com.jgoodies.forms.layout.FormSpecs.RELATED_GAP_COLSPEC,},
-			new RowSpec[] {
-				com.jgoodies.forms.layout.FormSpecs.LINE_GAP_ROWSPEC,
-				com.jgoodies.forms.layout.FormSpecs.DEFAULT_ROWSPEC,
-				com.jgoodies.forms.layout.FormSpecs.PARAGRAPH_GAP_ROWSPEC,
-				com.jgoodies.forms.layout.FormSpecs.DEFAULT_ROWSPEC,
-				com.jgoodies.forms.layout.FormSpecs.RELATED_GAP_ROWSPEC,
-				com.jgoodies.forms.layout.FormSpecs.DEFAULT_ROWSPEC,
-				com.jgoodies.forms.layout.FormSpecs.RELATED_GAP_ROWSPEC,
-				com.jgoodies.forms.layout.FormSpecs.DEFAULT_ROWSPEC,}));
+		contentPanel.setLayout(new FormLayout(
+				new ColumnSpec[] {com.jgoodies.forms.layout.FormSpecs.RELATED_GAP_COLSPEC, ColumnSpec.decode("center:default:grow"),
+						com.jgoodies.forms.layout.FormSpecs.UNRELATED_GAP_COLSPEC, ColumnSpec.decode("default:grow"),
+						com.jgoodies.forms.layout.FormSpecs.RELATED_GAP_COLSPEC, com.jgoodies.forms.layout.FormSpecs.DEFAULT_COLSPEC,
+						com.jgoodies.forms.layout.FormSpecs.RELATED_GAP_COLSPEC,},
+				new RowSpec[] {com.jgoodies.forms.layout.FormSpecs.LINE_GAP_ROWSPEC, com.jgoodies.forms.layout.FormSpecs.DEFAULT_ROWSPEC,
+						com.jgoodies.forms.layout.FormSpecs.PARAGRAPH_GAP_ROWSPEC, com.jgoodies.forms.layout.FormSpecs.DEFAULT_ROWSPEC,
+						com.jgoodies.forms.layout.FormSpecs.RELATED_GAP_ROWSPEC, com.jgoodies.forms.layout.FormSpecs.DEFAULT_ROWSPEC,
+						com.jgoodies.forms.layout.FormSpecs.RELATED_GAP_ROWSPEC, com.jgoodies.forms.layout.FormSpecs.DEFAULT_ROWSPEC,}));
 		{
 			lblPfadZurDatei = new JLabel("Pfad zur Datei");
 			contentPanel.add(lblPfadZurDatei, "2, 2, fill, fill");
 		}
-		{
-		}
+		{}
 		{
 			pfadInput = new JTextField();
 			contentPanel.add(pfadInput, "4, 2, fill, default");
@@ -135,7 +129,7 @@ public class JTrainGraphImportGUI extends JDialog implements GUI
 	{
 		setCursor(new Cursor(Cursor.WAIT_CURSOR));
 		JFileChooser fileChooser = new JFileChooser();
-		setCursor(new Cursor(Cursor.DEFAULT_CURSOR));	
+		setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		
 		fileChooser.setDialogTitle("Importieren...");
 		fileChooser.setFileFilter(new FileNameExtensionFilter("Bildfahrpläne (*.fpl, *.xml)", "fpl", "xml"));
@@ -147,7 +141,7 @@ public class JTrainGraphImportGUI extends JDialog implements GUI
 			fileChooser.setCurrentDirectory(file);
 		}
 		
-		if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION)
+		if(fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION)
 		{
 			pfadInput.setText(fileChooser.getSelectedFile().getPath());
 		}
@@ -190,13 +184,14 @@ public class JTrainGraphImportGUI extends JDialog implements GUI
 			default:
 		}
 		dispose();
-        setVisible(false);
+		setVisible(false);
 	}
 	
 	public interface Callback
 	{
 		public void call(DoneFuture future);
 	}
+	
 	public class DoneFuture
 	{
 		private boolean success;
@@ -204,17 +199,19 @@ public class JTrainGraphImportGUI extends JDialog implements GUI
 		private String pfad = null;
 		private Linie linie = null;
 		private boolean importZuege = false;
-
+		
 		private DoneFuture()
 		{
 			this.success = false;
 		}
+		
 		private DoneFuture(String pfad)
 		{
 			this.success = true;
 			this.pfad = pfad;
 			this.importZuege = false;
 		}
+		
 		private DoneFuture(String pfad, Linie linie)
 		{
 			this.success = true;
@@ -227,10 +224,12 @@ public class JTrainGraphImportGUI extends JDialog implements GUI
 		{
 			return success;
 		}
+		
 		public boolean importZuege()
 		{
 			return importZuege;
 		}
+		
 		public String getPfad()
 		{
 			if(success)
@@ -239,6 +238,7 @@ public class JTrainGraphImportGUI extends JDialog implements GUI
 			}
 			return null;
 		}
+		
 		public Linie getLinie()
 		{
 			if(success)
@@ -252,7 +252,7 @@ public class JTrainGraphImportGUI extends JDialog implements GUI
 	public void close()
 	{
 		dispose();
-        setVisible(false);
+		setVisible(false);
 		callback.call(new DoneFuture());
 	}
 	
@@ -260,10 +260,12 @@ public class JTrainGraphImportGUI extends JDialog implements GUI
 	{
 		JOptionPane.showMessageDialog(contentPanel, text, titel, JOptionPane.ERROR_MESSAGE);
 	}
+	
 	public void warningMessage(String text, String titel)
 	{
 		JOptionPane.showMessageDialog(contentPanel, text, titel, JOptionPane.WARNING_MESSAGE);
 	}
+	
 	public void infoMessage(String text, String titel)
 	{
 		JOptionPane.showMessageDialog(contentPanel, text, titel, JOptionPane.INFORMATION_MESSAGE);

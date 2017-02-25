@@ -38,6 +38,7 @@ public class TimeFormater
 			throw new NumberFormatException("Zeit falsch formatiert");
 		}
 	}
+	
 	public static double stringToDouble(String input) throws NumberFormatException
 	{
 		OptionalDouble output = stringToOptionalDouble(input);
@@ -49,6 +50,7 @@ public class TimeFormater
 		log.error("strinToDouble: String ist leer");
 		throw new NumberFormatException("Zeit falsch formatiert");
 	}
+	
 	public static String optionalDoubleToString(OptionalDouble input)
 	{
 		if(input.isPresent())
@@ -57,11 +59,12 @@ public class TimeFormater
 		}
 		return "";
 	}
+	
 	public static String doubleToString(double input)
 	{
 		int stunden = ((int) input) / 60;
 		
-		return stunden+":"+doubleToMinute(input);
+		return stunden + ":" + doubleToMinute(input);
 	}
 	
 	public static String doubleToMinute(double input)

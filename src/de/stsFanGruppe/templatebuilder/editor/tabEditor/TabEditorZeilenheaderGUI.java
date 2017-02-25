@@ -38,6 +38,7 @@ public class TabEditorZeilenheaderGUI extends JPanel
 	{
 		return table.getSelectedRows();
 	}
+	
 	public void setSelectionInterval(int start, int end)
 	{
 		table.setRowSelectionInterval(start, end);
@@ -52,12 +53,12 @@ public class TabEditorZeilenheaderGUI extends JPanel
 		
 		Object[][] data = new Object[rows.length][1];
 		
-		for(int i=0; i < rows.length; i++)
+		for(int i = 0; i < rows.length; i++)
 		{
 			data[i][0] = rows[i];
 		}
 		
-		table.setModel(new DefaultTableModel(data, new String[]{""}));
+		table.setModel(new DefaultTableModel(data, new String[] {""}));
 	}
 	
 }

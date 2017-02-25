@@ -19,7 +19,7 @@ import de.stsFanGruppe.tools.PreferenceHandler;
 public abstract class ConfigController
 {
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ConfigController.class);
-
+	
 	protected Map<Object, Runnable> callbacks = new HashMap<>();
 	protected int callbackCounter = 0;
 	protected PreferenceHandler prefs = null;
@@ -33,12 +33,14 @@ public abstract class ConfigController
 		callbacks.put(handlerID, callback);
 		return handlerID;
 	}
+	
 	public boolean unregisterChangeHandler(Object handlerID)
 	{
 		NullTester.test(handlerID);
 		log.debug("unregisterChangeHandler (ID {})", handlerID);
 		return callbacks.remove(handlerID) != null;
 	}
+	
 	protected void notifyChange()
 	{
 		callbacks.forEach((k, v) -> v.run());
@@ -51,7 +53,7 @@ public abstract class ConfigController
 		loadFileChooser.setFileFilter(new FileNameExtensionFilter("XML-Einstellungen (*.xml)", "xml"));
 		loadFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		
-		if (loadFileChooser.showOpenDialog(windowParent) == JFileChooser.APPROVE_OPTION)
+		if(loadFileChooser.showOpenDialog(windowParent) == JFileChooser.APPROVE_OPTION)
 		{
 			try
 			{
@@ -87,7 +89,7 @@ public abstract class ConfigController
 		saveFileChooser.setFileFilter(new FileNameExtensionFilter("XML-Einstellungen (*.xml)", "xml"));
 		saveFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		
-		if (saveFileChooser.showSaveDialog(windowParent) == JFileChooser.APPROVE_OPTION)
+		if(saveFileChooser.showSaveDialog(windowParent) == JFileChooser.APPROVE_OPTION)
 		{
 			try
 			{
@@ -115,14 +117,17 @@ public abstract class ConfigController
 	{
 		return prefs.schreibeEinstellungen();
 	}
+	
 	public boolean importXML(InputStream is)
 	{
 		return prefs.importXML(is);
 	}
+	
 	public boolean exportXML(OutputStream os)
 	{
 		return prefs.exportXML(os);
 	}
+	
 	public boolean speichertest()
 	{
 		NullTester.test(prefs);

@@ -63,7 +63,8 @@ public class TemplateBuilderGUIController extends GUIController
 			}
 			case "importFromJTG":
 			{
-				if(!GUILocker.lock(JTrainGraphImportGUI.class)) break;
+				if(!GUILocker.lock(JTrainGraphImportGUI.class))
+					break;
 				JTrainGraphImportGUI jtgi = new JTrainGraphImportGUI(gui.getFrame(), (ergebnis) -> {
 					assert ergebnis != null;
 					
@@ -115,7 +116,8 @@ public class TemplateBuilderGUIController extends GUIController
 			}
 			case "importRulesFromJTG":
 			{
-				if(!GUILocker.lock(JTrainGraphZugregelImportGUI.class)) break;
+				if(!GUILocker.lock(JTrainGraphZugregelImportGUI.class))
+					break;
 				new JTrainGraphZugregelImportGUI(gui.getFrame(), (ergebnis) -> {
 					assert ergebnis != null;
 					
@@ -153,7 +155,8 @@ public class TemplateBuilderGUIController extends GUIController
 					gui.errorMessage("Aktueller Tab ist nicht exportierbar.\nBitte anderen Tab auswählen.");
 				}
 				
-				if(!GUILocker.lock(JTrainGraphExportGUI.class)) break;
+				if(!GUILocker.lock(JTrainGraphExportGUI.class))
+					break;
 				JTrainGraphExportGUI jtge = new JTrainGraphExportGUI(gui.getFrame(), (ergebnis) -> {
 					assert ergebnis != null;
 					
@@ -197,11 +200,11 @@ public class TemplateBuilderGUIController extends GUIController
 			}
 			case "streckenEdit":
 			{
-				if(!GUILocker.lock(StreckenEditorGUI.class)) break;
+				if(!GUILocker.lock(StreckenEditorGUI.class))
+					break;
 				
 				EditorDaten editorDaten = tabs.getSelectedEditorDaten();
-				StreckenEditorGUIController controller = new StreckenEditorGUIController(
-						editorDaten, () -> GUILocker.unlock(StreckenEditorGUI.class));
+				StreckenEditorGUIController controller = new StreckenEditorGUIController(editorDaten, () -> GUILocker.unlock(StreckenEditorGUI.class));
 				StreckenEditorGUI bssg = new StreckenEditorGUI(controller, gui.getFrame());
 				break;
 			}
@@ -218,8 +221,7 @@ public class TemplateBuilderGUIController extends GUIController
 					break;
 				}
 				
-				int index = tabs.addBildfahrplanTab(editorDaten.getName(), null, null,
-						new BildfahrplanGUIController(editorDaten, config, gui));
+				int index = tabs.addBildfahrplanTab(editorDaten.getName(), null, null, new BildfahrplanGUIController(editorDaten, config, gui));
 				tabs.setSelectedTab(index);
 				break;
 			}
@@ -261,12 +263,14 @@ public class TemplateBuilderGUIController extends GUIController
 				break;
 			}
 			case "options":
-				if(!GUILocker.lock(BildfahrplanSettingsGUI.class)) break;
-				BildfahrplanSettingsGUI sg = new BildfahrplanSettingsGUI(new BildfahrplanSettingsGUIController(config, () -> GUILocker.unlock(BildfahrplanSettingsGUI.class)), gui.getFrame());
+				if(!GUILocker.lock(BildfahrplanSettingsGUI.class))
+					break;
+				BildfahrplanSettingsGUI sg = new BildfahrplanSettingsGUI(
+						new BildfahrplanSettingsGUIController(config, () -> GUILocker.unlock(BildfahrplanSettingsGUI.class)), gui.getFrame());
 				break;
 			case "about":
 				StringJoiner aboutText = new StringJoiner("\n");
-				aboutText.add("TemplateBuilder "+version+ ((dev) ? " (Entwicklungsversion)" : ""));
+				aboutText.add("TemplateBuilder " + version + ((dev) ? " (Entwicklungsversion)" : ""));
 				aboutText.add("Copyright DevonFrosch, Koschi");
 				aboutText.add("Fehler bitte unter https://sts-fan-gruppe.de/mantis/ melden.");
 				

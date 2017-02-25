@@ -3,8 +3,7 @@ package de.stsFanGruppe.tools;
 import java.util.Collection;
 import java.util.LinkedList;
 
-public class FirstLastLinkedList<E> extends LinkedList<E> implements
-		FirstLastList<E>
+public class FirstLastLinkedList<E> extends LinkedList<E> implements FirstLastList<E>
 {
 	public FirstLastLinkedList()
 	{
@@ -25,7 +24,7 @@ public class FirstLastLinkedList<E> extends LinkedList<E> implements
 	@Override
 	public E last() throws IndexOutOfBoundsException
 	{
-		return this.get(this.size()-1);
+		return this.get(this.size() - 1);
 	}
 	
 	@SuppressWarnings("unchecked")

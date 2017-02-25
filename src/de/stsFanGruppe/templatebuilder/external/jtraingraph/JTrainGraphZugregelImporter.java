@@ -17,7 +17,7 @@ import de.stsFanGruppe.tools.NullTester;
 
 public class JTrainGraphZugregelImporter
 {
-protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(JTrainGraphZugregelImporter.class);
+	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(JTrainGraphZugregelImporter.class);
 	
 	public void importRegeln(InputStream input) throws ImportException
 	{
@@ -70,7 +70,7 @@ protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(JTrain
 				{
 					breite = Integer.parseInt(rule.getAttribute("sz"));
 				}
-				catch(NumberFormatException|NullPointerException e)
+				catch(NumberFormatException | NullPointerException e)
 				{
 					log.error("Regel {} hat Exception bei Linienbreite sz={}", muster, rule.getAttribute("sz"));
 					throw e;
@@ -123,6 +123,7 @@ protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(JTrain
 		}
 		return defaultValue;
 	}
+	
 	private Color stringToColor(String input, Color defaultValue)
 	{
 		if(input.startsWith("c("))
@@ -132,7 +133,7 @@ protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(JTrain
 			
 			Matcher matcher = Pattern.compile("\\d+").matcher(input);
 			
-			for(int i=0; i<3; i++)
+			for(int i = 0; i < 3; i++)
 			{
 				if(!matcher.find())
 				{
@@ -143,7 +144,7 @@ protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(JTrain
 				{
 					rgb[i] = Integer.parseInt(matcher.group());
 				}
-				catch(NullPointerException|NumberFormatException e)
+				catch(NullPointerException | NumberFormatException e)
 				{
 					return defaultValue;
 				}
@@ -186,6 +187,7 @@ protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(JTrain
 		}
 		return defaultValue;
 	}
+	
 	protected LineType stringToLineType(String input, LineType defaultValue)
 	{
 		switch(input.toLowerCase())
