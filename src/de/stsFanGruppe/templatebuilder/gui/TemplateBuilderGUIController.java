@@ -1,7 +1,6 @@
 package de.stsFanGruppe.templatebuilder.gui;
 
 import java.awt.Component;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -18,14 +17,13 @@ import de.stsFanGruppe.templatebuilder.editor.EditorDaten;
 import de.stsFanGruppe.templatebuilder.editor.EditorGUI;
 import de.stsFanGruppe.templatebuilder.editor.bildfahrplan.BildfahrplanGUI;
 import de.stsFanGruppe.templatebuilder.editor.bildfahrplan.BildfahrplanGUIController;
+import de.stsFanGruppe.templatebuilder.editor.streckenEditor.StreckenEditorGUI;
+import de.stsFanGruppe.templatebuilder.editor.streckenEditor.StreckenEditorGUIController;
 import de.stsFanGruppe.templatebuilder.editor.tabEditor.TabEditorGUI;
 import de.stsFanGruppe.templatebuilder.external.*;
 import de.stsFanGruppe.templatebuilder.external.jtraingraph.*;
 import de.stsFanGruppe.templatebuilder.gui.TemplateBuilderGUI;
 import de.stsFanGruppe.templatebuilder.strecken.Streckenabschnitt;
-import de.stsFanGruppe.templatebuilder.streckenConfig.BildfahrplanSettingsStreckenGUI;
-import de.stsFanGruppe.templatebuilder.streckenConfig.BildfahrplanSettingsStreckenGUIController;
-import de.stsFanGruppe.templatebuilder.streckenConfig.BildfahrplanStreckenConfig;
 import de.stsFanGruppe.templatebuilder.zug.Fahrt;
 import de.stsFanGruppe.tools.FirstLastLinkedList;
 import de.stsFanGruppe.tools.GUILocker;
@@ -43,14 +41,11 @@ public class TemplateBuilderGUIController extends GUIController
 	protected TemplateBuilderGUI gui = null;
 	protected BildfahrplanConfig config;
 	protected FirstLastLinkedList<TabController> tabController = new FirstLastLinkedList<>();
-	protected BildfahrplanStreckenConfig streckenConfig;
 	
-	public TemplateBuilderGUIController(BildfahrplanConfig config, BildfahrplanStreckenConfig streckenConfig, String version, boolean dev)
+	public TemplateBuilderGUIController(BildfahrplanConfig config, String version, boolean dev)
 	{
 		NullTester.test(config);
-		NullTester.test(streckenConfig);
 		this.config = config;
-		this.streckenConfig = streckenConfig;
 		this.version = version;
 		this.dev = dev;
 	}
@@ -228,7 +223,7 @@ public class TemplateBuilderGUIController extends GUIController
 			}
 
 			case "streckenEdit":
-				if(!GUILocker.lock(BildfahrplanSettingsStreckenGUI.class)) break;
+				if(!GUILocker.lock(StreckenEditorGUI.class)) break;
 				Component com = getSelectedGUI();
 				
 				/*if(com == null || !com.getClass().isAssignableFrom(EditorGUI.class))
@@ -252,9 +247,9 @@ public class TemplateBuilderGUIController extends GUIController
 				
 				EditorDaten editorDaten = eGUI.getController().geteditorDaten();
 				
-				BildfahrplanSettingsStreckenGUIController controller = new BildfahrplanSettingsStreckenGUIController(
-						editorDaten, streckenConfig, () -> GUILocker.unlock(BildfahrplanSettingsStreckenGUI.class));
-				BildfahrplanSettingsStreckenGUI bssg = new BildfahrplanSettingsStreckenGUI(controller, gui.getFrame());
+				StreckenEditorGUIController controller = new StreckenEditorGUIController(
+						editorDaten, () -> GUILocker.unlock(StreckenEditorGUI.class));
+				StreckenEditorGUI bssg = new StreckenEditorGUI(controller, gui.getFrame());
 				break;
 			case "options":
 				if(!GUILocker.lock(BildfahrplanSettingsGUI.class)) break;

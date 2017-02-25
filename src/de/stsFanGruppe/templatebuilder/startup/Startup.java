@@ -4,7 +4,6 @@ import java.awt.EventQueue;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanConfig;
 import de.stsFanGruppe.templatebuilder.gui.TemplateBuilderGUI;
 import de.stsFanGruppe.templatebuilder.gui.TemplateBuilderGUIController;
-import de.stsFanGruppe.templatebuilder.streckenConfig.BildfahrplanStreckenConfig;
 
 public class Startup
 {
@@ -34,7 +33,7 @@ public class Startup
 		EventQueue.invokeLater(() -> {
 			try
 			{
-				TemplateBuilderGUIController controller = new TemplateBuilderGUIController(new BildfahrplanConfig(), new BildfahrplanStreckenConfig(), version, dev);
+				TemplateBuilderGUIController controller = new TemplateBuilderGUIController(new BildfahrplanConfig(), version, dev);
 				TemplateBuilderGUI window = new TemplateBuilderGUI(controller);
 				window.setVisible(true);
 			}
