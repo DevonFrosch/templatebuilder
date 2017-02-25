@@ -2,7 +2,6 @@ package de.stsFanGruppe.templatebuilder.startup;
 
 import java.awt.EventQueue;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanConfig;
-import de.stsFanGruppe.templatebuilder.gui.TemplateBuilderGUI;
 import de.stsFanGruppe.templatebuilder.gui.TemplateBuilderGUIController;
 
 public class Startup
@@ -34,8 +33,6 @@ public class Startup
 			try
 			{
 				TemplateBuilderGUIController controller = new TemplateBuilderGUIController(new BildfahrplanConfig(), version, dev);
-				TemplateBuilderGUI window = new TemplateBuilderGUI(controller);
-				window.setVisible(true);
 			}
 			catch(Exception e)
 			{

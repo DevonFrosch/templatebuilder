@@ -2,31 +2,27 @@ package de.stsFanGruppe.templatebuilder.gui;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
-import components.ButtonTabComponent;
 import de.stsFanGruppe.templatebuilder.editor.bildfahrplan.BildfahrplanGUI;
 import de.stsFanGruppe.tools.NullTester;
 import java.awt.Dimension;
 import java.awt.event.*;
 import java.awt.BorderLayout;
-import java.awt.Component;
 
 public class TemplateBuilderGUI implements GUI
 {
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(TemplateBuilderGUI.class);
-	
-	public static final int ANSICHT_BILDFAHRPLAN = 0;
-	public static final int ANSICHT_TABELLARISCH = 1;
 	
 	protected TemplateBuilderGUIController controller;
 	protected BildfahrplanGUI bildfahrplanZeichner;
 	private boolean initialized = false;
 	
 	protected JCheckBoxMenuItem mntmBildfahrplan;
-	protected JCheckBoxMenuItem mntmTabellarisch;
+	protected JCheckBoxMenuItem mntmTabellarischHin;
+	protected JCheckBoxMenuItem mntmTabellarischRück;
 	
 	protected JFrame frmTemplatebauer;
 	protected JTabbedPane tabbedPane;
-
+	
 	/**
 	 * Create the application.
 	 * @wbp.parser.entryPoint
@@ -35,7 +31,6 @@ public class TemplateBuilderGUI implements GUI
 	{
 		NullTester.test(controller);
 		this.controller = controller;
-		controller.setGUI(this);
 		initialize();
 	}
 	
@@ -160,11 +155,17 @@ public class TemplateBuilderGUI implements GUI
 		mntmBildfahrplan.addActionListener((ActionEvent arg0) -> updateAnsichtAuswahl());
 		mnAnsicht.add(mntmBildfahrplan);
 		
-		mntmTabellarisch = new JCheckBoxMenuItem("Tabellarisch");
-		mntmTabellarisch.setActionCommand("zeigeTabEditor");
-		mntmTabellarisch.addActionListener((ActionEvent arg0) -> controller.menuAction(arg0));
-		mntmTabellarisch.addActionListener((ActionEvent arg0) -> updateAnsichtAuswahl());
-		mnAnsicht.add(mntmTabellarisch);
+		mntmTabellarischHin = new JCheckBoxMenuItem("Tabellarisch (hin)");
+		mntmTabellarischHin.setActionCommand("zeigeTabEditorHin");
+		mntmTabellarischHin.addActionListener((ActionEvent arg0) -> controller.menuAction(arg0));
+		mntmTabellarischHin.addActionListener((ActionEvent arg0) -> updateAnsichtAuswahl());
+		mnAnsicht.add(mntmTabellarischHin);
+		
+		mntmTabellarischRück = new JCheckBoxMenuItem("Tabellarisch (zurück)");
+		mntmTabellarischRück.setActionCommand("zeigeTabEditorRück");
+		mntmTabellarischRück.addActionListener((ActionEvent arg0) -> controller.menuAction(arg0));
+		mntmTabellarischRück.addActionListener((ActionEvent arg0) -> updateAnsichtAuswahl());
+		mnAnsicht.add(mntmTabellarischRück);
 		
 		JMenu mnEinstellungen = new JMenu("Einstellungen");
 		menuBar.add(mnEinstellungen);
@@ -229,71 +230,25 @@ public class TemplateBuilderGUI implements GUI
 		frmTemplatebauer.getContentPane().add(toolBar, BorderLayout.NORTH);
 		
 		toolBar.add(new JButton()); //*/
+		
+		frmTemplatebauer.setVisible(true);
 	}
 	
 	public JFrame getFrame()
 	{
 		return frmTemplatebauer;
 	}
-	public void setVisible(boolean arg0)
-	{
-		this.frmTemplatebauer.setVisible(arg0);
-	}
 	
-	public int addTab(String name, Icon icon, String toolTip, Component view, Component columnHeader, Component rowHeader)
-	{
-		assert view != null;
-		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.getVerticalScrollBar().setUnitIncrement(20);
-		scrollPane.setViewportView(view);
-		if(columnHeader != null)
-		{
-			scrollPane.setColumnHeaderView(columnHeader);
-		}
-		if(rowHeader != null)
-		{
-			scrollPane.setRowHeaderView(rowHeader);
-		}
-		
-		boolean keinName = (name == null);
-		if(keinName)
-		{
-			name = "Neuer Fahrplan";
-		}
-		
-		int tabIndex = 0;
-		synchronized(tabbedPane)
-		{
-			tabbedPane.addTab(name, icon, scrollPane, toolTip);
-			tabIndex = tabbedPane.getTabCount() - 1;
-			tabbedPane.setTabComponentAt(tabIndex, new ButtonTabComponent(tabbedPane));
-			
-			if(keinName)
-			{
-				tabbedPane.setTitleAt(tabIndex, "Neuer Fahrplan ("+tabIndex+")");
-			}
-		}
-		return tabIndex;
-	}
-	public Component getSelectedTab()
-	{
-		if(tabbedPane.getTabCount() == 0)
-		{
-			return null;
-		}
-		
-		return tabbedPane.getComponentAt(tabbedPane.getSelectedIndex());
-	}
 	public void tabChanged(ChangeEvent e)
 	{
-		
+		updateAnsichtAuswahl();
 	}
 	
 	public void updateAnsichtAuswahl()
 	{
-		mntmBildfahrplan.setSelected(controller.selectedTabIsBildfahrplan());
-		mntmTabellarisch.setSelected(controller.selectedTabIsTabEditor());
+		mntmBildfahrplan.setSelected(controller.tabs.selectedTabIsBildfahrplan());
+		mntmTabellarischHin.setSelected(controller.tabs.selectedTabIsTabEditorHin());
+		mntmTabellarischRück.setSelected(controller.tabs.selectedTabIsTabEditorRück());
 	}
 	
 	public void errorMessage(String text, String titel)

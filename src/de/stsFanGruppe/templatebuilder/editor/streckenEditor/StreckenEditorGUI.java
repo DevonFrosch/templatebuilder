@@ -147,6 +147,10 @@ public class StreckenEditorGUI extends JDialog implements GUI
 		setVisible(false);
 		controller = null;
 	}
+	public StreckenEditorGUIController getController()
+	{
+		return controller;
+	}
 	
 	public void errorMessage(String text, String titel)
 	{

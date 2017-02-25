@@ -31,7 +31,7 @@
 
 // Quelle: http://docs.oracle.com/javase/tutorial/uiswing/examples/components/TabComponentsDemoProject/src/components/ButtonTabComponent.java
 
-package components;
+package de.stsFanGruppe.tools;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicButtonUI;
@@ -43,23 +43,43 @@ import java.awt.event.*;
  * Contains a JLabel to show the text and 
  * a JButton to close the tab it belongs to 
  */ 
-public class ButtonTabComponent extends JPanel {
+public class ButtonTabComponent extends JPanel
+{
     private final JTabbedPane pane;
+    private final String toolTip;
+    private CloseCallback closeCallback;
 
-    public ButtonTabComponent(final JTabbedPane pane) {
+    public ButtonTabComponent(final JTabbedPane pane)
+    {
+        this(pane, null);
+    }
+    public ButtonTabComponent(final JTabbedPane pane, CloseCallback closeCallback)
+    {
+        this(pane, closeCallback, null);
+    }
+    public ButtonTabComponent(final JTabbedPane pane, CloseCallback closeCallback, final String toolTip)
+    {
         //unset default FlowLayout' gaps
         super(new FlowLayout(FlowLayout.LEFT, 0, 0));
-        if (pane == null) {
-            throw new NullPointerException("TabbedPane is null");
+        if(pane == null)
+        {
+            throw new NullPointerException("Parameter pane is null.");
         }
+        
         this.pane = pane;
+        this.toolTip = toolTip;
+        this.closeCallback = closeCallback;
+        
         setOpaque(false);
         
         //make JLabel read titles from JTabbedPane
-        JLabel label = new JLabel() {
-            public String getText() {
+        JLabel label = new JLabel()
+        {
+            public String getText()
+            {
                 int i = pane.indexOfTabComponent(ButtonTabComponent.this);
-                if (i != -1) {
+                if (i != -1)
+                {
                     return pane.getTitleAt(i);
                 }
                 return null;
@@ -75,12 +95,26 @@ public class ButtonTabComponent extends JPanel {
         //add more space to the top of the component
         setBorder(BorderFactory.createEmptyBorder(2, 0, 0, 0));
     }
+    
+    public void closeTab()
+    {
+        int i = pane.indexOfTabComponent(ButtonTabComponent.this);
+        if (i != -1)
+        {
+            if(closeCallback == null || closeCallback.tabClosed(i))
+            {
+                pane.remove(i);
+            }
+        }
+    }
 
-    private class TabButton extends JButton implements ActionListener {
-        public TabButton() {
+    private class TabButton extends JButton implements ActionListener
+    {
+        public TabButton()
+        {
             int size = 17;
             setPreferredSize(new Dimension(size, size));
-            setToolTipText("close this tab");
+            setToolTipText(toolTip);
             //Make the button looks the same for all Laf's
             setUI(new BasicButtonUI());
             //Make it transparent
@@ -97,28 +131,30 @@ public class ButtonTabComponent extends JPanel {
             addActionListener(this);
         }
 
-        public void actionPerformed(ActionEvent e) {
-            int i = pane.indexOfTabComponent(ButtonTabComponent.this);
-            if (i != -1) {
-                pane.remove(i);
-            }
+        public void actionPerformed(ActionEvent e)
+        {
+            closeTab();
         }
 
         //we don't want to update UI for this button
-        public void updateUI() {
+        public void updateUI()
+        {
         }
 
         //paint the cross
-        protected void paintComponent(Graphics g) {
+        protected void paintComponent(Graphics g)
+        {
             super.paintComponent(g);
             Graphics2D g2 = (Graphics2D) g.create();
             //shift the image for pressed buttons
-            if (getModel().isPressed()) {
+            if (getModel().isPressed())
+            {
                 g2.translate(1, 1);
             }
             g2.setStroke(new BasicStroke(2));
             g2.setColor(Color.BLACK);
-            if (getModel().isRollover()) {
+            if (getModel().isRollover())
+            {
                 g2.setColor(Color.MAGENTA);
             }
             int delta = 6;
@@ -128,21 +164,38 @@ public class ButtonTabComponent extends JPanel {
         }
     }
 
-    private final static MouseListener buttonMouseListener = new MouseAdapter() {
-        public void mouseEntered(MouseEvent e) {
+    private MouseListener buttonMouseListener = new MouseAdapter()
+    {
+        public void mouseEntered(MouseEvent e)
+        {
             Component component = e.getComponent();
-            if (component instanceof AbstractButton) {
+            if (component instanceof AbstractButton)
+            {
                 AbstractButton button = (AbstractButton) component;
                 button.setBorderPainted(true);
             }
         }
 
-        public void mouseExited(MouseEvent e) {
+        public void mouseExited(MouseEvent e)
+        {
             Component component = e.getComponent();
-            if (component instanceof AbstractButton) {
+            if (component instanceof AbstractButton)
+            {
                 AbstractButton button = (AbstractButton) component;
                 button.setBorderPainted(false);
             }
         }
     };
+    
+    public interface CloseCallback
+    {
+        /**
+         * Function is called when a tab is to be closed, return value decides whether the tab is closed or not.
+         * 
+         * This just covers closing by the close button provided by this class.
+         * @param index Tab index to be closed.
+         * @return true if the tab can be closed safely.
+         */
+        public boolean tabClosed(int index);
+    }
 }

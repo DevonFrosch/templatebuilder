@@ -8,7 +8,8 @@ import de.stsFanGruppe.tools.NullTester;
 import javax.swing.JTable;
 import java.awt.BorderLayout;
 import javax.swing.ListSelectionModel;
-import javax.swing.JButton;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableModel;
 
 public class TabEditorGUI extends JPanel implements EditorGUI
 {
@@ -45,74 +46,30 @@ public class TabEditorGUI extends JPanel implements EditorGUI
 		table.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 		table.setColumnSelectionAllowed(true);
 		table.setCellSelectionEnabled(true);
-		//table.setModel(new DefaultTableModel(new String[] {"Zug 1"}, 1));
+		//table.setModel(new DefaultTableModel(new String[] {"", "Zug 1"}, 1));
 		add(table);
-		
-		JButton button = new JButton("+");
-		add(button, BorderLayout.EAST);
-		
-		JButton button_1 = new JButton("+");
-		add(button_1, BorderLayout.SOUTH);
-		
 	}
 	
-	public int getColumnCount()
+	public JTableHeader getTableHeader()
 	{
-		return table.getColumnCount();
-	}
-	public String getColumnName(int index)
-	{
-		return table.getColumnName(index);
-	}
-	public void getColumn(int index)
-	{
-		
-	}
-	public void addColumn()
-	{
-		
-	}
-	public void insertColumn(int index)
-	{
-		
-	}
-	public void removeColumn(int index)
-	{
-		
-	}
-	public void removeAllColumns()
-	{
-		
+		return table.getTableHeader();
 	}
 	
-	public int getRowCount()
+	public boolean isRichtungAufsteigend()
 	{
-		return table.getRowCount();
+		return controller.richtungAufsteigend;
 	}
-	public void getRow(int index)
+	public void setTableModel(TableModel model)
 	{
-		
+		table.setModel(model);
 	}
-	public void addRow()
+	public void setTableValueAt(String content, int row, int column)
 	{
-		
-	}
-	public void insertRow(int index)
-	{
-		
-	}
-	public void removeRow(int index)
-	{
-		
-	}
-	public void removeAllRows()
-	{
-		
+		table.setValueAt(content, row, column);
 	}
 	
 	public EditorGUIController getController()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return controller;
 	}
 }

@@ -3,7 +3,7 @@ package de.stsFanGruppe.templatebuilder.zug;
 import java.util.*;
 import de.stsFanGruppe.tools.NullTester;
 
-public class Fahrt
+public class Fahrt implements Comparable<Fahrt>
 {
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Fahrt.class);
 	
@@ -92,6 +92,36 @@ public class Fahrt
 	{
 		return fahrplanhalte.stream().max((a, b) -> Double.compare(a.getMaxZeit(), b.getMaxZeit())).get().getMaxZeit();
 	}
+	public boolean hasAbschnitteRichtung(boolean richtungAufsteigend)
+	{
+		if(fahrplanhalte.size() < 2)
+		{
+			return false;
+		}
+		double letzterKm = -1;
+		
+		for(Fahrplanhalt halt: fahrplanhalte)
+		{
+			if(letzterKm == -1)
+			{
+				letzterKm = halt.getGleisabschnitt().getKm();
+				continue;
+			}
+			
+			if(richtungAufsteigend && halt.getGleisabschnitt().getKm() > letzterKm)
+			{
+				return true;
+			}
+			if(!richtungAufsteigend && halt.getGleisabschnitt().getKm() < letzterKm)
+			{
+				return true;
+			}
+				
+			halt.getGleisabschnitt().getKm();
+		}
+		
+		return false;
+	}
 	
 	public String toString()
 	{
@@ -124,5 +154,10 @@ public class Fahrt
 		
 		xml.add(indent+"</fahrt>");
 		return xml.toString();
+	}
+	
+	public int compareTo(Fahrt other)
+	{
+		return this.fahrplanhalte.first().compareTo(other.fahrplanhalte.first());
 	}
 }

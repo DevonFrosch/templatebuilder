@@ -1,6 +1,5 @@
 package de.stsFanGruppe.templatebuilder.gui;
 
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -8,24 +7,19 @@ import java.io.OutputStream;
 import java.util.Hashtable;
 import java.util.Set;
 import java.util.StringJoiner;
-import javax.swing.Icon;
-import javax.swing.JScrollPane;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanConfig;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanSettingsGUI;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanSettingsGUIController;
 import de.stsFanGruppe.templatebuilder.editor.EditorDaten;
-import de.stsFanGruppe.templatebuilder.editor.EditorGUI;
-import de.stsFanGruppe.templatebuilder.editor.bildfahrplan.BildfahrplanGUI;
 import de.stsFanGruppe.templatebuilder.editor.bildfahrplan.BildfahrplanGUIController;
 import de.stsFanGruppe.templatebuilder.editor.streckenEditor.StreckenEditorGUI;
 import de.stsFanGruppe.templatebuilder.editor.streckenEditor.StreckenEditorGUIController;
-import de.stsFanGruppe.templatebuilder.editor.tabEditor.TabEditorGUI;
+import de.stsFanGruppe.templatebuilder.editor.tabEditor.TabEditorGUIController;
 import de.stsFanGruppe.templatebuilder.external.*;
 import de.stsFanGruppe.templatebuilder.external.jtraingraph.*;
 import de.stsFanGruppe.templatebuilder.gui.TemplateBuilderGUI;
 import de.stsFanGruppe.templatebuilder.strecken.Streckenabschnitt;
 import de.stsFanGruppe.templatebuilder.zug.Fahrt;
-import de.stsFanGruppe.tools.FirstLastLinkedList;
 import de.stsFanGruppe.tools.GUILocker;
 import de.stsFanGruppe.tools.NullTester;
 
@@ -40,7 +34,7 @@ public class TemplateBuilderGUIController extends GUIController
 	
 	protected TemplateBuilderGUI gui = null;
 	protected BildfahrplanConfig config;
-	protected FirstLastLinkedList<TabController> tabController = new FirstLastLinkedList<>();
+	protected TemplateBuilderTabs tabs = null;
 	
 	public TemplateBuilderGUIController(BildfahrplanConfig config, String version, boolean dev)
 	{
@@ -48,12 +42,10 @@ public class TemplateBuilderGUIController extends GUIController
 		this.config = config;
 		this.version = version;
 		this.dev = dev;
+		this.gui = new TemplateBuilderGUI(this);
+		this.tabs = new TemplateBuilderTabs(gui.tabbedPane);
 	}
 	
-	public void setGUI(TemplateBuilderGUI gui)
-	{
-		this.gui = gui;
-	}
 	public BildfahrplanConfig getConfig()
 	{
 		return config;
@@ -62,13 +54,11 @@ public class TemplateBuilderGUIController extends GUIController
 	// ActionHandler
 	public void menuAction(ActionEvent event)
 	{
-		assert gui != null;
-		
 		switch(event.getActionCommand())
 		{
 			case "neu":
 			{
-				addBildfahrplanTab(null, null, null, new BildfahrplanGUIController(config, gui));
+				tabs.addTabEditorTab(null, null, null, new TabEditorGUIController(config, gui, true));
 				break;
 			}
 			case "importFromJTG":
@@ -116,7 +106,7 @@ public class TemplateBuilderGUIController extends GUIController
 						}
 						
 						// Zum Panel hinzufügen
-						addBildfahrplanTab(name, null, null, bfpController);
+						tabs.addBildfahrplanTab(name, null, null, bfpController);
 					}
 					
 					GUILocker.unlock(JTrainGraphImportGUI.class);
@@ -156,28 +146,12 @@ public class TemplateBuilderGUIController extends GUIController
 			}
 			case "exportToJTG":
 			{
-				EditorGUI bfpGUI = null;
-				Component com = getSelectedGUI();
-				
-				if(com == null || !com.getClass().isAssignableFrom(EditorGUI.class))
+				EditorDaten editorDaten = tabs.getSelectedEditorDaten();
+				if(editorDaten == null)
 				{
 					log.info("exportToJTG: Aktueller Tab ist keine EditorGUI.");
 					gui.errorMessage("Aktueller Tab ist nicht exportierbar.\nBitte anderen Tab auswählen.");
-					return;
 				}
-				
-				try
-				{
-					
-					bfpGUI = (EditorGUI) com;
-				}
-				catch(ClassCastException e)
-				{
-					// Das ist wohl klein 
-					return;
-				}
-				
-				EditorDaten editoData = bfpGUI.getController().geteditorDaten();
 				
 				if(!GUILocker.lock(JTrainGraphExportGUI.class)) break;
 				JTrainGraphExportGUI jtge = new JTrainGraphExportGUI(gui.getFrame(), (ergebnis) -> {
@@ -191,14 +165,14 @@ public class TemplateBuilderGUIController extends GUIController
 							JTrainGraphExporter exporter = new JTrainGraphExporter(ergebnis.useDS100());
 							OutputStream output = new java.io.FileOutputStream(ergebnis.getPfad());
 							
-							Streckenabschnitt streckenabschnitt = editoData.getStreckenabschnitt();
+							Streckenabschnitt streckenabschnitt = editorDaten.getStreckenabschnitt();
 							
 							assert streckenabschnitt != null;
 							
 							Set<Fahrt> fahrten = null;
 							if(ergebnis.exportZuege())
 							{
-								fahrten = editoData.getFahrten();
+								fahrten = editorDaten.getFahrten();
 								exporter.exportFahrten(output, streckenabschnitt, fahrten);
 							}
 							else
@@ -221,36 +195,71 @@ public class TemplateBuilderGUIController extends GUIController
 				});
 				break;
 			}
-
 			case "streckenEdit":
+			{
 				if(!GUILocker.lock(StreckenEditorGUI.class)) break;
-				Component com = getSelectedGUI();
 				
-				/*if(com == null || !com.getClass().isAssignableFrom(EditorGUI.class))
-				{
-					log.info("streckenEdit: Aktueller Tab ist keine EditorGUI.");
-					gui.errorMessage("Aktueller Tab kann nicht bearbeitet werden.\nBitte anderen Tab auswählen.");
-					return;
-				}*/
-				
-				EditorGUI eGUI;
-				try
-				{
-					
-					eGUI = (EditorGUI) com;
-				}
-				catch(ClassCastException e)
-				{
-					// Das ist wohl klein 
-					throw e;
-				}
-				
-				EditorDaten editorDaten = eGUI.getController().geteditorDaten();
-				
+				EditorDaten editorDaten = tabs.getSelectedEditorDaten();
 				StreckenEditorGUIController controller = new StreckenEditorGUIController(
 						editorDaten, () -> GUILocker.unlock(StreckenEditorGUI.class));
 				StreckenEditorGUI bssg = new StreckenEditorGUI(controller, gui.getFrame());
 				break;
+			}
+			case "zeigeBildfahrplan":
+			{
+				if(!tabs.selectedTabIsEditor() || tabs.selectedTabIsBildfahrplan())
+				{
+					break;
+				}
+				EditorDaten editorDaten = tabs.getSelectedEditorDaten();
+				if(editorDaten.hasBildfahrplan())
+				{
+					tabs.setSelectedTab(tabs.getTabIndexOf(editorDaten.getBildfahrplan().getBildfahrplanGUI()));
+					break;
+				}
+				
+				int index = tabs.addBildfahrplanTab(editorDaten.getName(), null, null,
+						new BildfahrplanGUIController(editorDaten, config, gui));
+				tabs.setSelectedTab(index);
+				break;
+			}
+			case "zeigeTabEditorHin":
+			{
+				if(!tabs.selectedTabIsEditor() || tabs.selectedTabIsTabEditorHin())
+				{
+					break;
+				}
+				EditorDaten editorDaten = tabs.getSelectedEditorDaten();
+				if(editorDaten.hasTabEditorHin())
+				{
+					log.info("Wechseln auf EditorHin");
+					tabs.setSelectedTab(tabs.getTabIndexOf(editorDaten.getTabEditorHin().getTabEditorGUI()));
+					break;
+				}
+				
+				int index = tabs.addTabEditorTab(tabs.getSelectedEditorDaten().getName(), null, null,
+						new TabEditorGUIController(editorDaten, config, gui, true));
+				tabs.setSelectedTab(index);
+				break;
+			}
+			case "zeigeTabEditorRück":
+			{
+				if(!tabs.selectedTabIsEditor() || tabs.selectedTabIsTabEditorRück())
+				{
+					break;
+				}
+				EditorDaten editorDaten = tabs.getSelectedEditorDaten();
+				if(editorDaten.hasTabEditorRück())
+				{
+					tabs.setSelectedTab(tabs.getTabIndexOf(editorDaten.getTabEditorRück().getTabEditorGUI()));
+					break;
+				}
+				
+				int index = tabs.addTabEditorTab(tabs.getSelectedEditorDaten().getName(), null, null,
+						new TabEditorGUIController(editorDaten, config, gui, false));
+				tabs.setSelectedTab(index);
+				break;
+			}
 			case "options":
 				if(!GUILocker.lock(BildfahrplanSettingsGUI.class)) break;
 				BildfahrplanSettingsGUI sg = new BildfahrplanSettingsGUI(new BildfahrplanSettingsGUIController(config, () -> GUILocker.unlock(BildfahrplanSettingsGUI.class)), gui.getFrame());
@@ -270,43 +279,8 @@ public class TemplateBuilderGUIController extends GUIController
 				log.info("Programm beendet");
 				System.exit(0);
 			default:
-				log.error("Menü: nicht erkannt");
+				log.error("Menü {} nicht erkannt", event.getActionCommand());
 				break;
 		}
-	}
-	
-	public int addBildfahrplanTab(String name, Icon icon, String toolTip, BildfahrplanGUIController bfpController)
-	{
-		return gui.addTab(name, icon, toolTip, bfpController.getBildfahrplanGUI(),
-				bfpController.getBildfahrplanSpaltenHeaderGUI(), bfpController.getBildfahrplanZeilenHeaderGUI());
-	}
-	public boolean selectedTabIsBildfahrplan()
-	{
-		Class<? extends Component> tab = gui.getSelectedTab().getClass();
-		if(tab == null)
-		{
-			return false;
-		}
-		return tab.equals(BildfahrplanGUI.class);
-	}
-	
-	public boolean selectedTabIsTabEditor()
-	{
-		Class<? extends Component> tab = gui.getSelectedTab().getClass();
-		if(tab == null)
-		{
-			return false;
-		}
-		return tab.equals(TabEditorGUI.class);
-	}
-	
-	public Component getSelectedGUI()
-	{
-		JScrollPane scrollPane = (JScrollPane) gui.getSelectedTab();
-		if(scrollPane == null || scrollPane.getViewport() == null)
-		{
-			return null;
-		}
-		return scrollPane.getViewport().getView();
 	}
 }
