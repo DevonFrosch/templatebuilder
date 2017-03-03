@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jTrainGraph_timetable version="008" name="" tMin="360" tMax="410" d="1111111" bgC="weiß" sFont="font(SansSerif;0;12)" trFont="font(SansSerif;0;12)" hFont="font(SansSerif;0;12)" tFont="font(SansSerif;0;12)" sHor="true" sLine="0" shKm="false" sStation="-1" eStation="-1" cNr="1" exW="-1" exH="-1" shV="false">
+	<stations>
+		<sta name="A-Stadt" km="0.0" cl="schwarz" sh="true" sz="1" sy="0"></sta>
+		<sta name="B-Hausen" km="10.0" cl="schwarz" sh="true" sz="1" sy="0"></sta>
+		<sta name="C-Dorf" km="30.0" cl="schwarz" sh="true" sz="1" sy="0"></sta>
+	</stations>
+	<trains>
+		<ti name="Zug 1" cm="" cl="schwarz" sh="true" sz="1" sy="0" d="1111111" id="">
+			<t a="" d="06:00"></t>
+			<t a="06:10" d="06:11"></t>
+			<t a="06:29" d=""></t>
+		</ti>
+		<ti name="Zug 3" cm="" cl="schwarz" sh="true" sz="1" sy="0" d="1111111" id="">
+			<t a="" d="07:00"></t>
+			<t a="" d=""></t>
+			<t a="07:29" d=""></t>
+		</ti>
+		<ta name="Zug 2" cm="" cl="schwarz" sh="true" sz="1" sy="0" d="1111111" id="">
+			<t a="06:59" d=""></t>
+			<t a="06:49" d="06:50"></t>
+			<t a="" d="06:30"></t>
+		</ta>
+	</trains>
+</jTrainGraph_timetable>
