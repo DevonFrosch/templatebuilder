@@ -27,7 +27,12 @@ public class JTrainGraphImporter extends Importer
 		{
 			XMLReader xml = new XMLReader(input);
 			
-			XMLElement tJtgTt = xml.findTag("jTrainGraph_timetable");
+			XMLElement tJtgTt = xml.findTag("jTrainGraph_timetable", "fahrplandaten");
+			if(tJtgTt.getName().toLowerCase() == "fahrplandaten")
+			{
+				throw new ImportException("Zu alte Version einer JTG-Datei");
+			}
+			
 			XMLElement tStations = xml.findTag("stations");
 			
 			FirstLastList<Betriebsstelle> betriebsstellen = new FirstLastLinkedList<>();
@@ -78,6 +83,11 @@ public class JTrainGraphImporter extends Importer
 			log.error("NumberFormatException: {}", e.getMessage());
 			throw new ImportException("Numerischer Wert nicht erkannt", e);
 		}
+		catch(Exception e)
+		{
+			log.error("Exception", e);
+			throw new ImportException(e);
+		}
 		
 		return streckenabschnitt;
 	}
@@ -100,8 +110,13 @@ public class JTrainGraphImporter extends Importer
 		try
 		{
 			XMLReader xml = new XMLReader(input);
+
+			XMLElement tJtgTt = xml.findTag("jTrainGraph_timetable", "fahrplandaten");
+			if(tJtgTt.getName().toLowerCase() == "fahrplandaten")
+			{
+				throw new ImportException("Zu alte Version einer JTG-Datei");
+			}
 			
-			XMLElement tJtgTt = xml.findTag("jTrainGraph_timetable");
 			XMLElement tTrains = xml.findTag("trains");
 			
 			XMLElement train = null;
@@ -127,12 +142,19 @@ public class JTrainGraphImporter extends Importer
 					{
 						OptionalDouble doubleAn = TimeFormater.stringToOptionalDouble(an);
 						OptionalDouble doubleAb = TimeFormater.stringToOptionalDouble(ab);
+						
+						// An > Ab -> ignorieren da vermutlich Tagesübergang
+						if(doubleAn.isPresent() && doubleAb.isPresent() && doubleAn.getAsDouble() > doubleAb.getAsDouble())
+						{
+							continue;
+						}
+						
 						Fahrplanhalt f = new Fahrplanhalt(gleisabschnitte.get(i), doubleAn, doubleAb, new FahrplanhaltEigenschaften());
 						fahrplanhalte.add(f);
 					}
-					catch(NumberFormatException e)
+					catch(IllegalArgumentException e)
 					{
-						log.error("NumberFormatException");
+						log.error("Exception bei Zug {}", train.getAttribute("name"), e);
 						throw new ImportException(e);
 					}
 				}

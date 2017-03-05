@@ -39,7 +39,7 @@ public class XMLReader
 		List<String> tagNames = Arrays.asList(searchNames);
 		if(tagNames.contains(null))
 		{
-			throw new NullPointerException();
+			throw new NullPointerException("Namensliste enthält null");
 		}
 		
 		// alles auf lower case
@@ -89,7 +89,11 @@ public class XMLReader
 		}
 		
 		parser.close();
-		log.trace("End of Document");
+		log.debug("End of Document bei Suche von {}", String.join(", ", searchNames));
+		if(untilName == null)
+		{
+			throw new XMLStreamException("Tags "+String.join(", ", searchNames)+" nicht gefunden");
+		}
 		return null;
 	}
 }

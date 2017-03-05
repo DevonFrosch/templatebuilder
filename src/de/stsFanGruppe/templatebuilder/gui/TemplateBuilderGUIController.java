@@ -104,7 +104,7 @@ public class TemplateBuilderGUIController extends GUIController
 						catch(ImportException e)
 						{
 							log.error("JTG-Import", e);
-							gui.errorMessage("Fehler beim Import!");
+							gui.errorMessage("Fehler beim Import!\n"+e.getLocalizedMessage());
 							return;
 						}
 						
@@ -141,7 +141,7 @@ public class TemplateBuilderGUIController extends GUIController
 						catch(ImportException e)
 						{
 							log.error("JTG-Regelimport", e);
-							gui.errorMessage("Fehler beim Import!");
+							gui.errorMessage("Fehler beim Import!\n"+e.getLocalizedMessage());
 						}
 					}
 					GUILocker.unlock(JTrainGraphZugregelImportGUI.class);
@@ -193,7 +193,7 @@ public class TemplateBuilderGUIController extends GUIController
 						catch(ExportException e)
 						{
 							log.error("JTG-Export", e);
-							gui.errorMessage("Fehler beim Export!");
+							gui.errorMessage("Fehler beim Export!\n"+e.getLocalizedMessage());
 						}
 					}
 					GUILocker.unlock(JTrainGraphExportGUI.class);
