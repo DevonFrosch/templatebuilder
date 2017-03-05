@@ -75,7 +75,7 @@ public class TabEditorGUIController extends EditorGUIController
 			return;
 		}
 		
-		// Erster Zug
+		// Erster Halt
 		{
 			Betriebsstelle bs = betriebsstellen.first();
 			
@@ -93,7 +93,7 @@ public class TabEditorGUIController extends EditorGUIController
 			bsIndexAb.put(bs.getName(), i * 2);
 		}
 		
-		// Letzter Zug
+		// Letzter Halt
 		{
 			Betriebsstelle bs = betriebsstellen.last();
 			
@@ -104,10 +104,12 @@ public class TabEditorGUIController extends EditorGUIController
 		zeilenGui.setRows(bsNamen.toArray(new String[bsNamen.size()]));
 		
 		String[] fahrtNamen = fahrten.stream().map(f -> f.getName()).toArray(String[]::new);
-		HashMap<String, Integer> fahrtIndex = new HashMap<>();
-		for(int j = 0; j < fahrtNamen.length; j++)
+		Integer[] fahrtHashes = fahrten.stream().map(f -> f.hashCode()).toArray(Integer[]::new);
+		
+		HashMap<Integer, Integer> fahrtIndex = new HashMap<>();
+		for(int j = 0; j < fahrtHashes.length; j++)
 		{
-			fahrtIndex.put(fahrtNamen[j], j);
+			fahrtIndex.put(fahrtHashes[j], j);
 		}
 		
 		gui.setTableModel(new DefaultTableModel(fahrtNamen, bsNamen.size()));
@@ -121,23 +123,24 @@ public class TabEditorGUIController extends EditorGUIController
 			
 			if(halte == null || halte.size() < 1)
 			{
+				log.warn("Zug {}: Zu wenig Halte!", fahrt.getName());
 				break;
 			}
 			
 			for(Fahrplanhalt fh : halte)
 			{
-				String b = fh.getGleisabschnitt().getParent().getParent().getName();
+				String b = fh.getBetriebsstelle().getName();
 				
 				// Ankünfte außerhalb der Tabelle ignorieren
 				if(fh.getAnkunft().isPresent() && bsIndexAn.get(b) != null)
 				{
 					String an = TimeFormater.doubleToString(fh.getAnkunft().getAsDouble());
-					gui.setTableValueAt(an, bsIndexAn.get(b), fahrtIndex.get(fahrtName));
+					gui.setTableValueAt(an, bsIndexAn.get(b), fahrtIndex.get(fahrt.hashCode()));
 				}
 				if(fh.getAbfahrt().isPresent() && bsIndexAb.get(b) != null)
 				{
 					String ab = TimeFormater.doubleToString(fh.getAbfahrt().getAsDouble());
-					gui.setTableValueAt(ab, bsIndexAb.get(b), fahrtIndex.get(fahrtName));
+					gui.setTableValueAt(ab, bsIndexAb.get(b), fahrtIndex.get(fahrt.hashCode()));
 				}
 			}
 		}
