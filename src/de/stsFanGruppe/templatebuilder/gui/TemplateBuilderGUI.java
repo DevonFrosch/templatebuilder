@@ -5,6 +5,7 @@ import javax.swing.event.ChangeEvent;
 import de.stsFanGruppe.templatebuilder.editor.bildfahrplan.BildfahrplanGUI;
 import de.stsFanGruppe.tools.NullTester;
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.event.*;
 import java.awt.BorderLayout;
 
@@ -222,12 +223,57 @@ public class TemplateBuilderGUI implements GUI
 		 * splitPane.setLeftComponent(tree); //
 		 */
 		
+		JPanel panel = new JPanel();
+		frmTemplatebauer.getContentPane().add(panel, BorderLayout.CENTER);
+		panel.setLayout(new BorderLayout(0, 0));
+		
+		{
+			JToolBar toolBar = new JToolBar();
+			toolBar.setFloatable(false);
+			panel.add(toolBar, BorderLayout.NORTH);
+			
+			ImageIcon jtgImportIcon = new ImageIcon("icons/Import_JTG.png");
+			jtgImportIcon = new ImageIcon(jtgImportIcon.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH));
+			JButton jtgImportButton = new JButton(jtgImportIcon);
+			jtgImportButton.setActionCommand("importFromJTG");
+			jtgImportButton.addActionListener((ActionEvent arg0) -> controller.menuAction(arg0));
+			toolBar.add(jtgImportButton);
+			
+			toolBar.addSeparator();
+			
+			ImageIcon bildfahrplanIcon = new ImageIcon("icons/Bildfahrplan.png");
+			bildfahrplanIcon = new ImageIcon(bildfahrplanIcon.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH));
+			JButton bildfahrplanButton = new JButton(bildfahrplanIcon);
+			bildfahrplanButton.setActionCommand("zeigeBildfahrplan");
+			bildfahrplanButton.addActionListener((ActionEvent arg0) -> controller.menuAction(arg0));
+			bildfahrplanButton.addActionListener((ActionEvent arg0) -> updateAnsichtAuswahl());
+			toolBar.add(bildfahrplanButton);
+			
+			ImageIcon tabelleHinIcon = new ImageIcon("icons/Tabelle_hin.png");
+			tabelleHinIcon = new ImageIcon(tabelleHinIcon.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH));
+			JButton tabelleHinButton = new JButton(tabelleHinIcon);
+			tabelleHinButton.setActionCommand("zeigeTabEditorHin");
+			tabelleHinButton.addActionListener((ActionEvent arg0) -> controller.menuAction(arg0));
+			tabelleHinButton.addActionListener((ActionEvent arg0) -> updateAnsichtAuswahl());
+			toolBar.add(tabelleHinButton);
+			
+			ImageIcon tabelleRueckIcon = new ImageIcon("icons/Tabelle_rueck.png");
+			tabelleRueckIcon = new ImageIcon(tabelleRueckIcon.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH));
+			JButton tabelleRueckButton = new JButton(tabelleRueckIcon);
+			tabelleRueckButton.setActionCommand("zeigeTabEditorRück");
+			tabelleRueckButton.addActionListener((ActionEvent arg0) -> controller.menuAction(arg0));
+			tabelleRueckButton.addActionListener((ActionEvent arg0) -> updateAnsichtAuswahl());
+			toolBar.add(tabelleRueckButton);
+			
+			
+		}
+		
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP, JTabbedPane.SCROLL_TAB_LAYOUT);
+		panel.add(tabbedPane);
 		tabbedPane.addChangeListener((ChangeEvent event) -> tabChanged(event));
 		
 		// TODO
 		// splitPane.setRightComponent(tabbedPane);
-		frmTemplatebauer.getContentPane().add(tabbedPane, BorderLayout.CENTER);
 		
 		// TODO
 		/*
