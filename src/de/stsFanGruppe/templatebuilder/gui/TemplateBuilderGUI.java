@@ -232,7 +232,7 @@ public class TemplateBuilderGUI implements GUI
 			toolBar.setFloatable(false);
 			panel.add(toolBar, BorderLayout.NORTH);
 			
-			ImageIcon jtgImportIcon = new ImageIcon("icons/Import_JTG.png");
+			ImageIcon jtgImportIcon = new ImageIcon(TemplateBuilderGUI.class.getResource("/Import_JTG.png"));
 			jtgImportIcon = new ImageIcon(jtgImportIcon.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH));
 			JButton jtgImportButton = new JButton(jtgImportIcon);
 			jtgImportButton.setActionCommand("importFromJTG");
@@ -241,7 +241,7 @@ public class TemplateBuilderGUI implements GUI
 			
 			toolBar.addSeparator();
 			
-			ImageIcon bildfahrplanIcon = new ImageIcon("icons/Bildfahrplan.png");
+			ImageIcon bildfahrplanIcon = new ImageIcon(TemplateBuilderGUI.class.getResource("/Bildfahrplan.png"));
 			bildfahrplanIcon = new ImageIcon(bildfahrplanIcon.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH));
 			JButton bildfahrplanButton = new JButton(bildfahrplanIcon);
 			bildfahrplanButton.setActionCommand("zeigeBildfahrplan");
@@ -249,7 +249,7 @@ public class TemplateBuilderGUI implements GUI
 			bildfahrplanButton.addActionListener((ActionEvent arg0) -> updateAnsichtAuswahl());
 			toolBar.add(bildfahrplanButton);
 			
-			ImageIcon tabelleHinIcon = new ImageIcon("icons/Tabelle_hin.png");
+			ImageIcon tabelleHinIcon = new ImageIcon(TemplateBuilderGUI.class.getResource("/Tabelle_hin.png"));
 			tabelleHinIcon = new ImageIcon(tabelleHinIcon.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH));
 			JButton tabelleHinButton = new JButton(tabelleHinIcon);
 			tabelleHinButton.setActionCommand("zeigeTabEditorHin");
@@ -257,15 +257,13 @@ public class TemplateBuilderGUI implements GUI
 			tabelleHinButton.addActionListener((ActionEvent arg0) -> updateAnsichtAuswahl());
 			toolBar.add(tabelleHinButton);
 			
-			ImageIcon tabelleRueckIcon = new ImageIcon("icons/Tabelle_rueck.png");
+			ImageIcon tabelleRueckIcon = new ImageIcon(TemplateBuilderGUI.class.getResource("/Tabelle_rueck.png"));
 			tabelleRueckIcon = new ImageIcon(tabelleRueckIcon.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH));
 			JButton tabelleRueckButton = new JButton(tabelleRueckIcon);
 			tabelleRueckButton.setActionCommand("zeigeTabEditorRück");
 			tabelleRueckButton.addActionListener((ActionEvent arg0) -> controller.menuAction(arg0));
 			tabelleRueckButton.addActionListener((ActionEvent arg0) -> updateAnsichtAuswahl());
 			toolBar.add(tabelleRueckButton);
-			
-			
 		}
 		
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP, JTabbedPane.SCROLL_TAB_LAYOUT);

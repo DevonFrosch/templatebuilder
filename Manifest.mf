@@ -1,4 +1,4 @@
 Manifest-Version: 1.0
+Rsrc-Class-Path: ./
 Main-Class: de.stsFanGruppe.templatebuilder.gui.bildfahrplan.Bildfahrp
  lanGUI
-
