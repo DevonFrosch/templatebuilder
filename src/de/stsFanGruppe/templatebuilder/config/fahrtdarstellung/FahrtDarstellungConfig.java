@@ -34,6 +34,9 @@ public class FahrtDarstellungConfig extends ConfigController
 	public static final FahrtFilter DEFAULT_FAHRTDARSTELLUNG_FILTER = FahrtFilter.BEGINNT_MIT;
 	public static final String DEFAULT_FAHRTDARSTELLUNG_MUSTER = "";
 	
+	// nicht persistente Einstellungen
+	private String zugsucheText = null;
+	
 	// Konstruktoren
 	public FahrtDarstellungConfig()
 	{
@@ -94,6 +97,17 @@ public class FahrtDarstellungConfig extends ConfigController
 	public void setStandardLinienTyp(String standardLinienFarbe)
 	{
 		prefs.setString("standardLinienFarbe", CONFIG_STANDARD_LINIEN_TYP, standardLinienFarbe);
+	}
+	
+	public String getZugsucheText()
+	{
+		return zugsucheText;
+	}
+	
+	public void setZugsucheText(String zugsucheText)
+	{
+		this.zugsucheText = zugsucheText;
+		notifyChange();
 	}
 	
 	public FahrtDarstellung getStandardFahrtDarstellung()
@@ -171,5 +185,14 @@ public class FahrtDarstellungConfig extends ConfigController
 		}
 		
 		return list.toArray(new FahrtDarstellung[list.size()]);
+	}
+
+	public FahrtDarstellung getGesuchteFahrtDarstellung()
+	{
+		if(zugsucheText == null)
+		{
+			return null;
+		}
+		return new FahrtDarstellung(FahrtFilter.ENTHAELT, zugsucheText, Color.RED, 2, LineType.DASHED_LINE);
 	}
 }

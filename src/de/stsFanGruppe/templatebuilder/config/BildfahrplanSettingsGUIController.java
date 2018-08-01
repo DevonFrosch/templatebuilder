@@ -3,7 +3,6 @@ package de.stsFanGruppe.templatebuilder.config;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import javax.swing.JColorChooser;
-import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.FahrtDarstellungConfig;
 import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.FahrtDarstellungSettingsGUI;
 import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.FahrtDarstellungSettingsGUIController;
 import de.stsFanGruppe.templatebuilder.gui.GUIController;
@@ -112,9 +111,11 @@ public class BildfahrplanSettingsGUIController extends GUIController
 			case "format":
 				if(!GUILocker.lock(FahrtDarstellungSettingsGUI.class))
 					break;
-				FahrtDarstellungSettingsGUIController ffsgc = new FahrtDarstellungSettingsGUIController(new FahrtDarstellungConfig(), () -> {
-					GUILocker.unlock(FahrtDarstellungSettingsGUI.class);
-				});
+				FahrtDarstellungSettingsGUIController ffsgc = new FahrtDarstellungSettingsGUIController(
+					config.getFahrtDarstellungConfig(), () -> {
+						GUILocker.unlock(FahrtDarstellungSettingsGUI.class);
+					}
+				);
 				FahrtDarstellungSettingsGUI ffsg = new FahrtDarstellungSettingsGUI(ffsgc, gui);
 				break;
 			case "cancel":

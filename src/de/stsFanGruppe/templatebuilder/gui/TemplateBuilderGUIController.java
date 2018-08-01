@@ -131,7 +131,7 @@ public class TemplateBuilderGUIController extends GUIController
 							JTrainGraphZugregelImporter importer = new JTrainGraphZugregelImporter();
 							
 							InputStream input = new java.io.FileInputStream(ergebnis.getPfad());
-							importer.importRegeln(input);
+							importer.importRegeln(input, config.getFahrtDarstellungConfig());
 						}
 						catch(FileNotFoundException e)
 						{
@@ -208,6 +208,20 @@ public class TemplateBuilderGUIController extends GUIController
 				EditorDaten editorDaten = tabs.getSelectedEditorDaten();
 				FahrtEditorGUIController controller = new FahrtEditorGUIController(editorDaten, () -> GUILocker.unlock(FahrtEditorGUI.class));
 				
+				break;
+			}
+			case "sucheZug":
+			{
+				String suchString = gui.inputMessage("Suche nach Zugname:", "Suche Zug...");
+				if(suchString == null)
+				{
+					break;
+				}
+				else if(suchString.equals(""))
+				{
+					suchString = null;
+				}
+				config.getFahrtDarstellungConfig().setZugsucheText(suchString);
 				break;
 			}
 			case "streckenEdit":

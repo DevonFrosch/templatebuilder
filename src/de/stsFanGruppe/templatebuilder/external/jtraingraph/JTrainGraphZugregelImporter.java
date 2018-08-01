@@ -19,12 +19,10 @@ public class JTrainGraphZugregelImporter
 {
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(JTrainGraphZugregelImporter.class);
 	
-	public void importRegeln(InputStream input) throws ImportException
+	public void importRegeln(InputStream input, FahrtDarstellungConfig config) throws ImportException
 	{
 		log.info("JTrainGraphZugregeln - Import");
 		NullTester.test(input);
-		
-		FahrtDarstellungConfig config = new FahrtDarstellungConfig();
 		
 		try
 		{
@@ -200,7 +198,7 @@ public class JTrainGraphZugregelImporter
 				return LineType.DOTTED_LINE;
 			case "2":
 				// Kurz gestrichelt
-				return LineType.DASEHED_LINE;
+				return LineType.DASHED_LINE;
 			case "3":
 				// Länger gestrichelt (6,3)
 				return LineType.SHORT_LONG_LINE;

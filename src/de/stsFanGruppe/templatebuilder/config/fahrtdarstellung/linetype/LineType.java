@@ -19,7 +19,7 @@ public enum LineType
 			return new BasicStroke(width, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, 1.0f, new float[] {10, 10}, 1);
 		}
 	},
-	DASEHED_LINE
+	DASHED_LINE
 	{
 		public Stroke getStroke(float width)
 		{

@@ -82,8 +82,7 @@ public class TemplateBuilderGUI implements GUI
 		mntmffnen.addActionListener((ActionEvent arg0) -> controller.menuAction(arg0));
 		mnDatei.add(mntmffnen);
 		
-		JSeparator separator_2 = new JSeparator();
-		mnDatei.add(separator_2);
+		mnDatei.add(new JSeparator());
 		
 		JMenuItem mntmSpeichern = new JMenuItem("Speichern");
 		mntmSpeichern.setEnabled(false);
@@ -99,8 +98,7 @@ public class TemplateBuilderGUI implements GUI
 		mntmSpeichernUnter.addActionListener((ActionEvent arg0) -> controller.menuAction(arg0));
 		mnDatei.add(mntmSpeichernUnter);
 		
-		JSeparator separator = new JSeparator();
-		mnDatei.add(separator);
+		mnDatei.add(new JSeparator());
 		
 		JMenu mnImport = new JMenu("Import");
 		mnDatei.add(mnImport);
@@ -123,8 +121,7 @@ public class TemplateBuilderGUI implements GUI
 		mntmExportNachJtraingraph.addActionListener((ActionEvent arg0) -> controller.menuAction(arg0));
 		mnExport.add(mntmExportNachJtraingraph);
 		
-		JSeparator separator_1 = new JSeparator();
-		mnDatei.add(separator_1);
+		mnDatei.add(new JSeparator());
 		
 		JMenuItem mntmSchliessen = new JMenuItem("Schlie\u00DFen");
 		mntmSchliessen.setActionCommand("exit");
@@ -139,6 +136,14 @@ public class TemplateBuilderGUI implements GUI
 		mntmFahrten.setActionCommand("bearbeiteFahrten");
 		mntmFahrten.addActionListener((ActionEvent arg0) -> controller.menuAction(arg0));
 		mnBearbeiten.add(mntmFahrten);
+		
+		mnBearbeiten.add(new JSeparator());
+		
+		JMenuItem mntmSucheZug = new JMenuItem("Suche Zug...");
+		mntmSucheZug.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F, InputEvent.CTRL_MASK));
+		mntmSucheZug.setActionCommand("sucheZug");
+		mntmSucheZug.addActionListener((ActionEvent arg0) -> controller.menuAction(arg0));
+		mnBearbeiten.add(mntmSucheZug);
 		
 		JMenu mnStrecken = new JMenu("Strecken");
 		menuBar.add(mnStrecken);
@@ -313,5 +318,10 @@ public class TemplateBuilderGUI implements GUI
 	public void infoMessage(String text, String titel)
 	{
 		JOptionPane.showMessageDialog(frmTemplatebauer, text, titel, JOptionPane.INFORMATION_MESSAGE);
+	}
+	
+	public String inputMessage(String text, String titel)
+	{
+		return JOptionPane.showInputDialog(frmTemplatebauer, text, titel, JOptionPane.PLAIN_MESSAGE);
 	}
 }

@@ -2,6 +2,7 @@ package de.stsFanGruppe.templatebuilder.config;
 
 import java.awt.Color;
 import javax.swing.JComponent;
+import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.FahrtDarstellungConfig;
 import de.stsFanGruppe.tools.NullTester;
 import de.stsFanGruppe.tools.PreferenceHandler;
 
@@ -75,10 +76,13 @@ public class BildfahrplanConfig extends ConfigController
 	private static final Color DEFAULT_FARBEN_BETRIEBSS = Color.BLUE;
 	private static final Color DEFAULT_FARBEN_HINTERGR = Color.WHITE;
 	
+	protected FahrtDarstellungConfig fahrtDarstellungConfig;
+	
 	// Konstruktoren
 	public BildfahrplanConfig(double minZeit, double maxZeit)
 	{
 		log.debug("Neue BildfahrplanConfig(double, double)");
+		this.fahrtDarstellungConfig = new FahrtDarstellungConfig();
 		this.prefs = new PreferenceHandler(BildfahrplanConfig.class, () -> notifyChange());
 		this.setZeiten(minZeit, maxZeit);
 		assert prefs != null;
@@ -87,12 +91,18 @@ public class BildfahrplanConfig extends ConfigController
 	public BildfahrplanConfig()
 	{
 		log.debug("Neue BildfahrplanConfig()");
+		this.fahrtDarstellungConfig = new FahrtDarstellungConfig();
 		this.prefs = new PreferenceHandler(BildfahrplanConfig.class, () -> notifyChange());
 		this.enableAutoSize();
 		assert prefs != null;
 	}
 	
 	// Getter / Setter
+	public FahrtDarstellungConfig getFahrtDarstellungConfig()
+	{
+		return fahrtDarstellungConfig;
+	}
+	
 	public int getMarginRight()
 	{
 		return prefs.getInt(CONFIG_MAR_RIGHT, DEFAULT_MAR_RIGHT);

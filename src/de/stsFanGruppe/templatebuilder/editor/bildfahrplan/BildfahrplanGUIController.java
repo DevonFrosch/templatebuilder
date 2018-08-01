@@ -267,7 +267,7 @@ public class BildfahrplanGUIController extends EditorGUIController
 		
 		// ### Fahrten-Linien ###
 		{
-			FahrtDarstellungConfig darstellungConfig = new FahrtDarstellungConfig();
+			FahrtDarstellungConfig darstellungConfig = config.getFahrtDarstellungConfig();
 			FahrtDarstellungHandler darstellungHandler = new FahrtDarstellungHandler(darstellungConfig);
 			
 			int schachtelung = config.getSchachtelung();
@@ -288,6 +288,8 @@ public class BildfahrplanGUIController extends EditorGUIController
 					// Darstellung
 					FahrtDarstellung fahrtDarstellung = darstellungHandler.getFahrtDarstellung(zugName);
 					Color fahrtFarbe = fahrtDarstellung.getFarbe();
+					
+					
 					
 					for(Fahrplanhalt fh : fahrt.getFahrplanhalte())
 					{

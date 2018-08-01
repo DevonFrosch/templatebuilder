@@ -22,6 +22,10 @@ public class FahrtDarstellung
 		this.typ = typ;
 	}
 	
+	public boolean testZugname(String zugname) {
+		return this.filter.testZugname(zugname, this.muster);
+	}
+	
 	public FahrtFilter getFilter()
 	{
 		return filter;
