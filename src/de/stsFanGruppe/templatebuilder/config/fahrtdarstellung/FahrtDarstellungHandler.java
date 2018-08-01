@@ -26,7 +26,7 @@ public class FahrtDarstellungHandler
 		{
 			return zugsucheDarstellung;
 		}
-		if(templatesucheDarstellung != null && templatesucheDarstellung.testZugname(templatename))
+		if(templatesucheDarstellung != null && templatename != null && templatesucheDarstellung.testZugname(templatename))
 		{
 			return templatesucheDarstellung;
 		}
