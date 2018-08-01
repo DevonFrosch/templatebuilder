@@ -38,13 +38,13 @@ public class TemplateBuilderGUIController extends GUIController
 	protected BildfahrplanConfig config;
 	protected TemplateBuilderTabs tabs = null;
 	
-	public TemplateBuilderGUIController(BildfahrplanConfig config, String version, boolean dev)
+	public TemplateBuilderGUIController(BildfahrplanConfig config, String version, boolean dev, String update)
 	{
 		NullTester.test(config);
 		this.config = config;
 		this.version = version;
 		this.dev = dev;
-		this.gui = new TemplateBuilderGUI(this);
+		this.gui = new TemplateBuilderGUI(this, update);
 		this.tabs = new TemplateBuilderTabs(gui.tabbedPane);
 	}
 	
@@ -312,6 +312,7 @@ public class TemplateBuilderGUIController extends GUIController
 				StringJoiner aboutText = new StringJoiner("\n");
 				aboutText.add("TemplateBuilder " + version + ((dev) ? " (Entwicklungsversion)" : ""));
 				aboutText.add("Copyright DevonFrosch, Koschi");
+				aboutText.add("Webseite: https://sts-fan-gruppe.de/?seite=templatebuilder.");
 				aboutText.add("Fehler bitte unter https://sts-fan-gruppe.de/mantis/ melden.");
 				
 				gui.infoMessage(aboutText.toString(), "Über");

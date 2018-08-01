@@ -1,6 +1,11 @@
 package de.stsFanGruppe.templatebuilder.startup;
 
 import java.awt.EventQueue;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanConfig;
 import de.stsFanGruppe.templatebuilder.gui.TemplateBuilderGUIController;
 
@@ -9,17 +14,25 @@ public class Startup
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Startup.class);
 	
 	// Versionsinformationen
-	public final static String version = "0.3.2";
+	public final static String version = "0.3.3";
 	public final static boolean dev = true;
+	
+	public final static String updateUrl = "https://sts-fan-gruppe.de/spielzeug/templatebuilder/version.txt";
 	
 	public static void main(String[] args)
 	{
 		String v = version;
 		if(dev)
 			v += " (dev)";
+		String update = testForUpdate();
 		
 		log.info("Templatebuilder gestartet.");
 		log.info("Version {}", v);
+		
+		if(update != null)
+		{
+			log.info("Update auf Version '{}' verfügbar.", update);
+		}
 		
 		try
 		{
@@ -33,12 +46,38 @@ public class Startup
 		EventQueue.invokeLater(() -> {
 			try
 			{
-				TemplateBuilderGUIController controller = new TemplateBuilderGUIController(new BildfahrplanConfig(), version, dev);
+				TemplateBuilderGUIController controller = new TemplateBuilderGUIController(new BildfahrplanConfig(), version, dev, update);
 			}
 			catch(Exception e)
 			{
 				log.error("Nicht abgefangene Exception", e);
 			}
 		});
+	}
+	
+	public static String testForUpdate()
+	{
+		try
+		{
+			InputStream inputStream = new URL(updateUrl)
+					.openConnection()
+					.getInputStream();
+	        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+	        
+            String zeile = bufferedReader.readLine();
+            
+            if(!zeile.equals(version))
+            {
+            	if(zeile != null)
+            	{
+            		log.debug("zeile={}, version={}.", zeile, version);
+            	}
+            	return zeile;
+            }
+		}
+		catch(IOException e)
+		{}
+		
+		return null;
 	}
 }

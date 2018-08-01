@@ -26,14 +26,15 @@ public class TemplateBuilderGUI implements GUI
 	
 	/**
 	 * Create the application.
+	 * @param update 
 	 * 
 	 * @wbp.parser.entryPoint
 	 */
-	public TemplateBuilderGUI(TemplateBuilderGUIController controller)
+	public TemplateBuilderGUI(TemplateBuilderGUIController controller, String update)
 	{
 		NullTester.test(controller);
 		this.controller = controller;
-		initialize();
+		initialize(update);
 	}
 	
 	public BildfahrplanGUI getBildfahrplanZeichner()
@@ -45,7 +46,7 @@ public class TemplateBuilderGUI implements GUI
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize()
+	private void initialize(String update)
 	{
 		assert controller != null;
 		
@@ -55,8 +56,14 @@ public class TemplateBuilderGUI implements GUI
 		}
 		initialized = true;
 		
+		String title = "TemplateBauer";
+		if(update != null)
+		{
+			title = "TemplateBauer (Update verfügbar)";
+		}
+		
 		frmTemplatebauer = new JFrame();
-		frmTemplatebauer.setTitle("TemplateBauer");
+		frmTemplatebauer.setTitle(title);
 		frmTemplatebauer.setMinimumSize(new Dimension(450, 300));
 		frmTemplatebauer.setBounds(100, 100, 1000, 600);
 		// Fenster maximieren
