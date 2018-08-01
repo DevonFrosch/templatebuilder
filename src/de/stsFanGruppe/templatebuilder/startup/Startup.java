@@ -68,10 +68,6 @@ public class Startup
             
             if(!zeile.equals(version))
             {
-            	if(zeile != null)
-            	{
-            		log.debug("zeile={}, version={}.", zeile, version);
-            	}
             	return zeile;
             }
 		}

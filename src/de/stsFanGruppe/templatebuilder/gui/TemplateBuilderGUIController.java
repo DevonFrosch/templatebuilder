@@ -212,7 +212,8 @@ public class TemplateBuilderGUIController extends GUIController
 			}
 			case "sucheZug":
 			{
-				String suchString = gui.inputMessage("Suche nach Zugname:", "Suche Zug...");
+				String initialValue = config.getFahrtDarstellungConfig().getZugsucheText();
+				String suchString = gui.inputMessage("Suche nach Zugname:", initialValue);
 				if(suchString == null)
 				{
 					break;
@@ -226,7 +227,8 @@ public class TemplateBuilderGUIController extends GUIController
 			}
 			case "sucheTemplate":
 			{
-				String suchString = gui.inputMessage("Suche nach Templatename:", "Suche Template...");
+				String initialValue = config.getFahrtDarstellungConfig().getTemplatesucheText();
+				String suchString = gui.inputMessage("Suche nach Templatename:", initialValue);
 				if(suchString == null)
 				{
 					break;

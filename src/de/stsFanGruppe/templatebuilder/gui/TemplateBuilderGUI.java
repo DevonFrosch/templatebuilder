@@ -332,9 +332,9 @@ public class TemplateBuilderGUI implements GUI
 	{
 		JOptionPane.showMessageDialog(frmTemplatebauer, text, titel, JOptionPane.INFORMATION_MESSAGE);
 	}
-	
-	public String inputMessage(String text, String titel)
+
+	public String inputMessage(String text, String initialSelectionValue)
 	{
-		return JOptionPane.showInputDialog(frmTemplatebauer, text, titel, JOptionPane.PLAIN_MESSAGE);
+		return JOptionPane.showInputDialog(frmTemplatebauer, text, initialSelectionValue);
 	}
 }
