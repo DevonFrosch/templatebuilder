@@ -30,7 +30,7 @@ public class BildfahrplanGUIController extends EditorGUIController
 	protected BildfahrplanZeilenheaderGUI zeilenGui = null;
 	
 	protected BildfahrplanPaintHelper ph;
-	protected int stringHeight = 0;
+	protected static int stringHeight = 0;
 	
 	public BildfahrplanGUIController(EditorDaten daten, BildfahrplanConfig config)
 	{
@@ -184,7 +184,7 @@ public class BildfahrplanGUIController extends EditorGUIController
 		
 		// lokale Kopie zur Verwendung in Lambdas
 		int stringHeight = fontMetrics.getHeight();
-		this.stringHeight = stringHeight;
+		BildfahrplanGUIController.stringHeight = stringHeight;
 		
 		// Config für PaintHelper neu laden
 		ph.readConfig();
