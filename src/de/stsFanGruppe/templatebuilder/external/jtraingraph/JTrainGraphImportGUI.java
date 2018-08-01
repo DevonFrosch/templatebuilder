@@ -82,7 +82,8 @@ public class JTrainGraphImportGUI extends JDialog implements GUI
 			pfadInput.setColumns(10);
 		}
 		pfadButton = new JButton("...");
-		pfadButton.addActionListener((ActionEvent arg0) -> dateiChooser(arg0));
+		pfadButton.setEnabled(false);
+		pfadButton.addActionListener((ActionEvent arg0) -> dateiChooser());
 		contentPanel.add(pfadButton, "6, 2, right, default");
 		{
 			chckbxZgeImportieren = new JCheckBox("Z\u00FCge importieren");
@@ -122,10 +123,13 @@ public class JTrainGraphImportGUI extends JDialog implements GUI
 			}
 		}
 		setVisible(true);
+		
+		// TODO: Entfernen wenn wirklich Optionen auswählbar sind
+		dateiChooser();
 	}
 	
 	// ActionHandler
-	private void dateiChooser(ActionEvent e)
+	private void dateiChooser()
 	{
 		setCursor(new Cursor(Cursor.WAIT_CURSOR));
 		JFileChooser fileChooser = new JFileChooser();
@@ -144,6 +148,36 @@ public class JTrainGraphImportGUI extends JDialog implements GUI
 		if(fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION)
 		{
 			pfadInput.setText(fileChooser.getSelectedFile().getPath());
+			
+			// TODO: Entfernen wenn wirklich Optionen auswählbar sind
+			start();
+			dispose();
+			setVisible(false);
+		}
+	}
+	private void start()
+	{
+		String pfad = pfadInput.getText();
+		String linie = linieInput.getText();
+		
+		if(pfad.trim().isEmpty())
+		{
+			errorMessage("Pfad ist leer!");
+			return;
+		}
+		
+		if(chckbxZgeImportieren.isSelected())
+		{
+			if(linie.trim().isEmpty())
+			{
+				errorMessage("Linie ist leer!");
+				return;
+			}
+			callback.call(new DoneFuture(pfad, new Linie(linie)));
+		}
+		else
+		{
+			callback.call(new DoneFuture(pfad));
 		}
 	}
 	
@@ -157,29 +191,7 @@ public class JTrainGraphImportGUI extends JDialog implements GUI
 				close();
 				break;
 			case "OK":
-				String pfad = pfadInput.getText();
-				String linie = linieInput.getText();
-				
-				if(pfad.trim().isEmpty())
-				{
-					errorMessage("Pfad ist leer!");
-					return;
-				}
-				
-				if(chckbxZgeImportieren.isSelected())
-				{
-					if(linie.trim().isEmpty())
-					{
-						errorMessage("Linie ist leer!");
-						return;
-					}
-					callback.call(new DoneFuture(pfad, new Linie(linie)));
-				}
-				else
-				{
-					callback.call(new DoneFuture(pfad));
-				}
-				
+				start();
 				break;
 			default:
 		}
