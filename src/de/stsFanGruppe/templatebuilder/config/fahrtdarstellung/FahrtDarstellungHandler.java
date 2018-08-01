@@ -8,7 +8,8 @@ public class FahrtDarstellungHandler
 	
 	FahrtDarstellungConfig config;
 	FahrtDarstellung[] darstellungen = null;
-	FahrtDarstellung suchDarstellung = null;
+	FahrtDarstellung zugsucheDarstellung = null;
+	FahrtDarstellung templatesucheDarstellung = null;
 	
 	public FahrtDarstellungHandler(FahrtDarstellungConfig config)
 	{
@@ -17,13 +18,17 @@ public class FahrtDarstellungHandler
 		config.registerChangeHandler(() -> ladeConfig());
 	}
 	
-	public FahrtDarstellung getFahrtDarstellung(String zugname)
+	public FahrtDarstellung getFahrtDarstellung(String zugname, String templatename)
 	{
 		assert darstellungen != null;
 		
-		if(suchDarstellung != null && suchDarstellung.testZugname(zugname))
+		if(zugsucheDarstellung != null && zugsucheDarstellung.testZugname(zugname))
 		{
-			return suchDarstellung;
+			return zugsucheDarstellung;
+		}
+		if(templatesucheDarstellung != null && templatesucheDarstellung.testZugname(templatename))
+		{
+			return templatesucheDarstellung;
 		}
 		
 		for(FahrtDarstellung dar : darstellungen)
@@ -39,8 +44,8 @@ public class FahrtDarstellungHandler
 	
 	protected void ladeConfig()
 	{
-		
 		darstellungen = config.getFahrtDarstellungen();
-		suchDarstellung = config.getGesuchteFahrtDarstellung();
+		zugsucheDarstellung = config.getZugsucheFahrtDarstellung();
+		templatesucheDarstellung = config.getTemplatesucheFahrtDarstellung();
 	}
 }

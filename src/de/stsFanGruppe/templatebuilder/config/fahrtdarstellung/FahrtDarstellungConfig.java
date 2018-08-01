@@ -36,6 +36,7 @@ public class FahrtDarstellungConfig extends ConfigController
 	
 	// nicht persistente Einstellungen
 	private String zugsucheText = null;
+	private String templatesucheText = null;
 	
 	// Konstruktoren
 	public FahrtDarstellungConfig()
@@ -107,6 +108,17 @@ public class FahrtDarstellungConfig extends ConfigController
 	public void setZugsucheText(String zugsucheText)
 	{
 		this.zugsucheText = zugsucheText;
+		notifyChange();
+	}
+	
+	public String getTemplatesucheText()
+	{
+		return templatesucheText;
+	}
+	
+	public void setTemplatesucheText(String templatesucheText)
+	{
+		this.templatesucheText = templatesucheText;
 		notifyChange();
 	}
 	
@@ -187,12 +199,21 @@ public class FahrtDarstellungConfig extends ConfigController
 		return list.toArray(new FahrtDarstellung[list.size()]);
 	}
 
-	public FahrtDarstellung getGesuchteFahrtDarstellung()
+	public FahrtDarstellung getZugsucheFahrtDarstellung()
 	{
 		if(zugsucheText == null)
 		{
 			return null;
 		}
 		return new FahrtDarstellung(FahrtFilter.ENTHAELT, zugsucheText, Color.RED, 2, LineType.DASHED_LINE);
+	}
+
+	public FahrtDarstellung getTemplatesucheFahrtDarstellung()
+	{
+		if(templatesucheText == null)
+		{
+			return null;
+		}
+		return new FahrtDarstellung(FahrtFilter.ENTHAELT, templatesucheText, Color.RED, 2, LineType.DOTTED_LINE);
 	}
 }

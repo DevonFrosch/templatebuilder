@@ -145,6 +145,12 @@ public class TemplateBuilderGUI implements GUI
 		mntmSucheZug.addActionListener((ActionEvent arg0) -> controller.menuAction(arg0));
 		mnBearbeiten.add(mntmSucheZug);
 		
+		JMenuItem mntmSucheTemplate = new JMenuItem("Suche Template...");
+		mntmSucheTemplate.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK));
+		mntmSucheTemplate.setActionCommand("sucheTemplate");
+		mntmSucheTemplate.addActionListener((ActionEvent arg0) -> controller.menuAction(arg0));
+		mnBearbeiten.add(mntmSucheTemplate);
+		
 		JMenu mnStrecken = new JMenu("Strecken");
 		menuBar.add(mnStrecken);
 		

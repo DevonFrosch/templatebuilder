@@ -284,12 +284,11 @@ public class BildfahrplanGUIController extends EditorGUIController
 					double letzteZeit = -1;
 					double letzterKm = -1;
 					String zugName = fahrt.getName();
+					String templateName = fahrt.getTemplate();
 					
 					// Darstellung
-					FahrtDarstellung fahrtDarstellung = darstellungHandler.getFahrtDarstellung(zugName);
+					FahrtDarstellung fahrtDarstellung = darstellungHandler.getFahrtDarstellung(zugName, templateName);
 					Color fahrtFarbe = fahrtDarstellung.getFarbe();
-					
-					
 					
 					for(Fahrplanhalt fh : fahrt.getFahrplanhalte())
 					{

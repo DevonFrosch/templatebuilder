@@ -2,6 +2,8 @@ package de.stsFanGruppe.templatebuilder.external.jtraingraph;
 
 import java.io.InputStream;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.xml.stream.XMLStreamException;
 import de.stsFanGruppe.templatebuilder.external.*;
 import de.stsFanGruppe.templatebuilder.external.xmlhelper.*;
@@ -162,7 +164,21 @@ public class JTrainGraphImporter extends Importer
 				// leere Fahrten brauchen wir nicht importieren
 				if(!fahrplanhalte.isEmpty())
 				{
-					fahrten.add(new Fahrt(train.getAttribute("name"), linie, fahrplanhalte));
+					String templateName = null;
+					String comment = train.getAttribute("cm");
+					Matcher templateNameMatcher = Pattern.compile("Template: (.*)").matcher(comment);
+					
+					if(templateNameMatcher.find())
+					{
+						try
+						{
+							templateName = templateNameMatcher.group(1);
+						}
+						catch(IndexOutOfBoundsException e)
+						{}
+					}
+					
+					fahrten.add(new Fahrt(train.getAttribute("name"), linie, templateName, fahrplanhalte));
 				}
 			}
 		}

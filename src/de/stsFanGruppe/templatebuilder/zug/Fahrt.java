@@ -9,6 +9,7 @@ public class Fahrt implements Comparable<Fahrt>
 	
 	protected String name;
 	protected Linie linie;
+	protected String template;
 	protected NavigableSet<Fahrplanhalt> fahrplanhalte = new TreeSet<>(new Fahrplanhalt.StrictComparator());
 	
 	public Fahrt(String name, Linie linie)
@@ -16,10 +17,21 @@ public class Fahrt implements Comparable<Fahrt>
 		this.setName(name);
 		this.setLinie(linie);
 	}
-	
+	public Fahrt(String name, Linie linie, String template)
+	{
+		this.setName(name);
+		this.setLinie(linie);
+		this.setTemplate(template);
+	}
+
 	public Fahrt(String name, Linie linie, Collection<? extends Fahrplanhalt> fahrplanhalte)
 	{
 		this(name, linie);
+		this.addFahrplanhalte(fahrplanhalte);
+	}
+	public Fahrt(String name, Linie linie, String template, Collection<? extends Fahrplanhalt> fahrplanhalte)
+	{
+		this(name, linie, template);
 		this.addFahrplanhalte(fahrplanhalte);
 	}
 	
@@ -43,6 +55,16 @@ public class Fahrt implements Comparable<Fahrt>
 	{
 		NullTester.test(linie);
 		this.linie = linie;
+	}
+	
+	public String getTemplate()
+	{
+		return template;
+	}
+	
+	public void setTemplate(String template)
+	{
+		this.template = template;
 	}
 	
 	public boolean hasFahrplanhalte()
@@ -136,7 +158,15 @@ public class Fahrt implements Comparable<Fahrt>
 	
 	public String toString()
 	{
-		return "Fahrt " + getName() + " { Linie: " + getLinie() + ", " + fahrplanhalte.size() + " Fahrplanhalte }";
+		StringJoiner stringJoiner = new StringJoiner("Fahrt " + getName() + " { Linie: " + getLinie());
+		
+		if(getTemplate() != null)
+		{
+			stringJoiner.add(", Template: " + getTemplate());
+		}
+		
+		stringJoiner.add(", " + fahrplanhalte.size() + " Fahrplanhalte }");
+		return stringJoiner.toString();
 	}
 	
 	public String toXML()

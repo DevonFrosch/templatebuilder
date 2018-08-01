@@ -224,6 +224,20 @@ public class TemplateBuilderGUIController extends GUIController
 				config.getFahrtDarstellungConfig().setZugsucheText(suchString);
 				break;
 			}
+			case "sucheTemplate":
+			{
+				String suchString = gui.inputMessage("Suche nach Templatename:", "Suche Template...");
+				if(suchString == null)
+				{
+					break;
+				}
+				else if(suchString.equals(""))
+				{
+					suchString = null;
+				}
+				config.getFahrtDarstellungConfig().setTemplatesucheText(suchString);
+				break;
+			}
 			case "streckenEdit":
 			{
 				if(!GUILocker.lock(StreckenEditorGUI.class))
