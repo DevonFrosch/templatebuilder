@@ -1,6 +1,8 @@
 package de.stsFanGruppe.templatebuilder.config.fahrtdarstellung;
 
 import de.stsFanGruppe.templatebuilder.zug.FahrtDarstellung;
+import de.stsFanGruppe.tools.FirstLastLinkedList;
+import de.stsFanGruppe.tools.FirstLastList;
 
 public class FahrtDarstellungHandler
 {
@@ -10,36 +12,72 @@ public class FahrtDarstellungHandler
 	FahrtDarstellung[] darstellungen = null;
 	FahrtDarstellung zugsucheDarstellung = null;
 	FahrtDarstellung templatesucheDarstellung = null;
+	FahrtDarstellung[] hervorhebungsDarstellungen = null;
+	
+	private Object changeHandlerId = null;
 	
 	public FahrtDarstellungHandler(FahrtDarstellungConfig config)
 	{
 		this.config = config;
 		ladeConfig();
-		config.registerChangeHandler(() -> ladeConfig());
+		log.debug("FahrtDarstellungHandler registerChangeHandler");
+		this.changeHandlerId = config.registerChangeHandler(() -> ladeConfig());
 	}
 	
-	public FahrtDarstellung getFahrtDarstellung(String zugname, String templatename)
+	public FahrtDarstellung[] getFahrtDarstellungen(String zugname, String templatename)
 	{
 		assert darstellungen != null;
 		
+		FirstLastList<FahrtDarstellung> liste = new FirstLastLinkedList<>();
+		
 		if(zugsucheDarstellung != null && zugsucheDarstellung.testZugname(zugname))
 		{
-			return zugsucheDarstellung;
+			liste.add(zugsucheDarstellung);
 		}
-		if(templatesucheDarstellung != null && templatename != null && templatesucheDarstellung.testZugname(templatename))
+		else if(templatesucheDarstellung != null && templatename != null && templatesucheDarstellung.testZugname(templatename))
 		{
-			return templatesucheDarstellung;
+			liste.add(templatesucheDarstellung);
 		}
-		
-		for(FahrtDarstellung dar : darstellungen)
+		else 
 		{
-			if(dar.testZugname(zugname))
+			FahrtDarstellung ziel = null;
+			
+			for(FahrtDarstellung dar : darstellungen)
 			{
-				return dar;
+				if(dar.testZugname(zugname))
+				{
+					ziel = dar;
+					break;
+				}
+			}
+			
+			if(ziel != null)
+			{
+				liste.add(ziel);
+			}
+			else
+			{
+				liste.add(config.getStandardFahrtDarstellung());
 			}
 		}
 		
-		return config.getStandardFahrtDarstellung();
+		FahrtDarstellung hervorhebung = null;
+		
+		for(FahrtDarstellung dar : hervorhebungsDarstellungen)
+		{
+			if(dar.testZugname(zugname))
+			{
+				hervorhebung = dar;
+				break;
+			}
+		}
+		
+		if(hervorhebung != null)
+		{
+			liste.add(hervorhebung);
+		}
+		
+		return liste.toArray(new FahrtDarstellung[liste.size()]);
 	}
 	
 	protected void ladeConfig()
@@ -47,5 +85,6 @@ public class FahrtDarstellungHandler
 		darstellungen = config.getFahrtDarstellungen();
 		zugsucheDarstellung = config.getZugsucheFahrtDarstellung();
 		templatesucheDarstellung = config.getTemplatesucheFahrtDarstellung();
+		hervorhebungsDarstellungen = config.getFahrtHervorhebungsDarstellungen();
 	}
 }

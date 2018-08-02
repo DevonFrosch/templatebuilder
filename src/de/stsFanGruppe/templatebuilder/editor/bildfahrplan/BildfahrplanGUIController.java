@@ -8,7 +8,6 @@ import java.awt.event.MouseEvent;
 import java.util.Collection;
 import java.util.Set;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanConfig;
-import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.FahrtDarstellungConfig;
 import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.FahrtDarstellungHandler;
 import de.stsFanGruppe.templatebuilder.editor.EditorDaten;
 import de.stsFanGruppe.templatebuilder.editor.EditorGUIController;
@@ -33,6 +32,7 @@ public class BildfahrplanGUIController extends EditorGUIController
 	protected BildfahrplanZeilenheaderGUI zeilenGui = null;
 	
 	protected BildfahrplanPaintHelper ph;
+	protected FahrtDarstellungHandler darstellungHandler;
 	protected static int stringHeight = 0;
 	
 	protected Object zugLinienLock = new Object();
@@ -57,6 +57,7 @@ public class BildfahrplanGUIController extends EditorGUIController
 		this.ph = new BildfahrplanPaintHelper(config, this.gui);
 		this.spaltenGui = new BildfahrplanSpaltenheaderGUI(this.gui, this);
 		this.zeilenGui = new BildfahrplanZeilenheaderGUI(this.gui, this);
+		this.darstellungHandler = new FahrtDarstellungHandler(config.getFahrtDarstellungConfig());
 	}
 	
 	public void configChanged()
@@ -155,13 +156,16 @@ public class BildfahrplanGUIController extends EditorGUIController
 	// action handler
 	public void mouseClicked(MouseEvent e)
 	{
+		FirstLastLinkedList<String> zugNamen = new FirstLastLinkedList<>();
 		for(CalculatableLine linie: this.getZugLinien())
 		{
 			if(linie.isPunktAufLinie(e.getX(), e.getY(), 10))
 			{
-				log.debug("Linie von {} gefunden!", linie.getId());
+				zugNamen.add(linie.getId());
 			}
 		}
+		
+		config.getFahrtDarstellungConfig().setHervorgehobeneZuege(zugNamen);
 	}
 	
 	// Interne Funktionen
@@ -302,9 +306,6 @@ public class BildfahrplanGUIController extends EditorGUIController
 		
 		// ### Fahrten-Linien ###
 		{
-			FahrtDarstellungConfig darstellungConfig = config.getFahrtDarstellungConfig();
-			FahrtDarstellungHandler darstellungHandler = new FahrtDarstellungHandler(darstellungConfig);
-			
 			int schachtelung = config.getSchachtelung();
 			int zeigeZugnamen = config.getZeigeZugnamen();
 			boolean zeigeZeiten = config.getZeigeZeiten();
@@ -318,18 +319,18 @@ public class BildfahrplanGUIController extends EditorGUIController
 				{
 					double letzteZeit = -1;
 					double letzterKm = -1;
-					String zugName = fahrt.getName();
+					String vollerZugName = fahrt.getName();
 					String templateName = fahrt.getTemplate();
 					
-					if(config.getIgnorierteZuegeArray().contains(zugName)
+					if(config.getIgnorierteZuegeArray().contains(vollerZugName)
 							|| config.getIgnorierteTemplatesArray().contains(templateName))
 					{
 						continue;
 					}
 					
 					// Darstellung
-					FahrtDarstellung fahrtDarstellung = darstellungHandler.getFahrtDarstellung(zugName, templateName);
-					Color fahrtFarbe = fahrtDarstellung.getFarbe();
+					FahrtDarstellung[] fahrtDarstellungen = darstellungHandler.getFahrtDarstellungen(vollerZugName, templateName);
+					Color fahrtFarbe = fahrtDarstellungen[0].getFarbe();
 					
 					for(Fahrplanhalt fh : fahrt.getFahrplanhalte())
 					{
@@ -341,16 +342,18 @@ public class BildfahrplanGUIController extends EditorGUIController
 						
 						double kmAn = editorDaten.getStreckenKm(fh.getGleisabschnitt().getParent().getParent());
 						
-						if(!config.getZeigeZugnamenKommentare() && zugName.indexOf('%') >= 0)
+						String zugName = vollerZugName;
+						if(!config.getZeigeZugnamenKommentare() && vollerZugName.indexOf('%') >= 0)
 						{
 							// entferne alles ab dem ersten %, falls vorhanden
-							zugName = zugName.substring(0, zugName.indexOf('%'));
+							zugName = vollerZugName.substring(0, vollerZugName.indexOf('%'));
 						}
 						
 						// Übersetzten von dynamischen Variablen
 						double kmAb = letzterKm;
 						double ab = letzteZeit;
 						String name = zugName;
+						String vollerName = vollerZugName;
 						double showTextWidth = fontMetrics.stringWidth(name) * 0.9;
 						
 						// für ZeigeZeiten
@@ -388,8 +391,11 @@ public class BildfahrplanGUIController extends EditorGUIController
 										int y1 = ph.getZeitPos(ab - sch);
 										int y2 = ph.getZeitPos(an - sch);
 										
-										ph.paintLine(g, x1, y1, x2, y2, fahrtDarstellung);
-										zugLinien.add(new CalculatableLine(name, x1, y1, x2, y2));
+										for(FahrtDarstellung darstellung: fahrtDarstellungen)
+										{
+											ph.paintLine(g, x1, y1, x2, y2, darstellung);
+										}
+										zugLinien.add(new CalculatableLine(vollerName, x1, y1, x2, y2));
 										
 										// Zeiten zeichnen, wenn in der Config, dies aktiv ist.
 										if(zeigeZeiten)

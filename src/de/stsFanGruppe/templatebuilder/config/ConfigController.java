@@ -36,7 +36,10 @@ public abstract class ConfigController
 	
 	public boolean unregisterChangeHandler(Object handlerID)
 	{
-		NullTester.test(handlerID);
+		if(handlerID == null)
+		{
+			return false;
+		}
 		log.debug("unregisterChangeHandler (ID {})", handlerID);
 		return callbacks.remove(handlerID) != null;
 	}

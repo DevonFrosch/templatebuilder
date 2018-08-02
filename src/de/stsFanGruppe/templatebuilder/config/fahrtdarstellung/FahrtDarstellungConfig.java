@@ -37,6 +37,7 @@ public class FahrtDarstellungConfig extends ConfigController
 	// nicht persistente Einstellungen
 	private String zugsucheText = null;
 	private String templatesucheText = null;
+	private FirstLastLinkedList<String> hervorgehobeneZuege = null;
 	
 	// Konstruktoren
 	public FahrtDarstellungConfig()
@@ -122,6 +123,20 @@ public class FahrtDarstellungConfig extends ConfigController
 		notifyChange();
 	}
 	
+	public String[] getHervorgehobeneZuege()
+	{
+		if(hervorgehobeneZuege == null) {
+			return new String[]{};
+		}
+		return hervorgehobeneZuege.toArray(new String[hervorgehobeneZuege.size()]);
+	}
+
+	public void setHervorgehobeneZuege(FirstLastLinkedList<String> zugNamen)
+	{
+		this.hervorgehobeneZuege = zugNamen;
+		notifyChange();
+	}
+	
 	public FahrtDarstellung getStandardFahrtDarstellung()
 	{
 		return new FahrtDarstellung(DEFAULT_FAHRTDARSTELLUNG_FILTER, DEFAULT_FAHRTDARSTELLUNG_MUSTER, DEFAULT_FAHRTDARSTELLUNG_FARBE,
@@ -189,14 +204,14 @@ public class FahrtDarstellungConfig extends ConfigController
 		int count = prefs.getInt(CONFIG_REGEL_FAHRTNAME_PREFIX + "/count", 0);
 		
 		FahrtDarstellung defaultValue = getStandardFahrtDarstellung();
-		FirstLastList<FahrtDarstellung> list = new FirstLastLinkedList<>();
+		FirstLastList<FahrtDarstellung> liste = new FirstLastLinkedList<>();
 		
 		for(int i = 0; i < count; i++)
 		{
-			list.add(getFahrtDarstellung(CONFIG_REGEL_FAHRTNAME_PREFIX + "/" + i, defaultValue));
+			liste.add(getFahrtDarstellung(CONFIG_REGEL_FAHRTNAME_PREFIX + "/" + i, defaultValue));
 		}
 		
-		return list.toArray(new FahrtDarstellung[list.size()]);
+		return liste.toArray(new FahrtDarstellung[liste.size()]);
 	}
 
 	public FahrtDarstellung getZugsucheFahrtDarstellung()
@@ -215,5 +230,21 @@ public class FahrtDarstellungConfig extends ConfigController
 			return null;
 		}
 		return new FahrtDarstellung(FahrtFilter.ENTHAELT, templatesucheText, Color.RED, 2, LineType.DOTTED_LINE);
+	}
+	
+	public FahrtDarstellung[] getFahrtHervorhebungsDarstellungen()
+	{
+		FirstLastList<FahrtDarstellung> liste = new FirstLastLinkedList<>();
+		
+		if(hervorgehobeneZuege != null)
+		{
+			Color blau = new Color(0, 0, 255, 32);
+			for(String zugName: hervorgehobeneZuege)
+			{
+				liste.add(new FahrtDarstellung(FahrtFilter.GLEICH, zugName, blau, 5, LineType.SOLID_LINE));
+			}
+		}
+		
+		return liste.toArray(new FahrtDarstellung[liste.size()]);
 	}
 }

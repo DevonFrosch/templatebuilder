@@ -304,6 +304,36 @@ public class TemplateBuilderGUIController extends GUIController
 				tabs.setSelectedTab(index);
 				break;
 			}
+			case "zeigeMarkierte":
+			{
+				StringJoiner zuege = new StringJoiner("\n");
+				
+				EditorDaten editorDaten = tabs.getSelectedEditorDaten();
+				
+				for(String zug: config.getFahrtDarstellungConfig().getHervorgehobeneZuege())
+				{
+					if(editorDaten != null)
+					{
+						Fahrt fahrt = editorDaten.getFahrt(zug);
+						if(fahrt != null && fahrt.getTemplate() != null)
+						{
+							zuege.add(zug+" ["+fahrt.getTemplate()+"]");
+							continue;
+						}
+					}
+					zuege.add(zug);
+				}
+				
+				if(zuege.length() > 0)
+				{
+					gui.infoMessage("Markierte Züge:\n"+zuege.toString(), "Markierte Züge");
+				}
+				else
+				{
+					gui.infoMessage("Keine Züge markiert", "Markierte Züge");
+				}
+				break;
+			}
 			case "options":
 				if(!GUILocker.lock(BildfahrplanSettingsGUI.class))
 					break;

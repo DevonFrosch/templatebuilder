@@ -191,6 +191,13 @@ public class TemplateBuilderGUI implements GUI
 		mntmTabellarischRück.addActionListener((ActionEvent arg0) -> updateAnsichtAuswahl());
 		mnAnsicht.add(mntmTabellarischRück);
 		
+		mnAnsicht.add(new JSeparator());
+		
+		JMenuItem mntmZeigeMarkierte = new JMenuItem("Zeige markierte Züge");
+		mntmZeigeMarkierte.setActionCommand("zeigeMarkierte");
+		mntmZeigeMarkierte.addActionListener((ActionEvent arg0) -> controller.menuAction(arg0));
+		mnAnsicht.add(mntmZeigeMarkierte);
+		
 		JMenu mnEinstellungen = new JMenu("Einstellungen");
 		menuBar.add(mnEinstellungen);
 		
