@@ -48,9 +48,25 @@ public class JTrainGraphImporter extends Importer
 				
 				// Ortsangabe
 				String km = tSta.getAttribute("km");
+				String kml = tSta.getAttribute("kml");
+				String kmr = tSta.getAttribute("kmr");
 				if(isEmpty(km))
 				{
-					throw new ImportException("Keine Ortsangabe für Station " + stName);
+					if(isEmpty(kml))
+					{
+						if(isEmpty(kmr))
+						{
+							throw new ImportException("Keine Ortsangabe für Station " + stName);
+						}
+						else
+						{
+							km = kmr;
+						}
+					}
+					else
+					{
+						km = kml;
+					}
 				}
 				
 				Gleis gleis = new Gleis(stName, Double.parseDouble(km.replace(',', '.')));
