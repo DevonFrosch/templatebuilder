@@ -9,49 +9,49 @@ public enum FahrtFilter
 	{
 		public boolean testZugname(String zugname, String muster)
 		{
-			return zugname.startsWith(muster);
+			return zugname.toLowerCase().startsWith(muster.toLowerCase());
 		}
 	},
 	BEGINNT_NICHT_MIT("beginnt nicht mit")
 	{
 		public boolean testZugname(String zugname, String muster)
 		{
-			return !zugname.startsWith(muster);
+			return !zugname.toLowerCase().startsWith(muster.toLowerCase());
 		}
 	},
 	ENTHAELT("enthält")
 	{
 		public boolean testZugname(String zugname, String muster)
 		{
-			return zugname.contains(muster);
+			return zugname.toLowerCase().contains(muster.toLowerCase());
 		}
 	},
 	ENTHAELT_NICHT("enthält nicht")
 	{
 		public boolean testZugname(String zugname, String muster)
 		{
-			return !zugname.contains(muster);
+			return !zugname.toLowerCase().contains(muster.toLowerCase());
 		}
 	},
 	GLEICH("ist gleich")
 	{
 		public boolean testZugname(String zugname, String muster)
 		{
-			return zugname.equals(muster);
+			return zugname.toLowerCase().equals(muster.toLowerCase());
 		}
 	},
 	ENDET_MIT("endet mit")
 	{
 		public boolean testZugname(String zugname, String muster)
 		{
-			return zugname.endsWith(muster);
+			return zugname.toLowerCase().endsWith(muster.toLowerCase());
 		}
 	},
 	ENDET_NICHT_MIT("endet nicht mit")
 	{
 		public boolean testZugname(String zugname, String muster)
 		{
-			return !zugname.endsWith(muster);
+			return !zugname.toLowerCase().endsWith(muster.toLowerCase());
 		}
 	},
 	GROESSER_ALS("Zugnummer größer als")
