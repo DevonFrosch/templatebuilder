@@ -45,6 +45,9 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 	JRadioButton radioZeigeRichtungZurueck;
 	JRadioButton radioZeigeRichtungBeide;
 	
+	JTextArea ignorierteZuegeTextArea;
+	JTextArea ignorierteTemplatesTextArea;
+	
 	// Farben
 	JPanel panelBfpZeitenFarbeVorschau;
 	JPanel panelBfpBetriebsstellenFarbeVorschau;
@@ -84,7 +87,7 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 			}
 		});
 		
-		setBounds(100, 100, 450, 500);
+		setBounds(100, 100, 450, 525);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -113,9 +116,18 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 				tabbedPane.addTab("Bildfahrplan", null, panelBfp, null);
 				tabbedPane.setEnabledAt(3, true);
 				panelBfp.setLayout(
-						new FormLayout(new ColumnSpec[] {FormSpecs.RELATED_GAP_COLSPEC, ColumnSpec.decode("default:grow"), FormSpecs.RELATED_GAP_COLSPEC,},
-								new RowSpec[] {FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, FormSpecs.RELATED_GAP_ROWSPEC,
-										FormSpecs.DEFAULT_ROWSPEC, FormSpecs.RELATED_GAP_ROWSPEC,}));
+						new FormLayout(new ColumnSpec[] {
+						FormSpecs.RELATED_GAP_COLSPEC,
+						ColumnSpec.decode("default:grow"),
+						FormSpecs.RELATED_GAP_COLSPEC,},
+					new RowSpec[] {
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						FormSpecs.DEFAULT_ROWSPEC,
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						FormSpecs.DEFAULT_ROWSPEC,
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						RowSpec.decode("default:grow"),
+						FormSpecs.RELATED_GAP_ROWSPEC,}));
 				{
 					JPanel panelZeiten = new JPanel();
 					panelZeiten.setBorder(BorderFactory.createTitledBorder("Zeiten"));
@@ -309,6 +321,47 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 							rdbtngrpZeigeRichtung.add(radioZeigeRichtungBeide);
 							radioZeigeRichtungBeide.setActionCommand("beide");
 							panelZeigeRichtung.add(radioZeigeRichtungBeide);
+						}
+					}
+				}
+				{
+					JPanel panelIgnorieren = new JPanel();
+					panelIgnorieren.setBorder(BorderFactory.createTitledBorder("Züge und Templates ignorieren"));
+					panelBfp.add(panelIgnorieren, "2, 6, fill, fill");
+					panelIgnorieren.setLayout(new FormLayout(new ColumnSpec[] {
+							FormSpecs.RELATED_GAP_COLSPEC,
+							ColumnSpec.decode("default:grow"),
+							FormSpecs.RELATED_GAP_COLSPEC,
+							ColumnSpec.decode("default:grow"),
+							FormSpecs.RELATED_GAP_COLSPEC,},
+						new RowSpec[] {
+							FormSpecs.RELATED_GAP_ROWSPEC,
+							FormSpecs.DEFAULT_ROWSPEC,
+							FormSpecs.RELATED_GAP_ROWSPEC,
+							RowSpec.decode("default:grow"),
+							FormSpecs.RELATED_GAP_ROWSPEC,}));
+					{
+						JLabel lblZeigeZugnamen = new JLabel("Ignoriere Züge");
+						panelIgnorieren.add(lblZeigeZugnamen, "2, 2");
+					}
+					{
+						JLabel lblZeigeZugnamen = new JLabel("Ignoriere Templates");
+						panelIgnorieren.add(lblZeigeZugnamen, "4, 2");
+					}
+					{
+						JScrollPane ignorierteZuegePane = new JScrollPane();
+						panelIgnorieren.add(ignorierteZuegePane, "2, 4, fill, fill");
+						{
+							ignorierteZuegeTextArea = new JTextArea();
+							ignorierteZuegePane.setViewportView(ignorierteZuegeTextArea);
+						}
+					}
+					{
+						JScrollPane ignorierteTemplatesPane = new JScrollPane();
+						panelIgnorieren.add(ignorierteTemplatesPane, "4, 4, fill, fill");
+						{
+							ignorierteTemplatesTextArea = new JTextArea();
+							ignorierteTemplatesPane.setViewportView(ignorierteTemplatesTextArea);
 						}
 					}
 				}

@@ -197,6 +197,9 @@ public class BildfahrplanSettingsGUIController extends GUIController
 		gui.chckbxZugnamenKommentare.setSelected(config.getZeigeZugnamenKommentare());
 		gui.chckbxZeigeZeiten.setSelected(config.getZeigeZeiten());
 		gui.setRichtung(config.getZeigeRichtung());
+		
+		gui.ignorierteZuegeTextArea.setText(config.getIgnorierteZuege());
+		gui.ignorierteTemplatesTextArea.setText(config.getIgnorierteTemplates());
 	}
 	
 	protected void speichereTabBildfahrplan() throws NumberFormatException
@@ -218,6 +221,8 @@ public class BildfahrplanSettingsGUIController extends GUIController
 		config.setZeigeZugnamenKommentare(gui.chckbxZugnamenKommentare.isSelected());
 		config.setZeigeZeiten(gui.chckbxZeigeZeiten.isSelected());
 		config.setZeigeRichtung(gui.rdbtngrpZeigeRichtung.getSelection().getActionCommand());
+		config.setIgnorierteZuege(gui.ignorierteZuegeTextArea.getText());
+		config.setIgnorierteTemplates(gui.ignorierteTemplatesTextArea.getText());
 	}
 	
 	protected void ladeTabFarben()

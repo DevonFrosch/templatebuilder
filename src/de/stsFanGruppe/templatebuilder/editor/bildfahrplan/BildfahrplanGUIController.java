@@ -286,6 +286,12 @@ public class BildfahrplanGUIController extends EditorGUIController
 					String zugName = fahrt.getName();
 					String templateName = fahrt.getTemplate();
 					
+					if(config.getIgnorierteZuegeArray().contains(zugName)
+							|| config.getIgnorierteTemplatesArray().contains(templateName))
+					{
+						continue;
+					}
+					
 					// Darstellung
 					FahrtDarstellung fahrtDarstellung = darstellungHandler.getFahrtDarstellung(zugName, templateName);
 					Color fahrtFarbe = fahrtDarstellung.getFarbe();

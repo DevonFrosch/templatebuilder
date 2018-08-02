@@ -1,8 +1,11 @@
 package de.stsFanGruppe.templatebuilder.config;
 
 import java.awt.Color;
+import java.util.Arrays;
 import javax.swing.JComponent;
 import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.FahrtDarstellungConfig;
+import de.stsFanGruppe.tools.FirstLastLinkedList;
+import de.stsFanGruppe.tools.FirstLastList;
 import de.stsFanGruppe.tools.NullTester;
 import de.stsFanGruppe.tools.PreferenceHandler;
 
@@ -66,6 +69,13 @@ public class BildfahrplanConfig extends ConfigController
 	private static final int DEFAULT_TEXT_ZEIGEZUGNAMEN = 2;
 	private static final boolean DEFAULT_TEXT_ZEIGEKOMMENTARE = true;
 	private static final int DEFAULT_TEXT_ZEIGERICHTUNG = 3; // 0 = Keine, 1 = Hin, 2 = Rück, 3 = Beide
+	
+	// Ignorierte Züge/Templates
+	public static final String CONFIG_IGNORIERTE_ZUEGE = "bildfahrplan/darstellung/ignoriere/zuege";
+	public static final String CONFIG_IGNORIERTE_TEMPLATES = "bildfahrplan/darstellung/ignoriere/templates";
+
+	public static final String DEFAULT_IGNORIERTE_ZUEGE = "";
+	public static final String DEFAULT_IGNORIERTE_TEMPLATES = "";
 	
 	// Farbeinstellungen
 	public static final String CONFIG_FARBEN_ZEITEN = "bildfahrplan/darstellung/farben/zeiten";
@@ -357,6 +367,34 @@ public class BildfahrplanConfig extends ConfigController
 			default:
 		}
 		prefs.setInt("zeigeRichtung", CONFIG_TEXT_ZEIGERICHTUNG, zr);
+	}
+	
+	public String getIgnorierteZuege()
+	{
+		return prefs.getString(CONFIG_IGNORIERTE_ZUEGE, DEFAULT_IGNORIERTE_ZUEGE);
+	}
+	public FirstLastList<String> getIgnorierteZuegeArray()
+	{
+		String[] zugListe = getIgnorierteZuege().split("\n");
+		return new FirstLastLinkedList<String>(Arrays.asList(zugListe));
+	}
+	public void setIgnorierteZuege(String zeigeZuege)
+	{
+		prefs.setString("ignorierteZüge", CONFIG_IGNORIERTE_ZUEGE, zeigeZuege);
+	}
+	
+	public String getIgnorierteTemplates()
+	{
+		return prefs.getString(CONFIG_IGNORIERTE_TEMPLATES, DEFAULT_IGNORIERTE_TEMPLATES);
+	}
+	public FirstLastList<String> getIgnorierteTemplatesArray()
+	{
+		String[] templateListe = getIgnorierteTemplates().split("\n");
+		return new FirstLastLinkedList<String>(Arrays.asList(templateListe));
+	}
+	public void setIgnorierteTemplates(String zeigeTemplates)
+	{
+		prefs.setString("ignorierteTemplates", CONFIG_IGNORIERTE_TEMPLATES, zeigeTemplates);
 	}
 	
 	public Color getZeitenFarbe()
