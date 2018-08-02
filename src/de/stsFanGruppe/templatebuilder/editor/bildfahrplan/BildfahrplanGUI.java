@@ -1,9 +1,13 @@
 package de.stsFanGruppe.templatebuilder.editor.bildfahrplan;
 
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import javax.swing.JComponent;
 import de.stsFanGruppe.templatebuilder.editor.EditorGUI;
 import de.stsFanGruppe.templatebuilder.editor.EditorGUIController;
+import de.stsFanGruppe.tools.CalculatableLine;
+import de.stsFanGruppe.tools.FahrtPaintable;
 import de.stsFanGruppe.tools.FirstLastLinkedList;
 import de.stsFanGruppe.tools.NullTester;
 import de.stsFanGruppe.tools.Paintable;
@@ -16,13 +20,20 @@ public class BildfahrplanGUI extends JComponent implements EditorGUI
 	
 	protected Object paintLock = new Object();
 	protected FirstLastLinkedList<Paintable> paintables = null;
+	private FirstLastLinkedList<FahrtPaintable> fahrtPaintables = null;
 	boolean paint = true;
 	protected boolean forceRepaint = true;
+
 	
 	public BildfahrplanGUI(BildfahrplanGUIController controller)
 	{
 		NullTester.test(controller);
 		this.controller = controller;
+		this.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				controller.mouseClicked(e);
+			}
+		});
 	}
 	
 	public EditorGUIController getController()
@@ -35,6 +46,14 @@ public class BildfahrplanGUI extends JComponent implements EditorGUI
 		synchronized(paintLock)
 		{
 			this.paintables = paintables;
+		}
+	}
+
+	public void setFahrtPaintables(FirstLastLinkedList<FahrtPaintable> fahrtPaintables)
+	{
+		synchronized(paintLock)
+		{
+			this.fahrtPaintables = fahrtPaintables;
 		}
 	}
 	
@@ -72,26 +91,36 @@ public class BildfahrplanGUI extends JComponent implements EditorGUI
 			controller.recalculate(g.getFontMetrics());
 		}
 		
-		if(!paint || paintables == null)
+		if(!paint || paintables == null || fahrtPaintables == null)
 		{
 			return;
 		}
 		
 		// Arbeitskopie
 		FirstLastLinkedList<Paintable> ps;
+		FirstLastLinkedList<FahrtPaintable> fps;
 		synchronized(paintLock)
 		{
 			ps = paintables.clone();
+			fps = fahrtPaintables.clone();
 		}
 		
-		if(ps.isEmpty())
+		if(!ps.isEmpty())
 		{
-			return;
+			for(Paintable p : ps)
+			{
+				p.paint(g);
+			}
 		}
 		
-		for(Paintable p : ps)
+		if(!fps.isEmpty())
 		{
-			p.paint(g);
+			FirstLastLinkedList<CalculatableLine> zugLinien = new FirstLastLinkedList<>();
+			for(FahrtPaintable fp : fps)
+			{
+				zugLinien.addAll(fp.paint(g));
+			}
+			controller.setZugLinien(zugLinien);
 		}
 	}
 }

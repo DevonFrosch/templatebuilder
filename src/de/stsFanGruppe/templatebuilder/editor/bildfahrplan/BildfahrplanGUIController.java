@@ -4,6 +4,7 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Stroke;
+import java.awt.event.MouseEvent;
 import java.util.Collection;
 import java.util.Set;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanConfig;
@@ -16,6 +17,8 @@ import de.stsFanGruppe.templatebuilder.strecken.Streckenabschnitt;
 import de.stsFanGruppe.templatebuilder.zug.Fahrplanhalt;
 import de.stsFanGruppe.templatebuilder.zug.Fahrt;
 import de.stsFanGruppe.templatebuilder.zug.FahrtDarstellung;
+import de.stsFanGruppe.tools.CalculatableLine;
+import de.stsFanGruppe.tools.FahrtPaintable;
 import de.stsFanGruppe.tools.FirstLastLinkedList;
 import de.stsFanGruppe.tools.FirstLastList;
 import de.stsFanGruppe.tools.Paintable;
@@ -31,6 +34,9 @@ public class BildfahrplanGUIController extends EditorGUIController
 	
 	protected BildfahrplanPaintHelper ph;
 	protected static int stringHeight = 0;
+	
+	protected Object zugLinienLock = new Object();
+	protected FirstLastLinkedList<CalculatableLine> zugLinien = new FirstLastLinkedList<>();
 	
 	public BildfahrplanGUIController(EditorDaten daten, BildfahrplanConfig config)
 	{
@@ -73,6 +79,22 @@ public class BildfahrplanGUIController extends EditorGUIController
 	public BildfahrplanZeilenheaderGUI getBildfahrplanZeilenHeaderGUI()
 	{
 		return zeilenGui;
+	}
+	
+	public FirstLastLinkedList<CalculatableLine> getZugLinien()
+	{
+		synchronized(zugLinienLock)
+		{
+			return zugLinien.clone();
+		}
+	}
+	
+	public void setZugLinien(FirstLastLinkedList<CalculatableLine> zugLinien)
+	{
+		synchronized(zugLinienLock)
+		{
+			this.zugLinien = zugLinien;
+		}
 	}
 	
 	public void repaint()
@@ -130,6 +152,18 @@ public class BildfahrplanGUIController extends EditorGUIController
 		return config.getZeilenHeaderBreite();
 	}
 	
+	// action handler
+	public void mouseClicked(MouseEvent e)
+	{
+		for(CalculatableLine linie: this.getZugLinien())
+		{
+			if(linie.isPunktAufLinie(e.getX(), e.getY(), 10))
+			{
+				log.debug("Linie von {} gefunden!", linie.getId());
+			}
+		}
+	}
+	
 	// Interne Funktionen
 	protected void optimizeHeight()
 	{
@@ -175,6 +209,7 @@ public class BildfahrplanGUIController extends EditorGUIController
 		zeilenGui.getParent().setBackground(bg);
 		
 		FirstLastLinkedList<Paintable> guiPaints = new FirstLastLinkedList<>();
+		FirstLastLinkedList<FahrtPaintable> fahrtPaints = new FirstLastLinkedList<>();
 		FirstLastLinkedList<Paintable> spaltenGuiPaints = new FirstLastLinkedList<>();
 		FirstLastLinkedList<Paintable> zeilenGuiPaints = new FirstLastLinkedList<>();
 		
@@ -336,7 +371,8 @@ public class BildfahrplanGUIController extends EditorGUIController
 							// nicht zeichnen, wenn Richtung ausgeblendet
 							if((kmAb < kmAn && (zeigeRichtung & 1) != 0) || (kmAb > kmAn && (zeigeRichtung & 2) != 0))
 							{
-								guiPaints.add(g -> {
+								fahrtPaints.add(g -> {
+									FirstLastLinkedList<CalculatableLine> zugLinien = new FirstLastLinkedList<>();
 									int x1 = ph.getWegPos(kmAb);
 									int x2 = ph.getWegPos(kmAn);
 									
@@ -353,6 +389,7 @@ public class BildfahrplanGUIController extends EditorGUIController
 										int y2 = ph.getZeitPos(an - sch);
 										
 										ph.paintLine(g, x1, y1, x2, y2, fahrtDarstellung);
+										zugLinien.add(new CalculatableLine(name, x1, y1, x2, y2));
 										
 										// Zeiten zeichnen, wenn in der Config, dies aktiv ist.
 										if(zeigeZeiten)
@@ -399,6 +436,7 @@ public class BildfahrplanGUIController extends EditorGUIController
 											break;
 										}
 									}
+									return zugLinien;
 								});
 							}
 						}
@@ -414,6 +452,7 @@ public class BildfahrplanGUIController extends EditorGUIController
 		
 		// Paint-Objekte überschreiben
 		gui.setPaintables(guiPaints);
+		gui.setFahrtPaintables(fahrtPaints);
 		spaltenGui.setPaintables(spaltenGuiPaints);
 		zeilenGui.setPaintables(zeilenGuiPaints);
 		
