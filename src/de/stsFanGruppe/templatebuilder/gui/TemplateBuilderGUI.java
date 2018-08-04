@@ -327,21 +327,25 @@ public class TemplateBuilderGUI implements GUI
 	
 	public void errorMessage(String text, String titel)
 	{
-		JOptionPane.showMessageDialog(frmTemplatebauer, text, titel, JOptionPane.ERROR_MESSAGE);
+		JComponent pane = this.createSelectableTextPane(text);
+		JOptionPane.showMessageDialog(frmTemplatebauer, pane, titel, JOptionPane.ERROR_MESSAGE);
 	}
 	
 	public void warningMessage(String text, String titel)
 	{
-		JOptionPane.showMessageDialog(frmTemplatebauer, text, titel, JOptionPane.WARNING_MESSAGE);
+		JComponent pane = this.createSelectableTextPane(text);
+		JOptionPane.showMessageDialog(frmTemplatebauer, pane, titel, JOptionPane.WARNING_MESSAGE);
 	}
 	
 	public void infoMessage(String text, String titel)
 	{
-		JOptionPane.showMessageDialog(frmTemplatebauer, text, titel, JOptionPane.INFORMATION_MESSAGE);
+		JComponent pane = this.createSelectableTextPane(text);
+		JOptionPane.showMessageDialog(frmTemplatebauer, pane, titel, JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	public String inputMessage(String text, String initialSelectionValue)
 	{
-		return JOptionPane.showInputDialog(frmTemplatebauer, text, initialSelectionValue);
+		JComponent pane = this.createSelectableTextPane(text);
+		return JOptionPane.showInputDialog(frmTemplatebauer, pane, initialSelectionValue);
 	}
 }

@@ -22,6 +22,7 @@ import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 
 public class FahrtEditorGUI extends JFrame implements GUI
 {
@@ -164,16 +165,19 @@ public class FahrtEditorGUI extends JFrame implements GUI
 	
 	public void errorMessage(String text, String titel)
 	{
-		JOptionPane.showMessageDialog(contentPanel, text, titel, JOptionPane.ERROR_MESSAGE);
+		JComponent pane = this.createSelectableTextPane(text);
+		JOptionPane.showMessageDialog(contentPanel, pane, titel, JOptionPane.ERROR_MESSAGE);
 	}
 	
 	public void warningMessage(String text, String titel)
 	{
-		JOptionPane.showMessageDialog(contentPanel, text, titel, JOptionPane.WARNING_MESSAGE);
+		JComponent pane = this.createSelectableTextPane(text);
+		JOptionPane.showMessageDialog(contentPanel, pane, titel, JOptionPane.WARNING_MESSAGE);
 	}
 	
 	public void infoMessage(String text, String titel)
 	{
-		JOptionPane.showMessageDialog(contentPanel, text, titel, JOptionPane.INFORMATION_MESSAGE);
+		JComponent pane = this.createSelectableTextPane(text);
+		JOptionPane.showMessageDialog(contentPanel, pane, titel, JOptionPane.INFORMATION_MESSAGE);
 	}
 }
