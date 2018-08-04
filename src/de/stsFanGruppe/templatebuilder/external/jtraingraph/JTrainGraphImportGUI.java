@@ -2,7 +2,6 @@ package de.stsFanGruppe.templatebuilder.external.jtraingraph;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -16,7 +15,8 @@ public class JTrainGraphImportGUI extends JDialog implements GUI
 	public final int CANCEL_OPTION = 0;
 	public final int APPROVE_OPTION = 1;
 	
-	private Callback callback;
+	protected Callback callback;
+	protected static String lastOpenFilePath = null;
 	
 	final JPanel contentPanel = new JPanel();
 	JTextField pfadInput;
@@ -132,22 +132,17 @@ public class JTrainGraphImportGUI extends JDialog implements GUI
 	private void dateiChooser()
 	{
 		setCursor(new Cursor(Cursor.WAIT_CURSOR));
-		JFileChooser fileChooser = new JFileChooser();
+		JFileChooser fileChooser = new JFileChooser(lastOpenFilePath);
 		setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		
 		fileChooser.setDialogTitle("Importieren...");
 		fileChooser.setFileFilter(new FileNameExtensionFilter("Bildfahrpläne (*.fpl, *.xml)", "fpl", "xml"));
 		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		
-		if(!pfadInput.getText().trim().isEmpty())
-		{
-			File file = new File(pfadInput.getText());
-			fileChooser.setCurrentDirectory(file);
-		}
-		
 		if(fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION)
 		{
-			pfadInput.setText(fileChooser.getSelectedFile().getPath());
+			lastOpenFilePath = fileChooser.getSelectedFile().getPath();
+			pfadInput.setText(lastOpenFilePath);
 			
 			// TODO: Entfernen wenn wirklich Optionen auswählbar sind
 			start();
