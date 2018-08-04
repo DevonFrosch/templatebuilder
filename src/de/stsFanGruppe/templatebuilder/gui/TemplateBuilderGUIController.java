@@ -327,18 +327,22 @@ public class TemplateBuilderGUIController extends GUIController
 				
 				StringJoiner zuege = new StringJoiner("\n");
 				
-				for(String zug: bildfahrplanConfig.getFahrtDarstellungConfig().getHervorgehobeneZuege())
+				for(String name: bildfahrplanConfig.getFahrtDarstellungConfig().getHervorgehobeneZuege())
 				{
-					if(editorDaten != null)
+					Fahrt fahrt = editorDaten.getFahrt(name);
+					
+					if(fahrt == null)
 					{
-						Fahrt fahrt = editorDaten.getFahrt(zug);
-						if(fahrt != null && fahrt.getTemplate() != null)
-						{
-							zuege.add(zug+" ["+fahrt.getTemplate()+"]");
-							continue;
-						}
+						continue;
 					}
-					zuege.add(zug);
+					if(fahrt.getTemplateString() != null)
+					{
+						zuege.add(fahrt.getName() + " [" + fahrt.getTemplateString() + "]");
+					}
+					else
+					{
+						zuege.add(fahrt.getName());
+					}
 				}
 				
 				if(zuege.length() > 0)

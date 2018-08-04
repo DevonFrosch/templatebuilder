@@ -385,6 +385,14 @@ public class EditorDaten
 		}
 	}
 	
+	public Fahrt getFahrt(long fahrtId)
+	{
+		synchronized(fahrtenLock)
+		{
+			return fahrten.stream().filter((f) -> f.getFahrtId() == fahrtId).findFirst().orElse(null);
+		}
+	}
+	
 	public boolean hasFahrten()
 	{
 		synchronized(fahrtenLock)

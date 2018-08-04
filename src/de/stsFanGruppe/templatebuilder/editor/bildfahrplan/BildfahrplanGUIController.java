@@ -164,7 +164,7 @@ public class BildfahrplanGUIController extends EditorGUIController
 		{
 			if(linie.isPunktAufLinie(e.getX(), e.getY(), 10))
 			{
-				zugNamen.add(linie.getId());
+				zugNamen.add(linie.getName());
 			}
 		}
 		
@@ -323,7 +323,7 @@ public class BildfahrplanGUIController extends EditorGUIController
 					double letzteZeit = -1;
 					double letzterKm = -1;
 					String vollerZugName = fahrt.getName();
-					String templateName = fahrt.getTemplate();
+					String templateName = fahrt.getTemplateName();
 					
 					if(bildfahrplanConfig.getIgnorierteZuegeArray().contains(vollerZugName)
 							|| bildfahrplanConfig.getIgnorierteTemplatesArray().contains(templateName))

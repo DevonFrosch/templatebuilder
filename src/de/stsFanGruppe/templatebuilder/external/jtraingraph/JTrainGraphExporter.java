@@ -77,7 +77,8 @@ public class JTrainGraphExporter extends Exporter
 				throw new ExportException("Ungültige Betriebsstelle " + b.getName(), e);
 			}
 			// enthält wie jTrainGraph_timetable ungeklärte Formatierungen
-			xml.add("<sta name=\"" + name + "\" km=\"" + km + "\" cl=\"schwarz\" sh=\"true\" sz=\"1\" sy=\"0\"></sta>");
+			xml.add("<sta name=\"" + name + "\" km=\"" + km + "\" kml=\"" + km + "\" kmr=\"" + km
+					+ "\" cl=\"schwarz\" sh=\"true\" sz=\"1\" sy=\"0\"></sta>");
 		}
 		
 		xml.add("</stations>");

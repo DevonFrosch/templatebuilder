@@ -7,6 +7,7 @@ import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.linetype.LineType
 import de.stsFanGruppe.templatebuilder.zug.FahrtDarstellung;
 import de.stsFanGruppe.tools.FirstLastLinkedList;
 import de.stsFanGruppe.tools.FirstLastList;
+import de.stsFanGruppe.tools.NullTester;
 import de.stsFanGruppe.tools.PreferenceHandler;
 
 public class FahrtDarstellungConfig extends ConfigController
@@ -37,7 +38,7 @@ public class FahrtDarstellungConfig extends ConfigController
 	// nicht persistente Einstellungen
 	private String zugsucheText = null;
 	private String templatesucheText = null;
-	private FirstLastLinkedList<String> hervorgehobeneZuege = null;
+	private FirstLastList<String> hervorgehobeneZuege = new FirstLastLinkedList<>();
 	
 	// Konstruktoren
 	public FahrtDarstellungConfig()
@@ -127,17 +128,15 @@ public class FahrtDarstellungConfig extends ConfigController
 		notifyChange();
 	}
 	
-	public String[] getHervorgehobeneZuege()
+	public FirstLastList<String> getHervorgehobeneZuege()
 	{
-		if(hervorgehobeneZuege == null) {
-			return new String[]{};
-		}
-		return hervorgehobeneZuege.toArray(new String[hervorgehobeneZuege.size()]);
+		return hervorgehobeneZuege;
 	}
 
-	public void setHervorgehobeneZuege(FirstLastLinkedList<String> zugNamen)
+	public void setHervorgehobeneZuege(FirstLastList<String> hervorgehobeneZuege)
 	{
-		this.hervorgehobeneZuege = zugNamen;
+		NullTester.test(hervorgehobeneZuege);
+		this.hervorgehobeneZuege = hervorgehobeneZuege;
 		notifyChange();
 	}
 	
@@ -242,13 +241,10 @@ public class FahrtDarstellungConfig extends ConfigController
 	{
 		FirstLastList<FahrtDarstellung> liste = new FirstLastLinkedList<>();
 		
-		if(hervorgehobeneZuege != null)
+		Color blau = new Color(0, 0, 255, 32);
+		for(String zugName: hervorgehobeneZuege)
 		{
-			Color blau = new Color(0, 0, 255, 32);
-			for(String zugName: hervorgehobeneZuege)
-			{
-				liste.add(new FahrtDarstellung(FahrtFilter.GLEICH, zugName, blau, 5, LineType.SOLID_LINE));
-			}
+			liste.add(new FahrtDarstellung(FahrtFilter.GLEICH, zugName, blau, 5, LineType.SOLID_LINE));
 		}
 		
 		return liste.toArray(new FahrtDarstellung[liste.size()]);

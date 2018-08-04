@@ -180,21 +180,26 @@ public class JTrainGraphImporter extends Importer
 				// leere Fahrten brauchen wir nicht importieren
 				if(!fahrplanhalte.isEmpty())
 				{
-					String templateName = null;
-					String comment = train.getAttribute("cm");
-					Matcher templateNameMatcher = Pattern.compile("Template: (.*)").matcher(comment);
+					String templateName = train.getAttribute("data-template");
+					String templateZid = train.getAttribute("data-zid");
 					
-					if(templateNameMatcher.find())
+					if(templateName == null)
 					{
-						try
+						String comment = train.getAttribute("cm");
+						Matcher templateNameMatcher = Pattern.compile("Template: (.*)").matcher(comment);
+						
+						if(templateNameMatcher.find())
 						{
-							templateName = templateNameMatcher.group(1);
+							try
+							{
+								templateName = templateNameMatcher.group(1);
+							}
+							catch(IndexOutOfBoundsException e)
+							{}
 						}
-						catch(IndexOutOfBoundsException e)
-						{}
 					}
 					
-					fahrten.add(new Fahrt(train.getAttribute("name"), linie, templateName, fahrplanhalte));
+					fahrten.add(new Fahrt(train.getAttribute("name"), linie, templateName, templateZid, fahrplanhalte));
 				}
 			}
 		}

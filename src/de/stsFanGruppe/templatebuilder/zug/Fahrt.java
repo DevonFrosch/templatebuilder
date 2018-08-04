@@ -7,21 +7,26 @@ public class Fahrt implements Comparable<Fahrt>
 {
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Fahrt.class);
 	
+	protected static long nextId = 0;
+	
+	protected long fahrtId;
 	protected String name;
 	protected Linie linie;
-	protected String template;
+	protected String templateName;
+	protected String templateZid;
 	protected NavigableSet<Fahrplanhalt> fahrplanhalte = new TreeSet<>(new Fahrplanhalt.StrictComparator());
 	
 	public Fahrt(String name, Linie linie)
 	{
+		this.fahrtId = nextId ++;
 		this.setName(name);
 		this.setLinie(linie);
 	}
-	public Fahrt(String name, Linie linie, String template)
+	public Fahrt(String name, Linie linie, String templateName, String templateZid)
 	{
-		this.setName(name);
-		this.setLinie(linie);
-		this.setTemplate(template);
+		this(name, linie);
+		this.setTemplateName(templateName);
+		this.setTemplateZid(templateZid);
 	}
 
 	public Fahrt(String name, Linie linie, Collection<? extends Fahrplanhalt> fahrplanhalte)
@@ -29,10 +34,15 @@ public class Fahrt implements Comparable<Fahrt>
 		this(name, linie);
 		this.addFahrplanhalte(fahrplanhalte);
 	}
-	public Fahrt(String name, Linie linie, String template, Collection<? extends Fahrplanhalt> fahrplanhalte)
+	public Fahrt(String name, Linie linie, String templateName, String templateZid, Collection<? extends Fahrplanhalt> fahrplanhalte)
 	{
-		this(name, linie, template);
+		this(name, linie, templateName, templateZid);
 		this.addFahrplanhalte(fahrplanhalte);
+	}
+	
+	public long getFahrtId()
+	{
+		return fahrtId;
 	}
 	
 	public String getName()
@@ -57,14 +67,41 @@ public class Fahrt implements Comparable<Fahrt>
 		this.linie = linie;
 	}
 	
-	public String getTemplate()
+	public String getTemplateName()
 	{
-		return template;
+		return templateName;
 	}
 	
-	public void setTemplate(String template)
+	public void setTemplateName(String templateName)
 	{
-		this.template = template;
+		this.templateName = templateName;
+	}
+	
+	public String getTemplateZid()
+	{
+		return templateZid;
+	}
+	
+	public void setTemplateZid(String templateZid)
+	{
+		this.templateZid = templateZid;
+	}
+	
+	public String getTemplateString()
+	{
+		if(getTemplateName() != null)
+		{
+			if(getTemplateZid() != null)
+			{
+				return getTemplateName() + " (" + getTemplateZid() + ")";
+			}
+			return getTemplateName();
+		}
+		if(getTemplateZid() != null)
+		{
+			return getTemplateZid();
+		}
+		return null;
 	}
 	
 	public boolean hasFahrplanhalte()
@@ -158,15 +195,24 @@ public class Fahrt implements Comparable<Fahrt>
 	
 	public String toString()
 	{
-		StringJoiner stringJoiner = new StringJoiner("Fahrt " + getName() + " { Linie: " + getLinie());
+		StringBuilder stringBuilder = new StringBuilder("Fahrt " + getName() + " { Linie: " + getLinie());
 		
-		if(getTemplate() != null)
+		if(getTemplateName() != null)
 		{
-			stringJoiner.add(", Template: " + getTemplate());
+			stringBuilder.append(", Template: " + getTemplateName());
+			
+			if(getTemplateZid() != null)
+			{
+				stringBuilder.append(" (" + getTemplateZid() + ")");
+			}
+		}
+		else if(getTemplateZid() != null)
+		{
+			stringBuilder.append(", Template-ZID: " + getTemplateZid());
 		}
 		
-		stringJoiner.add(", " + fahrplanhalte.size() + " Fahrplanhalte }");
-		return stringJoiner.toString();
+		stringBuilder.append(", " + fahrplanhalte.size() + " Fahrplanhalte }");
+		return stringBuilder.toString();
 	}
 	
 	public String toXML()
@@ -177,7 +223,19 @@ public class Fahrt implements Comparable<Fahrt>
 	public String toXML(String indent)
 	{
 		StringJoiner xml = new StringJoiner("\n");
-		xml.add(indent + "<fahrt linie=\"" + linie.getName() + "\">");
+		StringBuilder fahrt = new StringBuilder(indent + "<fahrt linie=\"" + linie.getName() + "\"");
+		
+		if(getTemplateName() != null)
+		{
+			fahrt.append(" data-template=\"" + getTemplateName() + "\"");
+		}
+
+		if(getTemplateZid() != null)
+		{
+			fahrt.append(" data-zid=\"" + getTemplateZid() + "\"");
+		}
+		
+		xml.add(fahrt.append(">").toString());
 		
 		if(!fahrplanhalte.isEmpty())
 		{
