@@ -13,14 +13,12 @@ public class PreferenceHandler
 {
 	protected static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(PreferenceHandler.class);;
 	protected Preferences prefs;
-	protected Runnable setCallback;
 	
-	public PreferenceHandler(Class<?> reference, Runnable setCallback)
+	public PreferenceHandler(Class<?> reference)
 	{
 		NullTester.test(reference);
 		log.trace("Neuer PreferenceHandler ({})", reference);
 		prefs = Preferences.userNodeForPackage(reference);
-		this.setCallback = setCallback;
 	}
 	
 	// Hilfsfunktionen für Getter/Setter
@@ -29,7 +27,6 @@ public class PreferenceHandler
 	{
 		prefs.put(configName, value);
 		log.trace("Config: {} = {}", logName, value);
-		setCallback.run();
 	}
 	
 	public String getString(String configName, String defaultValue)
@@ -42,7 +39,6 @@ public class PreferenceHandler
 	{
 		prefs.putBoolean(configName, value);
 		log.trace("Config: {} = {}", logName, value);
-		setCallback.run();
 	}
 	
 	public boolean getBoolean(String configName, boolean defaultValue)
@@ -55,7 +51,6 @@ public class PreferenceHandler
 	{
 		prefs.putInt(configName, value);
 		log.trace("Config: {} = {}", logName, value);
-		setCallback.run();
 	}
 	
 	public int getInt(String configName, int defaultValue)
@@ -68,7 +63,6 @@ public class PreferenceHandler
 	{
 		prefs.putDouble(configName, value);
 		log.trace("Config: {} = {}", logName, value);
-		setCallback.run();
 	}
 	
 	public double getDouble(String configName, double defaultValue)
@@ -85,7 +79,6 @@ public class PreferenceHandler
 			arr.add(String.valueOf(val));
 		}
 		setString(logName, configName, arr.toString());
-		setCallback.run();
 	}
 	
 	public int[] getIntArray(String configName, int[] defaultValue)
@@ -125,7 +118,6 @@ public class PreferenceHandler
 	{
 		int[] rgba = {value.getRed(), value.getGreen(), value.getBlue(), value.getAlpha()};
 		setIntArray(logName, configName, rgba);
-		setCallback.run();
 	}
 	
 	public Color getColor(String configName, Color defaultValue)

@@ -201,8 +201,10 @@ public class FahrtDarstellungSettingsGUIController extends GUIController
 			case "ok":
 				try
 				{
+					config.startTransaction();
 					speichereStandards();
 					speichereRegeln();
+					config.endTransaction();
 				}
 				catch(NumberFormatException e)
 				{

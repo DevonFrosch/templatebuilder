@@ -24,6 +24,8 @@ public abstract class ConfigController
 	protected int callbackCounter = 0;
 	protected PreferenceHandler prefs = null;
 	
+	protected boolean isTransaction = false;
+	
 	// Change-Handler
 	public Object registerChangeHandler(Runnable callback)
 	{
@@ -44,8 +46,22 @@ public abstract class ConfigController
 		return callbacks.remove(handlerID) != null;
 	}
 	
+	public void startTransaction()
+	{
+		this.isTransaction = true;
+	}
+	
+	public void endTransaction()
+	{
+		this.isTransaction = false;
+	}
+	
 	protected void notifyChange()
 	{
+		if(isTransaction)
+		{
+			return;
+		}
 		callbacks.forEach((k, v) -> v.run());
 	}
 	

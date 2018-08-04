@@ -93,7 +93,7 @@ public class BildfahrplanConfig extends ConfigController
 	{
 		log.debug("Neue BildfahrplanConfig(double, double)");
 		this.fahrtDarstellungConfig = new FahrtDarstellungConfig();
-		this.prefs = new PreferenceHandler(BildfahrplanConfig.class, () -> notifyChange());
+		this.prefs = new PreferenceHandler(BildfahrplanConfig.class);
 		this.setZeiten(minZeit, maxZeit);
 		assert prefs != null;
 	}
@@ -102,7 +102,7 @@ public class BildfahrplanConfig extends ConfigController
 	{
 		log.debug("Neue BildfahrplanConfig()");
 		this.fahrtDarstellungConfig = new FahrtDarstellungConfig();
-		this.prefs = new PreferenceHandler(BildfahrplanConfig.class, () -> notifyChange());
+		this.prefs = new PreferenceHandler(BildfahrplanConfig.class);
 		this.enableAutoSize();
 		assert prefs != null;
 	}
@@ -121,6 +121,7 @@ public class BildfahrplanConfig extends ConfigController
 	public void setMarginRight(int marginRight)
 	{
 		prefs.setInt("marginRight", CONFIG_MAR_RIGHT, marginRight);
+		notifyChange();
 	}
 	
 	public int getMarginLeft()
@@ -131,6 +132,7 @@ public class BildfahrplanConfig extends ConfigController
 	public void setMarginLeft(int marginLeft)
 	{
 		prefs.setInt("marginLeft", CONFIG_MAR_LEFT, marginLeft);
+		notifyChange();
 	}
 	
 	public int getMarginTop()
@@ -141,6 +143,7 @@ public class BildfahrplanConfig extends ConfigController
 	public void setMarginTop(int marginTop)
 	{
 		prefs.setInt("marginTop", CONFIG_MAR_TOP, marginTop);
+		notifyChange();
 	}
 	
 	public int getMarginBottom()
@@ -151,6 +154,7 @@ public class BildfahrplanConfig extends ConfigController
 	public void setMarginBottom(int marginBottom)
 	{
 		prefs.setInt("marginBottom", CONFIG_MAR_BOTTOM, marginBottom);
+		notifyChange();
 	}
 	
 	public int getLineHeight()
@@ -161,6 +165,7 @@ public class BildfahrplanConfig extends ConfigController
 	public void setLineHeight(int lineHeight)
 	{
 		prefs.setInt("lineHeight", CONFIG_SH_LINEHEIGHT, lineHeight);
+		notifyChange();
 	}
 	
 	public int getOffsetX()
@@ -171,6 +176,7 @@ public class BildfahrplanConfig extends ConfigController
 	public void setOffsetX(int offsetX)
 	{
 		prefs.setInt("offsetX", CONFIG_SH_OFFSETX, offsetX);
+		notifyChange();
 	}
 	
 	public int getOffsetY()
@@ -181,6 +187,7 @@ public class BildfahrplanConfig extends ConfigController
 	public void setOffsetY(int offsetY)
 	{
 		prefs.setInt("offsetY", CONFIG_SH_OFFSETY, offsetY);
+		notifyChange();
 	}
 	
 	public int getTextMarginTop()
@@ -191,6 +198,7 @@ public class BildfahrplanConfig extends ConfigController
 	public void setTextMarginTop(int textMarginTop)
 	{
 		prefs.setInt("textMarginTop", CONFIG_SH_TEXTMARGINTOP, textMarginTop);
+		notifyChange();
 	}
 	
 	public int getTextMarginBottom()
@@ -201,6 +209,7 @@ public class BildfahrplanConfig extends ConfigController
 	public void setTextMarginBottom(int textMarginBottom)
 	{
 		prefs.setInt("textMarginBottom", CONFIG_SH_TEXTMARGINBOTTOM, textMarginBottom);
+		notifyChange();
 	}
 	
 	public int getZeilenAnzahl()
@@ -211,6 +220,7 @@ public class BildfahrplanConfig extends ConfigController
 	public void setZeilenAnzahl(int zeilenAnzahl)
 	{
 		prefs.setInt("zeilenAnzahl", CONFIG_SH_ZEILENANZAHL, zeilenAnzahl);
+		notifyChange();
 	}
 	
 	public int getZeilenHeaderBreite()
@@ -221,6 +231,7 @@ public class BildfahrplanConfig extends ConfigController
 	public void setZeilenHeaderBreite(int zeilenHeaderBreite)
 	{
 		prefs.setInt("zeilenHeaderBreite", CONFIG_ZH_BREITE, zeilenHeaderBreite);
+		notifyChange();
 	}
 	
 	public int getZeitIntervall()
@@ -231,6 +242,7 @@ public class BildfahrplanConfig extends ConfigController
 	public void setZeitIntervall(int zeitIntervall)
 	{
 		prefs.setInt("zeitIntervall", CONFIG_ZH_ZEITINTERVALL, zeitIntervall);
+		notifyChange();
 	}
 	
 	public int getHoeheProStunde()
@@ -245,6 +257,7 @@ public class BildfahrplanConfig extends ConfigController
 			throw new IllegalArgumentException("Höhe muss größer gleich 0 sein.");
 		}
 		prefs.setInt("hoeheProStunde", CONFIG_F_HOEHEPROSTUNDE, hoeheProStunde);
+		notifyChange();
 	}
 	
 	public double getMinZeit()
@@ -271,11 +284,13 @@ public class BildfahrplanConfig extends ConfigController
 		prefs.setDouble("minZeit", CONFIG_F_MINZEIT, min);
 		prefs.setDouble("maxZeit", CONFIG_F_MAXZEIT, max);
 		prefs.setBoolean("autoSize", CONFIG_F_AUTOSIZE, false);
+		notifyChange();
 	}
 	
 	public void enableAutoSize()
 	{
 		prefs.setBoolean("autoSize", CONFIG_F_AUTOSIZE, true);
+		notifyChange();
 	}
 	
 	public int getSchachtelung()
@@ -286,6 +301,7 @@ public class BildfahrplanConfig extends ConfigController
 	public void setSchachtelung(int schachtelung)
 	{
 		prefs.setInt("schachtelung", CONFIG_F_SCHACHTELUNG, schachtelung);
+		notifyChange();
 	}
 	
 	public boolean getZeigeZeiten()
@@ -296,6 +312,7 @@ public class BildfahrplanConfig extends ConfigController
 	public void setZeigeZeiten(boolean zeigeZeiten)
 	{
 		prefs.setBoolean("zeigeZeiten", CONFIG_TEXT_ZEIGEZEITEN, zeigeZeiten);
+		notifyChange();
 	}
 	
 	public int getZeigeZugnamen()
@@ -306,6 +323,7 @@ public class BildfahrplanConfig extends ConfigController
 	public void setZeigeZugnamen(int zeigeZugnamen)
 	{
 		prefs.setInt("zeigeZugnamen", CONFIG_TEXT_ZEIGEZUGNAMEN, zeigeZugnamen);
+		notifyChange();
 	}
 	
 	public void setZeigeZugnamen(String zeigeZugnamen)
@@ -325,6 +343,7 @@ public class BildfahrplanConfig extends ConfigController
 			default:
 		}
 		prefs.setInt("zeigeZugnamen", CONFIG_TEXT_ZEIGEZUGNAMEN, zz);
+		notifyChange();
 	}
 	
 	public boolean getZeigeZugnamenKommentare()
@@ -335,6 +354,7 @@ public class BildfahrplanConfig extends ConfigController
 	public void setZeigeZugnamenKommentare(boolean zeigeZugnamenKommentare)
 	{
 		prefs.setBoolean("zeigeZugnamenKommentare", CONFIG_TEXT_ZEIGEKOMMENTARE, zeigeZugnamenKommentare);
+		notifyChange();
 	}
 	
 	public int getZeigeRichtung()
@@ -345,6 +365,7 @@ public class BildfahrplanConfig extends ConfigController
 	public void setZeigeRichtung(int zeigeRichtung)
 	{
 		prefs.setInt("zeigeRichtung", CONFIG_TEXT_ZEIGERICHTUNG, zeigeRichtung);
+		notifyChange();
 	}
 	
 	public void setZeigeRichtung(String zeigeRichtung)
@@ -367,6 +388,7 @@ public class BildfahrplanConfig extends ConfigController
 			default:
 		}
 		prefs.setInt("zeigeRichtung", CONFIG_TEXT_ZEIGERICHTUNG, zr);
+		notifyChange();
 	}
 	
 	public String getIgnorierteZuege()
@@ -381,6 +403,7 @@ public class BildfahrplanConfig extends ConfigController
 	public void setIgnorierteZuege(String zeigeZuege)
 	{
 		prefs.setString("ignorierteZüge", CONFIG_IGNORIERTE_ZUEGE, zeigeZuege);
+		notifyChange();
 	}
 	
 	public String getIgnorierteTemplates()
@@ -395,6 +418,7 @@ public class BildfahrplanConfig extends ConfigController
 	public void setIgnorierteTemplates(String zeigeTemplates)
 	{
 		prefs.setString("ignorierteTemplates", CONFIG_IGNORIERTE_TEMPLATES, zeigeTemplates);
+		notifyChange();
 	}
 	
 	public Color getZeitenFarbe()
@@ -405,6 +429,7 @@ public class BildfahrplanConfig extends ConfigController
 	public void setZeitenFarbe(Color zeitenFarbe)
 	{
 		prefs.setColor("zeitenFarbe", CONFIG_FARBEN_ZEITEN, zeitenFarbe);
+		notifyChange();
 	}
 	
 	public Color getBetriebsstellenFarbe()
@@ -415,6 +440,7 @@ public class BildfahrplanConfig extends ConfigController
 	public void setBetriebsstellenFarbe(Color betriebsstellenFarbe)
 	{
 		prefs.setColor("betriebsstellenFarbe", CONFIG_FARBEN_BETRIEBSS, betriebsstellenFarbe);
+		notifyChange();
 	}
 	
 	public Color getHintergrundFarbe()
@@ -425,6 +451,7 @@ public class BildfahrplanConfig extends ConfigController
 	public void setHintergrundFarbe(Color hintergrundFarbe)
 	{
 		prefs.setColor("hintergrundFarbe", CONFIG_FARBEN_HINTERGR, hintergrundFarbe);
+		notifyChange();
 	}
 	
 	// Rechnende Funktionen

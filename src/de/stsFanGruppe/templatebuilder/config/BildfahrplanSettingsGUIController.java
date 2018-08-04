@@ -125,11 +125,13 @@ public class BildfahrplanSettingsGUIController extends GUIController
 			case "ok":
 				try
 				{
+					config.startTransaction();
 					speichereTabAllgemein();
 					speichereTabStreckeneditor();
 					speichereTabZugeditor();
 					speichereTabBildfahrplan();
 					speichereTabFarben();
+					config.endTransaction();
 				}
 				catch(NumberFormatException e)
 				{

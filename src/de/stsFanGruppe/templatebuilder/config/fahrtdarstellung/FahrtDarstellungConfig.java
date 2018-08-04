@@ -42,7 +42,7 @@ public class FahrtDarstellungConfig extends ConfigController
 	// Konstruktoren
 	public FahrtDarstellungConfig()
 	{
-		this.prefs = new PreferenceHandler(FahrtDarstellungConfig.class, () -> notifyChange());
+		this.prefs = new PreferenceHandler(FahrtDarstellungConfig.class);
 		assert prefs != null;
 	}
 	
@@ -55,6 +55,7 @@ public class FahrtDarstellungConfig extends ConfigController
 	public void setStandardLinienFarbe(Color standardLinienFarbe)
 	{
 		prefs.setColor("standardLinienFarbe", CONFIG_STANDARD_LINIEN_FARBE, standardLinienFarbe);
+		notifyChange();
 	}
 	
 	public int getStandardLinienBreite()
@@ -65,6 +66,7 @@ public class FahrtDarstellungConfig extends ConfigController
 	public void setStandardLinienBreite(int standardLinienBreite)
 	{
 		prefs.setInt("standardLinienBreite", CONFIG_STANDARD_LINIEN_BREITE, standardLinienBreite);
+		notifyChange();
 	}
 	
 	public LineType getStandardLinienTyp()
@@ -94,11 +96,13 @@ public class FahrtDarstellungConfig extends ConfigController
 	public void setStandardLinienTyp(LineType standardLinienFarbe)
 	{
 		prefs.setString("standardLinienFarbe", CONFIG_STANDARD_LINIEN_TYP, standardLinienFarbe.name());
+		notifyChange();
 	}
 	
 	public void setStandardLinienTyp(String standardLinienFarbe)
 	{
 		prefs.setString("standardLinienFarbe", CONFIG_STANDARD_LINIEN_TYP, standardLinienFarbe);
+		notifyChange();
 	}
 	
 	public String getZugsucheText()
@@ -152,6 +156,7 @@ public class FahrtDarstellungConfig extends ConfigController
 		prefs.setColor(logName + "-Farbe", configName + CONFIG_FAHRTDARSTELLUNG_POSTFIX_FARBE, value.getFarbe());
 		prefs.setInt(logName + "-Breite", configName + CONFIG_FAHRTDARSTELLUNG_POSTFIX_BREITE, value.getBreite());
 		prefs.setString(logName + "-Typ", configName + CONFIG_FAHRTDARSTELLUNG_POSTFIX_TYP, value.getTyp().name());
+		notifyChange();
 	}
 	
 	protected FahrtDarstellung getFahrtDarstellung(String configName, FahrtDarstellung defaultValue)
@@ -197,6 +202,7 @@ public class FahrtDarstellungConfig extends ConfigController
 			i++;
 		}
 		prefs.setInt("Anzahl FahrtDarstellungen", CONFIG_REGEL_FAHRTNAME_PREFIX + "/count", i);
+		notifyChange();
 	}
 	
 	public FahrtDarstellung[] getFahrtDarstellungen()
