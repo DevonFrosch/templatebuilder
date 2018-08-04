@@ -54,6 +54,7 @@ public abstract class ConfigController
 	public void endTransaction()
 	{
 		this.isTransaction = false;
+		notifyChange();
 	}
 	
 	protected void notifyChange()
@@ -62,6 +63,7 @@ public abstract class ConfigController
 		{
 			return;
 		}
+		log.trace("notifyChange");
 		callbacks.forEach((k, v) -> v.run());
 	}
 	
