@@ -8,7 +8,10 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.ListCellRenderer;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 import javax.swing.table.TableCellRenderer;
+import sun.swing.DefaultLookup;
 
 /**
  * Ändern die Darstellung der Combobox so, dass Linien eingezeichnet werden.
@@ -52,6 +55,25 @@ public class LineTypeRenderer extends JPanel implements ListCellRenderer<LineTyp
 			this.setBackground(table.getBackground());
 			this.setForeground(table.getForeground());
 		}
+		
+		Border border = null;
+		if(hasFocus)
+		{
+			if(isSelected)
+			{
+				border = DefaultLookup.getBorder(this, ui, "List.focusSelectedCellHighlightBorder");
+			}
+			if(border == null)
+			{
+				border = DefaultLookup.getBorder(this, ui, "List.focusCellHighlightBorder");
+			}
+		}
+		else
+		{
+			border = new EmptyBorder(1, 1, 1, 1);
+		}
+		this.setBorder(border);
+		
 		return this;
 	}
 	

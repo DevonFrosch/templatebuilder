@@ -16,26 +16,36 @@ public class FahrtDarstellungTable extends JTable
 	public FahrtDarstellungTable()
 	{
 		super();
+		initialize();
 	}
 	
 	public FahrtDarstellungTable(int numRows, int numColumns)
 	{
 		super(numRows, numColumns);
+		initialize();
 	}
 	
 	public FahrtDarstellungTable(Object[] columnNames, int numRows)
 	{
 		super(new DefaultTableModel(columnNames, numRows));
+		initialize();
 	}
 	
 	public FahrtDarstellungTable(Object[][] rowData, Object[] columnNames)
 	{
 		super(rowData, columnNames);
+		initialize();
 	}
 	
 	public FahrtDarstellungTable(TableModel dm)
 	{
 		super(dm);
+		initialize();
+	}
+	
+	protected void initialize()
+	{
+		putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
 	}
 	
 	public FahrtFilter getFilterAt(int row)
