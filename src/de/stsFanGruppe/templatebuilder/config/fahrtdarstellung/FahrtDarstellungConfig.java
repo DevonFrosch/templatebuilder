@@ -1,9 +1,12 @@
 package de.stsFanGruppe.templatebuilder.config.fahrtdarstellung;
 
 import java.awt.Color;
+import java.util.StringJoiner;
 import de.stsFanGruppe.templatebuilder.config.ConfigController;
 import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.filter.FahrtFilter;
 import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.linetype.LineType;
+import de.stsFanGruppe.templatebuilder.editor.EditorDaten;
+import de.stsFanGruppe.templatebuilder.zug.Fahrt;
 import de.stsFanGruppe.templatebuilder.zug.FahrtDarstellung;
 import de.stsFanGruppe.tools.FirstLastLinkedList;
 import de.stsFanGruppe.tools.FirstLastList;
@@ -131,6 +134,36 @@ public class FahrtDarstellungConfig extends ConfigController
 	public FirstLastList<String> getHervorgehobeneZuege()
 	{
 		return hervorgehobeneZuege;
+	}
+	
+	public String getHervorgehobeneZuegeText(EditorDaten editorDaten)
+	{
+		if(editorDaten == null)
+		{
+			return "";
+		}
+		
+		StringJoiner zuege = new StringJoiner("\n");
+		
+		for(String name: getHervorgehobeneZuege())
+		{
+			Fahrt fahrt = editorDaten.getFahrt(name);
+			
+			if(fahrt == null)
+			{
+				continue;
+			}
+			if(fahrt.getTemplateString() != null)
+			{
+				zuege.add(fahrt.getName() + " [" + fahrt.getTemplateString() + "]");
+			}
+			else
+			{
+				zuege.add(fahrt.getName());
+			}
+		}
+		
+		return zuege.toString();
 	}
 
 	public void setHervorgehobeneZuege(FirstLastList<String> hervorgehobeneZuege)

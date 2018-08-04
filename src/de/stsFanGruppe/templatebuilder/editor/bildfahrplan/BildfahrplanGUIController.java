@@ -6,12 +6,14 @@ import java.awt.FontMetrics;
 import java.awt.Stroke;
 import java.awt.event.MouseEvent;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanConfig;
 import de.stsFanGruppe.templatebuilder.config.GeneralConfig;
 import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.FahrtDarstellungHandler;
 import de.stsFanGruppe.templatebuilder.editor.EditorDaten;
 import de.stsFanGruppe.templatebuilder.editor.EditorGUIController;
+import de.stsFanGruppe.templatebuilder.gui.GUI;
 import de.stsFanGruppe.templatebuilder.strecken.Betriebsstelle;
 import de.stsFanGruppe.templatebuilder.strecken.Streckenabschnitt;
 import de.stsFanGruppe.templatebuilder.zug.Fahrplanhalt;
@@ -27,7 +29,8 @@ import de.stsFanGruppe.tools.TimeFormater;
 public class BildfahrplanGUIController extends EditorGUIController
 {
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(BildfahrplanGUIController.class);
-	
+
+	protected GUI parentGui = null; 
 	protected BildfahrplanGUI gui = null;
 	protected BildfahrplanSpaltenheaderGUI spaltenGui = null;
 	protected BildfahrplanZeilenheaderGUI zeilenGui = null;
@@ -39,22 +42,24 @@ public class BildfahrplanGUIController extends EditorGUIController
 	
 	protected Object zugLinienLock = new Object();
 	protected FirstLastLinkedList<CalculatableLine> zugLinien = new FirstLastLinkedList<>();
+	protected long lastClickTime = 0;
 	
-	public BildfahrplanGUIController(EditorDaten daten, GeneralConfig config)
+	public BildfahrplanGUIController(GUI parentGui, EditorDaten daten, GeneralConfig config)
 	{
 		super(daten, config);
-		initVariables(config);
+		initVariables(parentGui, config);
 	}
 	
-	public BildfahrplanGUIController(GeneralConfig config)
+	public BildfahrplanGUIController(GUI parentGui, GeneralConfig config)
 	{
 		super(config);
-		initVariables(config);
+		initVariables(parentGui, config);
 	}
 	
-	private void initVariables(GeneralConfig config)
+	private void initVariables(GUI parentGui, GeneralConfig config)
 	{
 		super.getEditorDaten().setBildfahrplan(this);
+		this.parentGui = parentGui;
 		this.bildfahrplanConfig = config.getBildfahrplanConfig();
 		this.gui = new BildfahrplanGUI(this);
 		this.ph = new BildfahrplanPaintHelper(this.bildfahrplanConfig, this.gui);
@@ -159,16 +164,26 @@ public class BildfahrplanGUIController extends EditorGUIController
 	// action handler
 	public void mouseClicked(MouseEvent e)
 	{
-		FirstLastLinkedList<String> zugNamen = new FirstLastLinkedList<>();
-		for(CalculatableLine linie: this.getZugLinien())
-		{
-			if(linie.isPunktAufLinie(e.getX(), e.getY(), 10))
-			{
-				zugNamen.add(linie.getName());
-			}
-		}
+		String zuege = bildfahrplanConfig.getFahrtDarstellungConfig().getHervorgehobeneZuegeText(editorDaten);
 		
-		bildfahrplanConfig.getFahrtDarstellungConfig().setHervorgehobeneZuege(zugNamen);
+		if(lastClickTime + 5.0e8 > System.nanoTime() && zuege.length() > 0)
+		{
+			parentGui.infoMessage("Markierte Züge:\n"+zuege, "Markierte Züge");
+		}
+		else
+		{
+			Set<String> zugNamen = new HashSet<>();
+			for(CalculatableLine linie: this.getZugLinien())
+			{
+				if(linie.isPunktAufLinie(e.getX(), e.getY(), 10))
+				{
+					zugNamen.add(linie.getName());
+				}
+			}
+			
+			bildfahrplanConfig.getFahrtDarstellungConfig().setHervorgehobeneZuege(new FirstLastLinkedList<>(zugNamen));
+		}
+		lastClickTime = System.nanoTime();
 	}
 	
 	// Interne Funktionen

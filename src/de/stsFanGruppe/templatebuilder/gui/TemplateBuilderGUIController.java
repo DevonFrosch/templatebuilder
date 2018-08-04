@@ -76,7 +76,7 @@ public class TemplateBuilderGUIController extends GUIController
 					if(ergebnis.success())
 					{
 						log.info("JTG-Import von {}", ergebnis.getPfad());
-						BildfahrplanGUIController bfpController = new BildfahrplanGUIController(config);
+						BildfahrplanGUIController bfpController = new BildfahrplanGUIController(gui, config);
 						String name = "Import";
 						
 						try
@@ -276,7 +276,7 @@ public class TemplateBuilderGUIController extends GUIController
 					break;
 				}
 				
-				int index = tabs.addBildfahrplanTab(editorDaten.getName(), null, null, new BildfahrplanGUIController(editorDaten, config));
+				int index = tabs.addBildfahrplanTab(editorDaten.getName(), null, null, new BildfahrplanGUIController(gui, editorDaten, config));
 				tabs.setSelectedTab(index);
 				break;
 			}
@@ -320,34 +320,11 @@ public class TemplateBuilderGUIController extends GUIController
 			case "zeigeMarkierte":
 			{
 				EditorDaten editorDaten = tabs.getSelectedEditorDaten();
-				if(editorDaten == null)
-				{
-					break;
-				}
-				
-				StringJoiner zuege = new StringJoiner("\n");
-				
-				for(String name: bildfahrplanConfig.getFahrtDarstellungConfig().getHervorgehobeneZuege())
-				{
-					Fahrt fahrt = editorDaten.getFahrt(name);
-					
-					if(fahrt == null)
-					{
-						continue;
-					}
-					if(fahrt.getTemplateString() != null)
-					{
-						zuege.add(fahrt.getName() + " [" + fahrt.getTemplateString() + "]");
-					}
-					else
-					{
-						zuege.add(fahrt.getName());
-					}
-				}
+				String zuege = bildfahrplanConfig.getFahrtDarstellungConfig().getHervorgehobeneZuegeText(editorDaten);
 				
 				if(zuege.length() > 0)
 				{
-					gui.infoMessage("Markierte Züge:\n"+zuege.toString(), "Markierte Züge");
+					gui.infoMessage("Markierte Züge:\n"+zuege, "Markierte Züge");
 				}
 				else
 				{
