@@ -36,14 +36,14 @@ public abstract class ConfigController
 		return handlerID;
 	}
 	
-	public boolean unregisterChangeHandler(Object handlerID)
+	public void unregisterChangeHandler(Object handlerID)
 	{
 		if(handlerID == null)
 		{
-			return false;
+			return;
 		}
 		log.debug("unregisterChangeHandler (ID {})", handlerID);
-		return callbacks.remove(handlerID) != null;
+		callbacks.remove(handlerID);
 	}
 	
 	public void startTransaction()
