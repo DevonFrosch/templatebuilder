@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
-import de.stsFanGruppe.templatebuilder.config.BildfahrplanConfig;
+import de.stsFanGruppe.templatebuilder.config.GeneralConfig;
 import de.stsFanGruppe.templatebuilder.gui.TemplateBuilderGUIController;
 
 public class Startup
@@ -46,7 +46,7 @@ public class Startup
 		EventQueue.invokeLater(() -> {
 			try
 			{
-				TemplateBuilderGUIController controller = new TemplateBuilderGUIController(new BildfahrplanConfig(), version, dev, update);
+				TemplateBuilderGUIController controller = new TemplateBuilderGUIController(new GeneralConfig(), version, dev, update);
 			}
 			catch(Exception e)
 			{

@@ -10,6 +10,7 @@ import java.util.StringJoiner;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanConfig;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanSettingsGUI;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanSettingsGUIController;
+import de.stsFanGruppe.templatebuilder.config.GeneralConfig;
 import de.stsFanGruppe.templatebuilder.editor.EditorDaten;
 import de.stsFanGruppe.templatebuilder.editor.bildfahrplan.BildfahrplanGUIController;
 import de.stsFanGruppe.templatebuilder.editor.fahrtEditor.FahrtEditorGUI;
@@ -35,22 +36,24 @@ public class TemplateBuilderGUIController extends GUIController
 	protected Hashtable<String, Boolean> windowLocks = new Hashtable<>();
 	
 	protected TemplateBuilderGUI gui = null;
-	protected BildfahrplanConfig config;
+	protected GeneralConfig config = null;
+	protected BildfahrplanConfig bildfahrplanConfig = null;
 	protected TemplateBuilderTabs tabs = null;
 	
-	public TemplateBuilderGUIController(BildfahrplanConfig config, String version, boolean dev, String update)
+	public TemplateBuilderGUIController(GeneralConfig config, String version, boolean dev, String update)
 	{
 		NullTester.test(config);
 		this.config = config;
+		this.bildfahrplanConfig = config.getBildfahrplanConfig();
 		this.version = version;
 		this.dev = dev;
 		this.gui = new TemplateBuilderGUI(this, update);
 		this.tabs = new TemplateBuilderTabs(gui.tabbedPane);
 	}
 	
-	public BildfahrplanConfig getConfig()
+	public BildfahrplanConfig getBildfahrplanConfig()
 	{
-		return config;
+		return bildfahrplanConfig;
 	}
 	
 	// ActionHandler
@@ -67,7 +70,7 @@ public class TemplateBuilderGUIController extends GUIController
 			{
 				if(!GUILocker.lock(JTrainGraphImportGUI.class))
 					break;
-				JTrainGraphImportGUI jtgi = new JTrainGraphImportGUI(gui.getFrame(), (ergebnis) -> {
+				JTrainGraphImportGUI jtgi = new JTrainGraphImportGUI(gui.getFrame(), config, (ergebnis) -> {
 					assert ergebnis != null;
 					
 					if(ergebnis.success())
@@ -131,7 +134,7 @@ public class TemplateBuilderGUIController extends GUIController
 							JTrainGraphZugregelImporter importer = new JTrainGraphZugregelImporter();
 							
 							InputStream input = new java.io.FileInputStream(ergebnis.getPfad());
-							importer.importRegeln(input, config.getFahrtDarstellungConfig());
+							importer.importRegeln(input, bildfahrplanConfig.getFahrtDarstellungConfig());
 						}
 						catch(FileNotFoundException e)
 						{
@@ -212,7 +215,7 @@ public class TemplateBuilderGUIController extends GUIController
 			}
 			case "sucheZug":
 			{
-				String initialValue = config.getFahrtDarstellungConfig().getZugsucheText();
+				String initialValue = bildfahrplanConfig.getFahrtDarstellungConfig().getZugsucheText();
 				String suchString = gui.inputMessage("Suche nach Zugname:", initialValue);
 				if(suchString == null)
 				{
@@ -222,12 +225,12 @@ public class TemplateBuilderGUIController extends GUIController
 				{
 					suchString = null;
 				}
-				config.getFahrtDarstellungConfig().setZugsucheText(suchString);
+				bildfahrplanConfig.getFahrtDarstellungConfig().setZugsucheText(suchString);
 				break;
 			}
 			case "sucheTemplate":
 			{
-				String initialValue = config.getFahrtDarstellungConfig().getTemplatesucheText();
+				String initialValue = bildfahrplanConfig.getFahrtDarstellungConfig().getTemplatesucheText();
 				String suchString = gui.inputMessage("Suche nach Templatename:", initialValue);
 				if(suchString == null)
 				{
@@ -237,7 +240,7 @@ public class TemplateBuilderGUIController extends GUIController
 				{
 					suchString = null;
 				}
-				config.getFahrtDarstellungConfig().setTemplatesucheText(suchString);
+				bildfahrplanConfig.getFahrtDarstellungConfig().setTemplatesucheText(suchString);
 				break;
 			}
 			case "streckenEdit":
@@ -310,7 +313,7 @@ public class TemplateBuilderGUIController extends GUIController
 				
 				EditorDaten editorDaten = tabs.getSelectedEditorDaten();
 				
-				for(String zug: config.getFahrtDarstellungConfig().getHervorgehobeneZuege())
+				for(String zug: bildfahrplanConfig.getFahrtDarstellungConfig().getHervorgehobeneZuege())
 				{
 					if(editorDaten != null)
 					{
@@ -338,7 +341,7 @@ public class TemplateBuilderGUIController extends GUIController
 				if(!GUILocker.lock(BildfahrplanSettingsGUI.class))
 					break;
 				BildfahrplanSettingsGUI sg = new BildfahrplanSettingsGUI(
-						new BildfahrplanSettingsGUIController(config, () -> GUILocker.unlock(BildfahrplanSettingsGUI.class)), gui.getFrame());
+						new BildfahrplanSettingsGUIController(bildfahrplanConfig, () -> GUILocker.unlock(BildfahrplanSettingsGUI.class)), gui.getFrame());
 				break;
 			case "about":
 				StringJoiner aboutText = new StringJoiner("\n");

@@ -100,7 +100,7 @@ public class BildfahrplanConfig extends ConfigController
 	
 	public BildfahrplanConfig()
 	{
-		log.debug("Neue BildfahrplanConfig()");
+		log.trace("Neue BildfahrplanConfig()");
 		this.fahrtDarstellungConfig = new FahrtDarstellungConfig();
 		this.prefs = new PreferenceHandler(BildfahrplanConfig.class);
 		this.enableAutoSize();

@@ -1,13 +1,13 @@
 package de.stsFanGruppe.templatebuilder.editor;
 
-import de.stsFanGruppe.templatebuilder.config.BildfahrplanConfig;
+import de.stsFanGruppe.templatebuilder.config.GeneralConfig;
 import de.stsFanGruppe.tools.NullTester;
 
 public abstract class EditorGUIController
 {
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(EditorGUIController.class);
 	
-	protected BildfahrplanConfig config;
+	protected GeneralConfig config;
 	private Object configChangeHandleId;
 	private Object fahrtConfigChangeHandleId;
 	protected EditorDaten editorDaten = null;
@@ -15,21 +15,21 @@ public abstract class EditorGUIController
 	/**
 	 * Erzeugt ein neues Objekt. Dieser Konstruktor wird verwendet, um ein neues
 	 * 
-	 * @param config
+	 * @param bildfahrplanConfig
 	 * @param parent
 	 */
-	protected EditorGUIController(BildfahrplanConfig config)
+	protected EditorGUIController(GeneralConfig config)
 	{
 		NullTester.test(config);
 		
 		this.config = config;
-		this.configChangeHandleId = config.registerChangeHandler(() -> configChanged());
+		this.configChangeHandleId = config.getBildfahrplanConfig().registerChangeHandler(() -> configChanged());
 		this.fahrtConfigChangeHandleId = config.getFahrtDarstellungConfig().registerChangeHandler(() -> configChanged());
 		
 		this.editorDaten = new EditorDaten();
 	}
 	
-	protected EditorGUIController(EditorDaten editorDaten, BildfahrplanConfig config)
+	protected EditorGUIController(EditorDaten editorDaten, GeneralConfig config)
 	{
 		this(config);
 		this.editorDaten = editorDaten;
@@ -44,7 +44,7 @@ public abstract class EditorGUIController
 	
 	public void close()
 	{
-		config.unregisterChangeHandler(configChangeHandleId);
+		config.getBildfahrplanConfig().unregisterChangeHandler(configChangeHandleId);
 		config.getFahrtDarstellungConfig().unregisterChangeHandler(fahrtConfigChangeHandleId);
 	}
 	

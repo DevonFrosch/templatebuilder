@@ -8,6 +8,7 @@ import java.awt.event.MouseEvent;
 import java.util.Collection;
 import java.util.Set;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanConfig;
+import de.stsFanGruppe.templatebuilder.config.GeneralConfig;
 import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.FahrtDarstellungHandler;
 import de.stsFanGruppe.templatebuilder.editor.EditorDaten;
 import de.stsFanGruppe.templatebuilder.editor.EditorGUIController;
@@ -31,6 +32,7 @@ public class BildfahrplanGUIController extends EditorGUIController
 	protected BildfahrplanSpaltenheaderGUI spaltenGui = null;
 	protected BildfahrplanZeilenheaderGUI zeilenGui = null;
 	
+	protected BildfahrplanConfig bildfahrplanConfig;
 	protected BildfahrplanPaintHelper ph;
 	protected FahrtDarstellungHandler darstellungHandler;
 	protected static int stringHeight = 0;
@@ -38,23 +40,24 @@ public class BildfahrplanGUIController extends EditorGUIController
 	protected Object zugLinienLock = new Object();
 	protected FirstLastLinkedList<CalculatableLine> zugLinien = new FirstLastLinkedList<>();
 	
-	public BildfahrplanGUIController(EditorDaten daten, BildfahrplanConfig config)
+	public BildfahrplanGUIController(EditorDaten daten, GeneralConfig config)
 	{
 		super(daten, config);
 		initVariables(config);
 	}
 	
-	public BildfahrplanGUIController(BildfahrplanConfig config)
+	public BildfahrplanGUIController(GeneralConfig config)
 	{
 		super(config);
 		initVariables(config);
 	}
 	
-	private void initVariables(BildfahrplanConfig config)
+	private void initVariables(GeneralConfig config)
 	{
 		super.getEditorDaten().setBildfahrplan(this);
+		this.bildfahrplanConfig = config.getBildfahrplanConfig();
 		this.gui = new BildfahrplanGUI(this);
-		this.ph = new BildfahrplanPaintHelper(config, this.gui);
+		this.ph = new BildfahrplanPaintHelper(this.bildfahrplanConfig, this.gui);
 		this.spaltenGui = new BildfahrplanSpaltenheaderGUI(this.gui, this);
 		this.zeilenGui = new BildfahrplanZeilenheaderGUI(this.gui, this);
 		this.darstellungHandler = new FahrtDarstellungHandler(config.getFahrtDarstellungConfig());
@@ -132,7 +135,7 @@ public class BildfahrplanGUIController extends EditorGUIController
 	// Nachricht von der GUI, dass sie gerade am repainten ist
 	void guiRepaint()
 	{
-		if(config.needsAutoSize())
+		if(bildfahrplanConfig.needsAutoSize())
 		{
 			optimizeHeight();
 		}
@@ -140,17 +143,17 @@ public class BildfahrplanGUIController extends EditorGUIController
 	
 	int getPanelHeight()
 	{
-		return config.getPanelHeight();
+		return bildfahrplanConfig.getPanelHeight();
 	}
 	
 	int getSpaltenHeaderHoehe()
 	{
-		return config.getSpaltenHeaderHoehe(stringHeight);
+		return bildfahrplanConfig.getSpaltenHeaderHoehe(stringHeight);
 	}
 	
 	int getZeilenHeaderBreite()
 	{
-		return config.getZeilenHeaderBreite();
+		return bildfahrplanConfig.getZeilenHeaderBreite();
 	}
 	
 	// action handler
@@ -165,7 +168,7 @@ public class BildfahrplanGUIController extends EditorGUIController
 			}
 		}
 		
-		config.getFahrtDarstellungConfig().setHervorgehobeneZuege(zugNamen);
+		bildfahrplanConfig.getFahrtDarstellungConfig().setHervorgehobeneZuege(zugNamen);
 	}
 	
 	// Interne Funktionen
@@ -181,7 +184,7 @@ public class BildfahrplanGUIController extends EditorGUIController
 		double maxZeit = editorDaten.getMaxZeit();
 		
 		assert minZeit <= maxZeit;
-		config.setZeiten(minZeit, maxZeit);
+		bildfahrplanConfig.setZeiten(minZeit, maxZeit);
 		gui.recalculatePanelSize();
 	}
 	
@@ -198,7 +201,7 @@ public class BildfahrplanGUIController extends EditorGUIController
 		 * Schleifenzähler müssen innerhalb der Schleife in eine lokale Variable kopiert werden, letztere kann dann verwendet werden.
 		 */
 		
-		if(!editorDaten.hasStreckenabschnitt() || !editorDaten.hasFahrten() || config == null || gui == null || spaltenGui == null || zeilenGui == null)
+		if(!editorDaten.hasStreckenabschnitt() || !editorDaten.hasFahrten() || bildfahrplanConfig == null || gui == null || spaltenGui == null || zeilenGui == null)
 		{
 			return;
 		}
@@ -206,7 +209,7 @@ public class BildfahrplanGUIController extends EditorGUIController
 		log.trace("recalc begonnen");
 		
 		// Hintergrundfarbe einstellen
-		Color bg = config.getHintergrundFarbe();
+		Color bg = bildfahrplanConfig.getHintergrundFarbe();
 		gui.getParent().getParent().setBackground(bg);
 		gui.getParent().setBackground(bg);
 		spaltenGui.getParent().setBackground(bg);
@@ -217,8 +220,8 @@ public class BildfahrplanGUIController extends EditorGUIController
 		FirstLastLinkedList<Paintable> spaltenGuiPaints = new FirstLastLinkedList<>();
 		FirstLastLinkedList<Paintable> zeilenGuiPaints = new FirstLastLinkedList<>();
 		
-		double minZeit = config.getMinZeit();
-		double maxZeit = config.getMaxZeit();
+		double minZeit = bildfahrplanConfig.getMinZeit();
+		double maxZeit = bildfahrplanConfig.getMaxZeit();
 		double diffZeit = maxZeit - minZeit;
 		
 		// lokale Kopie zur Verwendung in Lambdas
@@ -230,17 +233,17 @@ public class BildfahrplanGUIController extends EditorGUIController
 		
 		// ### Betriebsstellen-Linien ###
 		{
-			Color c = config.getBetriebsstellenFarbe();
+			Color c = bildfahrplanConfig.getBetriebsstellenFarbe();
 			FirstLastList<Betriebsstelle> betriebsstellen = editorDaten.getStreckenabschnitt().getBetriebsstellen();
 			
 			int bsCounter = 0;
 			for(Betriebsstelle bs : betriebsstellen)
 			{
 				double km = editorDaten.getStreckenKm(bs);
-				int lineHeight = config.getLineHeight();
-				final int offsetX = config.getOffsetX();
-				final int textY = config.getTextMarginTop() + ((stringHeight + config.getOffsetY()) * (bsCounter % config.getZeilenAnzahl()))
-						+ config.getTextMarginBottom();
+				int lineHeight = bildfahrplanConfig.getLineHeight();
+				final int offsetX = bildfahrplanConfig.getOffsetX();
+				final int textY = bildfahrplanConfig.getTextMarginTop() + ((stringHeight + bildfahrplanConfig.getOffsetY()) * (bsCounter % bildfahrplanConfig.getZeilenAnzahl()))
+						+ bildfahrplanConfig.getTextMarginBottom();
 				String name = bs.getName();
 				int stringWidth = fontMetrics.stringWidth(name);
 				
@@ -276,10 +279,10 @@ public class BildfahrplanGUIController extends EditorGUIController
 		
 		// ### Zeit-Linien ###
 		{
-			Color c = config.getZeitenFarbe();
+			Color c = bildfahrplanConfig.getZeitenFarbe();
 			
 			// Zeichnet die waagerechte Linie bei jeder angegebenen Zeit
-			int zeitIntervall = config.getZeitIntervall();
+			int zeitIntervall = bildfahrplanConfig.getZeitIntervall();
 			// Min-Zeit, auf 10 abgerundet
 			int zeit = (int) Math.ceil(minZeit / 10) * 10;
 			int zeitLinienStart = 5;
@@ -306,10 +309,10 @@ public class BildfahrplanGUIController extends EditorGUIController
 		
 		// ### Fahrten-Linien ###
 		{
-			int schachtelung = config.getSchachtelung();
-			int zeigeZugnamen = config.getZeigeZugnamen();
-			boolean zeigeZeiten = config.getZeigeZeiten();
-			int zeigeRichtung = config.getZeigeRichtung();
+			int schachtelung = bildfahrplanConfig.getSchachtelung();
+			int zeigeZugnamen = bildfahrplanConfig.getZeigeZugnamen();
+			boolean zeigeZeiten = bildfahrplanConfig.getZeigeZeiten();
+			int zeigeRichtung = bildfahrplanConfig.getZeigeRichtung();
 			
 			Set<Fahrt> fahrten = editorDaten.getFahrten();
 			
@@ -322,8 +325,8 @@ public class BildfahrplanGUIController extends EditorGUIController
 					String vollerZugName = fahrt.getName();
 					String templateName = fahrt.getTemplate();
 					
-					if(config.getIgnorierteZuegeArray().contains(vollerZugName)
-							|| config.getIgnorierteTemplatesArray().contains(templateName))
+					if(bildfahrplanConfig.getIgnorierteZuegeArray().contains(vollerZugName)
+							|| bildfahrplanConfig.getIgnorierteTemplatesArray().contains(templateName))
 					{
 						continue;
 					}
@@ -343,7 +346,7 @@ public class BildfahrplanGUIController extends EditorGUIController
 						double kmAn = editorDaten.getStreckenKm(fh.getGleisabschnitt().getParent().getParent());
 						
 						String zugName = vollerZugName;
-						if(!config.getZeigeZugnamenKommentare() && vollerZugName.indexOf('%') >= 0)
+						if(!bildfahrplanConfig.getZeigeZugnamenKommentare() && vollerZugName.indexOf('%') >= 0)
 						{
 							// entferne alles ab dem ersten %, falls vorhanden
 							zugName = vollerZugName.substring(0, vollerZugName.indexOf('%'));

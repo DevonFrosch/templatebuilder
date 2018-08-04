@@ -6,6 +6,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import com.jgoodies.forms.layout.*;
+import de.stsFanGruppe.templatebuilder.config.GeneralConfig;
 import de.stsFanGruppe.templatebuilder.gui.GUI;
 import de.stsFanGruppe.templatebuilder.zug.Linie;
 import de.stsFanGruppe.tools.NullTester;
@@ -16,7 +17,7 @@ public class JTrainGraphImportGUI extends JDialog implements GUI
 	public final int APPROVE_OPTION = 1;
 	
 	protected Callback callback;
-	protected static String lastOpenFilePath = null;
+	protected GeneralConfig config = null;
 	
 	final JPanel contentPanel = new JPanel();
 	JTextField pfadInput;
@@ -34,7 +35,7 @@ public class JTrainGraphImportGUI extends JDialog implements GUI
 	{
 		try
 		{
-			JTrainGraphImportGUI dialog = new JTrainGraphImportGUI(null, (a) -> {});
+			JTrainGraphImportGUI dialog = new JTrainGraphImportGUI(null, new GeneralConfig(), (a) -> {});
 		}
 		catch(Exception e)
 		{
@@ -45,9 +46,10 @@ public class JTrainGraphImportGUI extends JDialog implements GUI
 	/**
 	 * Create the dialog.
 	 */
-	public JTrainGraphImportGUI(JFrame parent, Callback callback)
+	public JTrainGraphImportGUI(JFrame parent, GeneralConfig config, Callback callback)
 	{
 		super(parent, "JTrainGraph-Import");
+		this.config = config;
 		this.callback = callback;
 		
 		setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
@@ -132,7 +134,7 @@ public class JTrainGraphImportGUI extends JDialog implements GUI
 	private void dateiChooser()
 	{
 		setCursor(new Cursor(Cursor.WAIT_CURSOR));
-		JFileChooser fileChooser = new JFileChooser(lastOpenFilePath);
+		JFileChooser fileChooser = new JFileChooser(config.getLastOpenFilePath());
 		setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		
 		fileChooser.setDialogTitle("Importieren...");
@@ -141,8 +143,9 @@ public class JTrainGraphImportGUI extends JDialog implements GUI
 		
 		if(fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION)
 		{
-			lastOpenFilePath = fileChooser.getSelectedFile().getPath();
-			pfadInput.setText(lastOpenFilePath);
+			String filePath = fileChooser.getSelectedFile().getPath();
+			pfadInput.setText(filePath);
+			config.setLastOpenFilePath(filePath);
 			
 			// TODO: Entfernen wenn wirklich Optionen auswählbar sind
 			start();

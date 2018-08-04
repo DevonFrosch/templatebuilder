@@ -7,7 +7,7 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
-import de.stsFanGruppe.templatebuilder.config.BildfahrplanConfig;
+import de.stsFanGruppe.templatebuilder.config.GeneralConfig;
 import de.stsFanGruppe.templatebuilder.editor.EditorDaten;
 import de.stsFanGruppe.templatebuilder.editor.EditorGUIController;
 import de.stsFanGruppe.templatebuilder.strecken.Betriebsstelle;
@@ -28,19 +28,19 @@ public class TabEditorGUIController extends EditorGUIController
 	
 	protected boolean richtungAufsteigend;
 	
-	public TabEditorGUIController(EditorDaten daten, BildfahrplanConfig config, boolean richtungAufsteigend)
+	public TabEditorGUIController(EditorDaten daten, GeneralConfig config, boolean richtungAufsteigend)
 	{
 		super(daten, config);
 		initVariables(config, richtungAufsteigend);
 	}
 	
-	public TabEditorGUIController(BildfahrplanConfig config, boolean richtungAufsteigend)
+	public TabEditorGUIController(GeneralConfig config, boolean richtungAufsteigend)
 	{
 		super(config);
 		initVariables(config, richtungAufsteigend);
 	}
 	
-	private void initVariables(BildfahrplanConfig config, boolean richtungAufsteigend)
+	private void initVariables(GeneralConfig config, boolean richtungAufsteigend)
 	{
 		super.getEditorDaten().setTabEditor(this, richtungAufsteigend);
 		this.gui = new TabEditorGUI(this);
