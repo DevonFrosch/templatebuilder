@@ -205,10 +205,15 @@ public class TemplateBuilderGUIController extends GUIController
 			}
 			case "bearbeiteFahrten":
 			{
+				EditorDaten editorDaten = tabs.getSelectedEditorDaten();
+				if(editorDaten == null)
+				{
+					break;
+				}
+				
 				if(!GUILocker.lock(FahrtEditorGUI.class))
 					break;
 				
-				EditorDaten editorDaten = tabs.getSelectedEditorDaten();
 				FahrtEditorGUIController controller = new FahrtEditorGUIController(editorDaten, () -> GUILocker.unlock(FahrtEditorGUI.class));
 				
 				break;
@@ -245,21 +250,26 @@ public class TemplateBuilderGUIController extends GUIController
 			}
 			case "streckenEdit":
 			{
+				EditorDaten editorDaten = tabs.getSelectedEditorDaten();
+				if(editorDaten == null)
+				{
+					break;
+				}
+				
 				if(!GUILocker.lock(StreckenEditorGUI.class))
 					break;
 				
-				EditorDaten editorDaten = tabs.getSelectedEditorDaten();
 				StreckenEditorGUIController controller = new StreckenEditorGUIController(editorDaten, () -> GUILocker.unlock(StreckenEditorGUI.class));
 				StreckenEditorGUI bssg = new StreckenEditorGUI(controller, gui.getFrame());
 				break;
 			}
 			case "zeigeBildfahrplan":
 			{
-				if(!tabs.selectedTabIsEditor() || tabs.selectedTabIsBildfahrplan())
+				EditorDaten editorDaten = tabs.getSelectedEditorDaten();
+				if(!tabs.selectedTabIsEditor() || tabs.selectedTabIsBildfahrplan() || editorDaten == null)
 				{
 					break;
 				}
-				EditorDaten editorDaten = tabs.getSelectedEditorDaten();
 				if(editorDaten.hasBildfahrplan())
 				{
 					tabs.setSelectedTab(tabs.getTabIndexOf(editorDaten.getBildfahrplan().getBildfahrplanGUI()));
@@ -272,11 +282,11 @@ public class TemplateBuilderGUIController extends GUIController
 			}
 			case "zeigeTabEditorHin":
 			{
-				if(!tabs.selectedTabIsEditor() || tabs.selectedTabIsTabEditorHin())
+				EditorDaten editorDaten = tabs.getSelectedEditorDaten();
+				if(!tabs.selectedTabIsEditor() || tabs.selectedTabIsTabEditorHin() || editorDaten == null)
 				{
 					break;
 				}
-				EditorDaten editorDaten = tabs.getSelectedEditorDaten();
 				if(editorDaten.hasTabEditorHin())
 				{
 					log.info("Wechseln auf EditorHin");
@@ -291,11 +301,11 @@ public class TemplateBuilderGUIController extends GUIController
 			}
 			case "zeigeTabEditorRück":
 			{
-				if(!tabs.selectedTabIsEditor() || tabs.selectedTabIsTabEditorRück())
+				EditorDaten editorDaten = tabs.getSelectedEditorDaten();
+				if(!tabs.selectedTabIsEditor() || tabs.selectedTabIsTabEditorRück() || editorDaten == null)
 				{
 					break;
 				}
-				EditorDaten editorDaten = tabs.getSelectedEditorDaten();
 				if(editorDaten.hasTabEditorRück())
 				{
 					tabs.setSelectedTab(tabs.getTabIndexOf(editorDaten.getTabEditorRück().getTabEditorGUI()));
@@ -309,9 +319,13 @@ public class TemplateBuilderGUIController extends GUIController
 			}
 			case "zeigeMarkierte":
 			{
-				StringJoiner zuege = new StringJoiner("\n");
-				
 				EditorDaten editorDaten = tabs.getSelectedEditorDaten();
+				if(editorDaten == null)
+				{
+					break;
+				}
+				
+				StringJoiner zuege = new StringJoiner("\n");
 				
 				for(String zug: bildfahrplanConfig.getFahrtDarstellungConfig().getHervorgehobeneZuege())
 				{
