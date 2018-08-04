@@ -2,6 +2,7 @@ package de.stsFanGruppe.templatebuilder.config;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
+import java.io.IOException;
 import javax.swing.JColorChooser;
 import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.FahrtDarstellungSettingsGUI;
 import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.FahrtDarstellungSettingsGUIController;
@@ -101,7 +102,15 @@ public class BildfahrplanSettingsGUIController extends GUIController
 		switch(event.getActionCommand())
 		{
 			case "save":
-				config.exportSettings(gui, gui);
+				try
+				{
+					config.exportSettings(gui);
+				}
+				catch(IOException e)
+				{
+					log.debug("Exception beim Speichern der Einstellugen", e);
+					gui.infoMessage("Fehler beim Speichern der Einstellungen!");
+				}
 				break;
 			case "load":
 				config.importSettings(gui, gui);

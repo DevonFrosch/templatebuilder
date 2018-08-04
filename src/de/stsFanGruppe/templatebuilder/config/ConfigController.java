@@ -98,12 +98,8 @@ public abstract class ConfigController
 		}
 	}
 	
-	/**
-	 * 0 = ok
-	 * 1 = FileNotFoundException (EXCEPTION)
-	 * 2 = Fehler beim Import (FAIL)
-	 */
-	public int exportSettings(Window windowParent, GUI messageParent)
+	public void exportSettings(Window windowParent)
+			throws IOException
 	{
 		JFileChooser saveFileChooser = new JFileChooser();
 		saveFileChooser.setDialogTitle("Einstellungen speichern");
@@ -112,26 +108,16 @@ public abstract class ConfigController
 		
 		if(saveFileChooser.showSaveDialog(windowParent) == JFileChooser.APPROVE_OPTION)
 		{
+			OutputStream os = new FileOutputStream(new File(saveFileChooser.getSelectedFile().getPath()));
 			try
 			{
-				OutputStream os = new FileOutputStream(new File(saveFileChooser.getSelectedFile().getPath()));
-				if(!exportXML(os))
-				{
-					messageParent.infoMessage("Fehler beim Speichern der Einstellungen!");
-					os.close();
-					return 2;
-				}
+				exportXML(os);
+			}
+			finally
+			{
 				os.close();
 			}
-			catch(IOException e)
-			{
-				log.error("Exception beim Einstellungen exportieren", e);
-				messageParent.infoMessage("Fehler beim Speichern der Einstellungen!");
-				return 1;
-			}
 		}
-		
-		return 0;
 	}
 	
 	public boolean schreibeEinstellungen()
@@ -144,22 +130,14 @@ public abstract class ConfigController
 		return prefs.importXML(is);
 	}
 	
-	public boolean exportXML(OutputStream os)
+	public void exportXML(OutputStream os) throws IOException
 	{
-		return prefs.exportXML(os);
+		prefs.exportXML(os);
 	}
 	
 	public boolean speichertest()
 	{
 		NullTester.test(prefs);
 		return prefs.speichertest();
-	}
-	
-	public interface ErrorHandler
-	{
-		public static final int FAIL = 0;
-		public static final int EXCEPTION = 1;
-		
-		public void handleError(int type, Exception e);
 	}
 }

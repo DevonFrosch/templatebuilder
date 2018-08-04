@@ -174,20 +174,17 @@ public class PreferenceHandler
 	 * Speichert die Einstellungen im OutputStream als Preferences-XML
 	 * 
 	 * @param os Stream, auf den das XML geschrieben wird
-	 * @return false, falls ein Fehler aufgetreten ist, sonst true
 	 */
-	public boolean exportXML(OutputStream os)
+	public void exportXML(OutputStream os) throws IOException
 	{
 		try
 		{
 			prefs.exportSubtree(os);
-			return true;
 		}
-		catch(IOException | BackingStoreException e)
+		catch(BackingStoreException e)
 		{
-			log.error("exportXML: Exception beim Export", e);
+			throw new IOException(e);
 		}
-		return false;
 	}
 	
 	/**

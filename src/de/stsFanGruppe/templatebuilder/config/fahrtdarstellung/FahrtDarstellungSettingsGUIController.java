@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.IOException;
 import java.util.Arrays;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JColorChooser;
@@ -187,7 +188,15 @@ public class FahrtDarstellungSettingsGUIController extends GUIController
 		switch(event.getActionCommand())
 		{
 			case "save":
-				config.exportSettings(gui, gui);
+				try
+				{
+					config.exportSettings(gui);
+				}
+				catch(IOException e)
+				{
+					log.debug("Exception beim Speichern der Einstellugen", e);
+					gui.infoMessage("Fehler beim Speichern der Einstellungen!");
+				}
 				break;
 			case "load":
 				config.importSettings(gui, gui);
