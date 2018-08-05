@@ -180,8 +180,8 @@ public class JTrainGraphImporter extends Importer
 				// leere Fahrten brauchen wir nicht importieren
 				if(!fahrplanhalte.isEmpty())
 				{
-					String templateName = train.getAttribute("data-template");
-					String templateZid = train.getAttribute("data-zid");
+					String templateName = train.getAttribute("template");
+					String templateZid = train.getAttribute("zid");
 					
 					if(templateName == null)
 					{
