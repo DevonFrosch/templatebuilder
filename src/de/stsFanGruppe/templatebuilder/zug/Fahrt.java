@@ -10,10 +10,12 @@ public class Fahrt implements Comparable<Fahrt>
 	protected static long nextId = 0;
 	
 	protected long fahrtId;
-	protected String name;
-	protected Linie linie;
-	protected String templateName;
-	protected String templateZid;
+	protected String name = null;
+	protected Linie linie = null;
+	protected String templateName = null;
+	protected String templateZid = null;
+	protected Fahrt vorgaenger = null;
+	protected Fahrt nachfolger = null;
 	protected NavigableSet<Fahrplanhalt> fahrplanhalte = new TreeSet<>(new Fahrplanhalt.StrictComparator());
 	
 	public Fahrt(String name, Linie linie)
@@ -102,6 +104,26 @@ public class Fahrt implements Comparable<Fahrt>
 			return getTemplateZid();
 		}
 		return null;
+	}
+	
+	public Fahrt getVorgaenger()
+	{
+		return this.vorgaenger;
+	}
+	
+	public void setVorgaenger(Fahrt vorgaenger)
+	{
+		this.vorgaenger = vorgaenger;
+	}
+	
+	public Fahrt getNachfolger()
+	{
+		return this.nachfolger;
+	}
+	
+	public void setNachfolger(Fahrt nachfolger)
+	{
+		this.nachfolger = nachfolger;
 	}
 	
 	public boolean hasFahrplanhalte()
