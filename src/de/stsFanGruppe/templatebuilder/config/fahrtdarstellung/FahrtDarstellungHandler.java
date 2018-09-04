@@ -24,17 +24,18 @@ public class FahrtDarstellungHandler
 		this.changeHandlerId = config.registerChangeHandler(() -> ladeConfig());
 	}
 	
-	public FahrtDarstellung[] getFahrtDarstellungen(String zugname, String templatename)
+	public FahrtDarstellung[] getFahrtDarstellungen(String zugName, String templateName, String templateZid)
 	{
 		assert darstellungen != null;
 		
 		FirstLastList<FahrtDarstellung> liste = new FirstLastLinkedList<>();
 		
-		if(zugsucheDarstellung != null && zugsucheDarstellung.testZugname(zugname))
+		if(zugsucheDarstellung != null && zugsucheDarstellung.testZugname(zugName))
 		{
 			liste.add(zugsucheDarstellung);
 		}
-		else if(templatesucheDarstellung != null && templatename != null && templatesucheDarstellung.testZugname(templatename))
+		else if(templatesucheDarstellung != null && (templateName != null && templatesucheDarstellung.testZugname(templateName) 
+				|| templateZid != null && templatesucheDarstellung.testZugname(templateZid)))
 		{
 			liste.add(templatesucheDarstellung);
 		}
@@ -44,7 +45,7 @@ public class FahrtDarstellungHandler
 			
 			for(FahrtDarstellung dar : darstellungen)
 			{
-				if(dar.testZugname(zugname))
+				if(dar.testZugname(zugName))
 				{
 					ziel = dar;
 					break;
@@ -65,7 +66,7 @@ public class FahrtDarstellungHandler
 		
 		for(FahrtDarstellung dar : hervorhebungsDarstellungen)
 		{
-			if(dar.testZugname(zugname))
+			if(dar.testZugname(zugName))
 			{
 				hervorhebung = dar;
 				break;
