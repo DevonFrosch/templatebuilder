@@ -1,11 +1,8 @@
 package de.stsFanGruppe.templatebuilder.config;
 
 import java.awt.Color;
-import java.util.Arrays;
 import javax.swing.JComponent;
 import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.FahrtDarstellungConfig;
-import de.stsFanGruppe.tools.FirstLastLinkedList;
-import de.stsFanGruppe.tools.FirstLastList;
 import de.stsFanGruppe.tools.NullTester;
 import de.stsFanGruppe.tools.PreferenceHandler;
 
@@ -395,10 +392,21 @@ public class BildfahrplanConfig extends ConfigController
 	{
 		return prefs.getString(CONFIG_IGNORIERTE_ZUEGE, DEFAULT_IGNORIERTE_ZUEGE);
 	}
-	public FirstLastList<String> getIgnorierteZuegeArray()
+	public String[] getIgnorierteZuegeArray()
 	{
-		String[] zugListe = getIgnorierteZuege().split("\n");
-		return new FirstLastLinkedList<String>(Arrays.asList(zugListe));
+		return getIgnorierteZuege().split("\n");
+	}
+	public boolean testIgnorierteZuege(String suche)
+	{
+		if(suche == null) {
+			return false;
+		}
+		for(String zugName: getIgnorierteZuegeArray()) {
+			if(zugName.length() > 0 && suche.contains(zugName)) {
+				return true;
+			}
+		}
+		return false;
 	}
 	public void setIgnorierteZuege(String zeigeZuege)
 	{
@@ -410,10 +418,21 @@ public class BildfahrplanConfig extends ConfigController
 	{
 		return prefs.getString(CONFIG_IGNORIERTE_TEMPLATES, DEFAULT_IGNORIERTE_TEMPLATES);
 	}
-	public FirstLastList<String> getIgnorierteTemplatesArray()
+	public String[] getIgnorierteTemplatesArray()
 	{
-		String[] templateListe = getIgnorierteTemplates().split("\n");
-		return new FirstLastLinkedList<String>(Arrays.asList(templateListe));
+		return getIgnorierteTemplates().split("\n");
+	}
+	public boolean testIgnorierteTemplates(String suche)
+	{
+		if(suche == null) {
+			return false;
+		}
+		for(String templateName: getIgnorierteTemplatesArray()) {
+			if(templateName.length() > 0 && suche.contains(templateName)) {
+				return true;
+			}
+		}
+		return false;
 	}
 	public void setIgnorierteTemplates(String zeigeTemplates)
 	{

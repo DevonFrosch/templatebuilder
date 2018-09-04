@@ -2,8 +2,6 @@ package de.stsFanGruppe.templatebuilder.external.jtraingraph;
 
 import java.io.InputStream;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javax.xml.stream.XMLStreamException;
 import de.stsFanGruppe.templatebuilder.external.*;
 import de.stsFanGruppe.templatebuilder.external.xmlhelper.*;
@@ -183,20 +181,11 @@ public class JTrainGraphImporter extends Importer
 					String templateName = train.getAttribute("template");
 					String templateZid = train.getAttribute("zid");
 					
-					if(templateName == null)
-					{
-						String comment = train.getAttribute("cm");
-						Matcher templateNameMatcher = Pattern.compile("Template: (.*)").matcher(comment);
-						
-						if(templateNameMatcher.find())
-						{
-							try
-							{
-								templateName = templateNameMatcher.group(1);
-							}
-							catch(IndexOutOfBoundsException e)
-							{}
-						}
+					if(templateName != null && templateName.length() == 0) {
+						templateName = null;
+					}
+					if(templateZid != null && templateZid.length() == 0) {
+						templateZid = null;
 					}
 					
 					fahrten.add(new Fahrt(train.getAttribute("name"), linie, templateName, templateZid, fahrplanhalte));

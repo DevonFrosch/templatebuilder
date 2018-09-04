@@ -340,9 +340,10 @@ public class BildfahrplanGUIController extends EditorGUIController
 					String vollerZugName = fahrt.getName();
 					String templateName = fahrt.getTemplateName();
 					
-					if(bildfahrplanConfig.getIgnorierteZuegeArray().contains(vollerZugName)
-							|| bildfahrplanConfig.getIgnorierteTemplatesArray().contains(templateName))
+					if(bildfahrplanConfig.testIgnorierteZuege(vollerZugName)
+							|| bildfahrplanConfig.testIgnorierteTemplates(templateName))
 					{
+						log.trace("Zug {} ignoriert", vollerZugName);
 						continue;
 					}
 					
