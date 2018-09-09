@@ -73,7 +73,12 @@ public class JTrainGraphImporter extends Importer
 				betriebsstelle.addGleis(gleis);
 				betriebsstellen.add(betriebsstelle);
 			}
-			betriebsstellen.sort((Betriebsstelle a, Betriebsstelle b) -> a.compareByKM(b));
+			
+			// teste ob die Liste sortiert ist (monoton nach Kilometern)
+			if(!isSorted(betriebsstellen)) {
+				log.warn("Betriebsstellen nicht nach Kilometern sortiert!");
+			}
+			
 			String strName = tJtgTt.getAttribute("name");
 			if(isEmpty(strName))
 			{
@@ -205,5 +210,25 @@ public class JTrainGraphImporter extends Importer
 		assert betriebsstelle != null;
 		
 		return betriebsstelle.getGleise().get(0).getGleisabschnitte().first();
+	}
+	
+	private static boolean isSorted(List<Betriebsstelle> bs) {
+		if(bs.size() <= 1) {
+			return true;
+		}
+		
+		int globalerVergleich = Double.compare(bs.get(0).getMaxKm(), bs.get(1).getMaxKm());
+		if(globalerVergleich == 0) {
+			return isSorted(bs.subList(1, bs.size()));
+		}
+		
+		for(int i=1; i < bs.size() - 1; i++) {
+			int lokalerVergleich = Double.compare(bs.get(i).getMaxKm(), bs.get(i+1).getMaxKm());
+			
+			if(lokalerVergleich != 0 && globalerVergleich > 0 != lokalerVergleich > 0) {
+				return false;
+			}
+		}
+		return true;
 	}
 }
