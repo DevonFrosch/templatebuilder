@@ -156,6 +156,7 @@ public class JTrainGraphImporter extends Importer
 					
 					if(isEmpty(an) && isEmpty(ab))
 					{
+						log.info("Zug {}, Bahnhof-Index {}: Ignoriere Halt mit leerem an oder ab", train.getAttribute("name"), i);
 						continue;
 					}
 					
@@ -167,6 +168,7 @@ public class JTrainGraphImporter extends Importer
 						// An > Ab -> ignorieren da vermutlich Tagesübergang
 						if(doubleAn.isPresent() && doubleAb.isPresent() && doubleAn.getAsDouble() > doubleAb.getAsDouble())
 						{
+							log.info("Zug {}, Bahnhof-Index {}: Ignoriere Halt mit an > ab", train.getAttribute("name"), i);
 							continue;
 						}
 						
