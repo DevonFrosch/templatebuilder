@@ -120,7 +120,7 @@ public class StreckenEditorGUI extends JDialog implements GUI
 				contentPanel.add(buttonPane, "2, 6, 3, 1, right, center");
 				{
 					JButton btnSaveRoute = new JButton("Speichern");
-					btnSaveRoute.setActionCommand("ok");
+					btnSaveRoute.setActionCommand("save");
 					btnSaveRoute.addActionListener((ActionEvent arg0) -> controller.actionButton(arg0));
 					buttonPane.add(btnSaveRoute, "1,1");
 				}
@@ -136,6 +136,9 @@ public class StreckenEditorGUI extends JDialog implements GUI
 		setVisible(true);
 	}
 	
+	/**
+	 * Schlieﬂt das Steckeneditorfenster
+	 */
 	public void close()
 	{
 		dispose();
