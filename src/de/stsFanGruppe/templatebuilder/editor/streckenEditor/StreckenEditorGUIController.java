@@ -37,7 +37,7 @@ public class StreckenEditorGUIController
 	}
 	
 	/**
-	 * Liest den ActionCommand vom event aus und führt dann etwas aus.
+	 * Liest die Button für die Tabelle aus und führt dann die jeweilige Aktion aus.
 	 * 
 	 * @param event
 	 */
@@ -88,8 +88,8 @@ public class StreckenEditorGUIController
 				}
 				break;
 			/*
-			 * Zeile(n) hinzufügen Zeile(n) wird/ werden nach ausgewählten
-			 * Zeilen hinzugefügt oder nach der letzten Zeile
+			 * Zeile(n) hinzufügen 
+			 * Zeile(n) wird/ werden nach ausgewählten Zeilen hinzugefügt oder nach der letzten Zeile
 			 */
 			case "addRow":
 				if(rows.length > 0)
@@ -107,8 +107,8 @@ public class StreckenEditorGUIController
 					break;
 				}
 				/*
-				 * Zeile(n) löschen Wenn keine Zeile ausgewählt, erscheint
-				 * Fehlerfenster.
+				 * Zeile(n) löschen 
+				 * Wenn keine Zeile ausgewählt, erscheint Fehlerfenster.
 				 */
 			case "removeRow":
 				if(rows.length < 0)
@@ -128,6 +128,10 @@ public class StreckenEditorGUIController
 		
 	}
 	
+	/**
+	 * Event zu den Button
+	 * @param event
+	 */
 	public void actionButton(ActionEvent event)
 	{
 		// Ohne GUI können wir nichts machen
@@ -143,7 +147,7 @@ public class StreckenEditorGUIController
 				close();
 				return;
 			case "apply":
-			case "ok":
+			case "save":
 				try
 				{
 					speichereStrecken();
@@ -155,7 +159,7 @@ public class StreckenEditorGUIController
 				}
 				
 				// OK: Fenster schließen
-				if(event.getActionCommand() == "ok")
+				if(event.getActionCommand() == "save")
 				{
 					close();
 					return;
@@ -166,6 +170,9 @@ public class StreckenEditorGUIController
 		}
 	}
 	
+	/**
+	 * Lädt die Strecke aus den editorDaten und stellt diese in der Tabelle dar.
+	 */
 	public void ladeStrecken()
 	{
 		assert editorDaten != null;
@@ -202,6 +209,11 @@ public class StreckenEditorGUIController
 		gui.table.setModel(model);
 	}
 	
+	
+	/**
+	 * Speichert die Betriebsstellen in die Streckenabschnitte und diese wird dann in den Editordaten gespeichert.
+	 * @throws NullPointerException
+	 */
 	public void speichereStrecken() throws NullPointerException
 	{
 		log.info("Speichere Strecken");
@@ -213,6 +225,7 @@ public class StreckenEditorGUIController
 		{
 			String stName = model.getValueAt(i, 1).toString();
 			Betriebsstelle betriebsstelle = new Betriebsstelle(stName);
+			log.info(model.getValueAt(i, 1).toString() + " - " + model.getValueAt(i, 0).toString());
 			
 			// Ortsangabe
 			String km = model.getValueAt(i, 0).toString();
@@ -244,6 +257,9 @@ public class StreckenEditorGUIController
 		editorDaten.ladeStreckenabschnitt(streckenabschnitt);
 	}
 	
+	/**
+	 * Schließt das Streckeneditorfenster
+	 */
 	protected void close()
 	{
 		gui.close();
@@ -251,6 +267,12 @@ public class StreckenEditorGUIController
 		onClose.run();
 	}
 	
+	/**
+	 * Erstellt einen Namen von der ersten Betriebstellle zur letzten Betriebsstelle
+	 * @param anfang Erste Betriebstelle
+	 * @param ende Letzte Beriebstelle
+	 * @return Der Name der ersten Betriebsstelle und letzten Betriebsstelle werden mit einen Minus "-" hintereinander geschrieben.
+	 */
 	private static String makeName(Betriebsstelle anfang, Betriebsstelle ende)
 	{
 		assert anfang != null;
@@ -260,6 +282,11 @@ public class StreckenEditorGUIController
 		return anfang.getName() + " - " + ende.getName();
 	}
 	
+	/**
+	 * Prüft, ob es String str leer ist.
+	 * @param str Der String, der geprüft werden soll.
+	 * @return boolean - True, wenn String leer ist.
+	 */
 	private static boolean isEmpty(String str)
 	{
 		return str == null || str.isEmpty();
