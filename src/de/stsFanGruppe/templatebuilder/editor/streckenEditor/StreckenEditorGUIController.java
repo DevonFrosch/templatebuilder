@@ -14,6 +14,12 @@ import de.stsFanGruppe.tools.FirstLastLinkedList;
 import de.stsFanGruppe.tools.FirstLastList;
 import de.stsFanGruppe.tools.NullTester;
 
+/**
+ * Alle Funktionalitäten für die GUI {@link StreckenEditorGUI} sind in dieser Klasse definiert.
+ * 
+ * @author Kai
+ *
+ */
 public class StreckenEditorGUIController
 {
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(StreckenEditorGUIController.class);
@@ -37,9 +43,13 @@ public class StreckenEditorGUIController
 	}
 	
 	/**
-	 * Liest die Button für die Tabelle aus und führt dann die jeweilige Aktion aus.
+	 * Liest den Event vom Button für die Tabelle aus und führt dann die jeweilige Aktion aus: <br><br>
 	 * 
-	 * @param event
+	 * <code>moveUpRow</code> verschiebt die ausgewählte(n) Zeile(n) um eine Zeile nach oben. <br>
+	 * <code>moveDownRow</code> verschiebt die ausgewählte(n) Zeile(n) um eine Zeile nach unten. <br>
+	 * <code>addRow</code> fügt hinter jeder markierten Zeile eine neue Zeile hinzu. <br>
+	 * <code>removeRow</code> löscht alle markierten Zeilen.
+	 * @param event Event vom gedrückten Button.
 	 */
 	public void tableButtonAction(ActionEvent event)
 	{
@@ -129,7 +139,10 @@ public class StreckenEditorGUIController
 	}
 	
 	/**
-	 * Event zu den Button
+	 * Event zu den Fensterbutton <br><br>
+	 * 
+	 * <code>cancel</code> schließt das Fenster. <br>
+	 * <code>save</code> führt {@link #speichereStrecken()} aus und schließt das Fenster anschließend.
 	 * @param event
 	 */
 	public void actionButton(ActionEvent event)
@@ -211,7 +224,7 @@ public class StreckenEditorGUIController
 	
 	
 	/**
-	 * Speichert die Betriebsstellen in die Streckenabschnitte und diese wird dann in den Editordaten gespeichert.
+	 * Speichert die Betriebsstellen in die Streckenabschnitte und diese wird dann sortiert nach km in den {@link EditorDaten} gespeichert. <br>
 	 * @throws NullPointerException
 	 */
 	public void speichereStrecken() throws NullPointerException
