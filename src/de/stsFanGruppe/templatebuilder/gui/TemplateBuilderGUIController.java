@@ -214,7 +214,7 @@ public class TemplateBuilderGUIController extends GUIController
 				if(!GUILocker.lock(FahrtEditorGUI.class))
 					break;
 				
-				FahrtEditorGUIController controller = new FahrtEditorGUIController(editorDaten, () -> GUILocker.unlock(FahrtEditorGUI.class));
+				FahrtEditorGUIController controller = new FahrtEditorGUIController(config, editorDaten, () -> GUILocker.unlock(FahrtEditorGUI.class));
 				
 				break;
 			}

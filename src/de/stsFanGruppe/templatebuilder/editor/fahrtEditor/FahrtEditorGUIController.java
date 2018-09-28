@@ -3,14 +3,16 @@ package de.stsFanGruppe.templatebuilder.editor.fahrtEditor;
 import java.awt.event.ActionEvent;
 import java.util.NavigableSet;
 import javax.swing.table.DefaultTableModel;
+import de.stsFanGruppe.templatebuilder.config.GeneralConfig;
 import de.stsFanGruppe.templatebuilder.editor.EditorDaten;
+import de.stsFanGruppe.templatebuilder.editor.EditorGUIController;
 import de.stsFanGruppe.templatebuilder.strecken.Streckenabschnitt;
 import de.stsFanGruppe.templatebuilder.zug.Fahrplanhalt;
 import de.stsFanGruppe.templatebuilder.zug.Fahrt;
 import de.stsFanGruppe.tools.NullTester;
 import de.stsFanGruppe.tools.TimeFormater;
 
-public class FahrtEditorGUIController
+public class FahrtEditorGUIController extends EditorGUIController
 {
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(FahrtEditorGUIController.class);
 	
@@ -20,8 +22,9 @@ public class FahrtEditorGUIController
 	
 	protected boolean ignoreNextComboBoxUpdate = false;
 	
-	public FahrtEditorGUIController(EditorDaten editorDaten, Runnable onClose)
+	public FahrtEditorGUIController(GeneralConfig config, EditorDaten editorDaten, Runnable onClose)
 	{
+		super(editorDaten, config);
 		NullTester.test(editorDaten);
 		NullTester.test(onClose);
 		this.editorDaten = editorDaten;
@@ -30,12 +33,15 @@ public class FahrtEditorGUIController
 		this.gui = new FahrtEditorGUI(this, editorDaten.getName());
 		
 		initFahrtNamen();
-		editorDaten.addFahrtenGeladenCallback(this::initFahrtNamen);
 	}
 	
 	public void initFahrtNamen()
 	{
 		gui.setComboBoxItems(editorDaten.getFahrten().stream().map(Fahrt::getName).toArray(String[]::new));
+	}
+	
+	public void dataChanged() {
+		initFahrtNamen();
 	}
 	
 	public void ladeFahrplan(Fahrt fahrt)
@@ -98,8 +104,9 @@ public class FahrtEditorGUIController
 		ladeFahrplan(editorDaten.getFahrt(gui.getSelectedFahrt()));
 	}
 	
-	protected void close()
+	public void close()
 	{
+		super.close();
 		gui.close();
 		gui = null;
 		onClose.run();

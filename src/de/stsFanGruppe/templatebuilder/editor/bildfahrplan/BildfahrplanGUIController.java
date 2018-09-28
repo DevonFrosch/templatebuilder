@@ -43,6 +43,8 @@ public class BildfahrplanGUIController extends EditorGUIController
 	protected Object zugLinienLock = new Object();
 	protected FirstLastLinkedList<CalculatableLine> zugLinien = new FirstLastLinkedList<>();
 	protected long lastClickTime = 0;
+
+	private FontMetrics fontMetrics = null;
 	
 	public BildfahrplanGUIController(GUI parentGui, EditorDaten daten, GeneralConfig config)
 	{
@@ -71,6 +73,14 @@ public class BildfahrplanGUIController extends EditorGUIController
 	public void configChanged()
 	{
 		gui.recalculatePanelSize();
+		repaint();
+	}
+	
+	public void dataChanged() {
+		log.info("BildfahrplanGUIController.dataChanged");
+		ph.setDiffKm(editorDaten.getDiffKm());
+		gui.recalculatePanelSize();
+		recalculate(null);
 		repaint();
 	}
 	
@@ -216,12 +226,23 @@ public class BildfahrplanGUIController extends EditorGUIController
 		 * Schleifenzähler müssen innerhalb der Schleife in eine lokale Variable kopiert werden, letztere kann dann verwendet werden.
 		 */
 		
-		if(!editorDaten.hasStreckenabschnitt() || !editorDaten.hasFahrten() || bildfahrplanConfig == null || gui == null || spaltenGui == null || zeilenGui == null)
+		if(!editorDaten.hasStreckenabschnitt()
+				|| !editorDaten.hasFahrten()
+				|| bildfahrplanConfig == null
+				|| gui == null
+				|| spaltenGui == null
+				|| zeilenGui == null
+				|| fontMetrics == null && this.fontMetrics == null)
 		{
+			log.trace("kein Recalc: {} || {} || {} || {} || {} || {} && {}", !editorDaten.hasFahrten(), bildfahrplanConfig == null, gui == null, spaltenGui == null, zeilenGui == null, fontMetrics == null, this.fontMetrics == null);
 			return;
 		}
 		
-		log.trace("recalc begonnen");
+		log.info("recalc begonnen");
+		
+		if(fontMetrics != null) {
+			this.fontMetrics = fontMetrics;
+		}
 		
 		// Hintergrundfarbe einstellen
 		Color bg = bildfahrplanConfig.getHintergrundFarbe();
@@ -240,7 +261,7 @@ public class BildfahrplanGUIController extends EditorGUIController
 		double diffZeit = maxZeit - minZeit;
 		
 		// lokale Kopie zur Verwendung in Lambdas
-		int stringHeight = fontMetrics.getHeight();
+		int stringHeight = this.fontMetrics.getHeight();
 		BildfahrplanGUIController.stringHeight = stringHeight;
 		
 		// Config für PaintHelper neu laden
@@ -260,7 +281,7 @@ public class BildfahrplanGUIController extends EditorGUIController
 				final int textY = bildfahrplanConfig.getTextMarginTop() + ((stringHeight + bildfahrplanConfig.getOffsetY()) * (bsCounter % bildfahrplanConfig.getZeilenAnzahl()))
 						+ bildfahrplanConfig.getTextMarginBottom();
 				String name = bs.getName();
-				int stringWidth = fontMetrics.stringWidth(name);
+				int stringWidth = this.fontMetrics.stringWidth(name);
 				
 				// Linie in gui
 				guiPaints.add(g -> ph.paintLine(g, ph.getWegPos(km), ph.getZeitPos(minZeit), ph.getWegPos(km), ph.getZeitPos(maxZeit), c));
@@ -374,7 +395,7 @@ public class BildfahrplanGUIController extends EditorGUIController
 						double ab = letzteZeit;
 						String name = zugName;
 						String vollerName = vollerZugName;
-						double showTextWidth = fontMetrics.stringWidth(name) * 0.9;
+						double showTextWidth = this.fontMetrics.stringWidth(name) * 0.9;
 						
 						// für ZeigeZeiten
 						int diffX = 5;
@@ -383,8 +404,8 @@ public class BildfahrplanGUIController extends EditorGUIController
 						// Minuten aus den Zeiten auslesen
 						String abMinute = TimeFormater.doubleToMinute(ab);
 						String anMinute = TimeFormater.doubleToMinute(an);
-						int abMinuteBreite = fontMetrics.stringWidth(abMinute) - 2;
-						int anMinuteBreite = fontMetrics.stringWidth(anMinute) - 2;
+						int abMinuteBreite = this.fontMetrics.stringWidth(abMinute) - 2;
+						int anMinuteBreite = this.fontMetrics.stringWidth(anMinute) - 2;
 						int abVerschiebungY = diffY;
 						int anVerschiebungY = stringHeight + diffY;
 						

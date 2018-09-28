@@ -10,6 +10,8 @@ public abstract class EditorGUIController
 	protected GeneralConfig config;
 	private Object configChangeHandleId;
 	private Object fahrtConfigChangeHandleId;
+	private Object editorDatenStreckeChangeHandleId = null;
+	private Object editorDatenFahrtenChangeHandleId = null;
 	protected EditorDaten editorDaten = null;
 	
 	/**
@@ -26,26 +28,54 @@ public abstract class EditorGUIController
 		this.configChangeHandleId = config.getBildfahrplanConfig().registerChangeHandler(() -> configChanged());
 		this.fahrtConfigChangeHandleId = config.getFahrtDarstellungConfig().registerChangeHandler(() -> configChanged());
 		
-		this.editorDaten = new EditorDaten();
+		this.setEditorDaten(new EditorDaten());
 	}
 	
 	protected EditorGUIController(EditorDaten editorDaten, GeneralConfig config)
 	{
 		this(config);
-		this.editorDaten = editorDaten;
+		this.setEditorDaten(editorDaten);
 	}
 	
 	protected void setEditorDaten(EditorDaten daten)
 	{
+		NullTester.test(daten);
 		this.editorDaten = daten;
+		log.info("setEditorDaten: callbacks");
+		this.editorDatenStreckeChangeHandleId = daten.registerStreckeGeladenCallback(() -> {
+			log.info("Callback für StreckeGeladen");
+			dataChanged();
+		});
+		this.editorDatenFahrtenChangeHandleId = daten.registerFahrtenGeladenCallback(() -> {
+			log.info("Callback für FahrtenGeladen");
+			dataChanged();
+		});
 	}
 	
-	public abstract void configChanged();
+	/**
+	 * Sollte von Kindklassen überschrieben werden
+	 */
+	public void configChanged()
+	{
+		// nichts tun
+	}
+
+	/**
+	 * Sollte von Kindklassen überschrieben werden
+	 */
+	public void dataChanged()
+	{
+		// nichts tun
+	}
 	
 	public void close()
 	{
 		config.getBildfahrplanConfig().unregisterChangeHandler(configChangeHandleId);
 		config.getFahrtDarstellungConfig().unregisterChangeHandler(fahrtConfigChangeHandleId);
+		if(editorDaten != null) {
+			editorDaten.unregisterStreckeGeladenCallback(editorDatenStreckeChangeHandleId);
+			editorDaten.unregisterFahrtenGeladenCallback(editorDatenFahrtenChangeHandleId);
+		}
 	}
 	
 	public EditorDaten getEditorDaten()

@@ -26,6 +26,7 @@ public class TabEditorGUIController extends EditorGUIController
 	protected TabEditorZeilenheaderGUI zeilenGui;
 	protected FirstLastLinkedList<TabEditorTabellenZeile> zeilen = new FirstLastLinkedList<>();
 	
+	
 	protected boolean richtungAufsteigend;
 	
 	public TabEditorGUIController(EditorDaten daten, GeneralConfig config, boolean richtungAufsteigend)
@@ -45,7 +46,7 @@ public class TabEditorGUIController extends EditorGUIController
 		super.getEditorDaten().setTabEditor(this, richtungAufsteigend);
 		this.gui = new TabEditorGUI(this);
 		this.zeilenGui = new TabEditorZeilenheaderGUI(this);
-		editorDaten.addFahrtenGeladenCallback(() -> ladeFahrten());
+		editorDaten.registerFahrtenGeladenCallback(() -> ladeFahrten());
 		this.richtungAufsteigend = richtungAufsteigend;
 		
 		ladeFahrten();
