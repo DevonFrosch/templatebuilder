@@ -15,9 +15,9 @@ import de.stsFanGruppe.tools.FirstLastList;
 import de.stsFanGruppe.tools.NullTester;
 
 /**
- * Alle Funktionalitäten für die GUI {@link StreckenEditorGUI} sind in dieser Klasse definiert.
- * 
- * @author Kai
+ * Alle Funktionalitäten für die GUI {@link StreckenEditorGUI} sind in dieser Klasse definiert. <br>
+ * {@link #tableButtonAction(ActionEvent)} definiert alle Funktionen zu den Button für die Tabelle. <br>
+ * {@link #actionButton(ActionEvent)} definiert alle Funktionen zu den Button für die GUI selbst. <br>
  *
  */
 public class StreckenEditorGUIController
@@ -184,7 +184,7 @@ public class StreckenEditorGUIController
 	}
 	
 	/**
-	 * Lädt die Strecke aus den editorDaten und stellt diese in der Tabelle dar.
+	 * Beim Öffnen der GUI wird die Strecke aus den editorDaten geladen und in der Tabelle eingefügt.
 	 */
 	public void ladeStrecken()
 	{
@@ -224,7 +224,7 @@ public class StreckenEditorGUIController
 	
 	
 	/**
-	 * Speichert die Betriebsstellen in die Streckenabschnitte und diese wird dann sortiert nach km in den {@link EditorDaten} gespeichert. <br>
+	 * Speichert die Betriebsstellen in die Streckenabschnitte und diese wird dann sortiert nach km in den {@link EditorDaten} gespeichert.
 	 * @throws NullPointerException
 	 */
 	public void speichereStrecken() throws NullPointerException
