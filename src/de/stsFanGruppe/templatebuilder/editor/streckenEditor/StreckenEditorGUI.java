@@ -24,7 +24,7 @@ public class StreckenEditorGUI extends JDialog implements GUI
 	
 	protected final JPanel contentPanel = new JPanel();
 	public JTable table;
-	public static final String[] columnNames = {"km", "Bestriebsstelle"};
+	public static final String[] columnNames = {"id", "km", "Bestriebsstelle"};
 	
 	/**
 	 * Launch the application.
@@ -91,28 +91,22 @@ public class StreckenEditorGUI extends JDialog implements GUI
 								FormSpecs.DEFAULT_ROWSPEC, FormSpecs.LABEL_COMPONENT_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC,
 								FormSpecs.LABEL_COMPONENT_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, FormSpecs.LABEL_COMPONENT_GAP_ROWSPEC,}));
 				{
-					JButton btnMoveUp = new JButton("Oben");
-					btnMoveUp.setActionCommand("moveUpRow");
-					btnMoveUp.addActionListener((ActionEvent arg0) -> controller.tableButtonAction(arg0));
-					buttonTablePane.add(btnMoveUp, "1, 2");
-				}
-				{
-					JButton btnMoveDown = new JButton("Unten");
-					btnMoveDown.setActionCommand("moveDownRow");
-					btnMoveDown.addActionListener((ActionEvent arg0) -> controller.tableButtonAction(arg0));
-					buttonTablePane.add(btnMoveDown, "1, 4");
-				}
-				{
 					JButton btnAddRow = new JButton("+");
 					btnAddRow.setActionCommand("addRow");
 					btnAddRow.addActionListener((ActionEvent arg0) -> controller.tableButtonAction(arg0));
-					buttonTablePane.add(btnAddRow, "1, 6");
+					buttonTablePane.add(btnAddRow, "1, 2");
+				}
+				{
+					JButton btnRemoveRow = new JButton("sortieren");
+					btnRemoveRow.setActionCommand("sortTableToKm");
+					btnRemoveRow.addActionListener((ActionEvent arg0) -> controller.tableButtonAction(arg0));
+					buttonTablePane.add(btnRemoveRow, "1, 4");
 				}
 				{
 					JButton btnRemoveRow = new JButton("-");
 					btnRemoveRow.setActionCommand("removeRow");
 					btnRemoveRow.addActionListener((ActionEvent arg0) -> controller.tableButtonAction(arg0));
-					buttonTablePane.add(btnRemoveRow, "1, 8");
+					buttonTablePane.add(btnRemoveRow, "1, 6");
 				}
 			}
 			{

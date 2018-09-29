@@ -72,31 +72,6 @@ public class StreckenEditorGUIController
 		
 		switch(event.getActionCommand())
 		{
-			// Zeile(n) nach oben verschieben
-			case "moveUpRow":
-				if(rows[0] == 0)
-				{
-					gui.infoMessage("Erste Zeile kann nicht nach oben verschoben werden.", "Info: Zeile nach oben verschieben");
-				}
-				else
-				{
-					selectionModel.clearSelection();
-					for(int i = 0; i < rows.length; i++)
-					{
-						model.moveRow(rows[i], rows[i], rows[i] - 1);
-						gui.table.addRowSelectionInterval(rows[i] - 1, rows[i] - 1);
-					}
-				}
-				break;
-			// Zeile(n) nach unten verschieben
-			case "moveDownRow":
-				selectionModel.clearSelection();
-				for(int i = 0; i < rows.length; i++)
-				{
-					model.moveRow(rows[i], rows[i], rows[i] + 1);
-					gui.table.addRowSelectionInterval(rows[i] + 1, rows[i] + 1);
-				}
-				break;
 			/*
 			 * Zeile(n) hinzufügen 
 			 * Zeile(n) wird/ werden nach ausgewählten Zeilen hinzugefügt oder nach der letzten Zeile
@@ -116,10 +91,17 @@ public class StreckenEditorGUIController
 					model.addRow(defaultRowdata);
 					break;
 				}
-				/*
-				 * Zeile(n) löschen 
-				 * Wenn keine Zeile ausgewählt, erscheint Fehlerfenster.
-				 */
+			/*
+			 * Tabelle sortieren
+			 * Sortiert die Tabelle nach km.
+			 */
+			
+			//TODO BT013 Funktion für das Sortieren der Tabelle einbinden
+			
+			/*
+			 * Zeile(n) löschen 
+			 * Wenn keine Zeile ausgewählt, erscheint Fehlerfenster.
+			 */
 			case "removeRow":
 				if(rows.length < 0)
 				{
@@ -190,7 +172,8 @@ public class StreckenEditorGUIController
 	{
 		assert editorDaten != null;
 		
-		DefaultTableModel model = new DefaultTableModel(StreckenEditorGUI.columnNames, 0) {
+		//Erstelle model für Tabelle mit fester Datentyp für die einzelnen Spalten
+		DefaultTableModel model = new DefaultTableModel(gui.columnNames, 0) {
 			@Override
 			public Class<?> getColumnClass(int column)
 			{
@@ -199,6 +182,8 @@ public class StreckenEditorGUIController
 					case 0:
 						return Double.class;
 					case 1:
+						return Double.class;
+					case 2:
 						return String.class;
 					default:
 						return Object.class;
@@ -210,11 +195,13 @@ public class StreckenEditorGUIController
 		
 		if(streckenabschnitt != null)
 		{
+			int i = 0;
 			for(Betriebsstelle bs : streckenabschnitt.getBetriebsstellen())
 			{
 				double km = editorDaten.getStreckenKm(bs);
 				String name = bs.getName();
-				Object[] row = {km, name};
+				Object[] row = {i, km, name};
+				i++;
 				
 				model.addRow(row);
 			}
