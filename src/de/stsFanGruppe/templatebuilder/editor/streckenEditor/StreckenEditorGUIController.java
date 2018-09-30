@@ -68,7 +68,7 @@ public class StreckenEditorGUIController
 		
 		// Erhalte ausgewählte Zeilen
 		int[] rows = gui.table.getSelectedRows();
-		Object[] defaultRowdata = {"", ""};
+		Object[] defaultRowdata = {20, 100, ""};
 		
 		switch(event.getActionCommand())
 		{
