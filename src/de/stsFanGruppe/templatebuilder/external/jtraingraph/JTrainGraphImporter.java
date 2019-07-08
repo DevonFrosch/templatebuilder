@@ -185,17 +185,16 @@ public class JTrainGraphImporter extends Importer
 				// leere Fahrten brauchen wir nicht importieren
 				if(!fahrplanhalte.isEmpty())
 				{
-					String templateName = train.getAttribute("template");
-					String templateZid = train.getAttribute("zid");
+					String templateName = train.getAttributeOrNull("template");
+					String templateZid = train.getAttributeOrNull("zid");
+					String templateTid = train.getAttributeOrNull("tid");
 					
-					if(templateName != null && templateName.length() == 0) {
-						templateName = null;
-					}
-					if(templateZid != null && templateZid.length() == 0) {
-						templateZid = null;
+					if(templateTid == null) {
+						// Fallback für Export (tid = zid und zid = zugid)
+						templateTid = templateZid;
 					}
 					
-					fahrten.add(new Fahrt(train.getAttribute("name"), linie, templateName, templateZid, fahrplanhalte));
+					fahrten.add(new Fahrt(train.getAttribute("name"), linie, templateName, templateTid, fahrplanhalte));
 				}
 			}
 		}

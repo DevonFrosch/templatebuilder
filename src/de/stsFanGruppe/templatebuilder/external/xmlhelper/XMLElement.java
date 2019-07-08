@@ -33,10 +33,21 @@ public class XMLElement
 		return elem.getName().getLocalPart();
 	}
 	
+	/** Returns null if attribute is not found */
 	public String getAttribute(String name)
 	{
 		NullTester.test(name);
 		return attrs.get(name.toLowerCase());
+	}
+
+	/** Returns null if attribute is not found or an empty string */
+	public String getAttributeOrNull(String name)
+	{
+		String value = this.getAttribute(name);
+		if(value == null || value.length() == 0) {
+			return null;
+		}
+		return value;
 	}
 	
 	public Map<String, String> getAttributes()
