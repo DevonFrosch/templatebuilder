@@ -13,7 +13,7 @@ public class Fahrt implements Comparable<Fahrt>
 	protected String name = null;
 	protected Linie linie = null;
 	protected String templateName = null;
-	protected String templateZid = null;
+	protected String templateTid = null;
 	protected Fahrt vorgaenger = null;
 	protected Fahrt nachfolger = null;
 	protected NavigableSet<Fahrplanhalt> fahrplanhalte = new TreeSet<>(new Fahrplanhalt.StrictComparator());
@@ -24,11 +24,11 @@ public class Fahrt implements Comparable<Fahrt>
 		this.setName(name);
 		this.setLinie(linie);
 	}
-	public Fahrt(String name, Linie linie, String templateName, String templateZid)
+	public Fahrt(String name, Linie linie, String templateName, String templateTid)
 	{
 		this(name, linie);
 		this.setTemplateName(templateName);
-		this.setTemplateZid(templateZid);
+		this.setTemplateTid(templateTid);
 	}
 
 	public Fahrt(String name, Linie linie, Collection<? extends Fahrplanhalt> fahrplanhalte)
@@ -36,9 +36,9 @@ public class Fahrt implements Comparable<Fahrt>
 		this(name, linie);
 		this.addFahrplanhalte(fahrplanhalte);
 	}
-	public Fahrt(String name, Linie linie, String templateName, String templateZid, Collection<? extends Fahrplanhalt> fahrplanhalte)
+	public Fahrt(String name, Linie linie, String templateName, String templateTid, Collection<? extends Fahrplanhalt> fahrplanhalte)
 	{
-		this(name, linie, templateName, templateZid);
+		this(name, linie, templateName, templateTid);
 		this.addFahrplanhalte(fahrplanhalte);
 	}
 	
@@ -79,29 +79,29 @@ public class Fahrt implements Comparable<Fahrt>
 		this.templateName = templateName;
 	}
 	
-	public String getTemplateZid()
+	public String getTemplateTid()
 	{
-		return templateZid;
+		return templateTid;
 	}
 	
-	public void setTemplateZid(String templateZid)
+	public void setTemplateTid(String templateTid)
 	{
-		this.templateZid = templateZid;
+		this.templateTid = templateTid;
 	}
 	
 	public String getTemplateString()
 	{
 		if(getTemplateName() != null)
 		{
-			if(getTemplateZid() != null)
+			if(getTemplateTid() != null)
 			{
-				return getTemplateName() + " (" + getTemplateZid() + ")";
+				return getTemplateName() + " (" + getTemplateTid() + ")";
 			}
 			return getTemplateName();
 		}
-		if(getTemplateZid() != null)
+		if(getTemplateTid() != null)
 		{
-			return getTemplateZid();
+			return getTemplateTid();
 		}
 		return null;
 	}
@@ -223,14 +223,14 @@ public class Fahrt implements Comparable<Fahrt>
 		{
 			stringBuilder.append(", Template: " + getTemplateName());
 			
-			if(getTemplateZid() != null)
+			if(getTemplateTid() != null)
 			{
-				stringBuilder.append(" (" + getTemplateZid() + ")");
+				stringBuilder.append(" (" + getTemplateTid() + ")");
 			}
 		}
-		else if(getTemplateZid() != null)
+		else if(getTemplateTid() != null)
 		{
-			stringBuilder.append(", Template-ZID: " + getTemplateZid());
+			stringBuilder.append(", TID: " + getTemplateTid());
 		}
 		
 		stringBuilder.append(", " + fahrplanhalte.size() + " Fahrplanhalte }");
@@ -252,9 +252,9 @@ public class Fahrt implements Comparable<Fahrt>
 			fahrt.append(" data-template=\"" + getTemplateName() + "\"");
 		}
 
-		if(getTemplateZid() != null)
+		if(getTemplateTid() != null)
 		{
-			fahrt.append(" data-zid=\"" + getTemplateZid() + "\"");
+			fahrt.append(" data-tid=\"" + getTemplateTid() + "\"");
 		}
 		
 		xml.add(fahrt.append(">").toString());

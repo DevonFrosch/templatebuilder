@@ -339,7 +339,7 @@ public class BildfahrplanGUIController extends EditorGUIController
 					double letzterKm = -1;
 					String vollerZugName = fahrt.getName();
 					String templateName = fahrt.getTemplateName();
-					String templateZid = fahrt.getTemplateZid();
+					String templateTid = fahrt.getTemplateTid();
 					
 					if(bildfahrplanConfig.testIgnorierteZuege(vollerZugName)
 							|| bildfahrplanConfig.testIgnorierteTemplates(templateName))
@@ -349,7 +349,7 @@ public class BildfahrplanGUIController extends EditorGUIController
 					}
 					
 					// Darstellung
-					FahrtDarstellung[] fahrtDarstellungen = darstellungHandler.getFahrtDarstellungen(vollerZugName, templateName, templateZid);
+					FahrtDarstellung[] fahrtDarstellungen = darstellungHandler.getFahrtDarstellungen(vollerZugName, templateName, templateTid);
 					Color fahrtFarbe = fahrtDarstellungen[0].getFarbe();
 					
 					for(Fahrplanhalt fh : fahrt.getFahrplanhalte())

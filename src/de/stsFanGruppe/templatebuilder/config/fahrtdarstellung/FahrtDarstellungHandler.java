@@ -24,7 +24,7 @@ public class FahrtDarstellungHandler
 		this.changeHandlerId = config.registerChangeHandler(() -> ladeConfig());
 	}
 	
-	public FahrtDarstellung[] getFahrtDarstellungen(String zugName, String templateName, String templateZid)
+	public FahrtDarstellung[] getFahrtDarstellungen(String zugName, String templateName, String templateTid)
 	{
 		assert darstellungen != null;
 		
@@ -35,7 +35,7 @@ public class FahrtDarstellungHandler
 			liste.add(zugsucheDarstellung);
 		}
 		else if(templatesucheDarstellung != null && (templateName != null && templatesucheDarstellung.testZugname(templateName) 
-				|| templateZid != null && templatesucheDarstellung.testZugname(templateZid)))
+				|| templateTid != null && templatesucheDarstellung.testZugname(templateTid)))
 		{
 			liste.add(templatesucheDarstellung);
 		}
