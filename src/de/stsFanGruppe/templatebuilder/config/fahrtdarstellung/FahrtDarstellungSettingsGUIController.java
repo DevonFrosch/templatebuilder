@@ -202,6 +202,7 @@ public class FahrtDarstellungSettingsGUIController extends GUIController
 				config.importSettings(gui, gui);
 				// Einstellungen neu laden
 				ladeStandards();
+				ladeRegeln();
 				break;
 			case "cancel":
 				close();
