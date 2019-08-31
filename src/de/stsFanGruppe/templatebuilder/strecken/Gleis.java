@@ -2,8 +2,9 @@ package de.stsFanGruppe.templatebuilder.strecken;
 
 import java.util.*;
 import de.stsFanGruppe.tools.NullTester;
+import de.stsFanGruppe.tools.XMLExportable;
 
-public class Gleis
+public class Gleis implements XMLExportable
 {
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Gleis.class);
 	
@@ -157,11 +158,6 @@ public class Gleis
 		{
 			return "Gleis " + getName() + " { " + gleisabschnitte.size() + " Gleisabschnitte }";
 		}
-	}
-	
-	public String toXML()
-	{
-		return toXML("");
 	}
 	
 	public String toXML(String indent)

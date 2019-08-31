@@ -3,7 +3,7 @@ package de.stsFanGruppe.templatebuilder.strecken;
 import java.util.*;
 import de.stsFanGruppe.tools.*;
 
-public class Bildfahrplanstrecke
+public class Bildfahrplanstrecke implements XMLExportable
 {
 	protected String name;
 	protected FirstLastList<Streckenabschnitt> streckenabschnitte = new FirstLastLinkedList<>();
@@ -67,11 +67,6 @@ public class Bildfahrplanstrecke
 	public String toString()
 	{
 		return "Bildfahrplanstrecke " + getName() + " { " + streckenabschnitte.size() + " Gleise }";
-	}
-	
-	public String toXML()
-	{
-		return toXML("");
 	}
 	
 	public String toXML(String indent)

@@ -4,6 +4,7 @@ import java.util.*;
 import de.stsFanGruppe.templatebuilder.strecken.Betriebsstelle;
 import de.stsFanGruppe.templatebuilder.strecken.Gleisabschnitt;
 import de.stsFanGruppe.tools.NullTester;
+import de.stsFanGruppe.tools.XMLExportable;
 
 /**
  * Ein Fahrplanhalt ist ein Eintrag in einem Fahrplan eines Zuges, der einem Gleisabschnitt
@@ -12,7 +13,7 @@ import de.stsFanGruppe.tools.NullTester;
  * 
  * @author DevonFrosch
  */
-public class Fahrplanhalt implements Comparable<Fahrplanhalt>
+public class Fahrplanhalt implements Comparable<Fahrplanhalt>, XMLExportable
 {
 	protected Gleisabschnitt gleisabschnitt;
 	protected OptionalDouble ankunft;
@@ -171,11 +172,6 @@ public class Fahrplanhalt implements Comparable<Fahrplanhalt>
 	{
 		return "Fahrplanhalt { gleisabschnitt: " + gleisabschnitt.getName() + ((ankunft.isPresent()) ? ", ankunft: " + ankunft.getAsDouble() : "")
 				+ ((abfahrt.isPresent()) ? ", abfahrt: " + abfahrt.getAsDouble() : "") + ", " + eigenschaften.toString() + " }";
-	}
-	
-	public String toXML()
-	{
-		return toXML("");
 	}
 	
 	public String toXML(String indent)

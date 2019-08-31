@@ -3,6 +3,7 @@ package de.stsFanGruppe.templatebuilder.strecken;
 import java.util.*;
 import java.util.function.DoubleSupplier;
 import de.stsFanGruppe.tools.NullTester;
+import de.stsFanGruppe.tools.XMLExportable;
 
 /**
  * Eine Strecke ist eine Verbindung zwischen zwei Betriebsstellen.
@@ -14,7 +15,7 @@ import de.stsFanGruppe.tools.NullTester;
  * 
  * @author DevonFrosch
  */
-public class Strecke
+public class Strecke implements XMLExportable
 {
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Strecke.class);
 	
@@ -148,11 +149,6 @@ public class Strecke
 	public String toString()
 	{
 		return "Strecke " + getName() + " { Anfang: " + anfang.getName() + ", Ende: " + ende.getName() + ", Anzahl Gleise: " + anzahlGleise + " }";
-	}
-	
-	public String toXML()
-	{
-		return toXML("");
 	}
 	
 	public String toXML(String indent)

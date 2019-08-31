@@ -1,8 +1,9 @@
 package de.stsFanGruppe.templatebuilder.zug;
 
 import de.stsFanGruppe.tools.NullTester;
+import de.stsFanGruppe.tools.XMLExportable;
 
-public class Linie
+public class Linie implements XMLExportable
 {
 	protected String name;
 	protected String nummer;
@@ -46,11 +47,6 @@ public class Linie
 	public String toString()
 	{
 		return getName();
-	}
-	
-	public String toXML()
-	{
-		return toXML("");
 	}
 	
 	public String toXML(String indent)

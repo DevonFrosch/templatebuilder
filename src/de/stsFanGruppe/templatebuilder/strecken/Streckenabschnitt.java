@@ -9,7 +9,7 @@ import de.stsFanGruppe.tools.*;
  * werden.
  * Weiterhin dürfen keine Sprünge enthalten sein. Sind Sprünge vorhanden, verhalten sich einige Funktionen undefiniert.
  */
-public class Streckenabschnitt implements Cloneable
+public class Streckenabschnitt implements Cloneable, XMLExportable
 {
 	protected String name;
 	protected FirstLastList<Strecke> strecken = new FirstLastLinkedList<>();
@@ -110,11 +110,6 @@ public class Streckenabschnitt implements Cloneable
 	public String toString()
 	{
 		return "Streckenabschnitt " + getName() + " { " + strecken.size() + " Strecken }";
-	}
-	
-	public String toXML()
-	{
-		return toXML("");
 	}
 	
 	public String toXML(String indent)

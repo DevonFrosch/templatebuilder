@@ -2,8 +2,9 @@ package de.stsFanGruppe.templatebuilder.zug;
 
 import java.util.*;
 import de.stsFanGruppe.tools.NullTester;
+import de.stsFanGruppe.tools.XMLExportable;
 
-public class Fahrt implements Comparable<Fahrt>
+public class Fahrt implements Comparable<Fahrt>, XMLExportable
 {
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Fahrt.class);
 	
@@ -235,11 +236,6 @@ public class Fahrt implements Comparable<Fahrt>
 		
 		stringBuilder.append(", " + fahrplanhalte.size() + " Fahrplanhalte }");
 		return stringBuilder.toString();
-	}
-	
-	public String toXML()
-	{
-		return toXML("");
 	}
 	
 	public String toXML(String indent)

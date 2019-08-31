@@ -6,8 +6,9 @@ import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.FahrtDarstellungC
 import de.stsFanGruppe.templatebuilder.config.types.Schachtelung;
 import de.stsFanGruppe.tools.NullTester;
 import de.stsFanGruppe.tools.PreferenceHandler;
+import de.stsFanGruppe.tools.XMLExportable;
 
-public class BildfahrplanConfig extends ConfigController
+public class BildfahrplanConfig extends ConfigController implements XMLExportable
 {
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(BildfahrplanConfig.class);
 	
@@ -524,11 +525,6 @@ public class BildfahrplanConfig extends ConfigController
 	public String toString()
 	{
 		return "BildfahrplanConfig (" + prefs.toString() + ")";
-	}
-	
-	public String toXML()
-	{
-		return toXML("");
 	}
 	
 	public String toXML(String indent)
