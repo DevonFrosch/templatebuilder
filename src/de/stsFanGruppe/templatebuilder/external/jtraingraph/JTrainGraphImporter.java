@@ -113,14 +113,14 @@ public class JTrainGraphImporter extends Importer
 		return streckenabschnitt;
 	}
 	
-	public Set<Fahrt> importFahrten(InputStream input, Streckenabschnitt streckenabschnitt, Linie linie) throws ImportException
+	public Set<Template> importFahrten(InputStream input, Streckenabschnitt streckenabschnitt, Linie linie) throws ImportException
 	{
 		log.info("JTrainGraphImport Fahrten");
 		NullTester.test(input);
 		NullTester.test(streckenabschnitt);
 		NullTester.test(linie);
 		
-		Set<Fahrt> fahrten = new HashSet<Fahrt>();
+		Map<String, Template> templates = new HashMap<>();
 		
 		// Erstelle eine Liste der Gleisabschnitte
 		FirstLastList<Gleisabschnitt> gleisabschnitte = new FirstLastLinkedList<>();
@@ -204,7 +204,19 @@ public class JTrainGraphImporter extends Importer
 						}
 					}
 					
-					fahrten.add(new Fahrt(train.getAttribute("name"), linie, templateName, tid, fahrplanhalte));
+					String templateKey = Template.templateNameOf(templateName, tid);
+					Fahrt fahrt = new Fahrt(train.getAttribute("name"), linie, templateName, tid, fahrplanhalte);
+					
+					if(templates.containsKey(templateKey)) {
+						Template template = templates.get(templateKey);
+						fahrt.setTemplate(template);
+						template.addFahrt(fahrt);
+					}
+					else {
+						Template template = new Template(templateName, tid, fahrt);
+						fahrt.setTemplate(template);
+						templates.put(templateKey, template);
+					}
 				}
 			}
 		}
@@ -213,7 +225,7 @@ public class JTrainGraphImporter extends Importer
 			log.error(e.getMessage());
 			throw new ImportException(e);
 		}
-		return fahrten;
+		return new HashSet<>(templates.values());
 	}
 	
 	private static Gleisabschnitt getGleisabschnitt(Betriebsstelle betriebsstelle)

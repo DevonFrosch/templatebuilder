@@ -2,6 +2,7 @@ package de.stsFanGruppe.templatebuilder.zug;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.OptionalDouble;
 import java.util.Set;
 import java.util.StringJoiner;
 import de.stsFanGruppe.tools.XMLExportable;
@@ -18,6 +19,11 @@ public class Template implements Comparable<Template>, XMLExportable {
 		setName(name);
 		setTid(tid);
 		addFahrten(fahrten);
+	}
+	public Template(String name, int tid, Fahrt fahrt) {
+		setName(name);
+		setTid(tid);
+		addFahrt(fahrt);
 	}
 	public Template(Collection<Fahrt> fahrten) {
 		addFahrten(fahrten);
@@ -64,6 +70,12 @@ public class Template implements Comparable<Template>, XMLExportable {
 		}
 	}
 	
+	public boolean hasFahrten() {
+		return !fahrten.isEmpty();
+	}
+	public Set<Fahrt> getFahrten() {
+		return fahrten;
+	}
 	public void addFahrten(Collection<Fahrt> fahrten) {
 		this.fahrten.addAll(fahrten);
 	}
@@ -76,22 +88,70 @@ public class Template implements Comparable<Template>, XMLExportable {
 	public void clearFahrten() {
 		fahrten.clear();
 	}
+
+	public Fahrt findFahrt(String name) {
+		return fahrten
+				.stream()
+				.filter((f) -> f.getName().equals(name))
+				.findFirst()
+				.orElse(null);
+	}
+	public Fahrt findFahrt(long fahrtId) {
+		return fahrten
+				.stream()
+				.filter((f) -> f.getFahrtId() == fahrtId)
+				.findFirst()
+				.orElse(null);
+	}
 	
-	public String toString()
-	{
+	public OptionalDouble getMinZeit() {
+		if(!hasFahrten()) {
+			return OptionalDouble.empty();
+		}
+		
+		return OptionalDouble.of(fahrten
+				.stream()
+				.min((a, b) -> Double.compare(a.getMinZeit(), b.getMinZeit()))
+				.get()
+				.getMinZeit());
+	}
+	public OptionalDouble getMaxZeit() {
+		if(!hasFahrten()) {
+			return OptionalDouble.empty();
+		}
+		
+		return OptionalDouble.of(fahrten
+				.stream()
+				.max((a, b) -> Double.compare(a.getMaxZeit(), b.getMaxZeit()))
+				.get()
+				.getMaxZeit());
+	}
+	
+	public static String templateNameOf(String name, int tid) {
+		String tidString = null;
+		if(tid != 0) {
+			return String.valueOf(tid);
+		}
+		return templateNameOf(name, tidString);
+	}
+	public static String templateNameOf(String name, String tid) {
 		if(name != null)
 		{
-			if(tid != 0)
+			if(tid != null)
 			{
 				return name + " (" + tid + ")";
 			}
 			return name;
 		}
-		if(tid != 0)
+		if(tid != null)
 		{
-			return String.valueOf(tid);
+			return tid;
 		}
 		return "";
+	}
+	public String toString()
+	{
+		return templateNameOf(getName(), getTidOrNull());
 	}
 	
 	public String toXML(String indent) {

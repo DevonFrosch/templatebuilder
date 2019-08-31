@@ -47,13 +47,13 @@ public class BildfahrplanConfig extends ConfigController implements XMLExportabl
 	private static final int DEFAULT_ZH_ZEITINTERVALL = 10; // Minuten
 	
 	// Darstellung der Linien
-	public static final String CONFIG_F_HOEHEPROSTUNDE = "bildfahrplan/darstellung/fahrten/hoeheProStunde";
-	public static final String CONFIG_F_MINZEIT = "bildfahrplan/darstellung/fahrten/minZeit";
-	public static final String CONFIG_F_MAXZEIT = "bildfahrplan/darstellung/fahrten/maxZeit";
-	public static final String CONFIG_F_AUTOSIZE = "bildfahrplan/darstellung/fahrten/autoSize";
-	public static final String CONFIG_F_SCHACHTELUNG_TYP = "bildfahrplan/darstellung/fahrten/schachtelung/typ";
-	public static final String CONFIG_F_SCHACHTELUNG_MINUTEN = "bildfahrplan/darstellung/fahrten/schachtelung/minuten";
-	public static final String CONFIG_F_SCHACHTELUNG_TEMPLATE = "bildfahrplan/darstellung/fahrten/schachtelung/template";
+	public static final String CONFIG_F_HOEHEPROSTUNDE = "bildfahrplan/darstellung/templates/hoeheProStunde";
+	public static final String CONFIG_F_MINZEIT = "bildfahrplan/darstellung/templates/minZeit";
+	public static final String CONFIG_F_MAXZEIT = "bildfahrplan/darstellung/templates/maxZeit";
+	public static final String CONFIG_F_AUTOSIZE = "bildfahrplan/darstellung/templates/autoSize";
+	public static final String CONFIG_F_SCHACHTELUNG_TYP = "bildfahrplan/darstellung/templates/schachtelung/typ";
+	public static final String CONFIG_F_SCHACHTELUNG_MINUTEN = "bildfahrplan/darstellung/templates/schachtelung/minuten";
+	public static final String CONFIG_F_SCHACHTELUNG_TEMPLATE = "bildfahrplan/darstellung/templates/schachtelung/template";
 	
 	private static final int DEFAULT_F_HOEHEPROSTUNDE = 400; // Minuten
 	private static final double DEFAULT_F_MINZEIT = 270; // Minuten, 4:30

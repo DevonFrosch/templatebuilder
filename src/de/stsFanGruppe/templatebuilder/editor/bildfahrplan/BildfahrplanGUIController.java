@@ -127,9 +127,9 @@ public class BildfahrplanGUIController extends EditorGUIController
 		gui.recalculatePanelSize();
 	}
 	
-	public void ladeZüge(Collection<? extends Fahrt> fahrten)
+	public void ladeTemplates(Collection<? extends Template> templates)
 	{
-		editorDaten.ladeZüge(fahrten);
+		editorDaten.ladeTemplates(templates);
 		gui.recalculatePanelSize();
 	}
 	
@@ -197,8 +197,8 @@ public class BildfahrplanGUIController extends EditorGUIController
 		}
 		log.trace("optimizeHeight()");
 		
-		double minZeit = editorDaten.getMinZeit();
-		double maxZeit = editorDaten.getMaxZeit();
+		double minZeit = editorDaten.getMinZeit().getAsDouble();
+		double maxZeit = editorDaten.getMaxZeit().getAsDouble();
 		
 		assert minZeit <= maxZeit;
 		bildfahrplanConfig.setZeiten(minZeit, maxZeit);
@@ -482,8 +482,8 @@ public class BildfahrplanGUIController extends EditorGUIController
 						letzterKm = editorDaten.getStreckenKm(fh.getGleisabschnitt().getParent().getParent());
 						
 					} // for(Fahrplanhalt fh: fahrt.getFahrplanhalte())
-				} // for(Fahrt fahrt: fahrten)
-			} // synchronized(fahrten)
+				} // for(Fahrt fahrt: templates)
+			} // synchronized(templates)
 		}
 		
 		// Paint-Objekte überschreiben

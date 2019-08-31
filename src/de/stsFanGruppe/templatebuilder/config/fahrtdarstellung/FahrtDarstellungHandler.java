@@ -31,18 +31,16 @@ public class FahrtDarstellungHandler
 		
 		FirstLastList<FahrtDarstellung> liste = new FirstLastLinkedList<>();
 		
+		boolean namePasst = templatesucheDarstellung != null && template.getName() != null && templatesucheDarstellung.testZugname(template.getName());
+		boolean tidPasst = templatesucheDarstellung != null && template.getTidOrNull() != null && templatesucheDarstellung.testZugname(template.getTidOrNull());
+		
 		if(zugsucheDarstellung != null && zugsucheDarstellung.testZugname(zugName))
 		{
 			liste.add(zugsucheDarstellung);
 		}
-		else if(templatesucheDarstellung != null)
+		else if(namePasst || tidPasst)
 		{
-			boolean namePasst = template.getName() != null && templatesucheDarstellung.testZugname(template.getName());
-			boolean tidPasst = template.getTidOrNull() != null && templatesucheDarstellung.testZugname(template.getTidOrNull());
-			
-			if(namePasst || tidPasst) {
-				liste.add(templatesucheDarstellung);
-			}
+			liste.add(templatesucheDarstellung);
 		}
 		else 
 		{

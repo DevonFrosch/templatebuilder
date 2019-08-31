@@ -23,6 +23,7 @@ import de.stsFanGruppe.templatebuilder.external.jtraingraph.*;
 import de.stsFanGruppe.templatebuilder.gui.TemplateBuilderGUI;
 import de.stsFanGruppe.templatebuilder.strecken.Streckenabschnitt;
 import de.stsFanGruppe.templatebuilder.zug.Fahrt;
+import de.stsFanGruppe.templatebuilder.zug.Template;
 import de.stsFanGruppe.tools.GUILocker;
 import de.stsFanGruppe.tools.NullTester;
 
@@ -94,8 +95,8 @@ public class TemplateBuilderGUIController extends GUIController
 							{
 								assert ergebnis.getPfad() != null;
 								input = new java.io.FileInputStream(ergebnis.getPfad());
-								Set<Fahrt> fahrten = importer.importFahrten(input, streckenabschnitt, ergebnis.getLinie());
-								bfpController.ladeZüge(fahrten);
+								Set<Template> templates = importer.importFahrten(input, streckenabschnitt, ergebnis.getLinie());
+								bfpController.ladeTemplates(templates);
 							}
 						}
 						catch(FileNotFoundException e)
