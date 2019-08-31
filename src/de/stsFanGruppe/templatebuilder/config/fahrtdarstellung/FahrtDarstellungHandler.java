@@ -1,6 +1,7 @@
 package de.stsFanGruppe.templatebuilder.config.fahrtdarstellung;
 
 import de.stsFanGruppe.templatebuilder.zug.FahrtDarstellung;
+import de.stsFanGruppe.templatebuilder.zug.Template;
 import de.stsFanGruppe.tools.FirstLastLinkedList;
 import de.stsFanGruppe.tools.FirstLastList;
 
@@ -24,7 +25,7 @@ public class FahrtDarstellungHandler
 		this.changeHandlerId = config.registerChangeHandler(() -> ladeConfig());
 	}
 	
-	public FahrtDarstellung[] getFahrtDarstellungen(String zugName, String templateName, String templateTid)
+	public FahrtDarstellung[] getFahrtDarstellungen(String zugName, Template template)
 	{
 		assert darstellungen != null;
 		
@@ -34,10 +35,14 @@ public class FahrtDarstellungHandler
 		{
 			liste.add(zugsucheDarstellung);
 		}
-		else if(templatesucheDarstellung != null && (templateName != null && templatesucheDarstellung.testZugname(templateName) 
-				|| templateTid != null && templatesucheDarstellung.testZugname(templateTid)))
+		else if(templatesucheDarstellung != null)
 		{
-			liste.add(templatesucheDarstellung);
+			boolean namePasst = template.getName() != null && templatesucheDarstellung.testZugname(template.getName());
+			boolean tidPasst = template.getTidOrNull() != null && templatesucheDarstellung.testZugname(template.getTidOrNull());
+			
+			if(namePasst || tidPasst) {
+				liste.add(templatesucheDarstellung);
+			}
 		}
 		else 
 		{

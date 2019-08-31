@@ -4,6 +4,7 @@ import java.awt.Color;
 import javax.swing.JComponent;
 import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.FahrtDarstellungConfig;
 import de.stsFanGruppe.templatebuilder.config.types.Schachtelung;
+import de.stsFanGruppe.templatebuilder.zug.Template;
 import de.stsFanGruppe.tools.NullTester;
 import de.stsFanGruppe.tools.PreferenceHandler;
 import de.stsFanGruppe.tools.XMLExportable;
@@ -448,14 +449,23 @@ public class BildfahrplanConfig extends ConfigController implements XMLExportabl
 	{
 		return getIgnorierteTemplates().split("\n");
 	}
-	public boolean testIgnorierteTemplates(String suche)
+	public boolean testIgnorierteTemplates(Template template)
 	{
-		if(suche == null) {
+		if(template == null) {
 			return false;
 		}
-		for(String templateName: getIgnorierteTemplatesArray()) {
-			if(templateName.length() > 0 && suche.contains(templateName)) {
-				return true;
+		
+		String name = template.getName();
+		String tid = template.getTidOrNull();
+		
+		for(String suchString: getIgnorierteTemplatesArray()) {
+			if(suchString.length() > 0) {
+				if(name != null && name.contains(suchString)) {
+					return true;
+				}
+				if(tid != null && tid.contains(suchString)) {
+					return true;
+				}
 			}
 		}
 		return false;

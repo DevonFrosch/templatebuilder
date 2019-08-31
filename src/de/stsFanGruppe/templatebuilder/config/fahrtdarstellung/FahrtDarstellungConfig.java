@@ -153,9 +153,12 @@ public class FahrtDarstellungConfig extends ConfigController
 			{
 				continue;
 			}
-			if(fahrt.getTemplateString() != null)
+
+			String template = fahrt.getTemplate().toString();
+			
+			if(!template.isEmpty())
 			{
-				zuege.add(fahrt.getName() + " [" + fahrt.getTemplateString() + "]");
+				zuege.add(fahrt.getName() + " [" + template + "]");
 			}
 			else
 			{

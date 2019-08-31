@@ -20,6 +20,7 @@ import de.stsFanGruppe.templatebuilder.strecken.Streckenabschnitt;
 import de.stsFanGruppe.templatebuilder.zug.Fahrplanhalt;
 import de.stsFanGruppe.templatebuilder.zug.Fahrt;
 import de.stsFanGruppe.templatebuilder.zug.FahrtDarstellung;
+import de.stsFanGruppe.templatebuilder.zug.Template;
 import de.stsFanGruppe.tools.CalculatableLine;
 import de.stsFanGruppe.tools.FahrtPaintable;
 import de.stsFanGruppe.tools.FirstLastLinkedList;
@@ -340,18 +341,17 @@ public class BildfahrplanGUIController extends EditorGUIController
 					double letzteZeit = -1;
 					double letzterKm = -1;
 					String vollerZugName = fahrt.getName();
-					String templateName = fahrt.getTemplateName();
-					String templateTid = fahrt.getTemplateTid();
+					Template template = fahrt.getTemplate();
 					
 					if(bildfahrplanConfig.testIgnorierteZuege(vollerZugName)
-							|| bildfahrplanConfig.testIgnorierteTemplates(templateName))
+							|| bildfahrplanConfig.testIgnorierteTemplates(template))
 					{
 						log.trace("Zug {} ignoriert", vollerZugName);
 						continue;
 					}
 					
 					// Darstellung
-					FahrtDarstellung[] fahrtDarstellungen = darstellungHandler.getFahrtDarstellungen(vollerZugName, templateName, templateTid);
+					FahrtDarstellung[] fahrtDarstellungen = darstellungHandler.getFahrtDarstellungen(vollerZugName, template);
 					Color fahrtFarbe = fahrtDarstellungen[0].getFarbe();
 					
 					for(Fahrplanhalt fh : fahrt.getFahrplanhalte())
