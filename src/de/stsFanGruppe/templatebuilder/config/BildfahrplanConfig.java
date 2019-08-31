@@ -3,6 +3,7 @@ package de.stsFanGruppe.templatebuilder.config;
 import java.awt.Color;
 import javax.swing.JComponent;
 import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.FahrtDarstellungConfig;
+import de.stsFanGruppe.templatebuilder.config.types.Schachtelung;
 import de.stsFanGruppe.tools.NullTester;
 import de.stsFanGruppe.tools.PreferenceHandler;
 
@@ -48,13 +49,17 @@ public class BildfahrplanConfig extends ConfigController
 	public static final String CONFIG_F_MINZEIT = "bildfahrplan/darstellung/fahrten/minZeit";
 	public static final String CONFIG_F_MAXZEIT = "bildfahrplan/darstellung/fahrten/maxZeit";
 	public static final String CONFIG_F_AUTOSIZE = "bildfahrplan/darstellung/fahrten/autoSize";
-	public static final String CONFIG_F_SCHACHTELUNG = "bildfahrplan/darstellung/fahrten/schachtelung";
+	public static final String CONFIG_F_SCHACHTELUNG_TYP = "bildfahrplan/darstellung/fahrten/schachtelung/typ";
+	public static final String CONFIG_F_SCHACHTELUNG_MINUTEN = "bildfahrplan/darstellung/fahrten/schachtelung/minuten";
+	public static final String CONFIG_F_SCHACHTELUNG_TEMPLATE = "bildfahrplan/darstellung/fahrten/schachtelung/template";
 	
 	private static final int DEFAULT_F_HOEHEPROSTUNDE = 400; // Minuten
 	private static final double DEFAULT_F_MINZEIT = 270; // Minuten, 4:30
 	private static final double DEFAULT_F_MAXZEIT = 1290; // Minuten, 21:30
 	private static final boolean DEFAULT_F_AUTOSIZE = true;
-	private static final int DEFAULT_F_SCHACHTELUNG = 1440; // Minuten
+	private static final String DEFAULT_F_SCHACHTELUNG_TYP = Schachtelung.KEINE.toString();
+	private static final int DEFAULT_F_SCHACHTELUNG_MINUTEN = 1440; // Minuten
+	private static final String DEFAULT_F_SCHACHTELUNG_TEMPLATE = "";
 	
 	// Darstellung von Texten
 	public static final String CONFIG_TEXT_ZEIGEZEITEN = "bildfahrplan/darstellung/text/zeigeZeiten";
@@ -290,14 +295,34 @@ public class BildfahrplanConfig extends ConfigController
 		notifyChange();
 	}
 	
-	public int getSchachtelung()
+	public Schachtelung getSchachtelungTyp()
 	{
-		return prefs.getInt(CONFIG_F_SCHACHTELUNG, DEFAULT_F_SCHACHTELUNG);
+		String typ = prefs.getString(CONFIG_F_SCHACHTELUNG_TYP, DEFAULT_F_SCHACHTELUNG_TYP);
+		return Schachtelung.valueOf(typ);
+	}
+	public void setSchachtelungTyp(Schachtelung schachtelung)
+	{
+		prefs.setString("schachtelung/typ", CONFIG_F_SCHACHTELUNG_TYP, schachtelung.toString());
+		notifyChange();
 	}
 	
-	public void setSchachtelung(int schachtelung)
+	public int getSchachtelungMinuten()
 	{
-		prefs.setInt("schachtelung", CONFIG_F_SCHACHTELUNG, schachtelung);
+		return prefs.getInt(CONFIG_F_SCHACHTELUNG_MINUTEN, DEFAULT_F_SCHACHTELUNG_MINUTEN);
+	}
+	public void setSchachtelungMinuten(int minuten)
+	{
+		prefs.setInt("schachtelung/minuten", CONFIG_F_SCHACHTELUNG_MINUTEN, minuten);
+		notifyChange();
+	}
+	
+	public String getSchachtelungTemplate()
+	{
+		return prefs.getString(CONFIG_F_SCHACHTELUNG_TEMPLATE, DEFAULT_F_SCHACHTELUNG_TEMPLATE);
+	}
+	public void setSchachtelungTemplate(String template)
+	{
+		prefs.setString("schachtelung/template", CONFIG_F_SCHACHTELUNG_TEMPLATE, template);
 		notifyChange();
 	}
 	

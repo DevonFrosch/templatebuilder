@@ -200,9 +200,7 @@ public class BildfahrplanSettingsGUIController extends GUIController
 		gui.sliderHoeheProStunde.setValue(config.getHoeheProStunde());
 		gui.inputMinZeit.setText(getMinZeit());
 		gui.inputMaxZeit.setText(getMaxZeit());
-		gui.inputSchachtelung.setText(String.valueOf(config.getSchachtelung()));
-		gui.inputSchachtelung.setEnabled(config.getSchachtelung() != 0);
-		gui.chckbxSchachtelung.setSelected(config.getSchachtelung() != 0);
+		gui.setSchachtelung(config.getSchachtelungTyp(), config.getSchachtelungMinuten(), config.getSchachtelungTemplate());
 		
 		gui.setZeigeZugnamen(config.getZeigeZugnamen());
 		gui.chckbxZugnamenKommentare.setSelected(config.getZeigeZugnamenKommentare());
@@ -226,7 +224,9 @@ public class BildfahrplanSettingsGUIController extends GUIController
 			config.setZeiten(gui.getMinZeit(), gui.getMaxZeit());
 		}
 		
-		config.setSchachtelung(gui.getSchachtelung());
+		config.setSchachtelungTyp(gui.getSchachtelungTyp());
+		config.setSchachtelungMinuten(gui.getSchachtelungMinuten());
+		config.setSchachtelungTemplate(gui.getSchachtelungTemplate());
 		
 		config.setZeigeZugnamen(gui.rdbtngrpZeigeZugnamen.getSelection().getActionCommand());
 		config.setZeigeZugnamenKommentare(gui.chckbxZugnamenKommentare.isSelected());

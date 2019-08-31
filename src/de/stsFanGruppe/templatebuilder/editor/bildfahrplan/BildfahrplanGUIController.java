@@ -11,6 +11,7 @@ import java.util.Set;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanConfig;
 import de.stsFanGruppe.templatebuilder.config.GeneralConfig;
 import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.FahrtDarstellungHandler;
+import de.stsFanGruppe.templatebuilder.config.types.Schachtelung;
 import de.stsFanGruppe.templatebuilder.editor.EditorDaten;
 import de.stsFanGruppe.templatebuilder.editor.EditorGUIController;
 import de.stsFanGruppe.templatebuilder.gui.GUI;
@@ -324,7 +325,8 @@ public class BildfahrplanGUIController extends EditorGUIController
 		
 		// ### Fahrten-Linien ###
 		{
-			int schachtelung = bildfahrplanConfig.getSchachtelung();
+			Schachtelung schachtelung = bildfahrplanConfig.getSchachtelungTyp();
+			int schachtelungMinuten = bildfahrplanConfig.getSchachtelungMinuten();
 			int zeigeZugnamen = bildfahrplanConfig.getZeigeZugnamen();
 			boolean zeigeZeiten = bildfahrplanConfig.getZeigeZeiten();
 			int zeigeRichtung = bildfahrplanConfig.getZeigeRichtung();
@@ -404,12 +406,9 @@ public class BildfahrplanGUIController extends EditorGUIController
 									int zeitenRTLx1 = x1 - abMinuteBreite - diffX;
 									int zeitenRTLx2 = x2 + diffX;
 									
-									// Schachtelung der Züge nach Minuten
-									// for(int schachtelungVerschiebung = (int) minZeit; schachtelungVerschiebung <= maxZeit;)
-									for(int sch = 0; sch < diffZeit; sch += schachtelung)
-									{
-										int y1 = ph.getZeitPos(ab - sch);
-										int y2 = ph.getZeitPos(an - sch);
+									EbenenZeichner ebenenZeichner = (int verschiebung) -> {
+										int y1 = ph.getZeitPos(ab - verschiebung);
+										int y2 = ph.getZeitPos(an - verschiebung);
 										
 										for(FahrtDarstellung darstellung: fahrtDarstellungen)
 										{
@@ -455,12 +454,23 @@ public class BildfahrplanGUIController extends EditorGUIController
 										{
 											ph.paintRotatedText(g, x1, y1, x2, y2, fahrtFarbe, name, -2);
 										}
-										
-										if(schachtelung == 0)
-										{
-											// Keine Schachtelung, abbrechen
+									};
+									
+									switch(schachtelung) {
+										case MINUTEN:
+											// Schachtelung der Züge nach Minuten
+											// for(int schachtelungVerschiebung = (int) minZeit; schachtelungVerschiebung <= maxZeit;)
+											for(int verschiebung = 0; verschiebung < diffZeit; verschiebung += schachtelungMinuten)
+											{
+												ebenenZeichner.zeichne(verschiebung);
+											}
 											break;
-										}
+										case TEMPLATE:
+											// TODO
+										case KEINE:
+										default:
+											ebenenZeichner.zeichne(0);
+											break;
 									}
 									return zugLinien;
 								});
@@ -483,5 +493,9 @@ public class BildfahrplanGUIController extends EditorGUIController
 		zeilenGui.setPaintables(zeilenGuiPaints);
 		
 		log.trace("recalc fertig");
+	}
+	
+	private interface EbenenZeichner {
+		void zeichne(int verschiebung);
 	}
 }

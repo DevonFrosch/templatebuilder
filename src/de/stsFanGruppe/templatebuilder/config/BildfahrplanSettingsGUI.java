@@ -9,6 +9,7 @@ import javax.swing.border.EmptyBorder;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
+import de.stsFanGruppe.templatebuilder.config.types.Schachtelung;
 import de.stsFanGruppe.templatebuilder.gui.GUI;
 import de.stsFanGruppe.tools.NullTester;
 import de.stsFanGruppe.tools.TimeFormater;
@@ -30,15 +31,22 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 	JTextField inputHoeheProStunde;
 	JSlider sliderHoeheProStunde;
 	JCheckBox chckbxAuto;
-	JCheckBox chckbxSchachtelung;
-	JTextField inputSchachtelung;
+	
+	private ButtonGroup radioGroupSchachtelung;
+	private JRadioButton radioKeineSchachtelung;
+	private JRadioButton radioMinutenSchachtelung;
+	private JRadioButton radioTemplateSchachtelung;
+	private JTextField inputSchachtelungMinuten;
+	private JTextField inputSchachtelungTemplate;
 	
 	ButtonGroup rdbtngrpZeigeZugnamen;
 	JRadioButton radioZeigeZugnamenNie;
 	JRadioButton radioZeigeZugnamenImmer;
 	JRadioButton radioZeigeZugnamenAuto;
+	
 	JCheckBox chckbxZugnamenKommentare;
 	JCheckBox chckbxZeigeZeiten;
+	
 	ButtonGroup rdbtngrpZeigeRichtung;
 	JRadioButton radioZeigeRichtungKeine;
 	JRadioButton radioZeigeRichtungHin;
@@ -214,40 +222,105 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 					{
 						JLabel lblSchachtelung = new JLabel("Schachtelung");
 						panelZeiten.add(lblSchachtelung, "2, 6");
+						radioGroupSchachtelung = new ButtonGroup();
 					}
 					{
-						JPanel panel = new JPanel();
-						FlowLayout flowLayout = (FlowLayout) panel.getLayout();
-						flowLayout.setVgap(0);
-						panelZeiten.add(panel, "4, 6, left, default");
+						JPanel panelSchachtelung = new JPanel();
+						panelZeiten.add(panelSchachtelung, "4, 6, fill, fill");
+						panelSchachtelung.setLayout(new FormLayout(new ColumnSpec[] {
+								ColumnSpec.decode("default:grow"),},
+							new RowSpec[] {
+								FormSpecs.DEFAULT_ROWSPEC,
+								FormSpecs.RELATED_GAP_ROWSPEC,
+								FormSpecs.DEFAULT_ROWSPEC,
+								FormSpecs.RELATED_GAP_ROWSPEC,
+								FormSpecs.DEFAULT_ROWSPEC,}));
 						{
-							chckbxSchachtelung = new JCheckBox("");
-							panel.add(chckbxSchachtelung);
+							JPanel panelKeineSchachtelung = new JPanel();
+							FlowLayout flowLayout = (FlowLayout) panelKeineSchachtelung.getLayout();
+							flowLayout.setVgap(0);
+							flowLayout.setHgap(0);
+							flowLayout.setAlignment(FlowLayout.LEFT);
+							panelSchachtelung.add(panelKeineSchachtelung, "1, 1, fill, fill");
+							{
+								radioKeineSchachtelung = new JRadioButton("Keine");
+								radioKeineSchachtelung.setActionCommand(Schachtelung.KEINE.toString());
+								radioKeineSchachtelung.addActionListener((e) -> updateOnSchachtelungClick(e));
+								radioGroupSchachtelung.add(radioKeineSchachtelung);
+								panelKeineSchachtelung.add(radioKeineSchachtelung);
+							}
 						}
 						{
-							inputSchachtelung = new JTextField();
-							panel.add(inputSchachtelung);
-							inputSchachtelung.setColumns(5);
+							JPanel panelMinutenSchachtelung = new JPanel();
+							panelSchachtelung.add(panelMinutenSchachtelung, "1, 3, fill, fill");
+							panelMinutenSchachtelung.setLayout(new FormLayout(new ColumnSpec[] {
+									FormSpecs.DEFAULT_COLSPEC,
+									FormSpecs.DEFAULT_COLSPEC,
+									FormSpecs.RELATED_GAP_COLSPEC,
+									ColumnSpec.decode("default:grow"),},
+								new RowSpec[] {
+									RowSpec.decode("default:grow"),}));
+							{
+								radioMinutenSchachtelung = new JRadioButton();
+								radioMinutenSchachtelung.setActionCommand(Schachtelung.MINUTEN.toString());
+								radioMinutenSchachtelung.addActionListener((e) -> updateOnSchachtelungClick(e));
+								radioGroupSchachtelung.add(radioMinutenSchachtelung);
+								panelMinutenSchachtelung.add(radioMinutenSchachtelung, "1, 1, left, center");
+							}
+							{
+								inputSchachtelungMinuten = new JTextField();
+								panelMinutenSchachtelung.add(inputSchachtelungMinuten, "2, 1, left, center");
+								inputSchachtelungMinuten.setColumns(5);
+							}
+							{
+								JLabel lblSchachtelungEinheit = new JLabel("Minuten");
+								panelMinutenSchachtelung.add(lblSchachtelungEinheit, "4, 1, left, fill");
+							}
 						}
 						{
-							JLabel lblSchachtelungEinheit = new JLabel("Minuten");
-							panel.add(lblSchachtelungEinheit);
+							JPanel panelTemplateSchachtelung = new JPanel();
+							panelSchachtelung.add(panelTemplateSchachtelung, "1, 5, fill, fill");
+							panelTemplateSchachtelung.setLayout(new FormLayout(new ColumnSpec[] {
+									FormSpecs.DEFAULT_COLSPEC,
+									FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
+									ColumnSpec.decode("default:grow"),},
+								new RowSpec[] {
+									RowSpec.decode("fill:default:grow"),}));
+							{
+								radioTemplateSchachtelung = new JRadioButton("Template");
+								radioTemplateSchachtelung.setActionCommand(Schachtelung.TEMPLATE.toString());
+								radioTemplateSchachtelung.addActionListener((e) -> updateOnSchachtelungClick(e));
+								radioGroupSchachtelung.add(radioTemplateSchachtelung);
+								panelTemplateSchachtelung.add(radioTemplateSchachtelung, "1, 1, left, center");
+							}
+							{
+								inputSchachtelungTemplate = new JTextField();
+								panelTemplateSchachtelung.add(inputSchachtelungTemplate, "3, 1, fill, center");
+								inputSchachtelungTemplate.setColumns(10);
+							}
 						}
-						chckbxSchachtelung.addActionListener((ActionEvent arg0) -> {
-							inputSchachtelung.setEnabled(chckbxSchachtelung.isSelected());
-						});
 					}
 				}
 				{
 					JPanel panelDarstellung = new JPanel();
 					panelDarstellung.setBorder(BorderFactory.createTitledBorder("Darstellung"));
 					panelBfp.add(panelDarstellung, "2, 4, fill, fill");
-					panelDarstellung.setLayout(new FormLayout(
-							new ColumnSpec[] {FormSpecs.RELATED_GAP_COLSPEC, ColumnSpec.decode("right:default"), FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
-									ColumnSpec.decode("default:grow"), FormSpecs.RELATED_GAP_COLSPEC,},
-							new RowSpec[] {FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC,
-									FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, FormSpecs.RELATED_GAP_ROWSPEC, RowSpec.decode("default:grow"),
-									FormSpecs.RELATED_GAP_ROWSPEC,}));
+					panelDarstellung.setLayout(new FormLayout(new ColumnSpec[] {
+							FormSpecs.RELATED_GAP_COLSPEC,
+							ColumnSpec.decode("right:default"),
+							FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
+							ColumnSpec.decode("default:grow"),
+							FormSpecs.RELATED_GAP_COLSPEC,},
+						new RowSpec[] {
+							FormSpecs.RELATED_GAP_ROWSPEC,
+							FormSpecs.DEFAULT_ROWSPEC,
+							FormSpecs.RELATED_GAP_ROWSPEC,
+							FormSpecs.DEFAULT_ROWSPEC,
+							FormSpecs.RELATED_GAP_ROWSPEC,
+							FormSpecs.DEFAULT_ROWSPEC,
+							FormSpecs.RELATED_GAP_ROWSPEC,
+							RowSpec.decode("default:grow"),
+							FormSpecs.RELATED_GAP_ROWSPEC,}));
 					{
 						JLabel lblZeigeZugnamen = new JLabel("Zeige Zugnamen");
 						panelDarstellung.add(lblZeigeZugnamen, "2, 2");
@@ -324,52 +397,52 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 						}
 					}
 				}
+			}
+			{
+				JPanel panelIgnorieren = new JPanel();
+				tabbedPane.addTab("Ignorieren", null, panelIgnorieren, null);
+				panelIgnorieren.setBorder(BorderFactory.createTitledBorder("Züge und Templates ignorieren"));
+				panelIgnorieren.setLayout(new FormLayout(new ColumnSpec[] {
+						FormSpecs.RELATED_GAP_COLSPEC,
+						ColumnSpec.decode("default:grow"),
+						FormSpecs.RELATED_GAP_COLSPEC,
+						ColumnSpec.decode("default:grow"),
+						FormSpecs.RELATED_GAP_COLSPEC,},
+					new RowSpec[] {
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						FormSpecs.DEFAULT_ROWSPEC,
+						FormSpecs.RELATED_GAP_ROWSPEC,
+						RowSpec.decode("default:grow"),
+						FormSpecs.RELATED_GAP_ROWSPEC,}));
 				{
-					JPanel panelIgnorieren = new JPanel();
-					panelIgnorieren.setBorder(BorderFactory.createTitledBorder("Züge und Templates ignorieren"));
-					panelBfp.add(panelIgnorieren, "2, 6, fill, fill");
-					panelIgnorieren.setLayout(new FormLayout(new ColumnSpec[] {
-							FormSpecs.RELATED_GAP_COLSPEC,
-							ColumnSpec.decode("default:grow"),
-							FormSpecs.RELATED_GAP_COLSPEC,
-							ColumnSpec.decode("default:grow"),
-							FormSpecs.RELATED_GAP_COLSPEC,},
-						new RowSpec[] {
-							FormSpecs.RELATED_GAP_ROWSPEC,
-							FormSpecs.DEFAULT_ROWSPEC,
-							FormSpecs.RELATED_GAP_ROWSPEC,
-							RowSpec.decode("default:grow"),
-							FormSpecs.RELATED_GAP_ROWSPEC,}));
+					JLabel lblZeigeZugnamen = new JLabel("Ignoriere Züge");
+					panelIgnorieren.add(lblZeigeZugnamen, "2, 2");
+				}
+				{
+					JLabel lblZeigeZugnamen = new JLabel("Ignoriere Templates");
+					panelIgnorieren.add(lblZeigeZugnamen, "4, 2");
+				}
+				{
+					JScrollPane ignorierteZuegePane = new JScrollPane();
+					panelIgnorieren.add(ignorierteZuegePane, "2, 4, fill, fill");
 					{
-						JLabel lblZeigeZugnamen = new JLabel("Ignoriere Züge");
-						panelIgnorieren.add(lblZeigeZugnamen, "2, 2");
+						ignorierteZuegeTextArea = new JTextArea();
+						ignorierteZuegePane.setViewportView(ignorierteZuegeTextArea);
 					}
+				}
+				{
+					JScrollPane ignorierteTemplatesPane = new JScrollPane();
+					panelIgnorieren.add(ignorierteTemplatesPane, "4, 4, fill, fill");
 					{
-						JLabel lblZeigeZugnamen = new JLabel("Ignoriere Templates");
-						panelIgnorieren.add(lblZeigeZugnamen, "4, 2");
-					}
-					{
-						JScrollPane ignorierteZuegePane = new JScrollPane();
-						panelIgnorieren.add(ignorierteZuegePane, "2, 4, fill, fill");
-						{
-							ignorierteZuegeTextArea = new JTextArea();
-							ignorierteZuegePane.setViewportView(ignorierteZuegeTextArea);
-						}
-					}
-					{
-						JScrollPane ignorierteTemplatesPane = new JScrollPane();
-						panelIgnorieren.add(ignorierteTemplatesPane, "4, 4, fill, fill");
-						{
-							ignorierteTemplatesTextArea = new JTextArea();
-							ignorierteTemplatesPane.setViewportView(ignorierteTemplatesTextArea);
-						}
+						ignorierteTemplatesTextArea = new JTextArea();
+						ignorierteTemplatesPane.setViewportView(ignorierteTemplatesTextArea);
 					}
 				}
 			}
 			{
 				JPanel panelFarben = new JPanel();
 				tabbedPane.addTab("Farben", null, panelFarben, null);
-				tabbedPane.setEnabledAt(4, true);
+				tabbedPane.setEnabledAt(5, true);
 				panelFarben.setLayout(
 						new FormLayout(new ColumnSpec[] {FormSpecs.RELATED_GAP_COLSPEC, ColumnSpec.decode("default:grow"), FormSpecs.RELATED_GAP_COLSPEC,},
 								new RowSpec[] {FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, FormSpecs.RELATED_GAP_ROWSPEC,
@@ -569,16 +642,15 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 		}
 	}
 	
-	public int getSchachtelung()
+	public Schachtelung getSchachtelungTyp() {
+		return Schachtelung.valueOf(radioGroupSchachtelung.getSelection().getActionCommand());
+	}
+	
+	public int getSchachtelungMinuten()
 	{
-		if(!chckbxSchachtelung.isSelected())
-		{
-			return 0;
-		}
-		
 		try
 		{
-			int schachtelung = controller.parseIntField("Schachtelung", inputSchachtelung.getText());
+			int schachtelung = controller.parseIntField("Schachtelung/Minuten", inputSchachtelungMinuten.getText());
 			if(schachtelung == 0)
 			{
 				throw new NumberFormatException("0 Minuten nicht sinnvoll.");
@@ -587,10 +659,56 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 		}
 		catch(NumberFormatException e)
 		{
-			log.error("NumberFormatException bei schachtelung: {}", e.getMessage());
-			errorMessage("Schachtelung: Nur positive ganze Zahlen erlaubt.");
+			log.error("NumberFormatException bei schachtelung/minuten: {}", e.getMessage());
+			errorMessage("Schachtelung in Minuten: Nur ganze Zahlen größer 0 erlaubt.");
 			throw e;
 		}
+	}
+	
+	public String getSchachtelungTemplate() {
+		return  inputSchachtelungTemplate.getText();
+	}
+	
+	public void setSchachtelung(Schachtelung typ, int minuten, String template) {
+		switch(typ) {
+			case KEINE:
+				setKeineSchachtelung();
+				return;
+			case MINUTEN:
+				setMinutenSchachtelung(minuten);
+				return;
+			case TEMPLATE:
+				setTemplateSchachtelung(template);
+				return;
+			default:
+				log.warn("setSchachtelung(): Schachtelung {} nicht erkannt", typ);
+				return;
+		}
+	}
+	
+	private void updateOnSchachtelungClick(ActionEvent e) {
+		setSelectedSchachtelung(Schachtelung.valueOf(e.getActionCommand()));
+	}
+	private void setSelectedSchachtelung(Schachtelung typ) {
+		inputSchachtelungMinuten.setEnabled(typ == Schachtelung.MINUTEN);
+		inputSchachtelungTemplate.setEnabled(typ == Schachtelung.TEMPLATE);
+	}
+	
+	public void setKeineSchachtelung() {
+		radioKeineSchachtelung.setSelected(true);
+		setSelectedSchachtelung(Schachtelung.KEINE);
+	}
+	
+	public void setMinutenSchachtelung(int minuten) {
+		radioMinutenSchachtelung.setSelected(true);
+		setSelectedSchachtelung(Schachtelung.MINUTEN);
+		inputSchachtelungMinuten.setText(String.valueOf(minuten));
+	}
+	
+	public void setTemplateSchachtelung(String template) {
+		radioTemplateSchachtelung.setSelected(true);
+		setSelectedSchachtelung(Schachtelung.TEMPLATE);
+		inputSchachtelungTemplate.setText(template);
 	}
 	
 	public void setZeigeZugnamen(int zeigeZugnamen)
