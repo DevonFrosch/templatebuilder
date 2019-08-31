@@ -10,6 +10,7 @@ public abstract class EditorGUIController
 	protected GeneralConfig config;
 	private Object configChangeHandleId;
 	private Object fahrtConfigChangeHandleId;
+	private Object schachtelungChangedHandleId;
 	protected EditorDaten editorDaten;
 	
 	protected EditorGUIController(EditorDaten editorDaten, GeneralConfig config)
@@ -17,8 +18,9 @@ public abstract class EditorGUIController
 		NullTester.test(config);
 		
 		this.config = config;
-		this.configChangeHandleId = config.getBildfahrplanConfig().registerChangeHandler(() -> configChanged());
-		this.fahrtConfigChangeHandleId = config.getFahrtDarstellungConfig().registerChangeHandler(() -> configChanged());
+		configChangeHandleId = config.getBildfahrplanConfig().registerChangeHandler(() -> configChanged());
+		fahrtConfigChangeHandleId = config.getFahrtDarstellungConfig().registerChangeHandler(() -> configChanged());
+		schachtelungChangedHandleId = editorDaten.registerSchachtelungChangedCallback(() -> configChanged());
 		setEditorDaten(editorDaten);
 	}
 	
@@ -41,6 +43,7 @@ public abstract class EditorGUIController
 	{
 		config.getBildfahrplanConfig().unregisterChangeHandler(configChangeHandleId);
 		config.getFahrtDarstellungConfig().unregisterChangeHandler(fahrtConfigChangeHandleId);
+		editorDaten.unregisterSchachtelungChangedCallback(schachtelungChangedHandleId);
 	}
 	
 	public abstract void configChanged();

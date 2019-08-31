@@ -17,6 +17,7 @@ public class FahrtEditorGUIController
 	protected EditorDaten editorDaten;
 	protected FahrtEditorGUI gui;
 	private Runnable onClose;
+	private Object fahrtenGeladenCallbackId;
 	
 	protected boolean ignoreNextComboBoxUpdate = false;
 	
@@ -30,7 +31,7 @@ public class FahrtEditorGUIController
 		this.gui = new FahrtEditorGUI(this, editorDaten.getName());
 		
 		initFahrtNamen();
-		editorDaten.registerFahrtenGeladenCallback(this::initFahrtNamen);
+		fahrtenGeladenCallbackId = editorDaten.registerFahrtenGeladenCallback(this::initFahrtNamen);
 	}
 	
 	public void initFahrtNamen()
@@ -100,6 +101,7 @@ public class FahrtEditorGUIController
 	
 	protected void close()
 	{
+		editorDaten.unregisterFahrtenGeladenCallback(fahrtenGeladenCallbackId);
 		gui.close();
 		gui = null;
 		onClose.run();

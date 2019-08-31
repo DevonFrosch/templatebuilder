@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.util.SortedSet;
@@ -273,6 +275,7 @@ public class TemplateBuilderGUI implements GUI
 			
 			radioGroupSchachtelung = new ButtonGroup();
 			radioSchachtelungKeine = new JRadioButton("Aus");
+			radioSchachtelungKeine.setEnabled(false);
 			radioSchachtelungKeine.setSelected(true);
 			radioSchachtelungKeine.setActionCommand(Schachtelung.KEINE.toString());
 			radioSchachtelungKeine.addActionListener(event -> updateOnSchachtelungClick(event));
@@ -280,6 +283,7 @@ public class TemplateBuilderGUI implements GUI
 			toolBar.add(radioSchachtelungKeine);
 			
 			radioSchachtelungMinuten = new JRadioButton("Minuten");
+			radioSchachtelungMinuten.setEnabled(false);
 			radioSchachtelungMinuten.setActionCommand(Schachtelung.MINUTEN.toString());
 			radioSchachtelungMinuten.addActionListener(event -> updateOnSchachtelungClick(event));
 			radioGroupSchachtelung.add(radioSchachtelungMinuten);
@@ -287,6 +291,12 @@ public class TemplateBuilderGUI implements GUI
 			
 			inputSchachtelungMinuten = new JTextField();
 			inputSchachtelungMinuten.setEnabled(false);
+			inputSchachtelungMinuten.addFocusListener(new FocusListener() {
+				public void focusGained(FocusEvent e) {}
+				public void focusLost(FocusEvent e) {
+					controller.schachtelungMinutenChanged();
+				}
+			});
 			inputSchachtelungMinuten.setMaximumSize(new Dimension(50, (int) inputSchachtelungMinuten.getPreferredSize().getHeight()));
 			inputSchachtelungMinuten.setColumns(10);
 			toolBar.add(inputSchachtelungMinuten);
@@ -300,7 +310,8 @@ public class TemplateBuilderGUI implements GUI
 			
 			inputSchachtelungTemplate = new JComboBox<Template>();
 			inputSchachtelungTemplate.setEnabled(false);
-			inputSchachtelungTemplate.setMaximumSize(new Dimension(150, 20));
+			inputSchachtelungTemplate.addActionListener(event -> controller.schachtelungTemplateChanged());
+			inputSchachtelungTemplate.setMaximumSize(new Dimension(250, 20));
 			toolBar.add(inputSchachtelungTemplate);
 		}
 		
@@ -318,21 +329,22 @@ public class TemplateBuilderGUI implements GUI
 	
 	public void updateAnsichtAuswahl()
 	{
-		GUIType guiType = controller.getGUITypeOfSelectedTab();
+		GUIType guiType = controller.getGUIType();
 		mntmBildfahrplan.setSelected(guiType == GUIType.BILDFAHRPLAN);
 		mntmTabellarischHin.setSelected(guiType == GUIType.TABELLE_AUFSTEIGEND);
 		mntmTabellarischRück.setSelected(guiType == GUIType.TABELLE_ABSTEIGEND);
 		
-		updateSchachtelungTemplates();
+		setSchachtelung(guiType != null, controller.getSchachtelung(), controller.getSchachtelungMinuten(), controller.getSchachtelungTemplate());
+		updateSchachtelungTemplates(guiType != null);
 	}
 	
-	private void updateSchachtelungTemplates()
+	private void updateSchachtelungTemplates(boolean isEditable)
 	{
-		SortedSet<Template> sorted = new TreeSet<>(controller.getTemplatesOfSelectedTab());
+		SortedSet<Template> sorted = new TreeSet<>(controller.getTemplates());
 		DefaultComboBoxModel<Template> model = new DefaultComboBoxModel<>(sorted.toArray(new Template[sorted.size()]));
 		inputSchachtelungTemplate.setModel(model);
 		
-		radioSchachtelungTemplate.setEnabled(sorted.size() > 1);
+		radioSchachtelungTemplate.setEnabled(isEditable && sorted.size() > 1);
 		if(sorted.size() <= 1 && radioSchachtelungTemplate.isSelected())
 		{
 			setSelectedSchachtelung(Schachtelung.KEINE);
@@ -344,23 +356,9 @@ public class TemplateBuilderGUI implements GUI
 		return Schachtelung.valueOf(radioGroupSchachtelung.getSelection().getActionCommand());
 	}
 	
-	public int getSchachtelungMinuten()
+	public String getSchachtelungMinuten()
 	{
-		try
-		{
-			int schachtelung = controller.parseIntField("Schachtelung/Minuten", inputSchachtelungMinuten.getText());
-			if(schachtelung == 0)
-			{
-				throw new NumberFormatException("0 Minuten nicht sinnvoll.");
-			}
-			return schachtelung;
-		}
-		catch(NumberFormatException e)
-		{
-			log.error("NumberFormatException bei schachtelung/minuten: {}", e.getMessage());
-			errorMessage("Schachtelung in Minuten: Nur ganze Zahlen größer 0 erlaubt.");
-			throw e;
-		}
+		return inputSchachtelungMinuten.getText();
 	}
 	
 	public Template getSchachtelungTemplate()
@@ -368,9 +366,13 @@ public class TemplateBuilderGUI implements GUI
 		return (Template) inputSchachtelungTemplate.getSelectedItem();
 	}
 	
-	public void setSchachtelung(Schachtelung typ, int minuten, Template template)
+	public void setSchachtelung(boolean isEditable, Schachtelung typ, int minuten, Template template)
 	{
+		radioSchachtelungKeine.setEnabled(isEditable);
+		radioSchachtelungMinuten.setEnabled(isEditable);
+		radioSchachtelungTemplate.setEnabled(isEditable);
 		setSelectedSchachtelung(typ);
+		
 		switch(typ)
 		{
 			case KEINE:
@@ -394,6 +396,8 @@ public class TemplateBuilderGUI implements GUI
 	
 	private void setSelectedSchachtelung(Schachtelung typ)
 	{
+		controller.schachtelungChanged(typ);
+		
 		radioSchachtelungKeine.setSelected(typ == Schachtelung.KEINE);
 		
 		radioSchachtelungMinuten.setSelected(typ == Schachtelung.MINUTEN);

@@ -219,54 +219,54 @@ public class EditorDaten
 	
 	// Callbacks
 	
-	public void registerNoEditorCallback(BooleanSupplier callback)
+	public Object registerNoEditorCallback(BooleanSupplier callback)
 	{
-		noEditorCallbacks.register(callback);
+		return noEditorCallbacks.register(callback);
 	}
 	
-	public void unregisterNoEditorCallback(BooleanSupplier callback)
+	public void unregisterNoEditorCallback(Object callbackId)
 	{
-		noEditorCallbacks.unregister(callback);
+		noEditorCallbacks.unregister(callbackId);
 	}
 	
-	public void registerNameChangedCallback(Runnable callback)
+	public Object registerNameChangedCallback(Runnable callback)
 	{
-		nameChangedCallbacks.register(callback);
+		return nameChangedCallbacks.register(callback);
 	}
 	
-	public void unregisterNameChangedCallback(Runnable callback)
+	public void unregisterNameChangedCallback(Object callbackId)
 	{
-		nameChangedCallbacks.unregister(callback);
+		nameChangedCallbacks.unregister(callbackId);
 	}
 	
-	public void registerSchachtelungChangedCallback(Runnable callback)
+	public Object registerSchachtelungChangedCallback(Runnable callback)
 	{
-		schachtelungChangedCallbacks.register(callback);
+		return schachtelungChangedCallbacks.register(callback);
 	}
 	
-	public void unregisterSchachtelungChangedCallback(Runnable callback)
+	public void unregisterSchachtelungChangedCallback(Object callbackId)
 	{
-		schachtelungChangedCallbacks.unregister(callback);
+		schachtelungChangedCallbacks.unregister(callbackId);
 	}
 	
-	public void registerFahrtenGeladenCallback(Runnable callback)
+	public Object registerFahrtenGeladenCallback(Runnable callback)
 	{
-		fahrtenGeladenCallbacks.register(callback);
+		return fahrtenGeladenCallbacks.register(callback);
 	}
 	
-	public void unregisterFahrtenGeladenCallback(Runnable callback)
+	public void unregisterFahrtenGeladenCallback(Object callbackId)
 	{
-		fahrtenGeladenCallbacks.unregister(callback);
+		fahrtenGeladenCallbacks.unregister(callbackId);
 	}
 	
-	public void registerStreckeGeladenCallback(Runnable callback)
+	public Object registerStreckeGeladenCallback(Runnable callback)
 	{
-		streckeGeladenCallbacks.register(callback);
+		return streckeGeladenCallbacks.register(callback);
 	}
 	
-	public void unregisterStreckeGeladenCallback(Runnable callback)
+	public void unregisterStreckeGeladenCallback(Object callbackId)
 	{
-		streckeGeladenCallbacks.unregister(callback);
+		streckeGeladenCallbacks.unregister(callbackId);
 	}
 	
 	// Strecken und Fahrten
@@ -318,7 +318,7 @@ public class EditorDaten
 		
 		this.name = streckenabschnitt.getName();
 		
-		streckeGeladenCallbacks.notifyAll();
+		streckeGeladenCallbacks.runAll();
 	}
 	
 	public void ladeTemplates(Collection<? extends Template> templates)
@@ -335,7 +335,7 @@ public class EditorDaten
 			});
 		}
 		
-		fahrtenGeladenCallbacks.notifyAll();
+		fahrtenGeladenCallbacks.runAll();
 	}
 	
 	public boolean hasStreckenabschnitt()

@@ -1,13 +1,8 @@
 package de.stsFanGruppe.templatebuilder.editor.bildfahrplan;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.FontMetrics;
-import java.awt.Stroke;
+import java.awt.*;
 import java.awt.event.MouseEvent;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanConfig;
 import de.stsFanGruppe.templatebuilder.config.GeneralConfig;
 import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.FahrtDarstellungHandler;
@@ -15,18 +10,11 @@ import de.stsFanGruppe.templatebuilder.editor.EditorDaten;
 import de.stsFanGruppe.templatebuilder.editor.EditorGUIController;
 import de.stsFanGruppe.templatebuilder.gui.GUI;
 import de.stsFanGruppe.templatebuilder.strecken.Betriebsstelle;
+import de.stsFanGruppe.templatebuilder.strecken.Gleisabschnitt;
 import de.stsFanGruppe.templatebuilder.strecken.Streckenabschnitt;
 import de.stsFanGruppe.templatebuilder.types.Schachtelung;
-import de.stsFanGruppe.templatebuilder.zug.Fahrplanhalt;
-import de.stsFanGruppe.templatebuilder.zug.Fahrt;
-import de.stsFanGruppe.templatebuilder.zug.FahrtDarstellung;
-import de.stsFanGruppe.templatebuilder.zug.Template;
-import de.stsFanGruppe.tools.CalculatableLine;
-import de.stsFanGruppe.tools.FahrtPaintable;
-import de.stsFanGruppe.tools.FirstLastLinkedList;
-import de.stsFanGruppe.tools.FirstLastList;
-import de.stsFanGruppe.tools.Paintable;
-import de.stsFanGruppe.tools.TimeFormater;
+import de.stsFanGruppe.templatebuilder.zug.*;
+import de.stsFanGruppe.tools.*;
 
 public class BildfahrplanGUIController extends EditorGUIController
 {
@@ -329,6 +317,9 @@ public class BildfahrplanGUIController extends EditorGUIController
 			Schachtelung schachtelung = editorDaten.getSchachtelung();
 			int schachtelungMinuten = editorDaten.getSchachtelungMinuten();
 			Template schachtelungTemplate = editorDaten.getSchachtelungTemplate();
+			Set<Integer> verschiebungen = getVerschiebungen(schachtelungTemplate);
+			log.info("Schachtelung {} Minuten {}", schachtelung, schachtelungMinuten);
+			
 			int zeigeZugnamen = bildfahrplanConfig.getZeigeZugnamen();
 			boolean zeigeZeiten = bildfahrplanConfig.getZeigeZeiten();
 			int zeigeRichtung = bildfahrplanConfig.getZeigeRichtung();
@@ -347,7 +338,6 @@ public class BildfahrplanGUIController extends EditorGUIController
 					if(bildfahrplanConfig.testIgnorierteZuege(vollerZugName)
 							|| bildfahrplanConfig.testIgnorierteTemplates(template))
 					{
-						log.trace("Zug {} ignoriert", vollerZugName);
 						continue;
 					}
 					
@@ -388,8 +378,6 @@ public class BildfahrplanGUIController extends EditorGUIController
 						String anMinute = TimeFormater.doubleToMinute(an);
 						int abMinuteBreite = fontMetrics.stringWidth(abMinute) - 2;
 						int anMinuteBreite = fontMetrics.stringWidth(anMinute) - 2;
-						int abVerschiebungY = diffY;
-						int anVerschiebungY = stringHeight + diffY;
 						
 						// erst ab dem 2. Fahrplanhalt zeichnen (die Linie, die zum Fahrplanhalt hinführt)
 						if(letzteZeit >= 0 && letzterKm >= 0 && letzteZeit >= minZeit && kmAb >= 0)
@@ -459,15 +447,16 @@ public class BildfahrplanGUIController extends EditorGUIController
 									
 									switch(schachtelung) {
 										case MINUTEN:
-											// Schachtelung der Züge nach Minuten
-											// for(int schachtelungVerschiebung = (int) minZeit; schachtelungVerschiebung <= maxZeit;)
 											for(int verschiebung = 0; verschiebung < diffZeit; verschiebung += schachtelungMinuten)
 											{
 												ebenenZeichner.zeichne(verschiebung);
 											}
 											break;
 										case TEMPLATE:
-											// TODO
+											for(Integer verschiebung: verschiebungen) {
+												ebenenZeichner.zeichne(verschiebung);
+											}
+											break;
 										case KEINE:
 										default:
 											ebenenZeichner.zeichne(0);
@@ -494,6 +483,47 @@ public class BildfahrplanGUIController extends EditorGUIController
 		zeilenGui.setPaintables(zeilenGuiPaints);
 		
 		log.trace("recalc fertig");
+	}
+	
+	private Set<Integer> getVerschiebungen(Template template) {
+		Set<Integer> verschiebungen = new HashSet<>();
+		verschiebungen.add(0);
+		
+		if(template == null) {
+			return verschiebungen;
+		}
+		
+		SortedSet<Fahrt> templateFahrten = new TreeSet<>(template.getFahrten());
+		Fahrt ersteFahrt = templateFahrten.first();
+		Fahrplanhalt ersterHalt = ersteFahrt
+				.getFahrplanhalte()
+				.stream()
+				.filter(fh -> fh.getAbfahrt().isPresent())
+				.findFirst()
+				.orElse(null);
+		
+		if(ersterHalt == null) {
+			log.warn("getVerschiebungen(): Keinen passenden Fahrplanhalt in der ersten Fahrt gefunden! Schachtelung wird ignoriert.");
+			return verschiebungen;
+		}
+		
+		double ersteAbfahrt = ersterHalt.getAbfahrt().getAsDouble();
+		Gleisabschnitt gleisabschnitt = ersterHalt.getGleisabschnitt();
+		
+		for(Fahrt fahrt: templateFahrten) {
+			Fahrplanhalt halt = fahrt.getFahrplanhalt(gleisabschnitt);
+			
+			if(halt == null) {
+				log.info("getVerschiebungen(): Überspringe Fahrt {}, Fahrplanhalt nicht gefunden", fahrt.getName());
+				continue;
+			}
+			
+			double differenz = halt.getMaxZeit() - ersteAbfahrt;
+			int verschiebung = (int) Math.floor(differenz);
+			verschiebungen.add(verschiebung);
+		}
+		
+		return verschiebungen;
 	}
 	
 	private interface EbenenZeichner {

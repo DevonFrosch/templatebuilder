@@ -378,23 +378,77 @@ public class TemplateBuilderGUIController extends GUIController
 		}
 	}
 	
-	public void schachtelungChanged(ActionEvent event) {
-		Schachtelung schachtelung = Schachtelung.valueOf(event.getActionCommand());
+	public void schachtelungChanged(Schachtelung typ) {
 		EditorGUI selectedGUI = tabs.getSelectedGUI();
 		if(selectedGUI != null) {
-			selectedGUI.getController().getEditorDaten().setSchachtelung(schachtelung);
+			selectedGUI.getController().getEditorDaten().setSchachtelung(typ);
 		}
 	}
 	
-	public Set<Template> getTemplatesOfSelectedTab() {
+	public void schachtelungMinutenChanged() {
+		int minuten = 0;
+		
+		try {
+			minuten = parsePositiveIntField("Schachtelung/Minuten", gui.getSchachtelungMinuten());
+		}
+		catch(NumberFormatException e) {
+			log.error("NumberFormatException bei schachtelung/minuten: {}", e.getMessage());
+			gui.errorMessage("Schachtelung in Minuten: Nur ganze Zahlen größer 0 erlaubt.");
+			return;
+		}
+		
+		EditorGUI selectedGUI = tabs.getSelectedGUI();
+		log.info("schachtelungMinutenChanged {}", selectedGUI != null);
+		if(selectedGUI != null) {
+			selectedGUI.getController().getEditorDaten().setSchachtelungMinuten(minuten);
+		}
+	}
+	
+	public void schachtelungTemplateChanged() {
+		Template template = gui.getSchachtelungTemplate();
+		EditorGUI selectedGUI = tabs.getSelectedGUI();
+		if(selectedGUI != null) {
+			selectedGUI.getController().getEditorDaten().setSchachtelungTemplate(template);
+		}
+	}
+	
+	public Set<Template> getTemplates() {
 		EditorDaten daten = tabs.getSelectedEditorDaten();
 		if(daten == null) {
 			return new HashSet<>();
 		}
 		return daten.getTemplates();
 	}
+	
+	private EditorDaten getEditorDaten() {
+		return tabs.getSelectedEditorDaten();
+	}
+	
+	public Schachtelung getSchachtelung() {
+		EditorDaten editorDaten = getEditorDaten();
+		if(editorDaten != null) {
+			return editorDaten.getSchachtelung();
+		}
+		return Schachtelung.KEINE;
+	}
+	
+	public int getSchachtelungMinuten() {
+		EditorDaten editorDaten = getEditorDaten();
+		if(editorDaten != null) {
+			return editorDaten.getSchachtelungMinuten();
+		}
+		return 1440;
+	}
+	
+	public Template getSchachtelungTemplate() {
+		EditorDaten editorDaten = getEditorDaten();
+		if(editorDaten != null) {
+			return editorDaten.getSchachtelungTemplate();
+		}
+		return null;
+	}
 
-	public GUIType getGUITypeOfSelectedTab()
+	public GUIType getGUIType()
 	{
 		return tabs.getGUITypeOfSelectedTab();
 	}

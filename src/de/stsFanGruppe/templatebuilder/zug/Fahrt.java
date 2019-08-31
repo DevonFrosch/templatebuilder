@@ -1,6 +1,7 @@
 package de.stsFanGruppe.templatebuilder.zug;
 
 import java.util.*;
+import de.stsFanGruppe.templatebuilder.strecken.Gleisabschnitt;
 import de.stsFanGruppe.tools.NullTester;
 import de.stsFanGruppe.tools.XMLExportable;
 
@@ -107,6 +108,14 @@ public class Fahrt implements Comparable<Fahrt>, XMLExportable
 	public NavigableSet<Fahrplanhalt> getFahrplanhalte()
 	{
 		return fahrplanhalte;
+	}
+	
+	public Fahrplanhalt getFahrplanhalt(Gleisabschnitt gleisabschnitt)
+	{
+		return fahrplanhalte.stream()
+				.filter(fh -> fh.getGleisabschnitt() == gleisabschnitt)
+				.findFirst()
+				.orElse(null);
 	}
 	
 	public void addFahrplanhalt(Fahrplanhalt halt)

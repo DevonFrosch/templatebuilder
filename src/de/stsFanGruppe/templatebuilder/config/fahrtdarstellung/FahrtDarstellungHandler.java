@@ -15,14 +15,12 @@ public class FahrtDarstellungHandler
 	FahrtDarstellung templatesucheDarstellung = null;
 	FahrtDarstellung[] hervorhebungsDarstellungen = null;
 	
-	private Object changeHandlerId = null;
-	
 	public FahrtDarstellungHandler(FahrtDarstellungConfig config)
 	{
 		this.config = config;
 		ladeConfig();
 		log.debug("FahrtDarstellungHandler registerChangeHandler");
-		this.changeHandlerId = config.registerChangeHandler(() -> ladeConfig());
+		config.registerChangeHandler(() -> ladeConfig());
 	}
 	
 	public FahrtDarstellung[] getFahrtDarstellungen(String zugName, Template template)

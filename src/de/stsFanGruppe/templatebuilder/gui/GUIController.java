@@ -4,6 +4,15 @@ public abstract class GUIController
 {
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(GUIController.class);
 	
+	public int parsePositiveIntField(String name, String input) throws NumberFormatException
+	{
+		int number = parseIntField(name, input);
+		if(number == 0) {
+			throw new NumberFormatException("Wert ist 0");
+		}
+		return number;
+	}
+	
 	public int parseIntField(String name, String input) throws NumberFormatException
 	{
 		assert name != null;

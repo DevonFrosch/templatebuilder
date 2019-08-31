@@ -1,18 +1,19 @@
 package de.stsFanGruppe.tools;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.BooleanSupplier;
 
 public class FeedbackCallbackHandler
 {
-	private Set<BooleanSupplier> callbacks = new HashSet<>();
+	protected int callbackCounter = 0;
+	protected Map<Object, BooleanSupplier> callbacks = new HashMap<>();
 	
 	public boolean runAll()
 	{
 		synchronized(callbacks)
 		{
-			for(BooleanSupplier callback : callbacks)
+			for(BooleanSupplier callback: callbacks.values())
 			{
 				if(!callback.getAsBoolean())
 				{
@@ -23,19 +24,25 @@ public class FeedbackCallbackHandler
 		return true;
 	}
 	
-	public void register(BooleanSupplier callback)
+	public Object register(BooleanSupplier callback)
 	{
+		NullTester.test(callback);
+		Object callbackId = Integer.valueOf(callbackCounter++);
+		
 		synchronized(callbacks)
 		{
-			callbacks.add(callback);
+			assert !callbacks.containsKey(callbackId);
+			callbacks.put(callbackId, callback);
 		}
+		
+		return callbackId;
 	}
 	
-	public void unregister(BooleanSupplier callback)
+	public void unregister(Object callbackId)
 	{
 		synchronized(callbacks)
 		{
-			callbacks.remove(callback);
+			callbacks.remove(callbackId);
 		}
 	}
 }

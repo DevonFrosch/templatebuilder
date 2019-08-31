@@ -1,37 +1,44 @@
 package de.stsFanGruppe.tools;
 
 import java.awt.EventQueue;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CallbackHandler
 {
-	private Set<Runnable> callbacks = new HashSet<>();
+	protected int callbackCounter = 0;
+	protected Map<Object, Runnable> callbacks = new HashMap<>();
 	
 	public void runAll()
 	{
 		synchronized(callbacks)
 		{
-			for(Runnable callback : callbacks)
+			for(Runnable callback: callbacks.values())
 			{
 				EventQueue.invokeLater(callback);
 			}
 		}
 	}
 	
-	public void register(Runnable callback)
+	public Object register(Runnable callback)
 	{
+		NullTester.test(callback);
+		Object callbackId = Integer.valueOf(callbackCounter++);
+		
 		synchronized(callbacks)
 		{
-			callbacks.add(callback);
+			assert !callbacks.containsKey(callbackId);
+			callbacks.put(callbackId, callback);
 		}
+		
+		return callbackId;
 	}
 	
-	public void unregister(Runnable callback)
+	public void unregister(Object callbackId)
 	{
 		synchronized(callbacks)
 		{
-			callbacks.remove(callback);
+			callbacks.remove(callbackId);
 		}
 	}
 }

@@ -70,6 +70,11 @@ public class BildfahrplanGUI extends JComponent implements EditorGUI
 		setPreferredSize(size);
 		
 		// Neu malen
+		forceRepaint();
+	}
+	
+	public synchronized void forceRepaint()
+	{
 		revalidate();
 		forceRepaint = true;
 		repaint();

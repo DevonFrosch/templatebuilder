@@ -156,7 +156,7 @@ public class JTrainGraphImporter extends Importer
 					
 					if(isEmpty(an) && isEmpty(ab))
 					{
-						log.info("Zug {}, Bahnhof-Index {}: Ignoriere Halt mit leerem an oder ab", train.getAttribute("name"), i);
+						log.trace("Zug {}, Bahnhof-Index {}: Ignoriere Halt mit leerem an oder ab", train.getAttribute("name"), i);
 						continue;
 					}
 					
