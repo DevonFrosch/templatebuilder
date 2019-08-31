@@ -184,15 +184,7 @@ public class Template implements Comparable<Template>, XMLExportable {
 
 	@Override
 	public int compareTo(Template other) {
-		if(tid != 0) {
-			return Integer.compare(this.tid, other.tid);
-		}
-		
-		if(name == null) {
-			return other.name == null ? 0 : -1;
-		}
-		
-		return name.compareTo(other.name);
+		return toString().compareToIgnoreCase(other.toString());
 	}
 	
 }

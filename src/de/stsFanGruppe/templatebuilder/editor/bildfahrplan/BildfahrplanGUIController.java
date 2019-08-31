@@ -11,12 +11,12 @@ import java.util.Set;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanConfig;
 import de.stsFanGruppe.templatebuilder.config.GeneralConfig;
 import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.FahrtDarstellungHandler;
-import de.stsFanGruppe.templatebuilder.config.types.Schachtelung;
 import de.stsFanGruppe.templatebuilder.editor.EditorDaten;
 import de.stsFanGruppe.templatebuilder.editor.EditorGUIController;
 import de.stsFanGruppe.templatebuilder.gui.GUI;
 import de.stsFanGruppe.templatebuilder.strecken.Betriebsstelle;
 import de.stsFanGruppe.templatebuilder.strecken.Streckenabschnitt;
+import de.stsFanGruppe.templatebuilder.types.Schachtelung;
 import de.stsFanGruppe.templatebuilder.zug.Fahrplanhalt;
 import de.stsFanGruppe.templatebuilder.zug.Fahrt;
 import de.stsFanGruppe.templatebuilder.zug.FahrtDarstellung;
@@ -326,8 +326,9 @@ public class BildfahrplanGUIController extends EditorGUIController
 		
 		// ### Fahrten-Linien ###
 		{
-			Schachtelung schachtelung = bildfahrplanConfig.getSchachtelungTyp();
-			int schachtelungMinuten = bildfahrplanConfig.getSchachtelungMinuten();
+			Schachtelung schachtelung = editorDaten.getSchachtelung();
+			int schachtelungMinuten = editorDaten.getSchachtelungMinuten();
+			Template schachtelungTemplate = editorDaten.getSchachtelungTemplate();
 			int zeigeZugnamen = bildfahrplanConfig.getZeigeZugnamen();
 			boolean zeigeZeiten = bildfahrplanConfig.getZeigeZeiten();
 			int zeigeRichtung = bildfahrplanConfig.getZeigeRichtung();

@@ -45,7 +45,7 @@ public class TabEditorGUIController extends EditorGUIController
 		super.getEditorDaten().setTabEditor(this, richtungAufsteigend);
 		this.gui = new TabEditorGUI(this);
 		this.zeilenGui = new TabEditorZeilenheaderGUI(this);
-		editorDaten.addFahrtenGeladenCallback(() -> ladeFahrten());
+		editorDaten.registerFahrtenGeladenCallback(() -> ladeFahrten());
 		this.richtungAufsteigend = richtungAufsteigend;
 		
 		ladeFahrten();

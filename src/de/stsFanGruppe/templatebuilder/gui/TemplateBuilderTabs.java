@@ -6,12 +6,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import de.stsFanGruppe.templatebuilder.editor.EditorDaten;
 import de.stsFanGruppe.templatebuilder.editor.EditorGUI;
+import de.stsFanGruppe.templatebuilder.editor.GUIType;
 import de.stsFanGruppe.templatebuilder.editor.bildfahrplan.BildfahrplanGUI;
 import de.stsFanGruppe.templatebuilder.editor.bildfahrplan.BildfahrplanGUIController;
-import de.stsFanGruppe.templatebuilder.editor.tabEditor.TabEditorGUI;
 import de.stsFanGruppe.templatebuilder.editor.tabEditor.TabEditorGUIController;
 import de.stsFanGruppe.tools.ButtonTabComponent;
-import de.stsFanGruppe.tools.ClassTester;
 import de.stsFanGruppe.tools.NullTester;
 
 public class TemplateBuilderTabs
@@ -74,12 +73,12 @@ public class TemplateBuilderTabs
 		pane.setSelectedIndex(index);
 	}
 	
-	public Component getSelectedGUI()
+	public EditorGUI getSelectedGUI()
 	{
 		return getGUIAt(getSelectedTab());
 	}
 	
-	public Component getGUIAt(int index)
+	public EditorGUI getGUIAt(int index)
 	{
 		if(index < 0)
 		{
@@ -90,7 +89,12 @@ public class TemplateBuilderTabs
 		{
 			return null;
 		}
-		return scrollPane.getViewport().getView();
+		Component view = scrollPane.getViewport().getView();
+		if(!(view instanceof EditorGUI))
+		{
+			return null;
+		}
+		return (EditorGUI) view;
 	}
 	
 	public int addBildfahrplanTab(String name, Icon icon, String toolTip, BildfahrplanGUIController bfpController)
@@ -104,52 +108,12 @@ public class TemplateBuilderTabs
 		return addTab(name, icon, toolTip, teController.getTabEditorGUI(), teController.getTableHeader(), teController.getZeilenheaderGUI());
 	}
 	
-	public boolean selectedTabIsEditor()
-	{
-		boolean test = getSelectedGUI() instanceof EditorGUI;
-		return test;
-	}
-	
-	public boolean selectedTabIsBildfahrplan()
-	{
-		return ClassTester.isAssignableFrom(getSelectedGUI(), BildfahrplanGUI.class);
-	}
-	
-	public boolean selectedTabIsTabEditor()
-	{
-		return ClassTester.isAssignableFrom(getSelectedGUI(), TabEditorGUI.class);
-	}
-	
-	public boolean selectedTabIsTabEditorHin()
-	{
-		if(selectedTabIsTabEditor())
-		{
-			try
-			{
-				return ((TabEditorGUI) getSelectedGUI()).isRichtungAufsteigend();
-			}
-			catch(ClassCastException e)
-			{
-				log.warn("ClassCastException", e);
-			}
+	public GUIType getGUITypeOfSelectedTab() {
+		EditorGUI view = getSelectedGUI();
+		if(view == null) {
+			return null;
 		}
-		return false;
-	}
-	
-	public boolean selectedTabIsTabEditorRück()
-	{
-		if(selectedTabIsTabEditor())
-		{
-			try
-			{
-				return !((TabEditorGUI) getSelectedGUI()).isRichtungAufsteigend();
-			}
-			catch(ClassCastException e)
-			{
-				log.warn("ClassCastException", e);
-			}
-		}
-		return false;
+		return view.getGUIType();
 	}
 	
 	public int getTabIndexOf(Component gui)
@@ -173,14 +137,13 @@ public class TemplateBuilderTabs
 	{
 		try
 		{
-			Component com = getSelectedGUI();
+			EditorGUI bfpGUI = getSelectedGUI();
 			
-			if(com == null || !(com instanceof EditorGUI))
+			if(bfpGUI == null)
 			{
 				return null;
 			}
 			
-			EditorGUI bfpGUI = (EditorGUI) com;
 			return bfpGUI.getController().getEditorDaten();
 		}
 		catch(ClassCastException e)

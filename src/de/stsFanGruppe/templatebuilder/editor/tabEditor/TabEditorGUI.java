@@ -3,6 +3,7 @@ package de.stsFanGruppe.templatebuilder.editor.tabEditor;
 import javax.swing.JPanel;
 import de.stsFanGruppe.templatebuilder.editor.EditorGUI;
 import de.stsFanGruppe.templatebuilder.editor.EditorGUIController;
+import de.stsFanGruppe.templatebuilder.editor.GUIType;
 import de.stsFanGruppe.tools.NullTester;
 import javax.swing.JTable;
 import java.awt.BorderLayout;
@@ -69,5 +70,12 @@ public class TabEditorGUI extends JPanel implements EditorGUI
 	public EditorGUIController getController()
 	{
 		return controller;
+	}
+	
+	public GUIType getGUIType() {
+		if(isRichtungAufsteigend()) {
+			return GUIType.TABELLE_AUFSTEIGEND;
+		}
+		return GUIType.TABELLE_ABSTEIGEND;
 	}
 }

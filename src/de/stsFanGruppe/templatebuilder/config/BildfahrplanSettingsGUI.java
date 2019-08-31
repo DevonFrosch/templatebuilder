@@ -9,13 +9,13 @@ import javax.swing.border.EmptyBorder;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
-import de.stsFanGruppe.templatebuilder.config.types.Schachtelung;
 import de.stsFanGruppe.templatebuilder.gui.GUI;
 import de.stsFanGruppe.tools.NullTester;
 import de.stsFanGruppe.tools.TimeFormater;
 import javax.swing.event.ChangeEvent;
 import com.jgoodies.forms.layout.FormSpecs;
 import javax.swing.border.BevelBorder;
+import javax.swing.border.TitledBorder;
 
 public class BildfahrplanSettingsGUI extends JDialog implements GUI
 {
@@ -31,13 +31,6 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 	JTextField inputHoeheProStunde;
 	JSlider sliderHoeheProStunde;
 	JCheckBox chckbxAuto;
-	
-	private ButtonGroup radioGroupSchachtelung;
-	private JRadioButton radioKeineSchachtelung;
-	private JRadioButton radioMinutenSchachtelung;
-	private JRadioButton radioTemplateSchachtelung;
-	private JTextField inputSchachtelungMinuten;
-	private JTextField inputSchachtelungTemplate;
 	
 	ButtonGroup rdbtngrpZeigeZugnamen;
 	JRadioButton radioZeigeZugnamenNie;
@@ -219,87 +212,6 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 							panelZeit.add(chckbxAuto, "7, 1");
 						}
 					}
-					{
-						JLabel lblSchachtelung = new JLabel("Schachtelung");
-						panelZeiten.add(lblSchachtelung, "2, 6");
-						radioGroupSchachtelung = new ButtonGroup();
-					}
-					{
-						JPanel panelSchachtelung = new JPanel();
-						panelZeiten.add(panelSchachtelung, "4, 6, fill, fill");
-						panelSchachtelung.setLayout(new FormLayout(new ColumnSpec[] {
-								ColumnSpec.decode("default:grow"),},
-							new RowSpec[] {
-								FormSpecs.DEFAULT_ROWSPEC,
-								FormSpecs.RELATED_GAP_ROWSPEC,
-								FormSpecs.DEFAULT_ROWSPEC,
-								FormSpecs.RELATED_GAP_ROWSPEC,
-								FormSpecs.DEFAULT_ROWSPEC,}));
-						{
-							JPanel panelKeineSchachtelung = new JPanel();
-							FlowLayout flowLayout = (FlowLayout) panelKeineSchachtelung.getLayout();
-							flowLayout.setVgap(0);
-							flowLayout.setHgap(0);
-							flowLayout.setAlignment(FlowLayout.LEFT);
-							panelSchachtelung.add(panelKeineSchachtelung, "1, 1, fill, fill");
-							{
-								radioKeineSchachtelung = new JRadioButton("Keine");
-								radioKeineSchachtelung.setActionCommand(Schachtelung.KEINE.toString());
-								radioKeineSchachtelung.addActionListener((e) -> updateOnSchachtelungClick(e));
-								radioGroupSchachtelung.add(radioKeineSchachtelung);
-								panelKeineSchachtelung.add(radioKeineSchachtelung);
-							}
-						}
-						{
-							JPanel panelMinutenSchachtelung = new JPanel();
-							panelSchachtelung.add(panelMinutenSchachtelung, "1, 3, fill, fill");
-							panelMinutenSchachtelung.setLayout(new FormLayout(new ColumnSpec[] {
-									FormSpecs.DEFAULT_COLSPEC,
-									FormSpecs.DEFAULT_COLSPEC,
-									FormSpecs.RELATED_GAP_COLSPEC,
-									ColumnSpec.decode("default:grow"),},
-								new RowSpec[] {
-									RowSpec.decode("default:grow"),}));
-							{
-								radioMinutenSchachtelung = new JRadioButton();
-								radioMinutenSchachtelung.setActionCommand(Schachtelung.MINUTEN.toString());
-								radioMinutenSchachtelung.addActionListener((e) -> updateOnSchachtelungClick(e));
-								radioGroupSchachtelung.add(radioMinutenSchachtelung);
-								panelMinutenSchachtelung.add(radioMinutenSchachtelung, "1, 1, left, center");
-							}
-							{
-								inputSchachtelungMinuten = new JTextField();
-								panelMinutenSchachtelung.add(inputSchachtelungMinuten, "2, 1, left, center");
-								inputSchachtelungMinuten.setColumns(5);
-							}
-							{
-								JLabel lblSchachtelungEinheit = new JLabel("Minuten");
-								panelMinutenSchachtelung.add(lblSchachtelungEinheit, "4, 1, left, fill");
-							}
-						}
-						{
-							JPanel panelTemplateSchachtelung = new JPanel();
-							panelSchachtelung.add(panelTemplateSchachtelung, "1, 5, fill, fill");
-							panelTemplateSchachtelung.setLayout(new FormLayout(new ColumnSpec[] {
-									FormSpecs.DEFAULT_COLSPEC,
-									FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
-									ColumnSpec.decode("default:grow"),},
-								new RowSpec[] {
-									RowSpec.decode("fill:default:grow"),}));
-							{
-								radioTemplateSchachtelung = new JRadioButton("Template");
-								radioTemplateSchachtelung.setActionCommand(Schachtelung.TEMPLATE.toString());
-								radioTemplateSchachtelung.addActionListener((e) -> updateOnSchachtelungClick(e));
-								radioGroupSchachtelung.add(radioTemplateSchachtelung);
-								panelTemplateSchachtelung.add(radioTemplateSchachtelung, "1, 1, left, center");
-							}
-							{
-								inputSchachtelungTemplate = new JTextField();
-								panelTemplateSchachtelung.add(inputSchachtelungTemplate, "3, 1, fill, center");
-								inputSchachtelungTemplate.setColumns(10);
-							}
-						}
-					}
 				}
 				{
 					JPanel panelDarstellung = new JPanel();
@@ -401,41 +313,56 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 			{
 				JPanel panelIgnorieren = new JPanel();
 				tabbedPane.addTab("Ignorieren", null, panelIgnorieren, null);
-				panelIgnorieren.setBorder(BorderFactory.createTitledBorder("Züge und Templates ignorieren"));
 				panelIgnorieren.setLayout(new FormLayout(new ColumnSpec[] {
-						FormSpecs.RELATED_GAP_COLSPEC,
-						ColumnSpec.decode("default:grow"),
 						FormSpecs.RELATED_GAP_COLSPEC,
 						ColumnSpec.decode("default:grow"),
 						FormSpecs.RELATED_GAP_COLSPEC,},
 					new RowSpec[] {
-						FormSpecs.RELATED_GAP_ROWSPEC,
-						FormSpecs.DEFAULT_ROWSPEC,
-						FormSpecs.RELATED_GAP_ROWSPEC,
+						FormSpecs.LINE_GAP_ROWSPEC,
 						RowSpec.decode("default:grow"),
-						FormSpecs.RELATED_GAP_ROWSPEC,}));
+						FormSpecs.LINE_GAP_ROWSPEC,
+						RowSpec.decode("default:grow"),
+						FormSpecs.LINE_GAP_ROWSPEC,}));
 				{
-					JLabel lblZeigeZugnamen = new JLabel("Ignoriere Züge");
-					panelIgnorieren.add(lblZeigeZugnamen, "2, 2");
-				}
-				{
-					JLabel lblZeigeZugnamen = new JLabel("Ignoriere Templates");
-					panelIgnorieren.add(lblZeigeZugnamen, "4, 2");
-				}
-				{
-					JScrollPane ignorierteZuegePane = new JScrollPane();
-					panelIgnorieren.add(ignorierteZuegePane, "2, 4, fill, fill");
+					JPanel panelIgnorierteZuege = new JPanel();
+					panelIgnorierteZuege.setBorder(new TitledBorder(null, "Ignorierte Z\u00FCge", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+					panelIgnorieren.add(panelIgnorierteZuege, "2, 2, fill, fill");
+					panelIgnorierteZuege.setLayout(new FormLayout(new ColumnSpec[] {
+							FormSpecs.RELATED_GAP_COLSPEC,
+							ColumnSpec.decode("default:grow"),
+							FormSpecs.RELATED_GAP_COLSPEC,},
+						new RowSpec[] {
+							FormSpecs.LINE_GAP_ROWSPEC,
+							RowSpec.decode("default:grow"),
+							FormSpecs.LINE_GAP_ROWSPEC,}));
 					{
-						ignorierteZuegeTextArea = new JTextArea();
-						ignorierteZuegePane.setViewportView(ignorierteZuegeTextArea);
+						JScrollPane ignorierteZuegePane = new JScrollPane();
+						panelIgnorierteZuege.add(ignorierteZuegePane, "2, 2, fill, fill");
+						{
+							ignorierteZuegeTextArea = new JTextArea();
+							ignorierteZuegePane.setViewportView(ignorierteZuegeTextArea);
+						}
 					}
 				}
 				{
-					JScrollPane ignorierteTemplatesPane = new JScrollPane();
-					panelIgnorieren.add(ignorierteTemplatesPane, "4, 4, fill, fill");
+					JPanel panelIgnorierteTemplates = new JPanel();
+					panelIgnorierteTemplates.setBorder(new TitledBorder(null, "Ignorierte Templates", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+					panelIgnorieren.add(panelIgnorierteTemplates, "2, 4, fill, fill");
+					panelIgnorierteTemplates.setLayout(new FormLayout(new ColumnSpec[] {
+							FormSpecs.RELATED_GAP_COLSPEC,
+							ColumnSpec.decode("default:grow"),
+							FormSpecs.RELATED_GAP_COLSPEC,},
+						new RowSpec[] {
+							FormSpecs.LINE_GAP_ROWSPEC,
+							RowSpec.decode("default:grow"),
+							FormSpecs.LINE_GAP_ROWSPEC,}));
 					{
-						ignorierteTemplatesTextArea = new JTextArea();
-						ignorierteTemplatesPane.setViewportView(ignorierteTemplatesTextArea);
+						JScrollPane ignorierteTemplatesPane = new JScrollPane();
+						panelIgnorierteTemplates.add(ignorierteTemplatesPane, "2, 2, fill, fill");
+						{
+							ignorierteTemplatesTextArea = new JTextArea();
+							ignorierteTemplatesPane.setViewportView(ignorierteTemplatesTextArea);
+						}
 					}
 				}
 			}
@@ -640,75 +567,6 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 			errorMessage("Dargestellte Zeit: Nur Zeiten im Format hh:mm (z.B. 12:01) erlaubt.");
 			throw e;
 		}
-	}
-	
-	public Schachtelung getSchachtelungTyp() {
-		return Schachtelung.valueOf(radioGroupSchachtelung.getSelection().getActionCommand());
-	}
-	
-	public int getSchachtelungMinuten()
-	{
-		try
-		{
-			int schachtelung = controller.parseIntField("Schachtelung/Minuten", inputSchachtelungMinuten.getText());
-			if(schachtelung == 0)
-			{
-				throw new NumberFormatException("0 Minuten nicht sinnvoll.");
-			}
-			return schachtelung;
-		}
-		catch(NumberFormatException e)
-		{
-			log.error("NumberFormatException bei schachtelung/minuten: {}", e.getMessage());
-			errorMessage("Schachtelung in Minuten: Nur ganze Zahlen größer 0 erlaubt.");
-			throw e;
-		}
-	}
-	
-	public String getSchachtelungTemplate() {
-		return  inputSchachtelungTemplate.getText();
-	}
-	
-	public void setSchachtelung(Schachtelung typ, int minuten, String template) {
-		switch(typ) {
-			case KEINE:
-				setKeineSchachtelung();
-				return;
-			case MINUTEN:
-				setMinutenSchachtelung(minuten);
-				return;
-			case TEMPLATE:
-				setTemplateSchachtelung(template);
-				return;
-			default:
-				log.warn("setSchachtelung(): Schachtelung {} nicht erkannt", typ);
-				return;
-		}
-	}
-	
-	private void updateOnSchachtelungClick(ActionEvent e) {
-		setSelectedSchachtelung(Schachtelung.valueOf(e.getActionCommand()));
-	}
-	private void setSelectedSchachtelung(Schachtelung typ) {
-		inputSchachtelungMinuten.setEnabled(typ == Schachtelung.MINUTEN);
-		inputSchachtelungTemplate.setEnabled(typ == Schachtelung.TEMPLATE);
-	}
-	
-	public void setKeineSchachtelung() {
-		radioKeineSchachtelung.setSelected(true);
-		setSelectedSchachtelung(Schachtelung.KEINE);
-	}
-	
-	public void setMinutenSchachtelung(int minuten) {
-		radioMinutenSchachtelung.setSelected(true);
-		setSelectedSchachtelung(Schachtelung.MINUTEN);
-		inputSchachtelungMinuten.setText(String.valueOf(minuten));
-	}
-	
-	public void setTemplateSchachtelung(String template) {
-		radioTemplateSchachtelung.setSelected(true);
-		setSelectedSchachtelung(Schachtelung.TEMPLATE);
-		inputSchachtelungTemplate.setText(template);
 	}
 	
 	public void setZeigeZugnamen(int zeigeZugnamen)

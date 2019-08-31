@@ -10,37 +10,32 @@ public abstract class EditorGUIController
 	protected GeneralConfig config;
 	private Object configChangeHandleId;
 	private Object fahrtConfigChangeHandleId;
-	protected EditorDaten editorDaten = null;
+	protected EditorDaten editorDaten;
 	
-	/**
-	 * Erzeugt ein neues Objekt. Dieser Konstruktor wird verwendet, um ein neues
-	 * 
-	 * @param bildfahrplanConfig
-	 * @param parent
-	 */
-	protected EditorGUIController(GeneralConfig config)
+	protected EditorGUIController(EditorDaten editorDaten, GeneralConfig config)
 	{
 		NullTester.test(config);
 		
 		this.config = config;
 		this.configChangeHandleId = config.getBildfahrplanConfig().registerChangeHandler(() -> configChanged());
 		this.fahrtConfigChangeHandleId = config.getFahrtDarstellungConfig().registerChangeHandler(() -> configChanged());
-		
-		this.editorDaten = new EditorDaten();
+		setEditorDaten(editorDaten);
 	}
 	
-	protected EditorGUIController(EditorDaten editorDaten, GeneralConfig config)
+	protected EditorGUIController(GeneralConfig config)
 	{
-		this(config);
+		this(new EditorDaten(), config);
+	}
+	
+	public EditorDaten getEditorDaten()
+	{
+		return editorDaten;
+	}
+	protected void setEditorDaten(EditorDaten editorDaten)
+	{
+		NullTester.test(editorDaten);
 		this.editorDaten = editorDaten;
 	}
-	
-	protected void setEditorDaten(EditorDaten daten)
-	{
-		this.editorDaten = daten;
-	}
-	
-	public abstract void configChanged();
 	
 	public void close()
 	{
@@ -48,12 +43,5 @@ public abstract class EditorGUIController
 		config.getFahrtDarstellungConfig().unregisterChangeHandler(fahrtConfigChangeHandleId);
 	}
 	
-	public EditorDaten getEditorDaten()
-	{
-		if(editorDaten == null)
-		{
-			throw new IllegalStateException("editorDaten ist null");
-		}
-		return editorDaten;
-	}
+	public abstract void configChanged();
 }

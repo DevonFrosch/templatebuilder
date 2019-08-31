@@ -1,4 +1,4 @@
-package de.stsFanGruppe.templatebuilder.config.types;
+package de.stsFanGruppe.templatebuilder.types;
 
 public enum Schachtelung
 {

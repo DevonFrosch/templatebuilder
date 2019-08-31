@@ -6,6 +6,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.JComponent;
 import de.stsFanGruppe.templatebuilder.editor.EditorGUI;
 import de.stsFanGruppe.templatebuilder.editor.EditorGUIController;
+import de.stsFanGruppe.templatebuilder.editor.GUIType;
 import de.stsFanGruppe.tools.CalculatableLine;
 import de.stsFanGruppe.tools.FahrtPaintable;
 import de.stsFanGruppe.tools.FirstLastLinkedList;
@@ -39,6 +40,10 @@ public class BildfahrplanGUI extends JComponent implements EditorGUI
 	public EditorGUIController getController()
 	{
 		return controller;
+	}
+	
+	public GUIType getGUIType() {
+		return GUIType.BILDFAHRPLAN;
 	}
 	
 	public void setPaintables(FirstLastLinkedList<Paintable> paintables)

@@ -30,7 +30,7 @@ public class FahrtEditorGUIController
 		this.gui = new FahrtEditorGUI(this, editorDaten.getName());
 		
 		initFahrtNamen();
-		editorDaten.addFahrtenGeladenCallback(this::initFahrtNamen);
+		editorDaten.registerFahrtenGeladenCallback(this::initFahrtNamen);
 	}
 	
 	public void initFahrtNamen()
