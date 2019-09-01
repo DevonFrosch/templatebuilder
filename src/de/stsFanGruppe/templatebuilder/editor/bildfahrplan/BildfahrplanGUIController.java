@@ -3,6 +3,7 @@ package de.stsFanGruppe.templatebuilder.editor.bildfahrplan;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.*;
+import java.util.stream.Collectors;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanConfig;
 import de.stsFanGruppe.templatebuilder.config.GeneralConfig;
 import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.FahrtDarstellungHandler;
@@ -31,7 +32,7 @@ public class BildfahrplanGUIController extends EditorGUIController
 	protected static int stringHeight = 0;
 	
 	protected Object zugLinienLock = new Object();
-	protected FirstLastLinkedList<CalculatableLine> zugLinien = new FirstLastLinkedList<>();
+	protected Set<FahrtabschnittCalculatableLine> zugLinien = new HashSet<>();
 	protected long lastClickTime = 0;
 	
 	public BildfahrplanGUIController(GUI parentGui, EditorDaten daten, GeneralConfig config)
@@ -80,15 +81,15 @@ public class BildfahrplanGUIController extends EditorGUIController
 		return zeilenGui;
 	}
 	
-	public FirstLastLinkedList<CalculatableLine> getZugLinien()
+	public Set<FahrtabschnittCalculatableLine> getZugLinien()
 	{
 		synchronized(zugLinienLock)
 		{
-			return zugLinien.clone();
+			return new HashSet<>(zugLinien);
 		}
 	}
 	
-	public void setZugLinien(FirstLastLinkedList<CalculatableLine> zugLinien)
+	public void setZugLinien(Set<FahrtabschnittCalculatableLine> zugLinien)
 	{
 		synchronized(zugLinienLock)
 		{
@@ -162,16 +163,24 @@ public class BildfahrplanGUIController extends EditorGUIController
 		}
 		else
 		{
-			Set<String> zugNamen = new HashSet<>();
-			for(CalculatableLine linie: this.getZugLinien())
+			Map<Fahrt, FahrtabschnittCalculatableLine> linienMap = new HashMap<>();
+			for(FahrtabschnittCalculatableLine linie: this.getZugLinien())
 			{
-				if(linie.isPunktAufLinie(e.getX(), e.getY(), 10))
+				Fahrt fahrt = linie.getFahrtabschnitt().getFahrt();
+				
+				if(linie.isPunktAufLinie(e.getX(), e.getY(), 10) && !linienMap.containsKey(fahrt))
 				{
-					zugNamen.add(linie.getName());
+					linienMap.put(fahrt, linie);
 				}
 			}
 			
-			bildfahrplanConfig.getFahrtDarstellungConfig().setHervorgehobeneZuege(new FirstLastLinkedList<>(zugNamen));
+			Set<Fahrtabschnitt> abschnitte = linienMap
+					.values()
+					.stream()
+					.map(linie -> linie.getFahrtabschnitt())
+					.collect(Collectors.toSet());
+			
+			bildfahrplanConfig.getFahrtDarstellungConfig().setHervorgehobeneZuege(abschnitte);
 		}
 		lastClickTime = System.nanoTime();
 	}
@@ -332,6 +341,7 @@ public class BildfahrplanGUIController extends EditorGUIController
 				{
 					double letzteZeit = -1;
 					double letzterKm = -1;
+					Fahrplanhalt letzterFahrplanhalt = null;
 					String vollerZugName = fahrt.getName();
 					Template template = fahrt.getTemplate();
 					
@@ -380,13 +390,15 @@ public class BildfahrplanGUIController extends EditorGUIController
 						int anMinuteBreite = fontMetrics.stringWidth(anMinute) - 2;
 						
 						// erst ab dem 2. Fahrplanhalt zeichnen (die Linie, die zum Fahrplanhalt hinführt)
-						if(letzteZeit >= 0 && letzterKm >= 0 && letzteZeit >= minZeit && kmAb >= 0)
+						if(letzterFahrplanhalt != null && letzteZeit >= 0 && letzterKm >= 0 && letzteZeit >= minZeit && kmAb >= 0)
 						{
 							// nicht zeichnen, wenn Richtung ausgeblendet
 							if((kmAb < kmAn && (zeigeRichtung & 1) != 0) || (kmAb > kmAn && (zeigeRichtung & 2) != 0))
 							{
+								Fahrtabschnitt abschnitt = new Fahrtabschnitt(letzterFahrplanhalt, fh);
+								
 								fahrtPaints.add(g -> {
-									FirstLastLinkedList<CalculatableLine> zugLinien = new FirstLastLinkedList<>();
+									Set<FahrtabschnittCalculatableLine> zugLinien = new HashSet<>();
 									int x1 = ph.getWegPos(kmAb);
 									int x2 = ph.getWegPos(kmAn);
 									
@@ -403,7 +415,8 @@ public class BildfahrplanGUIController extends EditorGUIController
 										{
 											ph.paintLine(g, x1, y1, x2, y2, darstellung);
 										}
-										zugLinien.add(new CalculatableLine(vollerName, x1, y1, x2, y2));
+										
+										zugLinien.add(new FahrtabschnittCalculatableLine(abschnitt, x1, y1, x2, y2));
 										
 										// Zeiten zeichnen, wenn in der Config, dies aktiv ist.
 										if(zeigeZeiten)
@@ -468,6 +481,7 @@ public class BildfahrplanGUIController extends EditorGUIController
 						}
 						
 						// für nächsten Eintrag
+						letzterFahrplanhalt = fh;
 						letzteZeit = fh.getMaxZeit();
 						letzterKm = editorDaten.getStreckenKm(fh.getGleisabschnitt().getParent().getParent());
 						
