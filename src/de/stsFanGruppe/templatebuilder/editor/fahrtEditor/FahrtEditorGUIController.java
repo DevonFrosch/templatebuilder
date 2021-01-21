@@ -3,28 +3,26 @@ package de.stsFanGruppe.templatebuilder.editor.fahrtEditor;
 import java.awt.event.ActionEvent;
 import java.util.NavigableSet;
 import javax.swing.table.DefaultTableModel;
-import de.stsFanGruppe.templatebuilder.config.GeneralConfig;
 import de.stsFanGruppe.templatebuilder.editor.EditorDaten;
-import de.stsFanGruppe.templatebuilder.editor.EditorGUIController;
 import de.stsFanGruppe.templatebuilder.strecken.Streckenabschnitt;
 import de.stsFanGruppe.templatebuilder.zug.Fahrplanhalt;
 import de.stsFanGruppe.templatebuilder.zug.Fahrt;
 import de.stsFanGruppe.tools.NullTester;
 import de.stsFanGruppe.tools.TimeFormater;
 
-public class FahrtEditorGUIController extends EditorGUIController
+public class FahrtEditorGUIController
 {
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(FahrtEditorGUIController.class);
 	
 	protected EditorDaten editorDaten;
 	protected FahrtEditorGUI gui;
 	private Runnable onClose;
+	private Object fahrtenGeladenCallbackId;
 	
 	protected boolean ignoreNextComboBoxUpdate = false;
 	
-	public FahrtEditorGUIController(GeneralConfig config, EditorDaten editorDaten, Runnable onClose)
+	public FahrtEditorGUIController(EditorDaten editorDaten, Runnable onClose)
 	{
-		super(editorDaten, config);
 		NullTester.test(editorDaten);
 		NullTester.test(onClose);
 		this.editorDaten = editorDaten;
@@ -33,15 +31,12 @@ public class FahrtEditorGUIController extends EditorGUIController
 		this.gui = new FahrtEditorGUI(this, editorDaten.getName());
 		
 		initFahrtNamen();
+		fahrtenGeladenCallbackId = editorDaten.registerFahrtenGeladenCallback(this::initFahrtNamen);
 	}
 	
 	public void initFahrtNamen()
 	{
 		gui.setComboBoxItems(editorDaten.getFahrten().stream().map(Fahrt::getName).toArray(String[]::new));
-	}
-	
-	public void dataChanged() {
-		initFahrtNamen();
 	}
 	
 	public void ladeFahrplan(Fahrt fahrt)
@@ -104,9 +99,9 @@ public class FahrtEditorGUIController extends EditorGUIController
 		ladeFahrplan(editorDaten.getFahrt(gui.getSelectedFahrt()));
 	}
 	
-	public void close()
+	protected void close()
 	{
-		super.close();
+		editorDaten.unregisterFahrtenGeladenCallback(fahrtenGeladenCallbackId);
 		gui.close();
 		gui = null;
 		onClose.run();

@@ -1,8 +1,9 @@
 package de.stsFanGruppe.templatebuilder.strecken;
 
 import de.stsFanGruppe.tools.NullTester;
+import de.stsFanGruppe.tools.XMLExportable;
 
-public class Fahrzeit
+public class Fahrzeit implements XMLExportable
 {
 	protected String name;
 	protected Streckenabschnitt streckenabschnitt;
@@ -78,11 +79,6 @@ public class Fahrzeit
 	public String toString()
 	{
 		return "Fahrzeit " + getName() + " { tempo: " + getTempo() + ", dauer: " + getDauer() + ", streckenabschnitt: " + streckenabschnitt.getName() + " }";
-	}
-	
-	public String toXML()
-	{
-		return toXML("");
 	}
 	
 	public String toXML(String indent)

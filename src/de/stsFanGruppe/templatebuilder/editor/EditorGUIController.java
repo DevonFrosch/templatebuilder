@@ -10,80 +10,41 @@ public abstract class EditorGUIController
 	protected GeneralConfig config;
 	private Object configChangeHandleId;
 	private Object fahrtConfigChangeHandleId;
-	private Object editorDatenStreckeChangeHandleId = null;
-	private Object editorDatenFahrtenChangeHandleId = null;
-	protected EditorDaten editorDaten = null;
+	private Object schachtelungChangedHandleId;
+	protected EditorDaten editorDaten;
 	
-	/**
-	 * Erzeugt ein neues Objekt. Dieser Konstruktor wird verwendet, um ein neues
-	 * 
-	 * @param bildfahrplanConfig
-	 * @param parent
-	 */
-	protected EditorGUIController(GeneralConfig config)
+	protected EditorGUIController(EditorDaten editorDaten, GeneralConfig config)
 	{
 		NullTester.test(config);
 		
 		this.config = config;
-		this.configChangeHandleId = config.getBildfahrplanConfig().registerChangeHandler(() -> configChanged());
-		this.fahrtConfigChangeHandleId = config.getFahrtDarstellungConfig().registerChangeHandler(() -> configChanged());
-		
-		this.setEditorDaten(new EditorDaten());
+		configChangeHandleId = config.getBildfahrplanConfig().registerChangeHandler(() -> configChanged());
+		fahrtConfigChangeHandleId = config.getFahrtDarstellungConfig().registerChangeHandler(() -> configChanged());
+		schachtelungChangedHandleId = editorDaten.registerSchachtelungChangedCallback(() -> configChanged());
+		setEditorDaten(editorDaten);
 	}
 	
-	protected EditorGUIController(EditorDaten editorDaten, GeneralConfig config)
+	protected EditorGUIController(GeneralConfig config)
 	{
-		this(config);
-		this.setEditorDaten(editorDaten);
+		this(new EditorDaten(), config);
 	}
 	
-	protected void setEditorDaten(EditorDaten daten)
+	public EditorDaten getEditorDaten()
 	{
-		NullTester.test(daten);
-		this.editorDaten = daten;
-		log.info("setEditorDaten: callbacks");
-		this.editorDatenStreckeChangeHandleId = daten.registerStreckeGeladenCallback(() -> {
-			log.info("Callback für StreckeGeladen");
-			dataChanged();
-		});
-		this.editorDatenFahrtenChangeHandleId = daten.registerFahrtenGeladenCallback(() -> {
-			log.info("Callback für FahrtenGeladen");
-			dataChanged();
-		});
+		return editorDaten;
 	}
-	
-	/**
-	 * Sollte von Kindklassen überschrieben werden
-	 */
-	public void configChanged()
+	protected void setEditorDaten(EditorDaten editorDaten)
 	{
-		// nichts tun
-	}
-
-	/**
-	 * Sollte von Kindklassen überschrieben werden
-	 */
-	public void dataChanged()
-	{
-		// nichts tun
+		NullTester.test(editorDaten);
+		this.editorDaten = editorDaten;
 	}
 	
 	public void close()
 	{
 		config.getBildfahrplanConfig().unregisterChangeHandler(configChangeHandleId);
 		config.getFahrtDarstellungConfig().unregisterChangeHandler(fahrtConfigChangeHandleId);
-		if(editorDaten != null) {
-			editorDaten.unregisterStreckeGeladenCallback(editorDatenStreckeChangeHandleId);
-			editorDaten.unregisterFahrtenGeladenCallback(editorDatenFahrtenChangeHandleId);
-		}
+		editorDaten.unregisterSchachtelungChangedCallback(schachtelungChangedHandleId);
 	}
 	
-	public EditorDaten getEditorDaten()
-	{
-		if(editorDaten == null)
-		{
-			throw new IllegalStateException("editorDaten ist null");
-		}
-		return editorDaten;
-	}
+	public abstract void configChanged();
 }

@@ -1,6 +1,9 @@
 package de.stsFanGruppe.templatebuilder.config.fahrtdarstellung;
 
 import java.awt.Color;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.StringJoiner;
 import de.stsFanGruppe.templatebuilder.config.ConfigController;
 import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.filter.FahrtFilter;
@@ -8,10 +11,12 @@ import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.linetype.LineType
 import de.stsFanGruppe.templatebuilder.editor.EditorDaten;
 import de.stsFanGruppe.templatebuilder.zug.Fahrt;
 import de.stsFanGruppe.templatebuilder.zug.FahrtDarstellung;
+import de.stsFanGruppe.templatebuilder.zug.Fahrtabschnitt;
 import de.stsFanGruppe.tools.FirstLastLinkedList;
 import de.stsFanGruppe.tools.FirstLastList;
 import de.stsFanGruppe.tools.NullTester;
 import de.stsFanGruppe.tools.PreferenceHandler;
+import de.stsFanGruppe.tools.TimeFormater;
 
 public class FahrtDarstellungConfig extends ConfigController
 {
@@ -41,7 +46,7 @@ public class FahrtDarstellungConfig extends ConfigController
 	// nicht persistente Einstellungen
 	private String zugsucheText = null;
 	private String templatesucheText = null;
-	private FirstLastList<String> hervorgehobeneZuege = new FirstLastLinkedList<>();
+	private Set<Fahrtabschnitt> hervorgehobeneFahrten = new HashSet<>();
 	
 	// Konstruktoren
 	public FahrtDarstellungConfig()
@@ -131,9 +136,12 @@ public class FahrtDarstellungConfig extends ConfigController
 		notifyChange();
 	}
 	
-	public FirstLastList<String> getHervorgehobeneZuege()
+	public Set<Fahrtabschnitt> getHervorgehobeneFahrten()
 	{
-		return hervorgehobeneZuege;
+		synchronized(hervorgehobeneFahrten)
+		{
+			return hervorgehobeneFahrten;
+		}
 	}
 	
 	public String getHervorgehobeneZuegeText(EditorDaten editorDaten)
@@ -145,31 +153,38 @@ public class FahrtDarstellungConfig extends ConfigController
 		
 		StringJoiner zuege = new StringJoiner("\n");
 		
-		for(String name: getHervorgehobeneZuege())
+		FirstLastList<Fahrtabschnitt> abschnitte = new FirstLastLinkedList<Fahrtabschnitt>(getHervorgehobeneFahrten());
+		
+		abschnitte.sort((a, b) -> a.getFahrt().getName().compareTo(b.getFahrt().getName()));
+		
+		for(Fahrtabschnitt abschnitt: abschnitte)
 		{
-			Fahrt fahrt = editorDaten.getFahrt(name);
+			Fahrt fahrt = abschnitt.getFahrt();
+			String template = fahrt.getTemplate().toString();
+
+			StringBuilder builder = new StringBuilder(fahrt.getName());
 			
-			if(fahrt == null)
+			if(!template.isEmpty())
 			{
-				continue;
+				builder.append(" [" + template + "]");
 			}
-			if(fahrt.getTemplateString() != null)
-			{
-				zuege.add(fahrt.getName() + " [" + fahrt.getTemplateString() + "]");
-			}
-			else
-			{
-				zuege.add(fahrt.getName());
-			}
+			
+			String abfahrt = TimeFormater.doubleToString(abschnitt.getStart().getMinZeit());
+			builder.append(" (Abfahrt " + abfahrt + ")");
+			
+			zuege.add(builder.toString());
 		}
 		
 		return zuege.toString();
 	}
-
-	public void setHervorgehobeneZuege(FirstLastList<String> hervorgehobeneZuege)
+	
+	public void setHervorgehobeneZuege(Collection<Fahrtabschnitt> abschnitte)
 	{
-		NullTester.test(hervorgehobeneZuege);
-		this.hervorgehobeneZuege = hervorgehobeneZuege;
+		NullTester.test(abschnitte);
+		synchronized(hervorgehobeneFahrten)
+		{
+			hervorgehobeneFahrten = new HashSet<>(abschnitte);
+		}
 		notifyChange();
 	}
 	
@@ -228,7 +243,7 @@ public class FahrtDarstellungConfig extends ConfigController
 	public void setFahrtDarstellungen(FahrtDarstellung[] values)
 	{
 		int i = 0;
-		for(FahrtDarstellung fd : values)
+		for(FahrtDarstellung fd: values)
 		{
 			setFahrtDarstellung("FahrtDarstellung " + i, CONFIG_REGEL_FAHRTNAME_PREFIX + "/" + i, fd);
 			i++;
@@ -251,7 +266,7 @@ public class FahrtDarstellungConfig extends ConfigController
 		
 		return liste.toArray(new FahrtDarstellung[liste.size()]);
 	}
-
+	
 	public FahrtDarstellung getZugsucheFahrtDarstellung()
 	{
 		if(zugsucheText == null)
@@ -260,7 +275,7 @@ public class FahrtDarstellungConfig extends ConfigController
 		}
 		return new FahrtDarstellung(FahrtFilter.ENTHAELT, zugsucheText, Color.RED, 2, LineType.DASHED_LINE);
 	}
-
+	
 	public FahrtDarstellung getTemplatesucheFahrtDarstellung()
 	{
 		if(templatesucheText == null)
@@ -275,9 +290,14 @@ public class FahrtDarstellungConfig extends ConfigController
 		FirstLastList<FahrtDarstellung> liste = new FirstLastLinkedList<>();
 		
 		Color blau = new Color(0, 0, 255, 32);
-		for(String zugName: hervorgehobeneZuege)
+		synchronized(hervorgehobeneFahrten)
 		{
-			liste.add(new FahrtDarstellung(FahrtFilter.GLEICH, zugName, blau, 5, LineType.SOLID_LINE));
+			for(Fahrtabschnitt abschnitt: hervorgehobeneFahrten)
+			{
+				Fahrt fahrt = abschnitt.getFahrt();
+				String zugName = fahrt.getName();
+				liste.add(new FahrtDarstellung(FahrtFilter.GLEICH, zugName, blau, 5, LineType.SOLID_LINE));
+			}
 		}
 		
 		return liste.toArray(new FahrtDarstellung[liste.size()]);

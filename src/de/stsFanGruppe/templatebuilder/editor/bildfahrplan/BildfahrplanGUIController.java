@@ -1,13 +1,9 @@
 package de.stsFanGruppe.templatebuilder.editor.bildfahrplan;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.FontMetrics;
-import java.awt.Stroke;
+import java.awt.*;
 import java.awt.event.MouseEvent;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanConfig;
 import de.stsFanGruppe.templatebuilder.config.GeneralConfig;
 import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.FahrtDarstellungHandler;
@@ -15,16 +11,11 @@ import de.stsFanGruppe.templatebuilder.editor.EditorDaten;
 import de.stsFanGruppe.templatebuilder.editor.EditorGUIController;
 import de.stsFanGruppe.templatebuilder.gui.GUI;
 import de.stsFanGruppe.templatebuilder.strecken.Betriebsstelle;
+import de.stsFanGruppe.templatebuilder.strecken.Gleisabschnitt;
 import de.stsFanGruppe.templatebuilder.strecken.Streckenabschnitt;
-import de.stsFanGruppe.templatebuilder.zug.Fahrplanhalt;
-import de.stsFanGruppe.templatebuilder.zug.Fahrt;
-import de.stsFanGruppe.templatebuilder.zug.FahrtDarstellung;
-import de.stsFanGruppe.tools.CalculatableLine;
-import de.stsFanGruppe.tools.FahrtPaintable;
-import de.stsFanGruppe.tools.FirstLastLinkedList;
-import de.stsFanGruppe.tools.FirstLastList;
-import de.stsFanGruppe.tools.Paintable;
-import de.stsFanGruppe.tools.TimeFormater;
+import de.stsFanGruppe.templatebuilder.types.Schachtelung;
+import de.stsFanGruppe.templatebuilder.zug.*;
+import de.stsFanGruppe.tools.*;
 
 public class BildfahrplanGUIController extends EditorGUIController
 {
@@ -41,10 +32,8 @@ public class BildfahrplanGUIController extends EditorGUIController
 	protected static int stringHeight = 0;
 	
 	protected Object zugLinienLock = new Object();
-	protected FirstLastLinkedList<CalculatableLine> zugLinien = new FirstLastLinkedList<>();
+	protected Set<FahrtabschnittCalculatableLine> zugLinien = new HashSet<>();
 	protected long lastClickTime = 0;
-
-	private FontMetrics fontMetrics = null;
 	
 	public BildfahrplanGUIController(GUI parentGui, EditorDaten daten, GeneralConfig config)
 	{
@@ -76,14 +65,6 @@ public class BildfahrplanGUIController extends EditorGUIController
 		repaint();
 	}
 	
-	public void dataChanged() {
-		log.info("BildfahrplanGUIController.dataChanged");
-		ph.setDiffKm(editorDaten.getDiffKm());
-		gui.recalculatePanelSize();
-		recalculate(null);
-		repaint();
-	}
-	
 	// Offizielle Funktionen
 	public BildfahrplanGUI getBildfahrplanGUI()
 	{
@@ -100,15 +81,15 @@ public class BildfahrplanGUIController extends EditorGUIController
 		return zeilenGui;
 	}
 	
-	public FirstLastLinkedList<CalculatableLine> getZugLinien()
+	public Set<FahrtabschnittCalculatableLine> getZugLinien()
 	{
 		synchronized(zugLinienLock)
 		{
-			return zugLinien.clone();
+			return new HashSet<>(zugLinien);
 		}
 	}
 	
-	public void setZugLinien(FirstLastLinkedList<CalculatableLine> zugLinien)
+	public void setZugLinien(Set<FahrtabschnittCalculatableLine> zugLinien)
 	{
 		synchronized(zugLinienLock)
 		{
@@ -135,9 +116,9 @@ public class BildfahrplanGUIController extends EditorGUIController
 		gui.recalculatePanelSize();
 	}
 	
-	public void ladeZüge(Collection<? extends Fahrt> fahrten)
+	public void ladeTemplates(Collection<? extends Template> templates)
 	{
-		editorDaten.ladeZüge(fahrten);
+		editorDaten.ladeTemplates(templates);
 		gui.recalculatePanelSize();
 	}
 	
@@ -182,16 +163,24 @@ public class BildfahrplanGUIController extends EditorGUIController
 		}
 		else
 		{
-			Set<String> zugNamen = new HashSet<>();
-			for(CalculatableLine linie: this.getZugLinien())
+			Map<Fahrt, FahrtabschnittCalculatableLine> linienMap = new HashMap<>();
+			for(FahrtabschnittCalculatableLine linie: this.getZugLinien())
 			{
-				if(linie.isPunktAufLinie(e.getX(), e.getY(), 10))
+				Fahrt fahrt = linie.getFahrtabschnitt().getFahrt();
+				
+				if(linie.isPunktAufLinie(e.getX(), e.getY(), 10) && !linienMap.containsKey(fahrt))
 				{
-					zugNamen.add(linie.getName());
+					linienMap.put(fahrt, linie);
 				}
 			}
 			
-			bildfahrplanConfig.getFahrtDarstellungConfig().setHervorgehobeneZuege(new FirstLastLinkedList<>(zugNamen));
+			Set<Fahrtabschnitt> abschnitte = linienMap
+					.values()
+					.stream()
+					.map(linie -> linie.getFahrtabschnitt())
+					.collect(Collectors.toSet());
+			
+			bildfahrplanConfig.getFahrtDarstellungConfig().setHervorgehobeneZuege(abschnitte);
 		}
 		lastClickTime = System.nanoTime();
 	}
@@ -205,8 +194,8 @@ public class BildfahrplanGUIController extends EditorGUIController
 		}
 		log.trace("optimizeHeight()");
 		
-		double minZeit = editorDaten.getMinZeit();
-		double maxZeit = editorDaten.getMaxZeit();
+		double minZeit = editorDaten.getMinZeit().getAsDouble();
+		double maxZeit = editorDaten.getMaxZeit().getAsDouble();
 		
 		assert minZeit <= maxZeit;
 		bildfahrplanConfig.setZeiten(minZeit, maxZeit);
@@ -226,23 +215,12 @@ public class BildfahrplanGUIController extends EditorGUIController
 		 * Schleifenzähler müssen innerhalb der Schleife in eine lokale Variable kopiert werden, letztere kann dann verwendet werden.
 		 */
 		
-		if(!editorDaten.hasStreckenabschnitt()
-				|| !editorDaten.hasFahrten()
-				|| bildfahrplanConfig == null
-				|| gui == null
-				|| spaltenGui == null
-				|| zeilenGui == null
-				|| fontMetrics == null && this.fontMetrics == null)
+		if(!editorDaten.hasStreckenabschnitt() || !editorDaten.hasFahrten() || bildfahrplanConfig == null || gui == null || spaltenGui == null || zeilenGui == null)
 		{
-			log.trace("kein Recalc: {} || {} || {} || {} || {} || {} && {}", !editorDaten.hasFahrten(), bildfahrplanConfig == null, gui == null, spaltenGui == null, zeilenGui == null, fontMetrics == null, this.fontMetrics == null);
 			return;
 		}
 		
-		log.info("recalc begonnen");
-		
-		if(fontMetrics != null) {
-			this.fontMetrics = fontMetrics;
-		}
+		log.trace("recalc begonnen");
 		
 		// Hintergrundfarbe einstellen
 		Color bg = bildfahrplanConfig.getHintergrundFarbe();
@@ -261,7 +239,7 @@ public class BildfahrplanGUIController extends EditorGUIController
 		double diffZeit = maxZeit - minZeit;
 		
 		// lokale Kopie zur Verwendung in Lambdas
-		int stringHeight = this.fontMetrics.getHeight();
+		int stringHeight = fontMetrics.getHeight();
 		BildfahrplanGUIController.stringHeight = stringHeight;
 		
 		// Config für PaintHelper neu laden
@@ -281,7 +259,7 @@ public class BildfahrplanGUIController extends EditorGUIController
 				final int textY = bildfahrplanConfig.getTextMarginTop() + ((stringHeight + bildfahrplanConfig.getOffsetY()) * (bsCounter % bildfahrplanConfig.getZeilenAnzahl()))
 						+ bildfahrplanConfig.getTextMarginBottom();
 				String name = bs.getName();
-				int stringWidth = this.fontMetrics.stringWidth(name);
+				int stringWidth = fontMetrics.stringWidth(name);
 				
 				// Linie in gui
 				guiPaints.add(g -> ph.paintLine(g, ph.getWegPos(km), ph.getZeitPos(minZeit), ph.getWegPos(km), ph.getZeitPos(maxZeit), c));
@@ -345,7 +323,12 @@ public class BildfahrplanGUIController extends EditorGUIController
 		
 		// ### Fahrten-Linien ###
 		{
-			int schachtelung = bildfahrplanConfig.getSchachtelung();
+			Schachtelung schachtelung = editorDaten.getSchachtelung();
+			int schachtelungMinuten = editorDaten.getSchachtelungMinuten();
+			Template schachtelungTemplate = editorDaten.getSchachtelungTemplate();
+			Set<Integer> verschiebungen = getVerschiebungen(schachtelungTemplate);
+			log.info("Schachtelung {} Minuten {}", schachtelung, schachtelungMinuten);
+			
 			int zeigeZugnamen = bildfahrplanConfig.getZeigeZugnamen();
 			boolean zeigeZeiten = bildfahrplanConfig.getZeigeZeiten();
 			int zeigeRichtung = bildfahrplanConfig.getZeigeRichtung();
@@ -358,19 +341,18 @@ public class BildfahrplanGUIController extends EditorGUIController
 				{
 					double letzteZeit = -1;
 					double letzterKm = -1;
+					Fahrplanhalt letzterFahrplanhalt = null;
 					String vollerZugName = fahrt.getName();
-					String templateName = fahrt.getTemplateName();
-					String templateTid = fahrt.getTemplateTid();
+					Template template = fahrt.getTemplate();
 					
 					if(bildfahrplanConfig.testIgnorierteZuege(vollerZugName)
-							|| bildfahrplanConfig.testIgnorierteTemplates(templateName))
+							|| bildfahrplanConfig.testIgnorierteTemplates(template))
 					{
-						log.trace("Zug {} ignoriert", vollerZugName);
 						continue;
 					}
 					
 					// Darstellung
-					FahrtDarstellung[] fahrtDarstellungen = darstellungHandler.getFahrtDarstellungen(vollerZugName, templateName, templateTid);
+					FahrtDarstellung[] fahrtDarstellungen = darstellungHandler.getFahrtDarstellungen(vollerZugName, template);
 					Color fahrtFarbe = fahrtDarstellungen[0].getFarbe();
 					
 					for(Fahrplanhalt fh : fahrt.getFahrplanhalte())
@@ -395,7 +377,7 @@ public class BildfahrplanGUIController extends EditorGUIController
 						double ab = letzteZeit;
 						String name = zugName;
 						String vollerName = vollerZugName;
-						double showTextWidth = this.fontMetrics.stringWidth(name) * 0.9;
+						double showTextWidth = fontMetrics.stringWidth(name) * 0.9;
 						
 						// für ZeigeZeiten
 						int diffX = 5;
@@ -404,19 +386,19 @@ public class BildfahrplanGUIController extends EditorGUIController
 						// Minuten aus den Zeiten auslesen
 						String abMinute = TimeFormater.doubleToMinute(ab);
 						String anMinute = TimeFormater.doubleToMinute(an);
-						int abMinuteBreite = this.fontMetrics.stringWidth(abMinute) - 2;
-						int anMinuteBreite = this.fontMetrics.stringWidth(anMinute) - 2;
-						int abVerschiebungY = diffY;
-						int anVerschiebungY = stringHeight + diffY;
+						int abMinuteBreite = fontMetrics.stringWidth(abMinute) - 2;
+						int anMinuteBreite = fontMetrics.stringWidth(anMinute) - 2;
 						
 						// erst ab dem 2. Fahrplanhalt zeichnen (die Linie, die zum Fahrplanhalt hinführt)
-						if(letzteZeit >= 0 && letzterKm >= 0 && letzteZeit >= minZeit && kmAb >= 0)
+						if(letzterFahrplanhalt != null && letzteZeit >= 0 && letzterKm >= 0 && letzteZeit >= minZeit && kmAb >= 0)
 						{
 							// nicht zeichnen, wenn Richtung ausgeblendet
 							if((kmAb < kmAn && (zeigeRichtung & 1) != 0) || (kmAb > kmAn && (zeigeRichtung & 2) != 0))
 							{
+								Fahrtabschnitt abschnitt = new Fahrtabschnitt(letzterFahrplanhalt, fh);
+								
 								fahrtPaints.add(g -> {
-									FirstLastLinkedList<CalculatableLine> zugLinien = new FirstLastLinkedList<>();
+									Set<FahrtabschnittCalculatableLine> zugLinien = new HashSet<>();
 									int x1 = ph.getWegPos(kmAb);
 									int x2 = ph.getWegPos(kmAn);
 									
@@ -425,18 +407,16 @@ public class BildfahrplanGUIController extends EditorGUIController
 									int zeitenRTLx1 = x1 - abMinuteBreite - diffX;
 									int zeitenRTLx2 = x2 + diffX;
 									
-									// Schachtelung der Züge nach Minuten
-									// for(int schachtelungVerschiebung = (int) minZeit; schachtelungVerschiebung <= maxZeit;)
-									for(int sch = 0; sch < diffZeit; sch += schachtelung)
-									{
-										int y1 = ph.getZeitPos(ab - sch);
-										int y2 = ph.getZeitPos(an - sch);
+									EbenenZeichner ebenenZeichner = (int verschiebung) -> {
+										int y1 = ph.getZeitPos(ab - verschiebung);
+										int y2 = ph.getZeitPos(an - verschiebung);
 										
 										for(FahrtDarstellung darstellung: fahrtDarstellungen)
 										{
 											ph.paintLine(g, x1, y1, x2, y2, darstellung);
 										}
-										zugLinien.add(new CalculatableLine(vollerName, x1, y1, x2, y2));
+										
+										zugLinien.add(new FahrtabschnittCalculatableLine(abschnitt, x1, y1, x2, y2));
 										
 										// Zeiten zeichnen, wenn in der Config, dies aktiv ist.
 										if(zeigeZeiten)
@@ -476,12 +456,24 @@ public class BildfahrplanGUIController extends EditorGUIController
 										{
 											ph.paintRotatedText(g, x1, y1, x2, y2, fahrtFarbe, name, -2);
 										}
-										
-										if(schachtelung == 0)
-										{
-											// Keine Schachtelung, abbrechen
+									};
+									
+									switch(schachtelung) {
+										case MINUTEN:
+											for(int verschiebung = 0; verschiebung < diffZeit; verschiebung += schachtelungMinuten)
+											{
+												ebenenZeichner.zeichne(verschiebung);
+											}
 											break;
-										}
+										case TEMPLATE:
+											for(Integer verschiebung: verschiebungen) {
+												ebenenZeichner.zeichne(verschiebung);
+											}
+											break;
+										case KEINE:
+										default:
+											ebenenZeichner.zeichne(0);
+											break;
 									}
 									return zugLinien;
 								});
@@ -489,12 +481,13 @@ public class BildfahrplanGUIController extends EditorGUIController
 						}
 						
 						// für nächsten Eintrag
+						letzterFahrplanhalt = fh;
 						letzteZeit = fh.getMaxZeit();
 						letzterKm = editorDaten.getStreckenKm(fh.getGleisabschnitt().getParent().getParent());
 						
 					} // for(Fahrplanhalt fh: fahrt.getFahrplanhalte())
-				} // for(Fahrt fahrt: fahrten)
-			} // synchronized(fahrten)
+				} // for(Fahrt fahrt: templates)
+			} // synchronized(templates)
 		}
 		
 		// Paint-Objekte überschreiben
@@ -504,5 +497,50 @@ public class BildfahrplanGUIController extends EditorGUIController
 		zeilenGui.setPaintables(zeilenGuiPaints);
 		
 		log.trace("recalc fertig");
+	}
+	
+	private Set<Integer> getVerschiebungen(Template template) {
+		Set<Integer> verschiebungen = new HashSet<>();
+		verschiebungen.add(0);
+		
+		if(template == null) {
+			return verschiebungen;
+		}
+		
+		SortedSet<Fahrt> templateFahrten = new TreeSet<>(template.getFahrten());
+		Fahrt ersteFahrt = templateFahrten.first();
+		Fahrplanhalt ersterHalt = ersteFahrt
+				.getFahrplanhalte()
+				.stream()
+				.filter(fh -> fh.getAbfahrt().isPresent())
+				.findFirst()
+				.orElse(null);
+		
+		if(ersterHalt == null) {
+			log.warn("getVerschiebungen(): Keinen passenden Fahrplanhalt in der ersten Fahrt gefunden! Schachtelung wird ignoriert.");
+			return verschiebungen;
+		}
+		
+		double ersteAbfahrt = ersterHalt.getAbfahrt().getAsDouble();
+		Gleisabschnitt gleisabschnitt = ersterHalt.getGleisabschnitt();
+		
+		for(Fahrt fahrt: templateFahrten) {
+			Fahrplanhalt halt = fahrt.getFahrplanhalt(gleisabschnitt);
+			
+			if(halt == null) {
+				log.info("getVerschiebungen(): Überspringe Fahrt {}, Fahrplanhalt nicht gefunden", fahrt.getName());
+				continue;
+			}
+			
+			double differenz = halt.getMaxZeit() - ersteAbfahrt;
+			int verschiebung = (int) Math.floor(differenz);
+			verschiebungen.add(verschiebung);
+		}
+		
+		return verschiebungen;
+	}
+	
+	private interface EbenenZeichner {
+		void zeichne(int verschiebung);
 	}
 }

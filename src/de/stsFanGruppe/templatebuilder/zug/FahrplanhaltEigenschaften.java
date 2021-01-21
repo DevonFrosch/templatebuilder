@@ -1,8 +1,9 @@
 package de.stsFanGruppe.templatebuilder.zug;
 
 import java.util.StringJoiner;
+import de.stsFanGruppe.tools.XMLExportable;
 
-public class FahrplanhaltEigenschaften
+public class FahrplanhaltEigenschaften implements XMLExportable
 {
 	// TODO Kuppeln und Flügeln implementieren
 	protected boolean hasDurchfahrt = false;
@@ -102,11 +103,6 @@ public class FahrplanhaltEigenschaften
 		}
 		
 		return str.toString();
-	}
-	
-	public String toXML()
-	{
-		return toXML("");
 	}
 	
 	public String toXML(String indent)

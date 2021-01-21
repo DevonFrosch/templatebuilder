@@ -15,6 +15,7 @@ import de.stsFanGruppe.tools.TimeFormater;
 import javax.swing.event.ChangeEvent;
 import com.jgoodies.forms.layout.FormSpecs;
 import javax.swing.border.BevelBorder;
+import javax.swing.border.TitledBorder;
 
 public class BildfahrplanSettingsGUI extends JDialog implements GUI
 {
@@ -30,15 +31,15 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 	JTextField inputHoeheProStunde;
 	JSlider sliderHoeheProStunde;
 	JCheckBox chckbxAuto;
-	JCheckBox chckbxSchachtelung;
-	JTextField inputSchachtelung;
 	
 	ButtonGroup rdbtngrpZeigeZugnamen;
 	JRadioButton radioZeigeZugnamenNie;
 	JRadioButton radioZeigeZugnamenImmer;
 	JRadioButton radioZeigeZugnamenAuto;
+	
 	JCheckBox chckbxZugnamenKommentare;
 	JCheckBox chckbxZeigeZeiten;
+	
 	ButtonGroup rdbtngrpZeigeRichtung;
 	JRadioButton radioZeigeRichtungKeine;
 	JRadioButton radioZeigeRichtungHin;
@@ -211,43 +212,27 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 							panelZeit.add(chckbxAuto, "7, 1");
 						}
 					}
-					{
-						JLabel lblSchachtelung = new JLabel("Schachtelung");
-						panelZeiten.add(lblSchachtelung, "2, 6");
-					}
-					{
-						JPanel panel = new JPanel();
-						FlowLayout flowLayout = (FlowLayout) panel.getLayout();
-						flowLayout.setVgap(0);
-						panelZeiten.add(panel, "4, 6, left, default");
-						{
-							chckbxSchachtelung = new JCheckBox("");
-							panel.add(chckbxSchachtelung);
-						}
-						{
-							inputSchachtelung = new JTextField();
-							panel.add(inputSchachtelung);
-							inputSchachtelung.setColumns(5);
-						}
-						{
-							JLabel lblSchachtelungEinheit = new JLabel("Minuten");
-							panel.add(lblSchachtelungEinheit);
-						}
-						chckbxSchachtelung.addActionListener((ActionEvent arg0) -> {
-							inputSchachtelung.setEnabled(chckbxSchachtelung.isSelected());
-						});
-					}
 				}
 				{
 					JPanel panelDarstellung = new JPanel();
 					panelDarstellung.setBorder(BorderFactory.createTitledBorder("Darstellung"));
 					panelBfp.add(panelDarstellung, "2, 4, fill, fill");
-					panelDarstellung.setLayout(new FormLayout(
-							new ColumnSpec[] {FormSpecs.RELATED_GAP_COLSPEC, ColumnSpec.decode("right:default"), FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
-									ColumnSpec.decode("default:grow"), FormSpecs.RELATED_GAP_COLSPEC,},
-							new RowSpec[] {FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC,
-									FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, FormSpecs.RELATED_GAP_ROWSPEC, RowSpec.decode("default:grow"),
-									FormSpecs.RELATED_GAP_ROWSPEC,}));
+					panelDarstellung.setLayout(new FormLayout(new ColumnSpec[] {
+							FormSpecs.RELATED_GAP_COLSPEC,
+							ColumnSpec.decode("right:default"),
+							FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
+							ColumnSpec.decode("default:grow"),
+							FormSpecs.RELATED_GAP_COLSPEC,},
+						new RowSpec[] {
+							FormSpecs.RELATED_GAP_ROWSPEC,
+							FormSpecs.DEFAULT_ROWSPEC,
+							FormSpecs.RELATED_GAP_ROWSPEC,
+							FormSpecs.DEFAULT_ROWSPEC,
+							FormSpecs.RELATED_GAP_ROWSPEC,
+							FormSpecs.DEFAULT_ROWSPEC,
+							FormSpecs.RELATED_GAP_ROWSPEC,
+							RowSpec.decode("default:grow"),
+							FormSpecs.RELATED_GAP_ROWSPEC,}));
 					{
 						JLabel lblZeigeZugnamen = new JLabel("Zeige Zugnamen");
 						panelDarstellung.add(lblZeigeZugnamen, "2, 2");
@@ -324,41 +309,56 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 						}
 					}
 				}
+			}
+			{
+				JPanel panelIgnorieren = new JPanel();
+				tabbedPane.addTab("Ignorieren", null, panelIgnorieren, null);
+				panelIgnorieren.setLayout(new FormLayout(new ColumnSpec[] {
+						FormSpecs.RELATED_GAP_COLSPEC,
+						ColumnSpec.decode("default:grow"),
+						FormSpecs.RELATED_GAP_COLSPEC,},
+					new RowSpec[] {
+						FormSpecs.LINE_GAP_ROWSPEC,
+						RowSpec.decode("default:grow"),
+						FormSpecs.LINE_GAP_ROWSPEC,
+						RowSpec.decode("default:grow"),
+						FormSpecs.LINE_GAP_ROWSPEC,}));
 				{
-					JPanel panelIgnorieren = new JPanel();
-					panelIgnorieren.setBorder(BorderFactory.createTitledBorder("Züge und Templates ignorieren"));
-					panelBfp.add(panelIgnorieren, "2, 6, fill, fill");
-					panelIgnorieren.setLayout(new FormLayout(new ColumnSpec[] {
-							FormSpecs.RELATED_GAP_COLSPEC,
-							ColumnSpec.decode("default:grow"),
+					JPanel panelIgnorierteZuege = new JPanel();
+					panelIgnorierteZuege.setBorder(new TitledBorder(null, "Ignorierte Z\u00FCge", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+					panelIgnorieren.add(panelIgnorierteZuege, "2, 2, fill, fill");
+					panelIgnorierteZuege.setLayout(new FormLayout(new ColumnSpec[] {
 							FormSpecs.RELATED_GAP_COLSPEC,
 							ColumnSpec.decode("default:grow"),
 							FormSpecs.RELATED_GAP_COLSPEC,},
 						new RowSpec[] {
-							FormSpecs.RELATED_GAP_ROWSPEC,
-							FormSpecs.DEFAULT_ROWSPEC,
-							FormSpecs.RELATED_GAP_ROWSPEC,
+							FormSpecs.LINE_GAP_ROWSPEC,
 							RowSpec.decode("default:grow"),
-							FormSpecs.RELATED_GAP_ROWSPEC,}));
-					{
-						JLabel lblZeigeZugnamen = new JLabel("Ignoriere Züge");
-						panelIgnorieren.add(lblZeigeZugnamen, "2, 2");
-					}
-					{
-						JLabel lblZeigeZugnamen = new JLabel("Ignoriere Templates");
-						panelIgnorieren.add(lblZeigeZugnamen, "4, 2");
-					}
+							FormSpecs.LINE_GAP_ROWSPEC,}));
 					{
 						JScrollPane ignorierteZuegePane = new JScrollPane();
-						panelIgnorieren.add(ignorierteZuegePane, "2, 4, fill, fill");
+						panelIgnorierteZuege.add(ignorierteZuegePane, "2, 2, fill, fill");
 						{
 							ignorierteZuegeTextArea = new JTextArea();
 							ignorierteZuegePane.setViewportView(ignorierteZuegeTextArea);
 						}
 					}
+				}
+				{
+					JPanel panelIgnorierteTemplates = new JPanel();
+					panelIgnorierteTemplates.setBorder(new TitledBorder(null, "Ignorierte Templates", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+					panelIgnorieren.add(panelIgnorierteTemplates, "2, 4, fill, fill");
+					panelIgnorierteTemplates.setLayout(new FormLayout(new ColumnSpec[] {
+							FormSpecs.RELATED_GAP_COLSPEC,
+							ColumnSpec.decode("default:grow"),
+							FormSpecs.RELATED_GAP_COLSPEC,},
+						new RowSpec[] {
+							FormSpecs.LINE_GAP_ROWSPEC,
+							RowSpec.decode("default:grow"),
+							FormSpecs.LINE_GAP_ROWSPEC,}));
 					{
 						JScrollPane ignorierteTemplatesPane = new JScrollPane();
-						panelIgnorieren.add(ignorierteTemplatesPane, "4, 4, fill, fill");
+						panelIgnorierteTemplates.add(ignorierteTemplatesPane, "2, 2, fill, fill");
 						{
 							ignorierteTemplatesTextArea = new JTextArea();
 							ignorierteTemplatesPane.setViewportView(ignorierteTemplatesTextArea);
@@ -369,7 +369,7 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 			{
 				JPanel panelFarben = new JPanel();
 				tabbedPane.addTab("Farben", null, panelFarben, null);
-				tabbedPane.setEnabledAt(4, true);
+				tabbedPane.setEnabledAt(5, true);
 				panelFarben.setLayout(
 						new FormLayout(new ColumnSpec[] {FormSpecs.RELATED_GAP_COLSPEC, ColumnSpec.decode("default:grow"), FormSpecs.RELATED_GAP_COLSPEC,},
 								new RowSpec[] {FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, FormSpecs.RELATED_GAP_ROWSPEC,
@@ -565,30 +565,6 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 		{
 			log.error("NumberFormatException bei maxZeit: {}", e.getMessage());
 			errorMessage("Dargestellte Zeit: Nur Zeiten im Format hh:mm (z.B. 12:01) erlaubt.");
-			throw e;
-		}
-	}
-	
-	public int getSchachtelung()
-	{
-		if(!chckbxSchachtelung.isSelected())
-		{
-			return 0;
-		}
-		
-		try
-		{
-			int schachtelung = controller.parseIntField("Schachtelung", inputSchachtelung.getText());
-			if(schachtelung == 0)
-			{
-				throw new NumberFormatException("0 Minuten nicht sinnvoll.");
-			}
-			return schachtelung;
-		}
-		catch(NumberFormatException e)
-		{
-			log.error("NumberFormatException bei schachtelung: {}", e.getMessage());
-			errorMessage("Schachtelung: Nur positive ganze Zahlen erlaubt.");
 			throw e;
 		}
 	}

@@ -8,11 +8,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.HashMap;
-import java.util.Map;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import de.stsFanGruppe.templatebuilder.gui.GUI;
+import de.stsFanGruppe.tools.CallbackHandler;
 import de.stsFanGruppe.tools.NullTester;
 import de.stsFanGruppe.tools.PreferenceHandler;
 
@@ -20,30 +19,19 @@ public abstract class ConfigController
 {
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ConfigController.class);
 	
-	protected Map<Object, Runnable> callbacks = new HashMap<>();
-	protected int callbackCounter = 0;
+	protected CallbackHandler callbacks = new CallbackHandler();
 	protected PreferenceHandler prefs = null;
 	
 	protected boolean isTransaction = false;
 	
-	// Change-Handler
 	public Object registerChangeHandler(Runnable callback)
 	{
-		NullTester.test(callback);
-		Object handlerID = Integer.valueOf(callbackCounter++);
-		log.debug("registerChangeHandler (ID {}) auf {}", handlerID, this.getClass().getName());
-		callbacks.put(handlerID, callback);
-		return handlerID;
+		return callbacks.register(callback);
 	}
 	
 	public void unregisterChangeHandler(Object handlerID)
 	{
-		if(handlerID == null)
-		{
-			return;
-		}
-		log.debug("unregisterChangeHandler (ID {})", handlerID);
-		callbacks.remove(handlerID);
+		callbacks.unregister(handlerID);
 	}
 	
 	public void startTransaction()
@@ -64,7 +52,7 @@ public abstract class ConfigController
 			return;
 		}
 		log.trace("notifyChange");
-		callbacks.forEach((k, v) -> v.run());
+		callbacks.runAll();
 	}
 	
 	public void importSettings(Window windowParent, GUI messageParent)

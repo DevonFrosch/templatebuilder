@@ -113,14 +113,14 @@ public class JTrainGraphImporter extends Importer
 		return streckenabschnitt;
 	}
 	
-	public Set<Fahrt> importFahrten(InputStream input, Streckenabschnitt streckenabschnitt, Linie linie) throws ImportException
+	public Set<Template> importFahrten(InputStream input, Streckenabschnitt streckenabschnitt, Linie linie) throws ImportException
 	{
 		log.info("JTrainGraphImport Fahrten");
 		NullTester.test(input);
 		NullTester.test(streckenabschnitt);
 		NullTester.test(linie);
 		
-		Set<Fahrt> fahrten = new HashSet<Fahrt>();
+		Map<String, Template> templates = new HashMap<>();
 		
 		// Erstelle eine Liste der Gleisabschnitte
 		FirstLastList<Gleisabschnitt> gleisabschnitte = new FirstLastLinkedList<>();
@@ -156,7 +156,7 @@ public class JTrainGraphImporter extends Importer
 					
 					if(isEmpty(an) && isEmpty(ab))
 					{
-						log.info("Zug {}, Bahnhof-Index {}: Ignoriere Halt mit leerem an oder ab", train.getAttribute("name"), i);
+						log.trace("Zug {}, Bahnhof-Index {}: Ignoriere Halt mit leerem an oder ab", train.getAttribute("name"), i);
 						continue;
 					}
 					
@@ -188,13 +188,35 @@ public class JTrainGraphImporter extends Importer
 					String templateName = train.getAttributeOrNull("template");
 					String templateZid = train.getAttributeOrNull("zid");
 					String templateTid = train.getAttributeOrNull("tid");
+					int tid = 0;
 					
 					if(templateTid == null) {
 						// Fallback für Export (tid = zid und zid = zugid)
 						templateTid = templateZid;
 					}
 					
-					fahrten.add(new Fahrt(train.getAttribute("name"), linie, templateName, templateTid, fahrplanhalte));
+					if(templateTid != null && !templateTid.isEmpty()) {
+						try {
+							tid = Integer.parseInt(templateTid); 
+						}
+						catch(NumberFormatException e) {
+							log.info("TID von Zug {} ist keine Zahl: {}", train.getAttribute("name"), templateTid, e);
+						}
+					}
+					
+					String templateKey = Template.templateNameOf(templateName, tid);
+					Fahrt fahrt = new Fahrt(train.getAttribute("name"), linie, templateName, tid, fahrplanhalte);
+					
+					if(templates.containsKey(templateKey)) {
+						Template template = templates.get(templateKey);
+						fahrt.setTemplate(template);
+						template.addFahrt(fahrt);
+					}
+					else {
+						Template template = new Template(templateName, tid, fahrt);
+						fahrt.setTemplate(template);
+						templates.put(templateKey, template);
+					}
 				}
 			}
 		}
@@ -203,7 +225,7 @@ public class JTrainGraphImporter extends Importer
 			log.error(e.getMessage());
 			throw new ImportException(e);
 		}
-		return fahrten;
+		return new HashSet<>(templates.values());
 	}
 	
 	private static Gleisabschnitt getGleisabschnitt(Betriebsstelle betriebsstelle)

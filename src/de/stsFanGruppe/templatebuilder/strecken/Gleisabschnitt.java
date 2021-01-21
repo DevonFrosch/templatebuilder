@@ -1,8 +1,9 @@
 package de.stsFanGruppe.templatebuilder.strecken;
 
 import de.stsFanGruppe.tools.NullTester;
+import de.stsFanGruppe.tools.XMLExportable;
 
-public class Gleisabschnitt implements Comparable<Gleisabschnitt>
+public class Gleisabschnitt implements Comparable<Gleisabschnitt>, XMLExportable
 {
 	protected String name;
 	protected double km = 0;
@@ -50,11 +51,6 @@ public class Gleisabschnitt implements Comparable<Gleisabschnitt>
 	public String toString()
 	{
 		return "Gleisabschnitt " + getName() + " { km = " + km + " }";
-	}
-	
-	public String toXML()
-	{
-		return toXML("");
 	}
 	
 	public String toXML(String indent)

@@ -6,8 +6,9 @@ import de.stsFanGruppe.templatebuilder.strecken.Streckenabschnitt;
 import de.stsFanGruppe.tools.FirstLastLinkedList;
 import de.stsFanGruppe.tools.FirstLastList;
 import de.stsFanGruppe.tools.NullTester;
+import de.stsFanGruppe.tools.XMLExportable;
 
-public class Laufweg
+public class Laufweg implements XMLExportable
 {
 	protected String name;
 	protected FirstLastList<Streckenabschnitt> streckenabschnitte = new FirstLastLinkedList<>();
@@ -71,11 +72,6 @@ public class Laufweg
 	{
 		return "Laufweg " + getName() + " { von " + streckenabschnitte.first().getName() + " nach " + streckenabschnitte.last().getName() + ", "
 				+ streckenabschnitte.size() + " Streckenabschnitte }";
-	}
-	
-	public String toXML()
-	{
-		return toXML("");
 	}
 	
 	public String toXML(String indent)

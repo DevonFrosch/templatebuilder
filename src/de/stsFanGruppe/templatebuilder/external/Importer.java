@@ -4,8 +4,8 @@ import java.io.InputStream;
 import java.util.Set;
 import de.stsFanGruppe.templatebuilder.strecken.Betriebsstelle;
 import de.stsFanGruppe.templatebuilder.strecken.Streckenabschnitt;
-import de.stsFanGruppe.templatebuilder.zug.Fahrt;
 import de.stsFanGruppe.templatebuilder.zug.Linie;
+import de.stsFanGruppe.templatebuilder.zug.Template;
 
 public class Importer
 {
@@ -14,7 +14,7 @@ public class Importer
 		throw new ImportException("Nicht implementiert");
 	}
 	
-	public Set<Fahrt> importFahrten(InputStream input, Streckenabschnitt streckenabschnitt, Linie linie) throws ImportException
+	public Set<Template> importFahrten(InputStream input, Streckenabschnitt streckenabschnitt, Linie linie) throws ImportException
 	{
 		throw new ImportException("Nicht implementiert");
 	}

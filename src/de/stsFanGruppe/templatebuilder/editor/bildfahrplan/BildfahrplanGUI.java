@@ -3,11 +3,14 @@ package de.stsFanGruppe.templatebuilder.editor.bildfahrplan;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.HashSet;
+import java.util.Set;
 import javax.swing.JComponent;
 import de.stsFanGruppe.templatebuilder.editor.EditorGUI;
 import de.stsFanGruppe.templatebuilder.editor.EditorGUIController;
-import de.stsFanGruppe.tools.CalculatableLine;
+import de.stsFanGruppe.templatebuilder.editor.GUIType;
 import de.stsFanGruppe.tools.FahrtPaintable;
+import de.stsFanGruppe.tools.FahrtabschnittCalculatableLine;
 import de.stsFanGruppe.tools.FirstLastLinkedList;
 import de.stsFanGruppe.tools.NullTester;
 import de.stsFanGruppe.tools.Paintable;
@@ -41,6 +44,10 @@ public class BildfahrplanGUI extends JComponent implements EditorGUI
 		return controller;
 	}
 	
+	public GUIType getGUIType() {
+		return GUIType.BILDFAHRPLAN;
+	}
+	
 	public void setPaintables(FirstLastLinkedList<Paintable> paintables)
 	{
 		synchronized(paintLock)
@@ -65,6 +72,11 @@ public class BildfahrplanGUI extends JComponent implements EditorGUI
 		setPreferredSize(size);
 		
 		// Neu malen
+		forceRepaint();
+	}
+	
+	public synchronized void forceRepaint()
+	{
 		revalidate();
 		forceRepaint = true;
 		repaint();
@@ -115,7 +127,7 @@ public class BildfahrplanGUI extends JComponent implements EditorGUI
 		
 		if(!fps.isEmpty())
 		{
-			FirstLastLinkedList<CalculatableLine> zugLinien = new FirstLastLinkedList<>();
+			Set<FahrtabschnittCalculatableLine> zugLinien = new HashSet<>();
 			for(FahrtPaintable fp : fps)
 			{
 				zugLinien.addAll(fp.paint(g));

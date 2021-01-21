@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Set;
 import java.util.StringJoiner;
@@ -12,6 +13,8 @@ import de.stsFanGruppe.templatebuilder.config.BildfahrplanSettingsGUI;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanSettingsGUIController;
 import de.stsFanGruppe.templatebuilder.config.GeneralConfig;
 import de.stsFanGruppe.templatebuilder.editor.EditorDaten;
+import de.stsFanGruppe.templatebuilder.editor.EditorGUI;
+import de.stsFanGruppe.templatebuilder.editor.GUIType;
 import de.stsFanGruppe.templatebuilder.editor.bildfahrplan.BildfahrplanGUIController;
 import de.stsFanGruppe.templatebuilder.editor.fahrtEditor.FahrtEditorGUI;
 import de.stsFanGruppe.templatebuilder.editor.fahrtEditor.FahrtEditorGUIController;
@@ -22,7 +25,9 @@ import de.stsFanGruppe.templatebuilder.external.*;
 import de.stsFanGruppe.templatebuilder.external.jtraingraph.*;
 import de.stsFanGruppe.templatebuilder.gui.TemplateBuilderGUI;
 import de.stsFanGruppe.templatebuilder.strecken.Streckenabschnitt;
+import de.stsFanGruppe.templatebuilder.types.Schachtelung;
 import de.stsFanGruppe.templatebuilder.zug.Fahrt;
+import de.stsFanGruppe.templatebuilder.zug.Template;
 import de.stsFanGruppe.tools.GUILocker;
 import de.stsFanGruppe.tools.NullTester;
 
@@ -64,6 +69,7 @@ public class TemplateBuilderGUIController extends GUIController
 			case "neu":
 			{
 				tabs.addTabEditorTab("Neuer Tab", null, null, new TabEditorGUIController(config, true));
+				gui.updateAnsichtAuswahl();
 				break;
 			}
 			case "importFromJTG":
@@ -94,8 +100,8 @@ public class TemplateBuilderGUIController extends GUIController
 							{
 								assert ergebnis.getPfad() != null;
 								input = new java.io.FileInputStream(ergebnis.getPfad());
-								Set<Fahrt> fahrten = importer.importFahrten(input, streckenabschnitt, ergebnis.getLinie());
-								bfpController.ladeZüge(fahrten);
+								Set<Template> templates = importer.importFahrten(input, streckenabschnitt, ergebnis.getLinie());
+								bfpController.ladeTemplates(templates);
 							}
 						}
 						catch(FileNotFoundException e)
@@ -117,6 +123,7 @@ public class TemplateBuilderGUIController extends GUIController
 					
 					GUILocker.unlock(JTrainGraphImportGUI.class);
 				});
+				gui.updateAnsichtAuswahl();
 				break;
 			}
 			case "importRulesFromJTG":
@@ -266,10 +273,13 @@ public class TemplateBuilderGUIController extends GUIController
 			case "zeigeBildfahrplan":
 			{
 				EditorDaten editorDaten = tabs.getSelectedEditorDaten();
-				if(!tabs.selectedTabIsEditor() || tabs.selectedTabIsBildfahrplan() || editorDaten == null)
+				GUIType guiType = tabs.getGUITypeOfSelectedTab();
+				
+				if(guiType == GUIType.BILDFAHRPLAN || editorDaten == null)
 				{
 					break;
 				}
+				
 				if(editorDaten.hasBildfahrplan())
 				{
 					tabs.setSelectedTab(tabs.getTabIndexOf(editorDaten.getBildfahrplan().getBildfahrplanGUI()));
@@ -278,15 +288,19 @@ public class TemplateBuilderGUIController extends GUIController
 				
 				int index = tabs.addBildfahrplanTab(editorDaten.getName(), null, null, new BildfahrplanGUIController(gui, editorDaten, config));
 				tabs.setSelectedTab(index);
+				gui.updateAnsichtAuswahl();
 				break;
 			}
 			case "zeigeTabEditorHin":
 			{
 				EditorDaten editorDaten = tabs.getSelectedEditorDaten();
-				if(!tabs.selectedTabIsEditor() || tabs.selectedTabIsTabEditorHin() || editorDaten == null)
+				GUIType guiType = tabs.getGUITypeOfSelectedTab();
+				
+				if(guiType == GUIType.TABELLE_AUFSTEIGEND || editorDaten == null)
 				{
 					break;
 				}
+				
 				if(editorDaten.hasTabEditorHin())
 				{
 					log.info("Wechseln auf EditorHin");
@@ -297,15 +311,19 @@ public class TemplateBuilderGUIController extends GUIController
 				int index = tabs.addTabEditorTab(tabs.getSelectedEditorDaten().getName(), null, null,
 						new TabEditorGUIController(editorDaten, config, true));
 				tabs.setSelectedTab(index);
+				gui.updateAnsichtAuswahl();
 				break;
 			}
 			case "zeigeTabEditorRück":
 			{
 				EditorDaten editorDaten = tabs.getSelectedEditorDaten();
-				if(!tabs.selectedTabIsEditor() || tabs.selectedTabIsTabEditorRück() || editorDaten == null)
+				GUIType guiType = tabs.getGUITypeOfSelectedTab();
+				
+				if(guiType == GUIType.TABELLE_ABSTEIGEND || editorDaten == null)
 				{
 					break;
 				}
+				
 				if(editorDaten.hasTabEditorRück())
 				{
 					tabs.setSelectedTab(tabs.getTabIndexOf(editorDaten.getTabEditorRück().getTabEditorGUI()));
@@ -315,6 +333,7 @@ public class TemplateBuilderGUIController extends GUIController
 				int index = tabs.addTabEditorTab(tabs.getSelectedEditorDaten().getName(), null, null,
 						new TabEditorGUIController(editorDaten, config, false));
 				tabs.setSelectedTab(index);
+				gui.updateAnsichtAuswahl();
 				break;
 			}
 			case "zeigeMarkierte":
@@ -358,4 +377,81 @@ public class TemplateBuilderGUIController extends GUIController
 				break;
 		}
 	}
+	
+	public void schachtelungChanged(Schachtelung typ) {
+		EditorGUI selectedGUI = tabs.getSelectedGUI();
+		if(selectedGUI != null) {
+			selectedGUI.getController().getEditorDaten().setSchachtelung(typ);
+		}
+	}
+	
+	public void schachtelungMinutenChanged() {
+		int minuten = 0;
+		
+		try {
+			minuten = parsePositiveIntField("Schachtelung/Minuten", gui.getSchachtelungMinuten());
+		}
+		catch(NumberFormatException e) {
+			log.error("NumberFormatException bei schachtelung/minuten: {}", e.getMessage());
+			gui.errorMessage("Schachtelung in Minuten: Nur ganze Zahlen größer 0 erlaubt.");
+			return;
+		}
+		
+		EditorGUI selectedGUI = tabs.getSelectedGUI();
+		log.info("schachtelungMinutenChanged {}", selectedGUI != null);
+		if(selectedGUI != null) {
+			selectedGUI.getController().getEditorDaten().setSchachtelungMinuten(minuten);
+		}
+	}
+	
+	public void schachtelungTemplateChanged() {
+		Template template = gui.getSchachtelungTemplate();
+		EditorGUI selectedGUI = tabs.getSelectedGUI();
+		if(selectedGUI != null) {
+			selectedGUI.getController().getEditorDaten().setSchachtelungTemplate(template);
+		}
+	}
+	
+	public Set<Template> getTemplates() {
+		EditorDaten daten = tabs.getSelectedEditorDaten();
+		if(daten == null) {
+			return new HashSet<>();
+		}
+		return daten.getTemplates();
+	}
+	
+	private EditorDaten getEditorDaten() {
+		return tabs.getSelectedEditorDaten();
+	}
+	
+	public Schachtelung getSchachtelung() {
+		EditorDaten editorDaten = getEditorDaten();
+		if(editorDaten != null) {
+			return editorDaten.getSchachtelung();
+		}
+		return Schachtelung.KEINE;
+	}
+	
+	public int getSchachtelungMinuten() {
+		EditorDaten editorDaten = getEditorDaten();
+		if(editorDaten != null) {
+			return editorDaten.getSchachtelungMinuten();
+		}
+		return 1440;
+	}
+	
+	public Template getSchachtelungTemplate() {
+		EditorDaten editorDaten = getEditorDaten();
+		if(editorDaten != null) {
+			return editorDaten.getSchachtelungTemplate();
+		}
+		return null;
+	}
+
+	public GUIType getGUIType()
+	{
+		return tabs.getGUITypeOfSelectedTab();
+	}
+	
+	
 }

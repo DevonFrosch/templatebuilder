@@ -3,7 +3,7 @@ package de.stsFanGruppe.templatebuilder.strecken;
 import java.util.*;
 import de.stsFanGruppe.tools.*;
 
-public class Betriebsstelle
+public class Betriebsstelle implements XMLExportable
 {
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Betriebsstelle.class);
 	
@@ -134,11 +134,6 @@ public class Betriebsstelle
 		}
 		return "Betriebsstelle " + getName() + " { " + gleise.size() + " Gleise }";
 		
-	}
-	
-	public String toXML()
-	{
-		return toXML("");
 	}
 	
 	public String toXML(String indent)

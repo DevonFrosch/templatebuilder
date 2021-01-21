@@ -1,9 +1,11 @@
 package de.stsFanGruppe.templatebuilder.zug;
 
 import java.util.*;
+import de.stsFanGruppe.templatebuilder.strecken.Gleisabschnitt;
 import de.stsFanGruppe.tools.NullTester;
+import de.stsFanGruppe.tools.XMLExportable;
 
-public class Fahrt implements Comparable<Fahrt>
+public class Fahrt implements Comparable<Fahrt>, XMLExportable
 {
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Fahrt.class);
 	
@@ -12,23 +14,25 @@ public class Fahrt implements Comparable<Fahrt>
 	protected long fahrtId;
 	protected String name = null;
 	protected Linie linie = null;
-	protected String templateName = null;
-	protected String templateTid = null;
+	protected Template template = null;
 	protected Fahrt vorgaenger = null;
 	protected Fahrt nachfolger = null;
 	protected NavigableSet<Fahrplanhalt> fahrplanhalte = new TreeSet<>(new Fahrplanhalt.StrictComparator());
 	
 	public Fahrt(String name, Linie linie)
 	{
-		this.fahrtId = nextId ++;
-		this.setName(name);
-		this.setLinie(linie);
+		fahrtId = nextId ++;
+		setName(name);
+		setLinie(linie);
 	}
-	public Fahrt(String name, Linie linie, String templateName, String templateTid)
+	public Fahrt(String name, Linie linie, Template template) {
+		this(name, linie);
+		setTemplate(template);
+	}
+	public Fahrt(String name, Linie linie, String templateName, int templateTid)
 	{
 		this(name, linie);
-		this.setTemplateName(templateName);
-		this.setTemplateTid(templateTid);
+		setTemplate(new Template(templateName, templateTid));
 	}
 
 	public Fahrt(String name, Linie linie, Collection<? extends Fahrplanhalt> fahrplanhalte)
@@ -36,7 +40,7 @@ public class Fahrt implements Comparable<Fahrt>
 		this(name, linie);
 		this.addFahrplanhalte(fahrplanhalte);
 	}
-	public Fahrt(String name, Linie linie, String templateName, String templateTid, Collection<? extends Fahrplanhalt> fahrplanhalte)
+	public Fahrt(String name, Linie linie, String templateName, int templateTid, Collection<? extends Fahrplanhalt> fahrplanhalte)
 	{
 		this(name, linie, templateName, templateTid);
 		this.addFahrplanhalte(fahrplanhalte);
@@ -69,41 +73,11 @@ public class Fahrt implements Comparable<Fahrt>
 		this.linie = linie;
 	}
 	
-	public String getTemplateName()
-	{
-		return templateName;
+	public Template getTemplate() {
+		return template;
 	}
-	
-	public void setTemplateName(String templateName)
-	{
-		this.templateName = templateName;
-	}
-	
-	public String getTemplateTid()
-	{
-		return templateTid;
-	}
-	
-	public void setTemplateTid(String templateTid)
-	{
-		this.templateTid = templateTid;
-	}
-	
-	public String getTemplateString()
-	{
-		if(getTemplateName() != null)
-		{
-			if(getTemplateTid() != null)
-			{
-				return getTemplateName() + " (" + getTemplateTid() + ")";
-			}
-			return getTemplateName();
-		}
-		if(getTemplateTid() != null)
-		{
-			return getTemplateTid();
-		}
-		return null;
+	public void setTemplate(Template template) {
+		this.template = template;
 	}
 	
 	public Fahrt getVorgaenger()
@@ -134,6 +108,14 @@ public class Fahrt implements Comparable<Fahrt>
 	public NavigableSet<Fahrplanhalt> getFahrplanhalte()
 	{
 		return fahrplanhalte;
+	}
+	
+	public Fahrplanhalt getFahrplanhalt(Gleisabschnitt gleisabschnitt)
+	{
+		return fahrplanhalte.stream()
+				.filter(fh -> fh.getGleisabschnitt() == gleisabschnitt)
+				.findFirst()
+				.orElse(null);
 	}
 	
 	public void addFahrplanhalt(Fahrplanhalt halt)
@@ -218,46 +200,17 @@ public class Fahrt implements Comparable<Fahrt>
 	public String toString()
 	{
 		StringBuilder stringBuilder = new StringBuilder("Fahrt " + getName() + " { Linie: " + getLinie());
-		
-		if(getTemplateName() != null)
-		{
-			stringBuilder.append(", Template: " + getTemplateName());
-			
-			if(getTemplateTid() != null)
-			{
-				stringBuilder.append(" (" + getTemplateTid() + ")");
-			}
-		}
-		else if(getTemplateTid() != null)
-		{
-			stringBuilder.append(", TID: " + getTemplateTid());
-		}
-		
+		stringBuilder.append(", Template: \"" + template.toString() + "\"");
 		stringBuilder.append(", " + fahrplanhalte.size() + " Fahrplanhalte }");
 		return stringBuilder.toString();
-	}
-	
-	public String toXML()
-	{
-		return toXML("");
 	}
 	
 	public String toXML(String indent)
 	{
 		StringJoiner xml = new StringJoiner("\n");
-		StringBuilder fahrt = new StringBuilder(indent + "<fahrt linie=\"" + linie.getName() + "\"");
+		String fahrt = indent + "<fahrt linie=\"" + linie.getName() + "\" template=\"" + template.toString() + "\">";
 		
-		if(getTemplateName() != null)
-		{
-			fahrt.append(" data-template=\"" + getTemplateName() + "\"");
-		}
-
-		if(getTemplateTid() != null)
-		{
-			fahrt.append(" data-tid=\"" + getTemplateTid() + "\"");
-		}
-		
-		xml.add(fahrt.append(">").toString());
+		xml.add(fahrt);
 		
 		if(!fahrplanhalte.isEmpty())
 		{

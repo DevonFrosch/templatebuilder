@@ -3,10 +3,12 @@ package de.stsFanGruppe.templatebuilder.config;
 import java.awt.Color;
 import javax.swing.JComponent;
 import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.FahrtDarstellungConfig;
+import de.stsFanGruppe.templatebuilder.zug.Template;
 import de.stsFanGruppe.tools.NullTester;
 import de.stsFanGruppe.tools.PreferenceHandler;
+import de.stsFanGruppe.tools.XMLExportable;
 
-public class BildfahrplanConfig extends ConfigController
+public class BildfahrplanConfig extends ConfigController implements XMLExportable
 {
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(BildfahrplanConfig.class);
 	
@@ -44,17 +46,15 @@ public class BildfahrplanConfig extends ConfigController
 	private static final int DEFAULT_ZH_ZEITINTERVALL = 10; // Minuten
 	
 	// Darstellung der Linien
-	public static final String CONFIG_F_HOEHEPROSTUNDE = "bildfahrplan/darstellung/fahrten/hoeheProStunde";
-	public static final String CONFIG_F_MINZEIT = "bildfahrplan/darstellung/fahrten/minZeit";
-	public static final String CONFIG_F_MAXZEIT = "bildfahrplan/darstellung/fahrten/maxZeit";
-	public static final String CONFIG_F_AUTOSIZE = "bildfahrplan/darstellung/fahrten/autoSize";
-	public static final String CONFIG_F_SCHACHTELUNG = "bildfahrplan/darstellung/fahrten/schachtelung";
+	public static final String CONFIG_F_HOEHEPROSTUNDE = "bildfahrplan/darstellung/templates/hoeheProStunde";
+	public static final String CONFIG_F_MINZEIT = "bildfahrplan/darstellung/templates/minZeit";
+	public static final String CONFIG_F_MAXZEIT = "bildfahrplan/darstellung/templates/maxZeit";
+	public static final String CONFIG_F_AUTOSIZE = "bildfahrplan/darstellung/templates/autoSize";
 	
 	private static final int DEFAULT_F_HOEHEPROSTUNDE = 400; // Minuten
 	private static final double DEFAULT_F_MINZEIT = 270; // Minuten, 4:30
 	private static final double DEFAULT_F_MAXZEIT = 1290; // Minuten, 21:30
 	private static final boolean DEFAULT_F_AUTOSIZE = true;
-	private static final int DEFAULT_F_SCHACHTELUNG = 1440; // Minuten
 	
 	// Darstellung von Texten
 	public static final String CONFIG_TEXT_ZEIGEZEITEN = "bildfahrplan/darstellung/text/zeigeZeiten";
@@ -290,17 +290,6 @@ public class BildfahrplanConfig extends ConfigController
 		notifyChange();
 	}
 	
-	public int getSchachtelung()
-	{
-		return prefs.getInt(CONFIG_F_SCHACHTELUNG, DEFAULT_F_SCHACHTELUNG);
-	}
-	
-	public void setSchachtelung(int schachtelung)
-	{
-		prefs.setInt("schachtelung", CONFIG_F_SCHACHTELUNG, schachtelung);
-		notifyChange();
-	}
-	
 	public boolean getZeigeZeiten()
 	{
 		return prefs.getBoolean(CONFIG_TEXT_ZEIGEZEITEN, DEFAULT_TEXT_ZEIGEZEITEN);
@@ -422,14 +411,23 @@ public class BildfahrplanConfig extends ConfigController
 	{
 		return getIgnorierteTemplates().split("\n");
 	}
-	public boolean testIgnorierteTemplates(String suche)
+	public boolean testIgnorierteTemplates(Template template)
 	{
-		if(suche == null) {
+		if(template == null) {
 			return false;
 		}
-		for(String templateName: getIgnorierteTemplatesArray()) {
-			if(templateName.length() > 0 && suche.contains(templateName)) {
-				return true;
+		
+		String name = template.getName();
+		String tid = template.getTidOrNull();
+		
+		for(String suchString: getIgnorierteTemplatesArray()) {
+			if(suchString.length() > 0) {
+				if(name != null && name.contains(suchString)) {
+					return true;
+				}
+				if(tid != null && tid.contains(suchString)) {
+					return true;
+				}
 			}
 		}
 		return false;
@@ -499,11 +497,6 @@ public class BildfahrplanConfig extends ConfigController
 	public String toString()
 	{
 		return "BildfahrplanConfig (" + prefs.toString() + ")";
-	}
-	
-	public String toXML()
-	{
-		return toXML("");
 	}
 	
 	public String toXML(String indent)
