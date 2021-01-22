@@ -2,11 +2,14 @@ package de.stsFanGruppe.templatebuilder.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.util.List;
 
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JTextPane;
+
+import de.stsFanGruppe.templatebuilder.zug.HervorgehobeneFahrtabschnitt;
 
 public interface GUI
 {
@@ -41,18 +44,18 @@ public interface GUI
 		return pane;
 	}
 	
-	default public void buttonMessage(Object[] object) {
+	default public void buttonMessage(Object[] hervorgehobeneFahrtabschnitte) {
 		int n = JOptionPane.showOptionDialog(null,
 				"Zug auswählen",
 				"Bitte Zug auswählen", 
 				JOptionPane.DEFAULT_OPTION,
 				JOptionPane.QUESTION_MESSAGE,
 				null,
-				object,
+				hervorgehobeneFahrtabschnitte,
 				null);
 		String ausgewaehlterZug;
 		if(n >= 0) {
-			ausgewaehlterZug = object[n].toString();
+			ausgewaehlterZug = hervorgehobeneFahrtabschnitte[n].toString();
 		}
 	}
 }

@@ -3,8 +3,11 @@ package de.stsFanGruppe.templatebuilder.config.fahrtdarstellung;
 import java.awt.Color;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.StringJoiner;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import de.stsFanGruppe.templatebuilder.config.ConfigController;
 import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.filter.FahrtFilter;
@@ -13,6 +16,7 @@ import de.stsFanGruppe.templatebuilder.editor.EditorDaten;
 import de.stsFanGruppe.templatebuilder.zug.Fahrt;
 import de.stsFanGruppe.templatebuilder.zug.FahrtDarstellung;
 import de.stsFanGruppe.templatebuilder.zug.Fahrtabschnitt;
+import de.stsFanGruppe.templatebuilder.zug.HervorgehobeneFahrtabschnitt;
 import de.stsFanGruppe.tools.FirstLastLinkedList;
 import de.stsFanGruppe.tools.FirstLastList;
 import de.stsFanGruppe.tools.NullTester;
@@ -179,7 +183,7 @@ public class FahrtDarstellungConfig extends ConfigController
 		return zuege.toString();
 	}
 	
-	public Object[] getHervorgehobeneZuegeObject(EditorDaten editorDaten) 
+	public List<HervorgehobeneFahrtabschnitt> getHervorgehobeneFahrtabschnitte(EditorDaten editorDaten) 
 	{
 		if(editorDaten == null)
 		{
@@ -188,31 +192,9 @@ public class FahrtDarstellungConfig extends ConfigController
 		
 		FirstLastList<Fahrtabschnitt> abschnitte = new FirstLastLinkedList<Fahrtabschnitt>(getHervorgehobeneFahrten());
 		
-		Object[] zugArray = new Object [abschnitte.size()]; 
-		
 		abschnitte.sort((a, b) -> a.getFahrt().getName().compareTo(b.getFahrt().getName()));
-		int i = 0;
-		for(Fahrtabschnitt abschnitt: abschnitte)
-		{
-			Fahrt fahrt = abschnitt.getFahrt();
-			String template = fahrt.getTemplate().toString();
-
-			StringBuilder builder = new StringBuilder(fahrt.getName());
+		return abschnitte.stream().map(abschnitt -> new HervorgehobeneFahrtabschnitt(abschnitt)).collect(Collectors.toList());
 			
-			if(!template.isEmpty())
-			{
-				builder.append(" [" + template + "]");
-			}
-			
-			String abfahrt = TimeFormater.doubleToString(abschnitt.getStart().getMinZeit());
-			builder.append("\n(Abfahrt " + abfahrt + ")");
-			
-			zugArray[i] = new Object();
-			zugArray[i] = builder.toString();
-			i++;
-		}
-		
-		return zugArray;
 	}
 	
 	public void setHervorgehobeneZuege(Collection<Fahrtabschnitt> abschnitte)

@@ -155,9 +155,9 @@ public class BildfahrplanGUIController extends EditorGUIController
 	// action handler
 	public void mouseClicked(MouseEvent e)
 	{
-		Object[] zuege = bildfahrplanConfig.getFahrtDarstellungConfig().getHervorgehobeneZuegeObject(editorDaten);
+		java.util.List<HervorgehobeneFahrtabschnitt> zuege = bildfahrplanConfig.getFahrtDarstellungConfig().getHervorgehobeneFahrtabschnitte(editorDaten);
 		
-		if(lastClickTime + 5.0e8 > System.nanoTime() && zuege.length > 0 && zuege != null)
+		if(lastClickTime + 5.0e8 > System.nanoTime() && zuege.size() > 0 && zuege != null)
 		{
 			parentGui.buttonMessage(zuege);
 		}

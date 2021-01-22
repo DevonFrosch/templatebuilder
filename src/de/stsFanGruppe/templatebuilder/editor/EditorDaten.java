@@ -402,7 +402,7 @@ public class EditorDaten
 		synchronized(templateLock)
 		{
 			return templates.stream().map(t -> t.findFahrt(name)).filter(t -> t != null).findFirst().orElse(null);
-		}
+		} 
 	}
 	
 	public Fahrt getFahrt(long fahrtId)
