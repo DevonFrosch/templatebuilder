@@ -157,7 +157,7 @@ public class BildfahrplanGUIController extends EditorGUIController
 	{
 		Object[] zuege = bildfahrplanConfig.getFahrtDarstellungConfig().getHervorgehobeneZuegeObject(editorDaten);
 		
-		if(lastClickTime + 5.0e8 > System.nanoTime() && zuege.length > 0)
+		if(lastClickTime + 5.0e8 > System.nanoTime() && zuege.length > 0 && zuege != null)
 		{
 			//parentGui.infoMessage("Markierte Züge:\n"+zuege, "Markierte Züge");
 			parentGui.example(zuege);

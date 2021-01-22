@@ -1,6 +1,11 @@
 package de.stsFanGruppe.templatebuilder.gui;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+
 import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.JTextPane;
 
 public interface GUI
@@ -37,6 +42,13 @@ public interface GUI
 	}
 	
 	default public void example(Object[] object) {
-		System.out.println(object);
+		int n = JOptionPane.showOptionDialog(null,
+				"Zug auswählen",
+				"Bitte Zug auswählen", 
+				JOptionPane.DEFAULT_OPTION,
+				JOptionPane.QUESTION_MESSAGE,
+				null,
+				object,
+				null);
 	}
 }

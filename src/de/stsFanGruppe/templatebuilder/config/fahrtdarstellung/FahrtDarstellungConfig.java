@@ -185,9 +185,10 @@ public class FahrtDarstellungConfig extends ConfigController
 		{
 			return null;
 		}
-		Object[] zugArray = null;
 		
 		FirstLastList<Fahrtabschnitt> abschnitte = new FirstLastLinkedList<Fahrtabschnitt>(getHervorgehobeneFahrten());
+		
+		Object[] zugArray = new Object [abschnitte.size()]; 
 		
 		abschnitte.sort((a, b) -> a.getFahrt().getName().compareTo(b.getFahrt().getName()));
 		int i = 0;
@@ -204,11 +205,11 @@ public class FahrtDarstellungConfig extends ConfigController
 			}
 			
 			String abfahrt = TimeFormater.doubleToString(abschnitt.getStart().getMinZeit());
-			builder.append(" (Abfahrt " + abfahrt + ")");
+			builder.append("\n(Abfahrt " + abfahrt + ")");
 			
 			zugArray[i] = new Object();
 			zugArray[i] = builder.toString();
-			
+			i++;
 		}
 		
 		return zugArray;
