@@ -11,6 +11,9 @@ import java.awt.event.KeyEvent;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+
 import de.stsFanGruppe.templatebuilder.editor.GUIType;
 import de.stsFanGruppe.templatebuilder.types.Schachtelung;
 import de.stsFanGruppe.templatebuilder.zug.Template;
@@ -295,6 +298,31 @@ public class TemplateBuilderGUI implements GUI
 				public void focusGained(FocusEvent e) {}
 				public void focusLost(FocusEvent e) {
 					controller.schachtelungMinutenChanged();
+				}
+			});
+			inputSchachtelungMinuten.getDocument().addDocumentListener(new DocumentListener()
+			{
+				@Override
+				public void changedUpdate(DocumentEvent e) {
+					
+				}
+
+				@Override
+				public void insertUpdate(DocumentEvent e) {
+					if(!inputSchachtelungMinuten.getText().equals("")) {
+						if(Integer.parseInt(inputSchachtelungMinuten.getText()) >= 10) {
+							controller.schachtelungMinutenChanged();
+						}
+					}
+				}
+
+				@Override
+				public void removeUpdate(DocumentEvent e) {
+					if(!inputSchachtelungMinuten.getText().equals("")) {
+						if(Integer.parseInt(inputSchachtelungMinuten.getText()) >= 10) {
+							controller.schachtelungMinutenChanged();
+						}
+					}
 				}
 			});
 			inputSchachtelungMinuten.setMaximumSize(new Dimension(50, (int) inputSchachtelungMinuten.getPreferredSize().getHeight()));
