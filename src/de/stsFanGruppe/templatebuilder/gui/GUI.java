@@ -41,7 +41,7 @@ public interface GUI
 		return pane;
 	}
 	
-	default public void example(Object[] object) {
+	default public void buttonMessage(Object[] object) {
 		int n = JOptionPane.showOptionDialog(null,
 				"Zug auswählen",
 				"Bitte Zug auswählen", 
@@ -50,5 +50,9 @@ public interface GUI
 				null,
 				object,
 				null);
+		String ausgewaehlterZug;
+		if(n >= 0) {
+			ausgewaehlterZug = object[n].toString();
+		}
 	}
 }

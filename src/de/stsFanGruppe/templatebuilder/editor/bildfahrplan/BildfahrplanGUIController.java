@@ -159,8 +159,7 @@ public class BildfahrplanGUIController extends EditorGUIController
 		
 		if(lastClickTime + 5.0e8 > System.nanoTime() && zuege.length > 0 && zuege != null)
 		{
-			//parentGui.infoMessage("Markierte Züge:\n"+zuege, "Markierte Züge");
-			parentGui.example(zuege);
+			parentGui.buttonMessage(zuege);
 		}
 		else
 		{
