@@ -35,4 +35,8 @@ public interface GUI
 		pane.setBorder(null);
 		return pane;
 	}
+	
+	default public void example(Object[] object) {
+		System.out.println(object);
+	}
 }

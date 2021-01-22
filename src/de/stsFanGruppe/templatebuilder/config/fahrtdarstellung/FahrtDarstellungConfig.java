@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringJoiner;
+
 import de.stsFanGruppe.templatebuilder.config.ConfigController;
 import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.filter.FahrtFilter;
 import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.linetype.LineType;
@@ -176,6 +177,41 @@ public class FahrtDarstellungConfig extends ConfigController
 		}
 		
 		return zuege.toString();
+	}
+	
+	public Object[] getHervorgehobeneZuegeObject(EditorDaten editorDaten) 
+	{
+		if(editorDaten == null)
+		{
+			return null;
+		}
+		Object[] zugArray = null;
+		
+		FirstLastList<Fahrtabschnitt> abschnitte = new FirstLastLinkedList<Fahrtabschnitt>(getHervorgehobeneFahrten());
+		
+		abschnitte.sort((a, b) -> a.getFahrt().getName().compareTo(b.getFahrt().getName()));
+		int i = 0;
+		for(Fahrtabschnitt abschnitt: abschnitte)
+		{
+			Fahrt fahrt = abschnitt.getFahrt();
+			String template = fahrt.getTemplate().toString();
+
+			StringBuilder builder = new StringBuilder(fahrt.getName());
+			
+			if(!template.isEmpty())
+			{
+				builder.append(" [" + template + "]");
+			}
+			
+			String abfahrt = TimeFormater.doubleToString(abschnitt.getStart().getMinZeit());
+			builder.append(" (Abfahrt " + abfahrt + ")");
+			
+			zugArray[i] = new Object();
+			zugArray[i] = builder.toString();
+			
+		}
+		
+		return zugArray;
 	}
 	
 	public void setHervorgehobeneZuege(Collection<Fahrtabschnitt> abschnitte)
