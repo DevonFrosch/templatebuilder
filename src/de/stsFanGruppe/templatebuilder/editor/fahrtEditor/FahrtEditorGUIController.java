@@ -34,6 +34,27 @@ public class FahrtEditorGUIController
 		fahrtenGeladenCallbackId = editorDaten.registerFahrtenGeladenCallback(this::initFahrtNamen);
 	}
 	
+	/**
+	 * Für den Aufruf über Doppelklick auf einen Fahrtabschnitt. Hier soll die ausgewählte Fahrt direkt geladen werden.
+	 * @param editorDaten
+	 * @param onClose
+	 * @param fahrt
+	 */
+	public FahrtEditorGUIController(EditorDaten editorDaten, Runnable onClose, Fahrt fahrt)
+	{
+		NullTester.test(editorDaten);
+		NullTester.test(onClose);
+		this.editorDaten = editorDaten;
+		this.onClose = onClose;
+		
+		this.gui = new FahrtEditorGUI(this, editorDaten.getName());
+		
+		initFahrtNamen();
+		fahrtenGeladenCallbackId = editorDaten.registerFahrtenGeladenCallback(this::initFahrtNamen);
+		gui.comboBoxZugname.setSelectedItem(fahrt.getName());
+		ladeFahrplan(fahrt);
+	}
+	
 	public void initFahrtNamen()
 	{
 		gui.setComboBoxItems(editorDaten.getFahrten().stream().map(Fahrt::getName).toArray(String[]::new));

@@ -159,7 +159,7 @@ public class BildfahrplanGUIController extends EditorGUIController
 		
 		if(lastClickTime + 5.0e8 > System.nanoTime() && zuege.size() > 0 && zuege != null)
 		{
-			parentGui.buttonMessage(zuege);
+			parentGui.buttonMessage(zuege, editorDaten);
 		}
 		else
 		{
