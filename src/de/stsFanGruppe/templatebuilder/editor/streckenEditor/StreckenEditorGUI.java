@@ -24,7 +24,7 @@ public class StreckenEditorGUI extends JDialog implements GUI
 	
 	protected final JPanel contentPanel = new JPanel();
 	public JTable table;
-	public static final String[] columnNames = {"id", "km", "Bestriebsstelle"};
+	public static final String[] columnNames = {"Anzahl Züge", "km", "Bestriebsstelle"};
 	
 	/**
 	 * Launch the application.

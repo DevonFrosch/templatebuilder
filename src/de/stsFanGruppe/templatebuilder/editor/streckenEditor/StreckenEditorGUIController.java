@@ -1,15 +1,23 @@
 package de.stsFanGruppe.templatebuilder.editor.streckenEditor;
 
 import java.awt.event.ActionEvent;
+import java.util.List;
+import java.util.NavigableSet;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
+
 import de.stsFanGruppe.templatebuilder.editor.EditorDaten;
 import de.stsFanGruppe.templatebuilder.strecken.Betriebsstelle;
 import de.stsFanGruppe.templatebuilder.strecken.Gleis;
 import de.stsFanGruppe.templatebuilder.strecken.Gleisabschnitt;
 import de.stsFanGruppe.templatebuilder.strecken.Strecke;
 import de.stsFanGruppe.templatebuilder.strecken.Streckenabschnitt;
+import de.stsFanGruppe.templatebuilder.zug.Fahrplanhalt;
+import de.stsFanGruppe.templatebuilder.zug.Fahrt;
 import de.stsFanGruppe.tools.FirstLastLinkedList;
 import de.stsFanGruppe.tools.FirstLastList;
 import de.stsFanGruppe.tools.NullTester;
@@ -112,7 +120,11 @@ public class StreckenEditorGUIController
 				{
 					for(int i = 0; i < rows.length; i++)
 					{
-						model.removeRow(rows[i] - i);
+						if(gui.table.getValueAt(rows[i], 0).toString() == "0") {
+							model.removeRow(rows[i] - i);
+						} else {
+							gui.warningMessage(gui.table.getValueAt(rows[i], 2).toString() + " hat noch " + gui.table.getValueAt(rows[i], 0).toString() + " Züge, die hier halten! \n Um diese Betriebsstelle löschen zu können, darf kein Zug in dieser Betriebsstelle ein Fahrplaneintrag haben.");
+						}
 					}
 					break;
 				}
@@ -180,7 +192,7 @@ public class StreckenEditorGUIController
 				switch(column)
 				{
 					case 0:
-						return Double.class;
+						return Long.class;
 					case 1:
 						return Double.class;
 					case 2:
@@ -197,10 +209,16 @@ public class StreckenEditorGUIController
 		{
 			int i = 0;
 			for(Betriebsstelle bs : streckenabschnitt.getBetriebsstellen())
-			{
+			{	
+				long anzahlZuegeProBetriebstelle = 0;
+				for(Fahrt fahrt : editorDaten.getFahrten())
+				{
+					anzahlZuegeProBetriebstelle += fahrt.getFahrplanhalte().stream().filter(fph -> fph.getBetriebsstelle() == bs).count();
+				}
+				
 				double km = editorDaten.getStreckenKm(bs);
 				String name = bs.getName();
-				Object[] row = {i, km, name};
+				Object[] row = {anzahlZuegeProBetriebstelle, km, name};
 				i++;
 				
 				model.addRow(row);
@@ -255,6 +273,8 @@ public class StreckenEditorGUIController
 			streckenabschnitt.addStrecke(new Strecke(makeName(anfang, ende), anfang, ende));
 		}
 		editorDaten.ladeStreckenabschnitt(streckenabschnitt);
+		editorDaten.getBildfahrplan().configChanged();
+		
 	}
 	
 	/**
