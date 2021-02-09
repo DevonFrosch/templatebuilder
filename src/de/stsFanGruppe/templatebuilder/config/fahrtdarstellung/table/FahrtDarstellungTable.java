@@ -144,11 +144,7 @@ public class FahrtDarstellungTable extends JTable
 	public void removeAllRows()
 	{
 		DefaultTableModel model = (DefaultTableModel) getModel();
-		int count = model.getRowCount();
-		for(int i = 0; i < count; i++)
-		{
-			model.removeRow(0);
-		}
+		model.setRowCount(0);
 	}
 	
 	public void clearSelection()
