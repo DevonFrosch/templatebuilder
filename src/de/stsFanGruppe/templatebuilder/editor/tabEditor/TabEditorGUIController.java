@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import de.stsFanGruppe.templatebuilder.config.GeneralConfig;
+import de.stsFanGruppe.templatebuilder.editor.ControllerType;
 import de.stsFanGruppe.templatebuilder.editor.EditorDaten;
 import de.stsFanGruppe.templatebuilder.editor.EditorGUIController;
 import de.stsFanGruppe.templatebuilder.strecken.Betriebsstelle;
@@ -32,13 +33,13 @@ public class TabEditorGUIController extends EditorGUIController
 	
 	public TabEditorGUIController(EditorDaten daten, GeneralConfig config, boolean richtungAufsteigend)
 	{
-		super(daten, config);
+		super(richtungAufsteigend ? ControllerType.TABELLE_HIN : ControllerType.TABELLE_RUECK, daten, config);
 		initVariables(config, richtungAufsteigend);
 	}
 	
 	public TabEditorGUIController(GeneralConfig config, boolean richtungAufsteigend)
 	{
-		super(config);
+		super(richtungAufsteigend ? ControllerType.TABELLE_HIN : ControllerType.TABELLE_RUECK, config);
 		initVariables(config, richtungAufsteigend);
 	}
 	

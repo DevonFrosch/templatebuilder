@@ -15,6 +15,7 @@ import javax.swing.JLabel;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanConfig;
 import de.stsFanGruppe.templatebuilder.config.GeneralConfig;
 import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.FahrtDarstellungHandler;
+import de.stsFanGruppe.templatebuilder.editor.ControllerType;
 import de.stsFanGruppe.templatebuilder.editor.EditorDaten;
 import de.stsFanGruppe.templatebuilder.editor.EditorGUIController;
 import de.stsFanGruppe.templatebuilder.editor.fahrtEditor.FahrtEditorGUIController;
@@ -46,13 +47,13 @@ public class BildfahrplanGUIController extends EditorGUIController
 	
 	public BildfahrplanGUIController(GUI parentGui, EditorDaten daten, GeneralConfig config)
 	{
-		super(daten, config);
+		super(ControllerType.BILDFAHRPLAN, daten, config);
 		initVariables(parentGui, config);
 	}
 	
 	public BildfahrplanGUIController(GUI parentGui, GeneralConfig config)
 	{
-		super(config);
+		super(ControllerType.BILDFAHRPLAN, config);
 		initVariables(parentGui, config);
 	}
 	

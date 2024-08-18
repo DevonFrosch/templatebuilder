@@ -9,16 +9,19 @@ public abstract class EditorGUIController
 {
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(EditorGUIController.class);
 	
+	protected ControllerType type;
 	protected GeneralConfig config;
 	private Object configChangeHandleId;
 	private Object fahrtConfigChangeHandleId;
 	private Object schachtelungChangedHandleId;
 	protected EditorDaten editorDaten;
 	
-	protected EditorGUIController(EditorDaten editorDaten, GeneralConfig config)
+	protected EditorGUIController(ControllerType type, EditorDaten editorDaten, GeneralConfig config)
 	{
+		NullTester.test(type);
 		NullTester.test(config);
 		
+		this.type = type;
 		this.config = config;
 		configChangeHandleId = config.getBildfahrplanConfig().registerChangeHandler(() -> configChanged());
 		fahrtConfigChangeHandleId = config.getFahrtDarstellungConfig().registerChangeHandler(() -> configChanged());
@@ -26,9 +29,9 @@ public abstract class EditorGUIController
 		setEditorDaten(editorDaten);
 	}
 	
-	protected EditorGUIController(GeneralConfig config)
+	protected EditorGUIController(ControllerType type, GeneralConfig config)
 	{
-		this(new EditorDaten(), config);
+		this(type, new EditorDaten(), config);
 	}
 	
 	public EditorDaten getEditorDaten()
@@ -54,7 +57,7 @@ public abstract class EditorGUIController
 		if(editorDaten != null)
 		{
 			editorDaten.unregisterSchachtelungChangedCallback(schachtelungChangedHandleId);
-			editorDaten.close();
+			editorDaten.viewClosed(type);
 		}
 	}
 	

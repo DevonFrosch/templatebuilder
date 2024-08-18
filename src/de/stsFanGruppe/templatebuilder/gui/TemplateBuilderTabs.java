@@ -56,14 +56,8 @@ public class TemplateBuilderTabs
 			pane.addTab(name, icon, scrollPane, toolTip);
 			tabIndex = pane.getTabCount() - 1;
 			
-			// Kopie für Lambda-Funktion
-			int localTabIndex = tabIndex;
-			
-			pane.setTabComponentAt(tabIndex, new ButtonTabComponent(pane, (index) -> {
-				if(index == localTabIndex)
-				{
-					guiController.close();
-				}
+			pane.setTabComponentAt(tabIndex, new ButtonTabComponent(pane, () -> {
+				guiController.close();
 				return true;
 			}));
 		}
