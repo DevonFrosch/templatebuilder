@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.OptionalDouble;
 import java.util.Set;
 import java.util.function.BooleanSupplier;
+import java.util.function.Function;
+
 import de.stsFanGruppe.templatebuilder.editor.bildfahrplan.BildfahrplanGUIController;
 import de.stsFanGruppe.templatebuilder.editor.tabEditor.TabEditorGUIController;
 import de.stsFanGruppe.templatebuilder.strecken.Betriebsstelle;
@@ -418,6 +420,16 @@ public class EditorDaten
 		{
 			return templates.stream().anyMatch(t -> t.hasFahrten());
 		}
+	}
+	
+	public void updateFahrt(long fahrtId, Function<Fahrt, Fahrt> updater)
+	{
+		synchronized(templateLock)
+		{
+			Fahrt fahrt = templates.stream().map(t -> t.findFahrt(fahrtId)).filter(t -> t != null).findFirst().orElse(null);
+			fahrt = updater.apply(fahrt);
+		}
+		fahrtenGeladenCallbacks.runAll();
 	}
 	
 	public double getDiffKm()

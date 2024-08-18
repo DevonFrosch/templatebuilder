@@ -97,6 +97,11 @@ public class Fahrt implements Comparable<Fahrt>, XMLExportable
 				.orElse(null);
 	}
 	
+	public Fahrplanhalt getFahrplanhalt(int index)
+	{
+		return getFahrplanhalte().get(index);
+	}
+	
 	public void addFahrplanhalt(Fahrplanhalt halt)
 	{
 		NullTester.test(halt);

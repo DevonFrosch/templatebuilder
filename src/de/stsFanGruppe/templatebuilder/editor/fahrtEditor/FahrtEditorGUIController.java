@@ -2,6 +2,7 @@ package de.stsFanGruppe.templatebuilder.editor.fahrtEditor;
 
 import java.awt.event.ActionEvent;
 import java.util.Collection;
+import java.util.OptionalDouble;
 
 import javax.swing.event.TableModelEvent;
 
@@ -81,7 +82,6 @@ public class FahrtEditorGUIController
 			// TODO: Entscheiden, ob Ankünfte am ersten und Abfahrten am letzten Halt angezeigt werden sollen
 			// Zur Entwicklung ist es sinnvoller, alles anzuzeigen
 			/*
-			if(j == 0 && halte.size() >= 2)
 			{
 				an = "";
 			}
@@ -111,8 +111,73 @@ public class FahrtEditorGUIController
 		for(int row = event.getFirstRow(); row <= event.getLastRow(); row++)
 		{
 			String value = gui.getTableValueAt(row, column);
+			// Wert kopieren wegen Lambda-Funktion...
+			int localRow = row;
 			
-			// TODO: editorDaten aktualisieren und alle Ansichten neu laden
+			editorDaten.updateFahrt(aktuelleFahrt.getFahrtId(), (fahrt) -> {
+				int anzahlHalte = fahrt.getFahrplanhalte().size();
+				Fahrplanhalt halt = fahrt.getFahrplanhalt(localRow);
+				switch(column)
+				{
+					case 1:
+						try
+						{
+							OptionalDouble zeit = TimeFormater.stringToOptionalDouble(value);
+							
+							if(localRow > 0 && !zeit.isPresent())
+							{
+								gui.errorMessage("Die Abfahrt in Zeile " + (localRow+1) + " darf nicht leer sein!");
+								return fahrt;
+							}
+							
+							halt.setAnkunft(zeit);
+							log.debug("Setze Ankunft auf {}", value);
+						}
+						catch(NumberFormatException e)
+						{
+							log.error("tableChanged: Kein gültiges Zeitformat in Ankunft, Wert war '{}'", value);
+							gui.errorMessage("Die Abfahrt in Zeile " + (localRow+1) + " ist keine gültige Zeit!");
+							return fahrt;
+						}
+						catch(IllegalArgumentException e)
+						{
+							log.error("tableChanged: Kann an nicht ändern", e);
+							gui.errorMessage("Die Ankunft in Zeile " + (localRow+1) + " ist nicht gültig! " + e.getMessage());
+							return fahrt;
+						}
+						break;
+					case 2:
+						try
+						{
+							OptionalDouble zeit = TimeFormater.stringToOptionalDouble(value);
+							
+							if(localRow < anzahlHalte - 1 && !zeit.isPresent())
+							{
+								gui.errorMessage("Die Abfahrt in Zeile " + (localRow+1) + " darf nicht leer sein!");
+								return fahrt;
+							}
+							
+							halt.setAbfahrt(zeit);
+							log.debug("Setze Abfahrt auf {}", value);
+						}
+						catch(NumberFormatException e)
+						{
+							log.error("tableChanged: Kein gültiges Zeitformat in Abfahrt, Wert war '{}'", value);
+							gui.errorMessage("Die Abfahrt in Zeile " + (localRow+1) + " ist keine gültige Zeit!");
+							return fahrt;
+						}
+						catch(IllegalArgumentException e)
+						{
+							log.error("tableChanged: Kann ab nicht ändern", e);
+							gui.errorMessage("Die Abfahrt in Zeile " + (localRow+1) + " ist nicht gültig! " + e.getMessage());
+							return fahrt;
+						}
+						break;
+					default:
+						log.error("tableChanged: Column {} darf nicht geändert werden", column);
+				}
+				return fahrt;
+			});
 		}
 	}
 	
