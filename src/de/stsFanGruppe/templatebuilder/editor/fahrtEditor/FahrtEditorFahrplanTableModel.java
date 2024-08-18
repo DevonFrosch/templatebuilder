@@ -16,6 +16,6 @@ public class FahrtEditorFahrplanTableModel extends DefaultTableModel
 	
 	public boolean isCellEditable(int row, int col)
 	{
-		return col > 1;
+		return col > 0;
 	}
 }
