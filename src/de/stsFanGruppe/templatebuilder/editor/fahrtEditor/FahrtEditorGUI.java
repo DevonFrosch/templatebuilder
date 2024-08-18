@@ -22,7 +22,6 @@ import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextPane;
-import javax.swing.JButton;
 import javax.swing.JComponent;
 
 public class FahrtEditorGUI extends JFrame implements GUI
@@ -40,9 +39,6 @@ public class FahrtEditorGUI extends JFrame implements GUI
 	
 	public final String[] SPALTEN_ÜBERSCHRIFTEN = new String[] {"Halt", "an", "ab"};
 	
-	/**
-	 * Launch the application.
-	 */
 	public static void main(String[] args)
 	{
 		EventQueue.invokeLater(new Runnable() {
@@ -60,9 +56,6 @@ public class FahrtEditorGUI extends JFrame implements GUI
 		});
 	}
 	
-	/**
-	 * Create the frame.
-	 */
 	private FahrtEditorGUI()
 	{
 		init();
@@ -98,8 +91,6 @@ public class FahrtEditorGUI extends JFrame implements GUI
 				FormSpecs.DEFAULT_COLSPEC,
 				FormSpecs.RELATED_GAP_COLSPEC,
 				ColumnSpec.decode("default:grow"),
-				FormSpecs.RELATED_GAP_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,
 				FormSpecs.RELATED_GAP_COLSPEC,},
 			new RowSpec[] {
 				FormSpecs.RELATED_GAP_ROWSPEC,
@@ -114,13 +105,9 @@ public class FahrtEditorGUI extends JFrame implements GUI
 		contentPanel.add(lblZugname, "2, 2, fill, default");
 		
 		comboBoxZugname = new AutoComboBox();
-		comboBoxZugname.addActionListener(event -> controller.comboBoxSelectionChanged(event));
+		comboBoxZugname.addActionListener(event -> controller.comboBoxSelectionChanged());
 		comboBoxZugname.setEditable(true);
 		contentPanel.add(comboBoxZugname, "4, 2, fill, fill");
-		
-		JButton btnLaden = new JButton("laden");
-		btnLaden.addActionListener(event -> controller.comboBoxSelectionChanged(event));
-		contentPanel.add(btnLaden, "6, 2, fill, fill");
 		
 		JLabel lblTemplate = new JLabel("Template");
 		contentPanel.add(lblTemplate, "2, 4");
@@ -129,10 +116,10 @@ public class FahrtEditorGUI extends JFrame implements GUI
 		lblTemplateInfo.setEditable(false);
 		lblTemplateInfo.setBackground(null);
 		lblTemplateInfo.setBorder(null);
-		contentPanel.add(lblTemplateInfo, "4, 4, 3, 1, fill, fill");
+		contentPanel.add(lblTemplateInfo, "4, 4, fill, fill");
 		
 		JScrollPane scrollPane = new JScrollPane();
-		contentPanel.add(scrollPane, "2, 6, 5, 1, fill, fill");
+		contentPanel.add(scrollPane, "2, 6, 3, 1, fill, fill");
 		
 		tableModel = new FahrtEditorFahrplanTableModel(SPALTEN_ÜBERSCHRIFTEN);
 		table = new JTable(tableModel);

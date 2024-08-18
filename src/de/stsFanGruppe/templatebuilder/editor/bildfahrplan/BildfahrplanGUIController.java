@@ -60,7 +60,6 @@ public class BildfahrplanGUIController extends EditorGUIController
 	{
 		editorDaten.setBildfahrplan(this);
 		editorDaten.registerFahrtenGeladenCallback(() -> {
-			log.debug("Fahrten geladen");
 			gui.recalculatePanelSize();
 		});
 		this.parentGui = parentGui;

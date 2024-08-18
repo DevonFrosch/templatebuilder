@@ -1,6 +1,5 @@
 package de.stsFanGruppe.templatebuilder.editor.fahrtEditor;
 
-import java.awt.event.ActionEvent;
 import java.util.Collection;
 import java.util.OptionalDouble;
 
@@ -151,7 +150,6 @@ public class FahrtEditorGUIController
 							}
 							
 							halt.setAnkunft(zeit);
-							log.debug("Setze Ankunft auf {}", value);
 						}
 						catch(NumberFormatException e)
 						{
@@ -178,7 +176,6 @@ public class FahrtEditorGUIController
 							}
 							
 							halt.setAbfahrt(zeit);
-							log.debug("Setze Abfahrt auf {}", value);
 						}
 						catch(NumberFormatException e)
 						{
@@ -201,10 +198,8 @@ public class FahrtEditorGUIController
 		}
 	}
 	
-	public synchronized void comboBoxSelectionChanged(ActionEvent event)
+	public synchronized void comboBoxSelectionChanged()
 	{
-		log.debug("comboBoxChanged()");
-		
 		ladeFahrplan(editorDaten.getFahrt(gui.getSelectedFahrt()));
 	}
 	
