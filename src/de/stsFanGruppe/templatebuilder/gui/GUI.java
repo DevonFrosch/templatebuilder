@@ -51,11 +51,10 @@ public interface GUI
 	
 	default public void buttonMessage(List<HervorgehobeneFahrtabschnitt> hervorgehobeneFahrtabschnitte, EditorDaten editorDaten) {
 		
-		JDialog zuegeAuswahlDialog = null;
 		//Nur wenn es mehr als 1 Zug in diesem Abschnitt gibt.
 		if(hervorgehobeneFahrtabschnitte.size() > 1) 
 		{
-			zuegeAuswahlDialog = new JDialog();
+			JDialog zuegeAuswahlDialog = new JDialog();
 			zuegeAuswahlDialog.setTitle("Zugauswahl");
 			
 			JLabel zuegeAuswahlUeberschrift = new JLabel("<html>Es wurden mehrere Züge gefunden.<p/>Bitte ein Zug auswählen:</html>");
@@ -67,20 +66,21 @@ public interface GUI
 				Fahrtabschnitt abschnitt = hervorgehobeneFahrtabschnitt.getFahrtabschnitt();
 				Fahrt fahrt = abschnitt.getFahrt();
 				String abfahrt = TimeFormater.doubleToString(abschnitt.getFahrt().getMinZeit());
-				String zuegeAuswahlName = fahrt.getName() + abfahrt;
+				String zuegeAuswahlName = fahrt.getName() + " (ab " + abfahrt + ")";
 				
 				JButton zuegeAuswahlButton = new JButton(zuegeAuswahlName);
 				zuegeAuswahlButton.addActionListener(new ActionListener()
 				{
 					@Override
 					public void actionPerformed(ActionEvent e) {
+						zuegeAuswahlDialog.setVisible(false);
 						openFahrtenEditor(editorDaten, fahrt);
 					}
 				});
 				zuegeAuswahlDialog.add(zuegeAuswahlButton);
 			}
 			zuegeAuswahlDialog.setLayout(new FlowLayout());
-			zuegeAuswahlDialog.setSize(250, (30 * hervorgehobeneFahrtabschnitte.size()) + 50);
+			zuegeAuswahlDialog.setSize(250, (30 * hervorgehobeneFahrtabschnitte.size()) + 70);
 			zuegeAuswahlDialog.setVisible(true);
 		} else {
 			openFahrtenEditor(editorDaten, hervorgehobeneFahrtabschnitte.get(0).getFahrtabschnitt().getFahrt());
