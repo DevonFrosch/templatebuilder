@@ -1,6 +1,7 @@
 package de.stsFanGruppe.templatebuilder.editor.fahrtEditor;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.OptionalDouble;
 
 import javax.swing.event.TableModelEvent;
@@ -15,7 +16,7 @@ public class FahrtEditorGUIController
 {
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(FahrtEditorGUIController.class);
 	
-	private static FahrtEditorGUIController instance;
+	private static HashMap<EditorDaten, FahrtEditorGUIController> instance = new HashMap<>();
 	
 	protected EditorDaten editorDaten;
 	protected FahrtEditorGUI gui;
@@ -24,11 +25,11 @@ public class FahrtEditorGUIController
 	
 	protected FahrtEditorGUIController(EditorDaten editorDaten)
 	{
-		instance = this;
+		instance.put(editorDaten, this);
 		NullTester.test(editorDaten);
 		this.editorDaten = editorDaten;
 		
-		this.gui = new FahrtEditorGUI(this, editorDaten.getName());
+		this.gui = new FahrtEditorGUI(this, "Fahrplaneditor: " + editorDaten.getName());
 		
 		initFahrtNamen();
 		fahrtenGeladenCallbackId = editorDaten.registerFahrtenGeladenCallback(this::initFahrtNamen);
@@ -49,12 +50,12 @@ public class FahrtEditorGUIController
 	 */
 	public static void openOrFocus(EditorDaten editorDaten)
 	{
-		if(instance == null)
+		if(!instance.containsKey(editorDaten))
 		{
 			new FahrtEditorGUIController(editorDaten);
 		}
-		instance.ladeFahrplan(null);
-		instance.gui.requestFocus();
+		instance.get(editorDaten).ladeFahrplan(null);
+		instance.get(editorDaten).gui.requestFocus();
 	}
 	
 	/**
@@ -65,12 +66,12 @@ public class FahrtEditorGUIController
 	 */
 	public static void openOrFocus(EditorDaten editorDaten, Fahrt fahrt)
 	{
-		if(instance == null)
+		if(!instance.containsKey(editorDaten))
 		{
 			new FahrtEditorGUIController(editorDaten);
 		}
-		instance.ladeFahrplan(fahrt);
-		instance.gui.requestFocus();
+		instance.get(editorDaten).ladeFahrplan(fahrt);
+		instance.get(editorDaten).gui.requestFocus();
 	}
 	
 	public void initFahrtNamen()
@@ -208,6 +209,6 @@ public class FahrtEditorGUIController
 		editorDaten.unregisterFahrtenGeladenCallback(fahrtenGeladenCallbackId);
 		gui.close();
 		gui = null;
-		instance = null;
+		instance.remove(editorDaten);
 	}
 }
