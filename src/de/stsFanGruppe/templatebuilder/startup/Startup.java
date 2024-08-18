@@ -5,7 +5,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import de.stsFanGruppe.templatebuilder.config.GeneralConfig;
 import de.stsFanGruppe.templatebuilder.gui.TemplateBuilderGUIController;
 
@@ -46,7 +47,7 @@ public class Startup
 		EventQueue.invokeLater(() -> {
 			try
 			{
-				TemplateBuilderGUIController controller = new TemplateBuilderGUIController(new GeneralConfig(), version, dev, update);
+				new TemplateBuilderGUIController(new GeneralConfig(), version, dev, update);
 			}
 			catch(Exception e)
 			{
@@ -59,7 +60,8 @@ public class Startup
 	{
 		try
 		{
-			InputStream inputStream = new URL(updateUrl)
+			InputStream inputStream = new URI(updateUrl)
+					.toURL()
 					.openConnection()
 					.getInputStream();
 	        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
@@ -71,7 +73,7 @@ public class Startup
             	return zeile;
             }
 		}
-		catch(IOException e)
+		catch(IOException | URISyntaxException e)
 		{}
 		
 		return null;

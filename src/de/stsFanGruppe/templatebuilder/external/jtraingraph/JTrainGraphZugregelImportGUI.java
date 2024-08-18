@@ -29,7 +29,7 @@ public class JTrainGraphZugregelImportGUI extends JDialog implements GUI
 	{
 		try
 		{
-			JTrainGraphZugregelImportGUI dialog = new JTrainGraphZugregelImportGUI(null, (a) -> {});
+			new JTrainGraphZugregelImportGUI(null, (a) -> {});
 		}
 		catch(Exception e)
 		{

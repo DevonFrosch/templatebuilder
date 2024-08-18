@@ -376,7 +376,6 @@ public class BildfahrplanGUIController extends EditorGUIController
 						double kmAb = letzterKm;
 						double ab = letzteZeit;
 						String name = zugName;
-						String vollerName = vollerZugName;
 						double showTextWidth = fontMetrics.stringWidth(name) * 0.9;
 						
 						// für ZeigeZeiten

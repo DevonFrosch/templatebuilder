@@ -125,7 +125,7 @@ public class BildfahrplanSettingsGUIController extends GUIController
 						GUILocker.unlock(FahrtDarstellungSettingsGUI.class);
 					}
 				);
-				FahrtDarstellungSettingsGUI ffsg = new FahrtDarstellungSettingsGUI(ffsgc, gui);
+				new FahrtDarstellungSettingsGUI(ffsgc, gui);
 				break;
 			case "cancel":
 				close();

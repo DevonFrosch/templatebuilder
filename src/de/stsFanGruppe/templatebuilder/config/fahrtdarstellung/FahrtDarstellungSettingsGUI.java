@@ -44,7 +44,7 @@ public class FahrtDarstellungSettingsGUI extends JDialog implements GUI
 	{
 		try
 		{
-			FahrtDarstellungSettingsGUI dialog = new FahrtDarstellungSettingsGUI(
+			new FahrtDarstellungSettingsGUI(
 					new FahrtDarstellungSettingsGUIController(new FahrtDarstellungConfig(), () -> {}), null);
 		}
 		catch(Exception e)

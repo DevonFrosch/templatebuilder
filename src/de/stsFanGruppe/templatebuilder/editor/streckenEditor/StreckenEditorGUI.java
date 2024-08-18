@@ -33,7 +33,7 @@ public class StreckenEditorGUI extends JDialog implements GUI
 	{
 		try
 		{
-			StreckenEditorGUI dialog = new StreckenEditorGUI(new StreckenEditorGUIController(new EditorDaten(), () -> {}), null);
+			new StreckenEditorGUI(new StreckenEditorGUIController(new EditorDaten(), () -> {}), null);
 		}
 		catch(Exception e)
 		{

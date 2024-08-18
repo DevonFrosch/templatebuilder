@@ -1,9 +1,6 @@
 package de.stsFanGruppe.templatebuilder.gui;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Panel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
@@ -92,6 +89,6 @@ public interface GUI
 	
 	default void openFahrtenEditor(EditorDaten editorDaten, Fahrt fahrt)
 	{
-		FahrtEditorGUIController controller = new FahrtEditorGUIController(editorDaten, () -> GUILocker.unlock(FahrtEditorGUI.class), fahrt);
+		new FahrtEditorGUIController(editorDaten, () -> GUILocker.unlock(FahrtEditorGUI.class), fahrt);
 	}
 }

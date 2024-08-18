@@ -276,7 +276,6 @@ public class EditorDaten
 		NullTester.test(streckenabschnitt);
 		log.trace("ladeStreckenabschnitt()");
 		
-		double streckenlaenge = 0;
 		double letzterAlterKm = 0;
 		double letzterNeuerKm = 0;
 		
@@ -293,7 +292,7 @@ public class EditorDaten
 		
 		synchronized(streckenKmLock)
 		{
-			streckenKm.put(b, new Double(0.0));
+			streckenKm.put(b, 0.0);
 		}
 		
 		letzterAlterKm = (b.getMaxKm() + b.getMinKm()) / 2;
@@ -308,7 +307,7 @@ public class EditorDaten
 			
 			synchronized(streckenKmLock)
 			{
-				streckenKm.put(b, new Double(neuerKm));
+				streckenKm.put(b, Double.valueOf(neuerKm));
 			}
 			
 			letzterAlterKm = alterKm;

@@ -117,10 +117,7 @@ public class TabEditorGUIController extends EditorGUIController
 		
 		for(Fahrt fahrt : fahrten)
 		{
-			String fahrtName = fahrt.getName();
 			NavigableSet<Fahrplanhalt> halte = fahrt.getFahrplanhalte();
-			
-			double letzterKm = -1;
 			
 			if(halte == null || halte.size() < 1)
 			{

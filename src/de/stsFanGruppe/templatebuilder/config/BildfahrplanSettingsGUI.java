@@ -61,7 +61,7 @@ public class BildfahrplanSettingsGUI extends JDialog implements GUI
 	{
 		try
 		{
-			BildfahrplanSettingsGUI dialog = new BildfahrplanSettingsGUI(new BildfahrplanSettingsGUIController(new BildfahrplanConfig(), () -> {}), null);
+			new BildfahrplanSettingsGUI(new BildfahrplanSettingsGUIController(new BildfahrplanConfig(), () -> {}), null);
 		}
 		catch(Exception e)
 		{

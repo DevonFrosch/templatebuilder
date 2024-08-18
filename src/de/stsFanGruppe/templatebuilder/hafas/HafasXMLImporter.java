@@ -25,8 +25,6 @@ public class HafasXMLImporter
 		XMLInputFactory factory = XMLInputFactory.newInstance();
 		XMLStreamReader parser = factory.createXMLStreamReader(result);
 		
-		StringBuilder spacer = new StringBuilder();
-		
 		List<Station> stations = new LinkedList<>();
 		
 		while(parser.hasNext())
@@ -84,7 +82,16 @@ public class HafasXMLImporter
 	
 	protected static InputStream getAnswer(String url, String xmlData, String charset) throws IOException
 	{
-		URLConnection urlConnection = new URL(url).openConnection();
+		URI uri;
+		try
+		{
+			uri = new URI(url);
+		}
+		catch(URISyntaxException e)
+		{
+			throw new IOException(e);
+		}
+		URLConnection urlConnection = uri.toURL().openConnection();
 		urlConnection.setUseCaches(false);
 		urlConnection.setDoOutput(true); // Triggers POST.
 		urlConnection.setRequestProperty("accept-charset", charset);

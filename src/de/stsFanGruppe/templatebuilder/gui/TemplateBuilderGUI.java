@@ -87,14 +87,14 @@ public class TemplateBuilderGUI implements GUI
 		menuBar.add(mnDatei);
 		
 		JMenuItem mntmNeu = new JMenuItem("Neu...");
-		mntmNeu.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_MASK));
+		mntmNeu.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_DOWN_MASK));
 		mntmNeu.setActionCommand("neu");
 		mntmNeu.addActionListener((event) -> controller.menuAction(event));
 		mnDatei.add(mntmNeu);
 		
 		JMenuItem mntmffnen = new JMenuItem("\u00D6ffnen...");
 		mntmffnen.setEnabled(false);
-		mntmffnen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_MASK));
+		mntmffnen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK));
 		mntmffnen.setActionCommand("öffnen");
 		mntmffnen.addActionListener((event) -> controller.menuAction(event));
 		mnDatei.add(mntmffnen);
@@ -103,14 +103,14 @@ public class TemplateBuilderGUI implements GUI
 		
 		JMenuItem mntmSpeichern = new JMenuItem("Speichern");
 		mntmSpeichern.setEnabled(false);
-		mntmSpeichern.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK));
+		mntmSpeichern.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK));
 		mntmSpeichern.setActionCommand("speichern");
 		mntmSpeichern.addActionListener((event) -> controller.menuAction(event));
 		mnDatei.add(mntmSpeichern);
 		
 		JMenuItem mntmSpeichernUnter = new JMenuItem("Speichern unter...");
 		mntmSpeichernUnter.setEnabled(false);
-		mntmSpeichernUnter.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK));
+		mntmSpeichernUnter.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK));
 		mntmSpeichernUnter.setActionCommand("speichernUnter");
 		mntmSpeichernUnter.addActionListener((event) -> controller.menuAction(event));
 		mnDatei.add(mntmSpeichernUnter);
@@ -143,7 +143,7 @@ public class TemplateBuilderGUI implements GUI
 		JMenuItem mntmSchliessen = new JMenuItem("Schlie\u00DFen");
 		mntmSchliessen.setActionCommand("exit");
 		mntmSchliessen.addActionListener((event) -> controller.menuAction(event));
-		mntmSchliessen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F4, InputEvent.ALT_MASK));
+		mntmSchliessen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F4, InputEvent.ALT_DOWN_MASK));
 		mnDatei.add(mntmSchliessen);
 		
 		JMenu mnBearbeiten = new JMenu("Bearbeiten");
@@ -157,13 +157,13 @@ public class TemplateBuilderGUI implements GUI
 		mnBearbeiten.add(new JSeparator());
 		
 		JMenuItem mntmSucheZug = new JMenuItem("Suche Zug...");
-		mntmSucheZug.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F, InputEvent.CTRL_MASK));
+		mntmSucheZug.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F, InputEvent.CTRL_DOWN_MASK));
 		mntmSucheZug.setActionCommand("sucheZug");
 		mntmSucheZug.addActionListener((event) -> controller.menuAction(event));
 		mnBearbeiten.add(mntmSucheZug);
 		
 		JMenuItem mntmSucheTemplate = new JMenuItem("Suche Template...");
-		mntmSucheTemplate.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK));
+		mntmSucheTemplate.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK));
 		mntmSucheTemplate.setActionCommand("sucheTemplate");
 		mntmSucheTemplate.addActionListener((event) -> controller.menuAction(event));
 		mnBearbeiten.add(mntmSucheTemplate);

@@ -36,7 +36,7 @@ public class JTrainGraphExportGUI extends JDialog implements GUI
 	{
 		try
 		{
-			JTrainGraphExportGUI dialog = new JTrainGraphExportGUI(null, (a) -> {});
+			new JTrainGraphExportGUI(null, (a) -> {});
 		}
 		catch(Exception e)
 		{

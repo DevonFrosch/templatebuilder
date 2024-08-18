@@ -1,22 +1,15 @@
 package de.stsFanGruppe.templatebuilder.editor.streckenEditor;
 
 import java.awt.event.ActionEvent;
-import java.util.List;
-import java.util.NavigableSet;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
 import de.stsFanGruppe.templatebuilder.editor.EditorDaten;
 import de.stsFanGruppe.templatebuilder.strecken.Betriebsstelle;
 import de.stsFanGruppe.templatebuilder.strecken.Gleis;
-import de.stsFanGruppe.templatebuilder.strecken.Gleisabschnitt;
 import de.stsFanGruppe.templatebuilder.strecken.Strecke;
 import de.stsFanGruppe.templatebuilder.strecken.Streckenabschnitt;
-import de.stsFanGruppe.templatebuilder.zug.Fahrplanhalt;
 import de.stsFanGruppe.templatebuilder.zug.Fahrt;
 import de.stsFanGruppe.tools.FirstLastLinkedList;
 import de.stsFanGruppe.tools.FirstLastList;
@@ -70,9 +63,6 @@ public class StreckenEditorGUIController
 		
 		// Tabellenmodell wird ausgelesen
 		DefaultTableModel model = (DefaultTableModel) gui.table.getModel();
-		
-		// Selectionmodell wird ausgelesen
-		ListSelectionModel selectionModel = gui.table.getSelectionModel();
 		
 		// Erhalte ausgewählte Zeilen
 		int[] rows = gui.table.getSelectedRows();
@@ -185,7 +175,7 @@ public class StreckenEditorGUIController
 		assert editorDaten != null;
 		
 		//Erstelle model für Tabelle mit fester Datentyp für die einzelnen Spalten
-		DefaultTableModel model = new DefaultTableModel(gui.columnNames, 0) {
+		DefaultTableModel model = new DefaultTableModel(StreckenEditorGUI.columnNames, 0) {
 			@Override
 			public Class<?> getColumnClass(int column)
 			{
@@ -207,7 +197,6 @@ public class StreckenEditorGUIController
 		
 		if(streckenabschnitt != null)
 		{
-			int i = 0;
 			for(Betriebsstelle bs : streckenabschnitt.getBetriebsstellen())
 			{	
 				long anzahlZuegeProBetriebstelle = 0;
@@ -219,7 +208,6 @@ public class StreckenEditorGUIController
 				double km = editorDaten.getStreckenKm(bs);
 				String name = bs.getName();
 				Object[] row = {anzahlZuegeProBetriebstelle, km, name};
-				i++;
 				
 				model.addRow(row);
 			}
@@ -254,7 +242,6 @@ public class StreckenEditorGUIController
 			}
 			
 			Gleis gleis = new Gleis(stName, Double.parseDouble(km));
-			Gleisabschnitt gleisabschnitt = gleis.getGleisabschnitte().first();
 			
 			betriebsstelle.addGleis(gleis);
 			betriebsstellen.add(betriebsstelle);

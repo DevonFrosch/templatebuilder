@@ -27,14 +27,6 @@ public class TabEditorGUI extends JPanel implements EditorGUI
 		init();
 	}
 	
-	/**
-	 * Create the panel.
-	 */
-	private TabEditorGUI()
-	{
-		init();
-	}
-	
 	public void init()
 	{
 		setLayout(new BorderLayout(0, 0));

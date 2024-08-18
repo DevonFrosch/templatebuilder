@@ -4,7 +4,6 @@ import java.awt.event.ActionEvent;
 import java.util.NavigableSet;
 import javax.swing.table.DefaultTableModel;
 import de.stsFanGruppe.templatebuilder.editor.EditorDaten;
-import de.stsFanGruppe.templatebuilder.strecken.Streckenabschnitt;
 import de.stsFanGruppe.templatebuilder.zug.Fahrplanhalt;
 import de.stsFanGruppe.templatebuilder.zug.Fahrt;
 import de.stsFanGruppe.tools.NullTester;
@@ -67,7 +66,6 @@ public class FahrtEditorGUIController
 			return;
 		}
 		
-		Streckenabschnitt strecke = editorDaten.getStreckenabschnitt();
 		NavigableSet<Fahrplanhalt> halte = fahrt.getFahrplanhalte();
 		
 		if(halte.size() < 2)

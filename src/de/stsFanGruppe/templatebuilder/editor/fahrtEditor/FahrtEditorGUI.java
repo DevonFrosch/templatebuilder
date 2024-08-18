@@ -47,7 +47,7 @@ public class FahrtEditorGUI extends JFrame implements GUI
 			{
 				try
 				{
-					FahrtEditorGUI frame = new FahrtEditorGUI();
+					new FahrtEditorGUI();
 				}
 				catch(Exception e)
 				{

@@ -103,9 +103,6 @@ public class BildfahrplanPaintHelper
 	{
 		g.setColor(c);
 		
-		FontMetrics f = g.getFontMetrics();
-		int stringWidth = f.stringWidth(beschriftung);
-		
 		// Text einzeichnen
 		g.drawString(beschriftung, x, y);
 	}

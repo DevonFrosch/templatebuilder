@@ -23,7 +23,6 @@ import de.stsFanGruppe.templatebuilder.editor.streckenEditor.StreckenEditorGUICo
 import de.stsFanGruppe.templatebuilder.editor.tabEditor.TabEditorGUIController;
 import de.stsFanGruppe.templatebuilder.external.*;
 import de.stsFanGruppe.templatebuilder.external.jtraingraph.*;
-import de.stsFanGruppe.templatebuilder.gui.TemplateBuilderGUI;
 import de.stsFanGruppe.templatebuilder.strecken.Streckenabschnitt;
 import de.stsFanGruppe.templatebuilder.types.Schachtelung;
 import de.stsFanGruppe.templatebuilder.zug.Fahrt;
@@ -76,7 +75,7 @@ public class TemplateBuilderGUIController extends GUIController
 			{
 				if(!GUILocker.lock(JTrainGraphImportGUI.class))
 					break;
-				JTrainGraphImportGUI jtgi = new JTrainGraphImportGUI(gui.getFrame(), config, (ergebnis) -> {
+				new JTrainGraphImportGUI(gui.getFrame(), config, (ergebnis) -> {
 					assert ergebnis != null;
 					
 					if(ergebnis.success())
@@ -169,7 +168,7 @@ public class TemplateBuilderGUIController extends GUIController
 				
 				if(!GUILocker.lock(JTrainGraphExportGUI.class))
 					break;
-				JTrainGraphExportGUI jtge = new JTrainGraphExportGUI(gui.getFrame(), (ergebnis) -> {
+				new JTrainGraphExportGUI(gui.getFrame(), (ergebnis) -> {
 					assert ergebnis != null;
 					
 					if(ergebnis.success())
@@ -221,7 +220,7 @@ public class TemplateBuilderGUIController extends GUIController
 				if(!GUILocker.lock(FahrtEditorGUI.class))
 					break;
 				
-				FahrtEditorGUIController controller = new FahrtEditorGUIController(editorDaten, () -> GUILocker.unlock(FahrtEditorGUI.class));
+				new FahrtEditorGUIController(editorDaten, () -> GUILocker.unlock(FahrtEditorGUI.class));
 				
 				break;
 			}
@@ -267,7 +266,7 @@ public class TemplateBuilderGUIController extends GUIController
 					break;
 				
 				StreckenEditorGUIController controller = new StreckenEditorGUIController(editorDaten, () -> GUILocker.unlock(StreckenEditorGUI.class));
-				StreckenEditorGUI bssg = new StreckenEditorGUI(controller, gui.getFrame());
+				new StreckenEditorGUI(controller, gui.getFrame());
 				break;
 			}
 			case "zeigeBildfahrplan":
@@ -355,7 +354,7 @@ public class TemplateBuilderGUIController extends GUIController
 			case "options":
 				if(!GUILocker.lock(BildfahrplanSettingsGUI.class))
 					break;
-				BildfahrplanSettingsGUI sg = new BildfahrplanSettingsGUI(
+				new BildfahrplanSettingsGUI(
 						new BildfahrplanSettingsGUIController(bildfahrplanConfig, () -> GUILocker.unlock(BildfahrplanSettingsGUI.class)), gui.getFrame());
 				break;
 			case "about":

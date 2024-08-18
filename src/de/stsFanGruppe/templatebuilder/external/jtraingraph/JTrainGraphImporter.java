@@ -33,7 +33,7 @@ public class JTrainGraphImporter extends Importer
 				throw new ImportException("Zu alte Version einer JTG-Datei");
 			}
 			
-			XMLElement tStations = xml.findTag("stations");
+			xml.findTag("stations");
 			
 			FirstLastList<Betriebsstelle> betriebsstellen = new FirstLastLinkedList<>();
 			XMLElement tSta = null;
@@ -68,7 +68,6 @@ public class JTrainGraphImporter extends Importer
 				}
 				
 				Gleis gleis = new Gleis(stName, Double.parseDouble(km.replace(',', '.')));
-				Gleisabschnitt gleisabschnitt = gleis.getGleisabschnitte().first();
 				
 				betriebsstelle.addGleis(gleis);
 				betriebsstellen.add(betriebsstelle);
@@ -138,15 +137,13 @@ public class JTrainGraphImporter extends Importer
 				throw new ImportException("Zu alte Version einer JTG-Datei");
 			}
 			
-			XMLElement tTrains = xml.findTag("trains");
+			xml.findTag("trains");
 			
 			XMLElement train = null;
-			List<Fahrplanhalt> halte = new LinkedList<>();
 			
-			for(int fahrtCounter = 1; (train = xml.findTagUntil("trains", "ti", "ta")) != null; fahrtCounter++)
+			while((train = xml.findTagUntil("trains", "ti", "ta")) != null)
 			{
 				XMLElement tTime = null;
-				boolean richtung = train.getName().toLowerCase() == "ti";
 				NavigableSet<Fahrplanhalt> fahrplanhalte = new TreeSet<>();
 				
 				for(int i = 0; (tTime = xml.findTagUntil(train.getName().toLowerCase(), "t")) != null; i++)

@@ -8,8 +8,6 @@ import java.util.StringJoiner;
 import de.stsFanGruppe.tools.XMLExportable;
 
 public class Template implements Comparable<Template>, XMLExportable {
-	private static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Template.class);
-	
 	protected String name = null;
 	protected int tid = 0;
 	
