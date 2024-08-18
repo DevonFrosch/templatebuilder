@@ -21,6 +21,7 @@ public class FahrtEditorGUIController
 	protected EditorDaten editorDaten;
 	protected FahrtEditorGUI gui;
 	private Object fahrtenGeladenCallbackId;
+	private Object editorDatenCloseCallbackId;
 	private Fahrt aktuelleFahrt;
 	
 	protected FahrtEditorGUIController(EditorDaten editorDaten)
@@ -33,6 +34,7 @@ public class FahrtEditorGUIController
 		
 		initFahrtNamen();
 		fahrtenGeladenCallbackId = editorDaten.registerFahrtenGeladenCallback(this::initFahrtNamen);
+		editorDatenCloseCallbackId = editorDaten.registerCloseCallback(this::close);
 	}
 	
 	protected FahrtEditorGUIController(EditorDaten editorDaten, Fahrt fahrt)
@@ -207,6 +209,7 @@ public class FahrtEditorGUIController
 	protected void close()
 	{
 		editorDaten.unregisterFahrtenGeladenCallback(fahrtenGeladenCallbackId);
+		editorDaten.unregisterCloseCallback(editorDatenCloseCallbackId);
 		gui.close();
 		gui = null;
 		instance.remove(editorDaten);

@@ -37,6 +37,7 @@ public class EditorDaten
 	protected CallbackHandler schachtelungChangedCallbacks = new CallbackHandler();
 	protected CallbackHandler fahrtenGeladenCallbacks = new CallbackHandler();
 	protected CallbackHandler streckeGeladenCallbacks = new CallbackHandler();
+	protected CallbackHandler closeCallbacks = new CallbackHandler();
 	
 	protected String name = null;
 	
@@ -271,6 +272,16 @@ public class EditorDaten
 		streckeGeladenCallbacks.unregister(callbackId);
 	}
 	
+	public Object registerCloseCallback(Runnable callback)
+	{
+		return closeCallbacks.register(callback);
+	}
+	
+	public void unregisterCloseCallback(Object callbackId)
+	{
+		closeCallbacks.unregister(callbackId);
+	}
+	
 	// Strecken und Fahrten
 	
 	public void ladeStreckenabschnitt(Streckenabschnitt streckenabschnitt)
@@ -481,5 +492,10 @@ public class EditorDaten
 		schachtelung = Schachtelung.KEINE;
 		schachtelungMinuten = 1440;
 		schachtelungTemplate = null;
+	}
+	
+	public void close()
+	{
+		closeCallbacks.runAll();
 	}
 }

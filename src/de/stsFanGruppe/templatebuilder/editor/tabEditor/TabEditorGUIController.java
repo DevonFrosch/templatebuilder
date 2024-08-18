@@ -145,17 +145,17 @@ public class TabEditorGUIController extends EditorGUIController
 		}
 	}
 	
-	public TabEditorGUI getTabEditorGUI()
+	public TabEditorGUI getGUI()
 	{
 		return this.gui;
 	}
 	
-	public TabEditorZeilenheaderGUI getZeilenheaderGUI()
+	public TabEditorZeilenheaderGUI getRowHeader()
 	{
 		return this.zeilenGui;
 	}
 	
-	public JTableHeader getTableHeader()
+	public JTableHeader getColumnHeader()
 	{
 		return this.gui.getTableHeader();
 	}

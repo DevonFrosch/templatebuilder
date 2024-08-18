@@ -78,17 +78,17 @@ public class BildfahrplanGUIController extends EditorGUIController
 	}
 	
 	// Offizielle Funktionen
-	public BildfahrplanGUI getBildfahrplanGUI()
+	public BildfahrplanGUI getGUI()
 	{
 		return gui;
 	}
 	
-	public BildfahrplanSpaltenheaderGUI getBildfahrplanSpaltenHeaderGUI()
+	public BildfahrplanSpaltenheaderGUI getColumnHeader()
 	{
 		return spaltenGui;
 	}
 	
-	public BildfahrplanZeilenheaderGUI getBildfahrplanZeilenHeaderGUI()
+	public BildfahrplanZeilenheaderGUI getRowHeader()
 	{
 		return zeilenGui;
 	}

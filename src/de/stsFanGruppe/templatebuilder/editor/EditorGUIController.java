@@ -1,5 +1,7 @@
 package de.stsFanGruppe.templatebuilder.editor;
 
+import java.awt.Component;
+
 import de.stsFanGruppe.templatebuilder.config.GeneralConfig;
 import de.stsFanGruppe.tools.NullTester;
 
@@ -39,11 +41,21 @@ public abstract class EditorGUIController
 		this.editorDaten = editorDaten;
 	}
 	
+	public abstract Component getGUI();
+	
+	public abstract Component getColumnHeader();
+	
+	public abstract Component getRowHeader();
+	
 	public void close()
 	{
 		config.getBildfahrplanConfig().unregisterChangeHandler(configChangeHandleId);
 		config.getFahrtDarstellungConfig().unregisterChangeHandler(fahrtConfigChangeHandleId);
-		editorDaten.unregisterSchachtelungChangedCallback(schachtelungChangedHandleId);
+		if(editorDaten != null)
+		{
+			editorDaten.unregisterSchachtelungChangedCallback(schachtelungChangedHandleId);
+			editorDaten.close();
+		}
 	}
 	
 	public abstract void configChanged();
