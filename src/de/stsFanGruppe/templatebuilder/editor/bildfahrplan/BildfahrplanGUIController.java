@@ -1,14 +1,24 @@
 package de.stsFanGruppe.templatebuilder.editor.bildfahrplan;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
+
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanConfig;
 import de.stsFanGruppe.templatebuilder.config.GeneralConfig;
 import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.FahrtDarstellungHandler;
 import de.stsFanGruppe.templatebuilder.editor.EditorDaten;
 import de.stsFanGruppe.templatebuilder.editor.EditorGUIController;
+import de.stsFanGruppe.templatebuilder.editor.fahrtEditor.FahrtEditorGUI;
+import de.stsFanGruppe.templatebuilder.editor.fahrtEditor.FahrtEditorGUIController;
 import de.stsFanGruppe.templatebuilder.gui.GUI;
 import de.stsFanGruppe.templatebuilder.strecken.Betriebsstelle;
 import de.stsFanGruppe.templatebuilder.strecken.Gleisabschnitt;
@@ -159,7 +169,7 @@ public class BildfahrplanGUIController extends EditorGUIController
 		
 		if(lastClickTime + 5.0e8 > System.nanoTime() && zuege.size() > 0 && zuege != null)
 		{
-			parentGui.buttonMessage(zuege, editorDaten);
+			chooseZug(zuege);
 		}
 		else
 		{
@@ -183,6 +193,49 @@ public class BildfahrplanGUIController extends EditorGUIController
 			bildfahrplanConfig.getFahrtDarstellungConfig().setHervorgehobeneZuege(abschnitte);
 		}
 		lastClickTime = System.nanoTime();
+	}
+	
+	private void chooseZug(List<HervorgehobeneFahrtabschnitt> hervorgehobeneFahrtabschnitte) {
+		
+		//Nur wenn es mehr als 1 Zug in diesem Abschnitt gibt.
+		if(hervorgehobeneFahrtabschnitte.size() > 1) 
+		{
+			JDialog zuegeAuswahlDialog = new JDialog();
+			zuegeAuswahlDialog.setTitle("Zugauswahl");
+			
+			JLabel zuegeAuswahlUeberschrift = new JLabel("<html>Es wurden mehrere Züge gefunden.<p/>Bitte ein Zug auswählen:</html>");
+			zuegeAuswahlUeberschrift.setSize(225, 30);
+			zuegeAuswahlDialog.add(zuegeAuswahlUeberschrift);
+			
+			for(HervorgehobeneFahrtabschnitt hervorgehobeneFahrtabschnitt : hervorgehobeneFahrtabschnitte) 
+			{
+				Fahrtabschnitt abschnitt = hervorgehobeneFahrtabschnitt.getFahrtabschnitt();
+				Fahrt fahrt = abschnitt.getFahrt();
+				String abfahrt = TimeFormater.doubleToString(abschnitt.getFahrt().getMinZeit());
+				String zuegeAuswahlName = fahrt.getName() + " (ab " + abfahrt + ")";
+				
+				JButton zuegeAuswahlButton = new JButton(zuegeAuswahlName);
+				zuegeAuswahlButton.addActionListener(new ActionListener()
+				{
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						zuegeAuswahlDialog.setVisible(false);
+						openFahrtenEditor(editorDaten, fahrt);
+					}
+				});
+				zuegeAuswahlDialog.add(zuegeAuswahlButton);
+			}
+			zuegeAuswahlDialog.setLayout(new FlowLayout());
+			zuegeAuswahlDialog.setSize(250, (30 * hervorgehobeneFahrtabschnitte.size()) + 70);
+			zuegeAuswahlDialog.setVisible(true);
+		} else {
+			openFahrtenEditor(editorDaten, hervorgehobeneFahrtabschnitte.get(0).getFahrtabschnitt().getFahrt());
+		}
+	}
+	
+	private void openFahrtenEditor(EditorDaten editorDaten, Fahrt fahrt)
+	{
+		new FahrtEditorGUIController(editorDaten, () -> GUILocker.unlock(FahrtEditorGUI.class), fahrt);
 	}
 	
 	// Interne Funktionen

@@ -2,7 +2,9 @@ package de.stsFanGruppe.templatebuilder.editor.fahrtEditor;
 
 import java.awt.event.ActionEvent;
 import java.util.NavigableSet;
-import javax.swing.table.DefaultTableModel;
+
+import javax.swing.event.TableModelEvent;
+
 import de.stsFanGruppe.templatebuilder.editor.EditorDaten;
 import de.stsFanGruppe.templatebuilder.zug.Fahrplanhalt;
 import de.stsFanGruppe.templatebuilder.zug.Fahrt;
@@ -17,8 +19,7 @@ public class FahrtEditorGUIController
 	protected FahrtEditorGUI gui;
 	private Runnable onClose;
 	private Object fahrtenGeladenCallbackId;
-	
-	protected boolean ignoreNextComboBoxUpdate = false;
+	private Fahrt aktuelleFahrt;
 	
 	public FahrtEditorGUIController(EditorDaten editorDaten, Runnable onClose)
 	{
@@ -65,50 +66,51 @@ public class FahrtEditorGUIController
 		{
 			return;
 		}
+		aktuelleFahrt = fahrt;
 		
 		NavigableSet<Fahrplanhalt> halte = fahrt.getFahrplanhalte();
 		
-		if(halte.size() < 2)
-		{
-			log.warn("ladeFahrplan: Zu wenig Fahrplanhalte: {}", halte.size());
-			return;
-		}
-		
-		String[][] inhalte = new String[(halte.size()-1)*2][2];
+		String[][] inhalte = new String[halte.size()][3];
 		
 		int j = 0;
-		{
-			Fahrplanhalt halt = halte.first();
-			inhalte[j][0] = halt.getBetriebsstelle().getName() + " (ab)";
-			inhalte[j][1] = TimeFormater.optionalDoubleToString(halt.getAbfahrt());
-			j++;
-		}
-		
 		for(Fahrplanhalt halt : halte)
 		{
-			if(halt == halte.first() || halt == halte.last())
+			String an = TimeFormater.optionalDoubleToString(halt.getAnkunft());
+			String ab = TimeFormater.optionalDoubleToString(halt.getAbfahrt ());
+			
+			if(halt == halte.first() && halte.size() >= 2)
 			{
-				continue;
+				an = "";
+			}
+			if(halt == halte.last() && halte.size() >= 2)
+			{
+				ab = "";
 			}
 			
-			String haltName = halt.getBetriebsstelle().getName();
-			inhalte[j][0] =  haltName + " (an)";
-			inhalte[j][1] = TimeFormater.optionalDoubleToString(halt.getAnkunft());
-			j++;
-			inhalte[j][0] =  haltName + " (ab)";
-			inhalte[j][1] = TimeFormater.optionalDoubleToString(halt.getAbfahrt ());
+			inhalte[j][0] = halt.getBetriebsstelle().getName();
+			inhalte[j][1] = an;
+			inhalte[j][2] = ab;
 			j++;
 		}
+		
+		gui.updateSelectedFahrt(fahrt, inhalte, (event) -> tableChanged(event));
+	}
+	
+	protected void tableChanged(TableModelEvent event)
+	{
+		if(aktuelleFahrt == null)
 		{
-			Fahrplanhalt halt = halte.last();
-
-			inhalte[j][0] = halt.getBetriebsstelle().getName() + " (an)";
-			inhalte[j][1] = TimeFormater.optionalDoubleToString(halt.getAnkunft());
+			return;
 		}
+		int column = event.getColumn();
+		NavigableSet<Fahrplanhalt> halte = aktuelleFahrt.getFahrplanhalte();
 		
-		DefaultTableModel model = new DefaultTableModel(inhalte, gui.SPALTEN_ÜBERSCHRIFTEN);
-		
-		gui.setTableModel(model);
+		for(int row = event.getFirstRow(); row <= event.getLastRow(); row++)
+		{
+			String value = gui.getTableValueAt(row, column);
+			
+			// TODO: editorDaten aktualisieren und alle Ansichten neu laden
+		}
 	}
 	
 	public synchronized void comboBoxSelectionChanged(ActionEvent event)
