@@ -146,6 +146,12 @@ public class FahrtEditorGUI extends JFrame implements GUI
 		return comboBoxZugname.getSelectedItem();
 	}
 	
+	public void clearFahrt()
+	{
+		table.setModel(new DefaultTableModel());
+		lblTemplateInfo.setText("");
+		comboBoxZugname.setSelectedItem(null);
+	}
 	public void updateSelectedFahrt(Fahrt fahrt, String[][] fahrplan, TableModelListener tableUpdate)
 	{
 		DefaultTableModel model = new FahrtEditorFahrplanTableModel(fahrplan, SPALTEN_ÜBERSCHRIFTEN);
@@ -153,6 +159,7 @@ public class FahrtEditorGUI extends JFrame implements GUI
 		table.setModel(model);
 		
 		lblTemplateInfo.setText(fahrt.getTemplate().toString());
+		comboBoxZugname.setSelectedItem(fahrt.getName());
 	}
 	
 	public void setComboBoxItems(String[] items)

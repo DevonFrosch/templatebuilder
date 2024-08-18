@@ -16,18 +16,18 @@ public class FahrtEditorGUIController
 {
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(FahrtEditorGUIController.class);
 	
+	private static FahrtEditorGUIController instance;
+	
 	protected EditorDaten editorDaten;
 	protected FahrtEditorGUI gui;
-	private Runnable onClose;
 	private Object fahrtenGeladenCallbackId;
 	private Fahrt aktuelleFahrt;
 	
-	public FahrtEditorGUIController(EditorDaten editorDaten, Runnable onClose)
+	protected FahrtEditorGUIController(EditorDaten editorDaten)
 	{
+		instance = this;
 		NullTester.test(editorDaten);
-		NullTester.test(onClose);
 		this.editorDaten = editorDaten;
-		this.onClose = onClose;
 		
 		this.gui = new FahrtEditorGUI(this, editorDaten.getName());
 		
@@ -35,25 +35,43 @@ public class FahrtEditorGUIController
 		fahrtenGeladenCallbackId = editorDaten.registerFahrtenGeladenCallback(this::initFahrtNamen);
 	}
 	
-	/**
-	 * Für den Aufruf über Doppelklick auf einen Fahrtabschnitt. Hier soll die ausgewählte Fahrt direkt geladen werden.
-	 * @param editorDaten
-	 * @param onClose
-	 * @param fahrt
-	 */
-	public FahrtEditorGUIController(EditorDaten editorDaten, Runnable onClose, Fahrt fahrt)
+	protected FahrtEditorGUIController(EditorDaten editorDaten, Fahrt fahrt)
 	{
-		NullTester.test(editorDaten);
-		NullTester.test(onClose);
-		this.editorDaten = editorDaten;
-		this.onClose = onClose;
-		
-		this.gui = new FahrtEditorGUI(this, editorDaten.getName());
-		
-		initFahrtNamen();
-		fahrtenGeladenCallbackId = editorDaten.registerFahrtenGeladenCallback(this::initFahrtNamen);
+		this(editorDaten);
 		gui.comboBoxZugname.setSelectedItem(fahrt.getName());
 		ladeFahrplan(fahrt);
+	}
+
+	/**
+	 * Öffnet den Dialog ohne Fahrt.
+	 * Falls der Dialog schon offen ist, setzt ihn in den Fokus und entfernt die Fahrt.
+	 * 
+	 * Für den Aufruf über das Menü.
+	 */
+	public static void openOrFocus(EditorDaten editorDaten)
+	{
+		if(instance == null)
+		{
+			new FahrtEditorGUIController(editorDaten);
+		}
+		instance.ladeFahrplan(null);
+		instance.gui.requestFocus();
+	}
+	
+	/**
+	 * Öffnet den Dialog mit der gewählten Fahrt.
+	 * Falls der Dialog schon offen ist, setzt ihn in den Fokus und überschreibt die Fahrt.
+	 * 
+	 * Für den Aufruf über Doppelklick auf einen Fahrtabschnitt.
+	 */
+	public static void openOrFocus(EditorDaten editorDaten, Fahrt fahrt)
+	{
+		if(instance == null)
+		{
+			new FahrtEditorGUIController(editorDaten);
+		}
+		instance.ladeFahrplan(fahrt);
+		instance.gui.requestFocus();
 	}
 	
 	public void initFahrtNamen()
@@ -65,8 +83,10 @@ public class FahrtEditorGUIController
 	{
 		if(fahrt == null)
 		{
+			gui.clearFahrt();
 			return;
 		}
+		
 		aktuelleFahrt = fahrt;
 		
 		Collection<Fahrplanhalt> halte = fahrt.getFahrplanhalte();
@@ -193,6 +213,6 @@ public class FahrtEditorGUIController
 		editorDaten.unregisterFahrtenGeladenCallback(fahrtenGeladenCallbackId);
 		gui.close();
 		gui = null;
-		onClose.run();
+		instance = null;
 	}
 }

@@ -16,7 +16,6 @@ import de.stsFanGruppe.templatebuilder.editor.EditorDaten;
 import de.stsFanGruppe.templatebuilder.editor.EditorGUI;
 import de.stsFanGruppe.templatebuilder.editor.GUIType;
 import de.stsFanGruppe.templatebuilder.editor.bildfahrplan.BildfahrplanGUIController;
-import de.stsFanGruppe.templatebuilder.editor.fahrtEditor.FahrtEditorGUI;
 import de.stsFanGruppe.templatebuilder.editor.fahrtEditor.FahrtEditorGUIController;
 import de.stsFanGruppe.templatebuilder.editor.streckenEditor.StreckenEditorGUI;
 import de.stsFanGruppe.templatebuilder.editor.streckenEditor.StreckenEditorGUIController;
@@ -214,14 +213,11 @@ public class TemplateBuilderGUIController extends GUIController
 				EditorDaten editorDaten = tabs.getSelectedEditorDaten();
 				if(editorDaten == null)
 				{
+					log.error("Aktion bearbeiteFahrten: Keine editorDaten vorhanden!");
 					break;
 				}
 				
-				if(!GUILocker.lock(FahrtEditorGUI.class))
-					break;
-				
-				new FahrtEditorGUIController(editorDaten, () -> GUILocker.unlock(FahrtEditorGUI.class));
-				
+				FahrtEditorGUIController.openOrFocus(editorDaten);
 				break;
 			}
 			case "sucheZug":

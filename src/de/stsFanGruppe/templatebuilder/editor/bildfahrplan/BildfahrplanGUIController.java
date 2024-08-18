@@ -17,7 +17,6 @@ import de.stsFanGruppe.templatebuilder.config.GeneralConfig;
 import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.FahrtDarstellungHandler;
 import de.stsFanGruppe.templatebuilder.editor.EditorDaten;
 import de.stsFanGruppe.templatebuilder.editor.EditorGUIController;
-import de.stsFanGruppe.templatebuilder.editor.fahrtEditor.FahrtEditorGUI;
 import de.stsFanGruppe.templatebuilder.editor.fahrtEditor.FahrtEditorGUIController;
 import de.stsFanGruppe.templatebuilder.gui.GUI;
 import de.stsFanGruppe.templatebuilder.strecken.Betriebsstelle;
@@ -239,7 +238,13 @@ public class BildfahrplanGUIController extends EditorGUIController
 	
 	private void openFahrtenEditor(EditorDaten editorDaten, Fahrt fahrt)
 	{
-		new FahrtEditorGUIController(editorDaten, () -> GUILocker.unlock(FahrtEditorGUI.class), fahrt);
+		if(editorDaten == null)
+		{
+			log.error("openFahrtenEditor: Keine editorDaten vorhanden!");
+			return;
+		}
+		
+		FahrtEditorGUIController.openOrFocus(editorDaten, fahrt);
 	}
 	
 	// Interne Funktionen
