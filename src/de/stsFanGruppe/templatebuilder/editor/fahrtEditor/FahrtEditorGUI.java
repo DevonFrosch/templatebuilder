@@ -21,6 +21,7 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextPane;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 
@@ -34,6 +35,7 @@ public class FahrtEditorGUI extends JFrame implements GUI
 	protected AutoComboBox comboBoxZugname;
 	protected JScrollPane scrollPane;
 	protected JTable table;
+	protected JTextPane lblTemplateInfo;
 	
 	public final String[] SPALTEN_ÜBERSCHRIFTEN = new String[] {"Halt", "Zeit"};
 	
@@ -102,10 +104,12 @@ public class FahrtEditorGUI extends JFrame implements GUI
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				FormSpecs.DEFAULT_ROWSPEC,
 				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,
+				FormSpecs.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("default:grow"),
 				FormSpecs.RELATED_GAP_ROWSPEC,}));
 		
-		JLabel lblZugname = new JLabel("Zugname");
+		JLabel lblZugname = new JLabel("Zug");
 		contentPanel.add(lblZugname, "2, 2, fill, default");
 		
 		comboBoxZugname = new AutoComboBox();
@@ -117,8 +121,17 @@ public class FahrtEditorGUI extends JFrame implements GUI
 		btnLaden.addActionListener(event -> controller.comboBoxSelectionChanged(event));
 		contentPanel.add(btnLaden, "6, 2, fill, fill");
 		
+		JLabel lblTemplate = new JLabel("Template");
+		contentPanel.add(lblTemplate, "2, 4");
+		
+		lblTemplateInfo = new JTextPane();
+		lblTemplateInfo.setEditable(false);
+		lblTemplateInfo.setBackground(null);
+		lblTemplateInfo.setBorder(null);
+		contentPanel.add(lblTemplateInfo, "4, 4, 3, 1");
+		
 		JScrollPane scrollPane = new JScrollPane();
-		contentPanel.add(scrollPane, "2, 4, 5, 1, fill, fill");
+		contentPanel.add(scrollPane, "2, 6, 5, 1, fill, fill");
 		
 		table = new JTable(new DefaultTableModel(SPALTEN_ÜBERSCHRIFTEN, 0));
 		scrollPane.setViewportView(table);

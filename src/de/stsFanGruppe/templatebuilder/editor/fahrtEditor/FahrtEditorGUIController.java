@@ -109,6 +109,8 @@ public class FahrtEditorGUIController
 		DefaultTableModel model = new DefaultTableModel(inhalte, gui.SPALTEN_ÜBERSCHRIFTEN);
 		
 		gui.setTableModel(model);
+		
+		gui.lblTemplateInfo.setText(fahrt.getTemplate().toString());
 	}
 	
 	public synchronized void comboBoxSelectionChanged(ActionEvent event)
