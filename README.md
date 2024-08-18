@@ -19,5 +19,5 @@ Das wiederhole ich alle 4 Stunden, und schon habe ich alle Fahrten auf einen Bli
 ## Historie
 
 DevonFrosch hat dieses Projekt mal irgendwann in 2014 gestartet.
-kkscript ist dann 2015 dazu gestoßen und hat einige Beiträge geleistet.
+Koschi (kkscript) ist dann 2015 dazu gestoßen und hat einige Beiträge geleistet.
 Das Projekt lief lange Zeit über Bitbucket (von Atlassian), so langsam ist es aber Zeit, es woanders unter zu bringen.
