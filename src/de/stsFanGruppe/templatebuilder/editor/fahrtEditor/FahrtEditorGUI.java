@@ -11,6 +11,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableModel;
 import de.stsFanGruppe.templatebuilder.gui.GUI;
+import de.stsFanGruppe.templatebuilder.zug.Fahrt;
 import de.stsFanGruppe.tools.AutoComboBox;
 import de.stsFanGruppe.tools.NullTester;
 import com.jgoodies.forms.layout.FormLayout;
@@ -37,7 +38,7 @@ public class FahrtEditorGUI extends JFrame implements GUI
 	protected JTable table;
 	protected JTextPane lblTemplateInfo;
 	
-	public final String[] SPALTEN_ÜBERSCHRIFTEN = new String[] {"Halt", "Zeit"};
+	public final String[] SPALTEN_ÜBERSCHRIFTEN = new String[] {"Halt", "an", "ab"};
 	
 	/**
 	 * Launch the application.
@@ -128,7 +129,7 @@ public class FahrtEditorGUI extends JFrame implements GUI
 		lblTemplateInfo.setEditable(false);
 		lblTemplateInfo.setBackground(null);
 		lblTemplateInfo.setBorder(null);
-		contentPanel.add(lblTemplateInfo, "4, 4, 3, 1");
+		contentPanel.add(lblTemplateInfo, "4, 4, 3, 1, fill, fill");
 		
 		JScrollPane scrollPane = new JScrollPane();
 		contentPanel.add(scrollPane, "2, 6, 5, 1, fill, fill");
@@ -142,6 +143,14 @@ public class FahrtEditorGUI extends JFrame implements GUI
 	public String getSelectedFahrt()
 	{
 		return comboBoxZugname.getSelectedItem();
+	}
+	
+	public void updateSelectedFahrt(Fahrt fahrt, String[][] fahrplan)
+	{
+		DefaultTableModel model = new DefaultTableModel(fahrplan, SPALTEN_ÜBERSCHRIFTEN);
+		setTableModel(model);
+		
+		lblTemplateInfo.setText(fahrt.getTemplate().toString());
 	}
 	
 	public void setComboBoxItems(String[] items)
