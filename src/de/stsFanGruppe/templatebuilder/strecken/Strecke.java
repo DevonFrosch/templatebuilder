@@ -12,8 +12,6 @@ import de.stsFanGruppe.tools.XMLExportable;
  * <br>
  * Bei zweigleisigen Strecken sind die Streckengleise durchnummeriert, Streckengleis 0 ist dabei
  * das Gleis in Fahrtrichtung Anfang -> Ende, Streckengleis 1 ist das Gleis Ende -> Anfang.
- * 
- * @author DevonFrosch
  */
 public class Strecke implements XMLExportable
 {

@@ -10,8 +10,6 @@ import de.stsFanGruppe.tools.XMLExportable;
  * Ein Fahrplanhalt ist ein Eintrag in einem Fahrplan eines Zuges, der einem Gleisabschnitt
  * eine Ankunft und eine Abfahrt zuweist.
  * Fahrplanhalte sind zeitlich geordnet, zuerst nach Ankunft, dann nach Abfahrt.
- * 
- * @author DevonFrosch
  */
 public class Fahrplanhalt implements Comparable<Fahrplanhalt>, XMLExportable
 {
