@@ -362,7 +362,6 @@ public class TemplateBuilderGUIController extends GUIController
 				aboutText.add("TemplateBuilder " + version + ((dev) ? " (Entwicklungsversion)" : ""));
 				aboutText.add("Copyright DevonFrosch, Koschi");
 				aboutText.add("Webseite: https://sts-fan-gruppe.de/?seite=templatebuilder.");
-				aboutText.add("Fehler bitte unter https://sts-fan-gruppe.de/mantis/ melden.");
 				
 				gui.infoMessage(aboutText.toString(), "Über");
 				break;
