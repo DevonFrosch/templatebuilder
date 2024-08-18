@@ -7,9 +7,8 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.JTableHeader;
-import javax.swing.table.TableModel;
 import de.stsFanGruppe.templatebuilder.gui.GUI;
 import de.stsFanGruppe.templatebuilder.zug.Fahrt;
 import de.stsFanGruppe.tools.AutoComboBox;
@@ -36,6 +35,7 @@ public class FahrtEditorGUI extends JFrame implements GUI
 	protected AutoComboBox comboBoxZugname;
 	protected JScrollPane scrollPane;
 	protected JTable table;
+	private FahrtEditorFahrplanTableModel tableModel;
 	protected JTextPane lblTemplateInfo;
 	
 	public final String[] SPALTEN_ÜBERSCHRIFTEN = new String[] {"Halt", "an", "ab"};
@@ -134,7 +134,8 @@ public class FahrtEditorGUI extends JFrame implements GUI
 		JScrollPane scrollPane = new JScrollPane();
 		contentPanel.add(scrollPane, "2, 6, 5, 1, fill, fill");
 		
-		table = new JTable(new DefaultTableModel(SPALTEN_ÜBERSCHRIFTEN, 0));
+		tableModel = new FahrtEditorFahrplanTableModel(SPALTEN_ÜBERSCHRIFTEN);
+		table = new JTable(tableModel);
 		scrollPane.setViewportView(table);
 		
 		setVisible(true);
@@ -145,10 +146,11 @@ public class FahrtEditorGUI extends JFrame implements GUI
 		return comboBoxZugname.getSelectedItem();
 	}
 	
-	public void updateSelectedFahrt(Fahrt fahrt, String[][] fahrplan)
+	public void updateSelectedFahrt(Fahrt fahrt, String[][] fahrplan, TableModelListener tableUpdate)
 	{
-		DefaultTableModel model = new DefaultTableModel(fahrplan, SPALTEN_ÜBERSCHRIFTEN);
-		setTableModel(model);
+		DefaultTableModel model = new FahrtEditorFahrplanTableModel(fahrplan, SPALTEN_ÜBERSCHRIFTEN);
+		model.addTableModelListener(tableUpdate);
+		table.setModel(model);
 		
 		lblTemplateInfo.setText(fahrt.getTemplate().toString());
 	}
@@ -158,19 +160,9 @@ public class FahrtEditorGUI extends JFrame implements GUI
 		comboBoxZugname.setItems(items);
 	}
 	
-	public JTableHeader getTableHeader()
+	public String getTableValueAt(int row, int column)
 	{
-		return table.getTableHeader();
-	}
-	
-	public void setTableModel(TableModel model)
-	{
-		table.setModel(model);
-	}
-	
-	public void setTableValueAt(String content, int row, int column)
-	{
-		table.setValueAt(content, row, column);
+		return (String) table.getValueAt(row, column);
 	}
 	
 	public void close()

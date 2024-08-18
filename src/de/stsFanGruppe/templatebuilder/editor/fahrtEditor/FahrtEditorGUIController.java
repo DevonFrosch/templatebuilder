@@ -2,6 +2,9 @@ package de.stsFanGruppe.templatebuilder.editor.fahrtEditor;
 
 import java.awt.event.ActionEvent;
 import java.util.NavigableSet;
+
+import javax.swing.event.TableModelEvent;
+
 import de.stsFanGruppe.templatebuilder.editor.EditorDaten;
 import de.stsFanGruppe.templatebuilder.zug.Fahrplanhalt;
 import de.stsFanGruppe.templatebuilder.zug.Fahrt;
@@ -16,6 +19,7 @@ public class FahrtEditorGUIController
 	protected FahrtEditorGUI gui;
 	private Runnable onClose;
 	private Object fahrtenGeladenCallbackId;
+	private Fahrt aktuelleFahrt;
 	
 	public FahrtEditorGUIController(EditorDaten editorDaten, Runnable onClose)
 	{
@@ -62,6 +66,7 @@ public class FahrtEditorGUIController
 		{
 			return;
 		}
+		aktuelleFahrt = fahrt;
 		
 		NavigableSet<Fahrplanhalt> halte = fahrt.getFahrplanhalte();
 		
@@ -88,7 +93,24 @@ public class FahrtEditorGUIController
 			j++;
 		}
 		
-		gui.updateSelectedFahrt(fahrt, inhalte);
+		gui.updateSelectedFahrt(fahrt, inhalte, (event) -> tableChanged(event));
+	}
+	
+	protected void tableChanged(TableModelEvent event)
+	{
+		if(aktuelleFahrt == null)
+		{
+			return;
+		}
+		int column = event.getColumn();
+		NavigableSet<Fahrplanhalt> halte = aktuelleFahrt.getFahrplanhalte();
+		
+		for(int row = event.getFirstRow(); row <= event.getLastRow(); row++)
+		{
+			String value = gui.getTableValueAt(row, column);
+			
+			// TODO: editorDaten aktualisieren und alle Ansichten neu laden
+		}
 	}
 	
 	public synchronized void comboBoxSelectionChanged(ActionEvent event)
