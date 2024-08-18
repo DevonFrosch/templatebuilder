@@ -1,13 +1,13 @@
 package de.stsFanGruppe.templatebuilder.editor.fahrtEditor;
 
 import java.awt.event.ActionEvent;
-import java.util.NavigableSet;
 
 import javax.swing.event.TableModelEvent;
 
 import de.stsFanGruppe.templatebuilder.editor.EditorDaten;
 import de.stsFanGruppe.templatebuilder.zug.Fahrplanhalt;
 import de.stsFanGruppe.templatebuilder.zug.Fahrt;
+import de.stsFanGruppe.tools.FirstLastLinkedList;
 import de.stsFanGruppe.tools.NullTester;
 import de.stsFanGruppe.tools.TimeFormater;
 
@@ -68,7 +68,7 @@ public class FahrtEditorGUIController
 		}
 		aktuelleFahrt = fahrt;
 		
-		NavigableSet<Fahrplanhalt> halte = fahrt.getFahrplanhalte();
+		FirstLastLinkedList<Fahrplanhalt> halte = fahrt.getFahrplanhalte();
 		
 		String[][] inhalte = new String[halte.size()][3];
 		
@@ -76,7 +76,7 @@ public class FahrtEditorGUIController
 		for(Fahrplanhalt halt : halte)
 		{
 			String an = TimeFormater.optionalDoubleToString(halt.getAnkunft());
-			String ab = TimeFormater.optionalDoubleToString(halt.getAbfahrt ());
+			String ab = TimeFormater.optionalDoubleToString(halt.getAbfahrt());
 			
 			if(halt == halte.first() && halte.size() >= 2)
 			{
@@ -103,7 +103,7 @@ public class FahrtEditorGUIController
 			return;
 		}
 		int column = event.getColumn();
-		NavigableSet<Fahrplanhalt> halte = aktuelleFahrt.getFahrplanhalte();
+		FirstLastLinkedList<Fahrplanhalt> halte = aktuelleFahrt.getFahrplanhalte();
 		
 		for(int row = event.getFirstRow(); row <= event.getLastRow(); row++)
 		{

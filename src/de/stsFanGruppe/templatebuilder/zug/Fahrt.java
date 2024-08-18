@@ -2,6 +2,7 @@ package de.stsFanGruppe.templatebuilder.zug;
 
 import java.util.*;
 import de.stsFanGruppe.templatebuilder.strecken.Gleisabschnitt;
+import de.stsFanGruppe.tools.FirstLastLinkedList;
 import de.stsFanGruppe.tools.NullTester;
 import de.stsFanGruppe.tools.XMLExportable;
 
@@ -15,8 +16,6 @@ public class Fahrt implements Comparable<Fahrt>, XMLExportable
 	protected String name = null;
 	protected Linie linie = null;
 	protected Template template = null;
-	protected Fahrt vorgaenger = null;
-	protected Fahrt nachfolger = null;
 	protected NavigableSet<Fahrplanhalt> fahrplanhalte = new TreeSet<>(new Fahrplanhalt.StrictComparator());
 	
 	public Fahrt(String name, Linie linie)
@@ -80,34 +79,14 @@ public class Fahrt implements Comparable<Fahrt>, XMLExportable
 		this.template = template;
 	}
 	
-	public Fahrt getVorgaenger()
-	{
-		return this.vorgaenger;
-	}
-	
-	public void setVorgaenger(Fahrt vorgaenger)
-	{
-		this.vorgaenger = vorgaenger;
-	}
-	
-	public Fahrt getNachfolger()
-	{
-		return this.nachfolger;
-	}
-	
-	public void setNachfolger(Fahrt nachfolger)
-	{
-		this.nachfolger = nachfolger;
-	}
-	
 	public boolean hasFahrplanhalte()
 	{
 		return !fahrplanhalte.isEmpty();
 	}
 	
-	public NavigableSet<Fahrplanhalt> getFahrplanhalte()
+	public FirstLastLinkedList<Fahrplanhalt> getFahrplanhalte()
 	{
-		return fahrplanhalte;
+		return new FirstLastLinkedList<>(fahrplanhalte);
 	}
 	
 	public Fahrplanhalt getFahrplanhalt(Gleisabschnitt gleisabschnitt)

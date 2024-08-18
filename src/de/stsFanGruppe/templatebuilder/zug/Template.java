@@ -80,12 +80,6 @@ public class Template implements Comparable<Template>, XMLExportable {
 	public void addFahrt(Fahrt fahrt) {
 		fahrten.add(fahrt);
 	}
-	public void removeFahrt(Fahrt fahrt) {
-		fahrten.remove(fahrt);
-	}
-	public void clearFahrten() {
-		fahrten.clear();
-	}
 
 	public Fahrt findFahrt(String name) {
 		return fahrten

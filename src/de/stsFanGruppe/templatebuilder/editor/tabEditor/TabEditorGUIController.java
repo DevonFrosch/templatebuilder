@@ -1,5 +1,6 @@
 package de.stsFanGruppe.templatebuilder.editor.tabEditor;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.NavigableSet;
 import java.util.Set;
@@ -117,7 +118,7 @@ public class TabEditorGUIController extends EditorGUIController
 		
 		for(Fahrt fahrt : fahrten)
 		{
-			NavigableSet<Fahrplanhalt> halte = fahrt.getFahrplanhalte();
+			Collection<Fahrplanhalt> halte = fahrt.getFahrplanhalte();
 			
 			if(halte == null || halte.size() < 1)
 			{
