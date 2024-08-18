@@ -59,7 +59,11 @@ public class BildfahrplanGUIController extends EditorGUIController
 	
 	private void initVariables(GUI parentGui, GeneralConfig config)
 	{
-		super.getEditorDaten().setBildfahrplan(this);
+		editorDaten.setBildfahrplan(this);
+		editorDaten.registerFahrtenGeladenCallback(() -> {
+			log.debug("Fahrten geladen");
+			gui.recalculatePanelSize();
+		});
 		this.parentGui = parentGui;
 		this.bildfahrplanConfig = config.getBildfahrplanConfig();
 		this.gui = new BildfahrplanGUI(this);
