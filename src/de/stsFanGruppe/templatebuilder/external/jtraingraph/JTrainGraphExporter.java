@@ -92,7 +92,7 @@ public class JTrainGraphExporter extends Exporter
 				for(Fahrt fahrt : fahrten)
 				{
 					assert fahrt != null;
-					NavigableSet<Fahrplanhalt> fahrplanhalte = fahrt.getFahrplanhalte();
+					Collection<Fahrplanhalt> fahrplanhalte = fahrt.getFahrplanhalte();
 					FirstLastList<String> halte = new FirstLastLinkedList<>();
 					Betriebsstelle anfang = null;
 					Betriebsstelle ende = null;

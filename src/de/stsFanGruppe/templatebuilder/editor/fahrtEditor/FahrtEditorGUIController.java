@@ -1,7 +1,8 @@
 package de.stsFanGruppe.templatebuilder.editor.fahrtEditor;
 
-import java.awt.event.ActionEvent;
-import java.util.NavigableSet;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.OptionalDouble;
 
 import javax.swing.event.TableModelEvent;
 
@@ -15,44 +16,64 @@ public class FahrtEditorGUIController
 {
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(FahrtEditorGUIController.class);
 	
+	private static HashMap<EditorDaten, FahrtEditorGUIController> instance = new HashMap<>();
+	
 	protected EditorDaten editorDaten;
 	protected FahrtEditorGUI gui;
-	private Runnable onClose;
 	private Object fahrtenGeladenCallbackId;
+	private Object editorDatenCloseCallbackId;
 	private Fahrt aktuelleFahrt;
 	
-	public FahrtEditorGUIController(EditorDaten editorDaten, Runnable onClose)
+	protected FahrtEditorGUIController(EditorDaten editorDaten)
 	{
+		instance.put(editorDaten, this);
 		NullTester.test(editorDaten);
-		NullTester.test(onClose);
 		this.editorDaten = editorDaten;
-		this.onClose = onClose;
 		
-		this.gui = new FahrtEditorGUI(this, editorDaten.getName());
+		this.gui = new FahrtEditorGUI(this, "Fahrplaneditor: " + editorDaten.getName());
 		
 		initFahrtNamen();
 		fahrtenGeladenCallbackId = editorDaten.registerFahrtenGeladenCallback(this::initFahrtNamen);
+		editorDatenCloseCallbackId = editorDaten.registerCloseCallback(this::close);
+	}
+	
+	protected FahrtEditorGUIController(EditorDaten editorDaten, Fahrt fahrt)
+	{
+		this(editorDaten);
+		gui.comboBoxZugname.setSelectedItem(fahrt.getName());
+		ladeFahrplan(fahrt);
+	}
+
+	/**
+	 * Öffnet den Dialog ohne Fahrt.
+	 * Falls der Dialog schon offen ist, setzt ihn in den Fokus und entfernt die Fahrt.
+	 * 
+	 * Für den Aufruf über das Menü.
+	 */
+	public static void openOrFocus(EditorDaten editorDaten)
+	{
+		if(!instance.containsKey(editorDaten))
+		{
+			new FahrtEditorGUIController(editorDaten);
+		}
+		instance.get(editorDaten).ladeFahrplan(null);
+		instance.get(editorDaten).gui.requestFocus();
 	}
 	
 	/**
-	 * Für den Aufruf über Doppelklick auf einen Fahrtabschnitt. Hier soll die ausgewählte Fahrt direkt geladen werden.
-	 * @param editorDaten
-	 * @param onClose
-	 * @param fahrt
+	 * Öffnet den Dialog mit der gewählten Fahrt.
+	 * Falls der Dialog schon offen ist, setzt ihn in den Fokus und überschreibt die Fahrt.
+	 * 
+	 * Für den Aufruf über Doppelklick auf einen Fahrtabschnitt.
 	 */
-	public FahrtEditorGUIController(EditorDaten editorDaten, Runnable onClose, Fahrt fahrt)
+	public static void openOrFocus(EditorDaten editorDaten, Fahrt fahrt)
 	{
-		NullTester.test(editorDaten);
-		NullTester.test(onClose);
-		this.editorDaten = editorDaten;
-		this.onClose = onClose;
-		
-		this.gui = new FahrtEditorGUI(this, editorDaten.getName());
-		
-		initFahrtNamen();
-		fahrtenGeladenCallbackId = editorDaten.registerFahrtenGeladenCallback(this::initFahrtNamen);
-		gui.comboBoxZugname.setSelectedItem(fahrt.getName());
-		ladeFahrplan(fahrt);
+		if(!instance.containsKey(editorDaten))
+		{
+			new FahrtEditorGUIController(editorDaten);
+		}
+		instance.get(editorDaten).ladeFahrplan(fahrt);
+		instance.get(editorDaten).gui.requestFocus();
 	}
 	
 	public void initFahrtNamen()
@@ -64,11 +85,13 @@ public class FahrtEditorGUIController
 	{
 		if(fahrt == null)
 		{
+			gui.clearFahrt();
 			return;
 		}
+		
 		aktuelleFahrt = fahrt;
 		
-		NavigableSet<Fahrplanhalt> halte = fahrt.getFahrplanhalte();
+		Collection<Fahrplanhalt> halte = fahrt.getFahrplanhalte();
 		
 		String[][] inhalte = new String[halte.size()][3];
 		
@@ -76,16 +99,19 @@ public class FahrtEditorGUIController
 		for(Fahrplanhalt halt : halte)
 		{
 			String an = TimeFormater.optionalDoubleToString(halt.getAnkunft());
-			String ab = TimeFormater.optionalDoubleToString(halt.getAbfahrt ());
+			String ab = TimeFormater.optionalDoubleToString(halt.getAbfahrt());
 			
-			if(halt == halte.first() && halte.size() >= 2)
+			// TODO: Entscheiden, ob Ankünfte am ersten und Abfahrten am letzten Halt angezeigt werden sollen
+			// Zur Entwicklung ist es sinnvoller, alles anzuzeigen
+			/*
 			{
 				an = "";
 			}
-			if(halt == halte.last() && halte.size() >= 2)
+			if(j == halte.size() - 1 && halte.size() >= 2)
 			{
 				ab = "";
 			}
+			*/
 			
 			inhalte[j][0] = halt.getBetriebsstelle().getName();
 			inhalte[j][1] = an;
@@ -103,28 +129,89 @@ public class FahrtEditorGUIController
 			return;
 		}
 		int column = event.getColumn();
-		NavigableSet<Fahrplanhalt> halte = aktuelleFahrt.getFahrplanhalte();
 		
 		for(int row = event.getFirstRow(); row <= event.getLastRow(); row++)
 		{
 			String value = gui.getTableValueAt(row, column);
+			// Wert kopieren wegen Lambda-Funktion...
+			int localRow = row;
 			
-			// TODO: editorDaten aktualisieren und alle Ansichten neu laden
+			editorDaten.updateFahrt(aktuelleFahrt.getFahrtId(), (fahrt) -> {
+				int anzahlHalte = fahrt.getFahrplanhalte().size();
+				Fahrplanhalt halt = fahrt.getFahrplanhalt(localRow);
+				switch(column)
+				{
+					case 1:
+						try
+						{
+							OptionalDouble zeit = TimeFormater.stringToOptionalDouble(value);
+							
+							if(localRow > 0 && !zeit.isPresent())
+							{
+								gui.errorMessage("Die Abfahrt in Zeile " + (localRow+1) + " darf nicht leer sein!");
+								return fahrt;
+							}
+							
+							halt.setAnkunft(zeit);
+						}
+						catch(NumberFormatException e)
+						{
+							log.error("tableChanged: Kein gültiges Zeitformat in Ankunft, Wert war '{}'", value);
+							gui.errorMessage("Die Abfahrt in Zeile " + (localRow+1) + " ist keine gültige Zeit!");
+							return fahrt;
+						}
+						catch(IllegalArgumentException e)
+						{
+							log.error("tableChanged: Kann an nicht ändern", e);
+							gui.errorMessage("Die Ankunft in Zeile " + (localRow+1) + " ist nicht gültig! " + e.getMessage());
+							return fahrt;
+						}
+						break;
+					case 2:
+						try
+						{
+							OptionalDouble zeit = TimeFormater.stringToOptionalDouble(value);
+							
+							if(localRow < anzahlHalte - 1 && !zeit.isPresent())
+							{
+								gui.errorMessage("Die Abfahrt in Zeile " + (localRow+1) + " darf nicht leer sein!");
+								return fahrt;
+							}
+							
+							halt.setAbfahrt(zeit);
+						}
+						catch(NumberFormatException e)
+						{
+							log.error("tableChanged: Kein gültiges Zeitformat in Abfahrt, Wert war '{}'", value);
+							gui.errorMessage("Die Abfahrt in Zeile " + (localRow+1) + " ist keine gültige Zeit!");
+							return fahrt;
+						}
+						catch(IllegalArgumentException e)
+						{
+							log.error("tableChanged: Kann ab nicht ändern", e);
+							gui.errorMessage("Die Abfahrt in Zeile " + (localRow+1) + " ist nicht gültig! " + e.getMessage());
+							return fahrt;
+						}
+						break;
+					default:
+						log.error("tableChanged: Column {} darf nicht geändert werden", column);
+				}
+				return fahrt;
+			});
 		}
 	}
 	
-	public synchronized void comboBoxSelectionChanged(ActionEvent event)
+	public synchronized void comboBoxSelectionChanged()
 	{
-		log.debug("comboBoxChanged()");
-		
 		ladeFahrplan(editorDaten.getFahrt(gui.getSelectedFahrt()));
 	}
 	
 	protected void close()
 	{
 		editorDaten.unregisterFahrtenGeladenCallback(fahrtenGeladenCallbackId);
+		editorDaten.unregisterCloseCallback(editorDatenCloseCallbackId);
 		gui.close();
 		gui = null;
-		onClose.run();
+		instance.remove(editorDaten);
 	}
 }

@@ -6,10 +6,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import de.stsFanGruppe.templatebuilder.editor.EditorDaten;
 import de.stsFanGruppe.templatebuilder.editor.EditorGUI;
+import de.stsFanGruppe.templatebuilder.editor.EditorGUIController;
 import de.stsFanGruppe.templatebuilder.editor.GUIType;
-import de.stsFanGruppe.templatebuilder.editor.bildfahrplan.BildfahrplanGUI;
 import de.stsFanGruppe.templatebuilder.editor.bildfahrplan.BildfahrplanGUIController;
-import de.stsFanGruppe.templatebuilder.editor.tabEditor.TabEditorGUIController;
 import de.stsFanGruppe.tools.ButtonTabComponent;
 import de.stsFanGruppe.tools.NullTester;
 
@@ -25,25 +24,25 @@ public class TemplateBuilderTabs
 		this.pane = pane;
 	}
 	
-	protected int addTab(String name, Icon icon, String toolTip, Component view, Component columnHeader, Component rowHeader)
+	protected int addTab(String name, Icon icon, String toolTip, EditorGUIController guiController)
 	{
-		assert view != null;
+		assert guiController != null;
 		
 		JScrollPane scrollPane = new JScrollPane();
 		
-		if(view.getClass().isAssignableFrom(BildfahrplanGUI.class))
+		if(guiController.getClass().isAssignableFrom(BildfahrplanGUIController.class))
 		{
 			scrollPane.getVerticalScrollBar().setUnitIncrement(20);
 		}
 		
-		scrollPane.setViewportView(view);
-		if(columnHeader != null)
+		scrollPane.setViewportView(guiController.getGUI());
+		if(guiController.getColumnHeader() != null)
 		{
-			scrollPane.setColumnHeaderView(columnHeader);
+			scrollPane.setColumnHeaderView(guiController.getColumnHeader());
 		}
-		if(rowHeader != null)
+		if(guiController.getRowHeader() != null)
 		{
-			scrollPane.setRowHeaderView(rowHeader);
+			scrollPane.setRowHeaderView(guiController.getRowHeader());
 		}
 		
 		if(name == null)
@@ -56,7 +55,9 @@ public class TemplateBuilderTabs
 		{
 			pane.addTab(name, icon, scrollPane, toolTip);
 			tabIndex = pane.getTabCount() - 1;
-			pane.setTabComponentAt(tabIndex, new ButtonTabComponent(pane, (int index) -> {
+			
+			pane.setTabComponentAt(tabIndex, new ButtonTabComponent(pane, () -> {
+				guiController.close();
 				return true;
 			}));
 		}
@@ -95,17 +96,6 @@ public class TemplateBuilderTabs
 			return null;
 		}
 		return (EditorGUI) view;
-	}
-	
-	public int addBildfahrplanTab(String name, Icon icon, String toolTip, BildfahrplanGUIController bfpController)
-	{
-		return addTab(name, icon, toolTip, bfpController.getBildfahrplanGUI(), bfpController.getBildfahrplanSpaltenHeaderGUI(),
-				bfpController.getBildfahrplanZeilenHeaderGUI());
-	}
-	
-	public int addTabEditorTab(String name, Icon icon, String toolTip, TabEditorGUIController teController)
-	{
-		return addTab(name, icon, toolTip, teController.getTabEditorGUI(), teController.getTableHeader(), teController.getZeilenheaderGUI());
 	}
 	
 	public GUIType getGUITypeOfSelectedTab() {

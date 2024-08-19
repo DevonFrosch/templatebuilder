@@ -6,7 +6,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.OptionalDouble;
 import java.util.Set;
-import java.util.function.BooleanSupplier;
+import java.util.function.Function;
+
 import de.stsFanGruppe.templatebuilder.editor.bildfahrplan.BildfahrplanGUIController;
 import de.stsFanGruppe.templatebuilder.editor.tabEditor.TabEditorGUIController;
 import de.stsFanGruppe.templatebuilder.strecken.Betriebsstelle;
@@ -16,7 +17,6 @@ import de.stsFanGruppe.templatebuilder.types.Schachtelung;
 import de.stsFanGruppe.templatebuilder.zug.Fahrt;
 import de.stsFanGruppe.templatebuilder.zug.Template;
 import de.stsFanGruppe.tools.CallbackHandler;
-import de.stsFanGruppe.tools.FeedbackCallbackHandler;
 import de.stsFanGruppe.tools.NullTester;
 
 /**
@@ -26,15 +26,12 @@ public class EditorDaten
 {
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(EditorDaten.class);
 	
-	protected BildfahrplanGUIController bfpController = null;
-	protected TabEditorGUIController tabHinController = null;
-	protected TabEditorGUIController tabRückController = null;
+	protected HashMap<ControllerType, EditorGUIController> controllers = new HashMap<>();
 	
-	protected FeedbackCallbackHandler noEditorCallbacks = new FeedbackCallbackHandler();
-	protected CallbackHandler nameChangedCallbacks = new CallbackHandler();
 	protected CallbackHandler schachtelungChangedCallbacks = new CallbackHandler();
 	protected CallbackHandler fahrtenGeladenCallbacks = new CallbackHandler();
 	protected CallbackHandler streckeGeladenCallbacks = new CallbackHandler();
+	protected CallbackHandler closeCallbacks = new CallbackHandler();
 	
 	protected String name = null;
 	
@@ -53,131 +50,56 @@ public class EditorDaten
 	protected int schachtelungMinuten = 1440;
 	protected Template schachtelungTemplate = null;
 	
-	// Konstruktoren
-	
-	public EditorDaten()
-	{}
-	
-	public EditorDaten(String name)
-	{
-		this.name = name;
-	}
-	
-	public EditorDaten(BildfahrplanGUIController controller)
-	{
-		this.setBildfahrplan(controller);
-	}
-	
-	public EditorDaten(BildfahrplanGUIController controller, String name)
-	{
-		this(controller);
-		this.name = name;
-	}
-	
-	public EditorDaten(TabEditorGUIController controller, boolean richtungAufsteigend)
-	{
-		this.setTabEditor(controller, richtungAufsteigend);
-	}
-	
-	public EditorDaten(TabEditorGUIController controller, boolean richtungAufsteigend, String name)
-	{
-		this(controller, richtungAufsteigend);
-		this.name = name;
-	}
-	
-	// Getter / Setter
-	
 	public boolean hasBildfahrplan()
 	{
-		return bfpController != null;
+		return controllers.containsKey(ControllerType.BILDFAHRPLAN);
 	}
 	
 	public BildfahrplanGUIController getBildfahrplan()
 	{
-		return bfpController;
+		return (BildfahrplanGUIController) controllers.get(ControllerType.BILDFAHRPLAN);
 	}
 	
 	public void setBildfahrplan(BildfahrplanGUIController controller)
 	{
-		this.bfpController = controller;
-	}
-	
-	public boolean hasTabEditor(boolean richtungAufsteigend)
-	{
-		return getTabEditor(richtungAufsteigend) != null;
-	}
-	
-	public TabEditorGUIController getTabEditor(boolean richtungAufsteigend)
-	{
-		return((richtungAufsteigend) ? tabHinController : tabRückController);
+		controllers.put(ControllerType.BILDFAHRPLAN, controller);
 	}
 	
 	public void setTabEditor(TabEditorGUIController controller, boolean richtungAufsteigend)
 	{
 		if(richtungAufsteigend)
 		{
-			// Wenn das der letzte Editor ist, nachfragen
-			if(!hasBildfahrplan() && !hasTabEditorRück() && noEditorCallbacks.runAll())
-			{
-				return;
-			}
-			this.tabHinController = controller;
+			controllers.put(ControllerType.TABELLE_HIN, controller);
 		}
 		else
 		{
-			// Wenn das der letzte Editor ist, nachfragen
-			if(!hasBildfahrplan() && !hasTabEditorHin() && noEditorCallbacks.runAll())
-			{
-				return;
-			}
-			this.tabRückController = controller;
+			controllers.put(ControllerType.TABELLE_RUECK, controller);
 		}
 	}
 	
 	public boolean hasTabEditorHin()
 	{
-		return hasTabEditor(true);
+		return controllers.containsKey(ControllerType.TABELLE_HIN);
 	}
 	
 	public TabEditorGUIController getTabEditorHin()
 	{
-		return getTabEditor(true);
-	}
-	
-	public void setTabEditorHin(TabEditorGUIController controller)
-	{
-		setTabEditor(controller, true);
+		return (TabEditorGUIController) controllers.get(ControllerType.TABELLE_HIN);
 	}
 	
 	public boolean hasTabEditorRück()
 	{
-		return hasTabEditor(false);
+		return controllers.containsKey(ControllerType.TABELLE_RUECK);
 	}
 	
 	public TabEditorGUIController getTabEditorRück()
 	{
-		return getTabEditor(false);
-	}
-	
-	public void setTabEditorRück(TabEditorGUIController controller)
-	{
-		setTabEditor(controller, false);
-	}
-	
-	public boolean hasEditoren()
-	{
-		return hasBildfahrplan() || hasTabEditorHin() || hasTabEditorRück();
+		return (TabEditorGUIController) controllers.get(ControllerType.TABELLE_RUECK);
 	}
 	
 	public String getName()
 	{
 		return name;
-	}
-	
-	public void setName(String name)
-	{
-		this.name = name;
-		nameChangedCallbacks.runAll();
 	}
 	
 	public Schachtelung getSchachtelung()
@@ -219,26 +141,6 @@ public class EditorDaten
 	
 	// Callbacks
 	
-	public Object registerNoEditorCallback(BooleanSupplier callback)
-	{
-		return noEditorCallbacks.register(callback);
-	}
-	
-	public void unregisterNoEditorCallback(Object callbackId)
-	{
-		noEditorCallbacks.unregister(callbackId);
-	}
-	
-	public Object registerNameChangedCallback(Runnable callback)
-	{
-		return nameChangedCallbacks.register(callback);
-	}
-	
-	public void unregisterNameChangedCallback(Object callbackId)
-	{
-		nameChangedCallbacks.unregister(callbackId);
-	}
-	
 	public Object registerSchachtelungChangedCallback(Runnable callback)
 	{
 		return schachtelungChangedCallbacks.register(callback);
@@ -267,6 +169,16 @@ public class EditorDaten
 	public void unregisterStreckeGeladenCallback(Object callbackId)
 	{
 		streckeGeladenCallbacks.unregister(callbackId);
+	}
+	
+	public Object registerCloseCallback(Runnable callback)
+	{
+		return closeCallbacks.register(callback);
+	}
+	
+	public void unregisterCloseCallback(Object callbackId)
+	{
+		closeCallbacks.unregister(callbackId);
 	}
 	
 	// Strecken und Fahrten
@@ -384,14 +296,6 @@ public class EditorDaten
 		}
 	}
 	
-	public String[] getFahrtTreffer(String suchmuster)
-	{
-		synchronized(templateLock)
-		{
-			return getFahrten().stream().filter(f -> f.getName().toLowerCase().contains(suchmuster.toLowerCase())).map(Fahrt::getName).toArray(String[]::new);
-		}
-	}
-	
 	public Fahrt getFahrt(String name)
 	{
 		if(name == null)
@@ -404,20 +308,22 @@ public class EditorDaten
 		} 
 	}
 	
-	public Fahrt getFahrt(long fahrtId)
-	{
-		synchronized(templateLock)
-		{
-			return templates.stream().map(t -> t.findFahrt(fahrtId)).filter(t -> t != null).findFirst().orElse(null);
-		}
-	}
-	
 	public boolean hasFahrten()
 	{
 		synchronized(templateLock)
 		{
 			return templates.stream().anyMatch(t -> t.hasFahrten());
 		}
+	}
+	
+	public void updateFahrt(long fahrtId, Function<Fahrt, Fahrt> updater)
+	{
+		synchronized(templateLock)
+		{
+			Fahrt fahrt = templates.stream().map(t -> t.findFahrt(fahrtId)).filter(t -> t != null).findFirst().orElse(null);
+			fahrt = updater.apply(fahrt);
+		}
+		fahrtenGeladenCallbacks.runAll();
 	}
 	
 	public double getDiffKm()
@@ -469,5 +375,14 @@ public class EditorDaten
 		schachtelung = Schachtelung.KEINE;
 		schachtelungMinuten = 1440;
 		schachtelungTemplate = null;
+	}
+	
+	public void viewClosed(ControllerType type)
+	{
+		controllers.remove(type);
+		if(controllers.size() == 0)
+		{
+			closeCallbacks.runAll();
+		}
 	}
 }

@@ -1,5 +1,6 @@
 package de.stsFanGruppe.templatebuilder.editor.tabEditor;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.NavigableSet;
 import java.util.Set;
@@ -8,6 +9,7 @@ import java.util.stream.Collectors;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import de.stsFanGruppe.templatebuilder.config.GeneralConfig;
+import de.stsFanGruppe.templatebuilder.editor.ControllerType;
 import de.stsFanGruppe.templatebuilder.editor.EditorDaten;
 import de.stsFanGruppe.templatebuilder.editor.EditorGUIController;
 import de.stsFanGruppe.templatebuilder.strecken.Betriebsstelle;
@@ -31,13 +33,13 @@ public class TabEditorGUIController extends EditorGUIController
 	
 	public TabEditorGUIController(EditorDaten daten, GeneralConfig config, boolean richtungAufsteigend)
 	{
-		super(daten, config);
+		super(richtungAufsteigend ? ControllerType.TABELLE_HIN : ControllerType.TABELLE_RUECK, daten, config);
 		initVariables(config, richtungAufsteigend);
 	}
 	
 	public TabEditorGUIController(GeneralConfig config, boolean richtungAufsteigend)
 	{
-		super(config);
+		super(richtungAufsteigend ? ControllerType.TABELLE_HIN : ControllerType.TABELLE_RUECK, config);
 		initVariables(config, richtungAufsteigend);
 	}
 	
@@ -117,7 +119,7 @@ public class TabEditorGUIController extends EditorGUIController
 		
 		for(Fahrt fahrt : fahrten)
 		{
-			NavigableSet<Fahrplanhalt> halte = fahrt.getFahrplanhalte();
+			Collection<Fahrplanhalt> halte = fahrt.getFahrplanhalte();
 			
 			if(halte == null || halte.size() < 1)
 			{
@@ -144,17 +146,17 @@ public class TabEditorGUIController extends EditorGUIController
 		}
 	}
 	
-	public TabEditorGUI getTabEditorGUI()
+	public TabEditorGUI getGUI()
 	{
 		return this.gui;
 	}
 	
-	public TabEditorZeilenheaderGUI getZeilenheaderGUI()
+	public TabEditorZeilenheaderGUI getRowHeader()
 	{
 		return this.zeilenGui;
 	}
 	
-	public JTableHeader getTableHeader()
+	public JTableHeader getColumnHeader()
 	{
 		return this.gui.getTableHeader();
 	}

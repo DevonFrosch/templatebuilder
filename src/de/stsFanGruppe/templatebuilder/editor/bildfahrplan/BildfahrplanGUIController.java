@@ -15,9 +15,9 @@ import javax.swing.JLabel;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanConfig;
 import de.stsFanGruppe.templatebuilder.config.GeneralConfig;
 import de.stsFanGruppe.templatebuilder.config.fahrtdarstellung.FahrtDarstellungHandler;
+import de.stsFanGruppe.templatebuilder.editor.ControllerType;
 import de.stsFanGruppe.templatebuilder.editor.EditorDaten;
 import de.stsFanGruppe.templatebuilder.editor.EditorGUIController;
-import de.stsFanGruppe.templatebuilder.editor.fahrtEditor.FahrtEditorGUI;
 import de.stsFanGruppe.templatebuilder.editor.fahrtEditor.FahrtEditorGUIController;
 import de.stsFanGruppe.templatebuilder.gui.GUI;
 import de.stsFanGruppe.templatebuilder.strecken.Betriebsstelle;
@@ -47,19 +47,22 @@ public class BildfahrplanGUIController extends EditorGUIController
 	
 	public BildfahrplanGUIController(GUI parentGui, EditorDaten daten, GeneralConfig config)
 	{
-		super(daten, config);
+		super(ControllerType.BILDFAHRPLAN, daten, config);
 		initVariables(parentGui, config);
 	}
 	
 	public BildfahrplanGUIController(GUI parentGui, GeneralConfig config)
 	{
-		super(config);
+		super(ControllerType.BILDFAHRPLAN, config);
 		initVariables(parentGui, config);
 	}
 	
 	private void initVariables(GUI parentGui, GeneralConfig config)
 	{
-		super.getEditorDaten().setBildfahrplan(this);
+		editorDaten.setBildfahrplan(this);
+		editorDaten.registerFahrtenGeladenCallback(() -> {
+			gui.recalculatePanelSize();
+		});
 		this.parentGui = parentGui;
 		this.bildfahrplanConfig = config.getBildfahrplanConfig();
 		this.gui = new BildfahrplanGUI(this);
@@ -76,17 +79,17 @@ public class BildfahrplanGUIController extends EditorGUIController
 	}
 	
 	// Offizielle Funktionen
-	public BildfahrplanGUI getBildfahrplanGUI()
+	public BildfahrplanGUI getGUI()
 	{
 		return gui;
 	}
 	
-	public BildfahrplanSpaltenheaderGUI getBildfahrplanSpaltenHeaderGUI()
+	public BildfahrplanSpaltenheaderGUI getColumnHeader()
 	{
 		return spaltenGui;
 	}
 	
-	public BildfahrplanZeilenheaderGUI getBildfahrplanZeilenHeaderGUI()
+	public BildfahrplanZeilenheaderGUI getRowHeader()
 	{
 		return zeilenGui;
 	}
@@ -235,7 +238,13 @@ public class BildfahrplanGUIController extends EditorGUIController
 	
 	private void openFahrtenEditor(EditorDaten editorDaten, Fahrt fahrt)
 	{
-		new FahrtEditorGUIController(editorDaten, () -> GUILocker.unlock(FahrtEditorGUI.class), fahrt);
+		if(editorDaten == null)
+		{
+			log.error("openFahrtenEditor: Keine editorDaten vorhanden!");
+			return;
+		}
+		
+		FahrtEditorGUIController.openOrFocus(editorDaten, fahrt);
 	}
 	
 	// Interne Funktionen

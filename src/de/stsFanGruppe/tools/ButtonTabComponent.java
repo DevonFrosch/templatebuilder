@@ -97,7 +97,7 @@ public class ButtonTabComponent extends JPanel
 		int i = pane.indexOfTabComponent(ButtonTabComponent.this);
 		if(i != -1)
 		{
-			if(closeCallback == null || closeCallback.tabClosed(i))
+			if(closeCallback == null || closeCallback.tabClosed())
 			{
 				pane.remove(i);
 			}
@@ -187,9 +187,8 @@ public class ButtonTabComponent extends JPanel
 		 * Function is called when a tab is to be closed, return value decides whether the tab is closed or not.
 		 * This just covers closing by the close button provided by this class.
 		 * 
-		 * @param index Tab index to be closed.
 		 * @return true if the tab can be closed safely.
 		 */
-		public boolean tabClosed(int index);
+		public boolean tabClosed();
 	}
 }

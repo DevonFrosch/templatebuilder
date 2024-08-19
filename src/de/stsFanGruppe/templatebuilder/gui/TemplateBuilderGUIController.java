@@ -16,7 +16,6 @@ import de.stsFanGruppe.templatebuilder.editor.EditorDaten;
 import de.stsFanGruppe.templatebuilder.editor.EditorGUI;
 import de.stsFanGruppe.templatebuilder.editor.GUIType;
 import de.stsFanGruppe.templatebuilder.editor.bildfahrplan.BildfahrplanGUIController;
-import de.stsFanGruppe.templatebuilder.editor.fahrtEditor.FahrtEditorGUI;
 import de.stsFanGruppe.templatebuilder.editor.fahrtEditor.FahrtEditorGUIController;
 import de.stsFanGruppe.templatebuilder.editor.streckenEditor.StreckenEditorGUI;
 import de.stsFanGruppe.templatebuilder.editor.streckenEditor.StreckenEditorGUIController;
@@ -67,7 +66,7 @@ public class TemplateBuilderGUIController extends GUIController
 		{
 			case "neu":
 			{
-				tabs.addTabEditorTab("Neuer Tab", null, null, new TabEditorGUIController(config, true));
+				tabs.addTab("Neuer Tab", null, null, new TabEditorGUIController(config, true));
 				gui.updateAnsichtAuswahl();
 				break;
 			}
@@ -117,7 +116,7 @@ public class TemplateBuilderGUIController extends GUIController
 						}
 						
 						// Zum Panel hinzufügen
-						tabs.addBildfahrplanTab(name, null, null, bfpController);
+						tabs.addTab(name, null, null, bfpController);
 					}
 					
 					GUILocker.unlock(JTrainGraphImportGUI.class);
@@ -214,14 +213,11 @@ public class TemplateBuilderGUIController extends GUIController
 				EditorDaten editorDaten = tabs.getSelectedEditorDaten();
 				if(editorDaten == null)
 				{
+					log.error("Aktion bearbeiteFahrten: Keine editorDaten vorhanden!");
 					break;
 				}
 				
-				if(!GUILocker.lock(FahrtEditorGUI.class))
-					break;
-				
-				new FahrtEditorGUIController(editorDaten, () -> GUILocker.unlock(FahrtEditorGUI.class));
-				
+				FahrtEditorGUIController.openOrFocus(editorDaten);
 				break;
 			}
 			case "sucheZug":
@@ -281,11 +277,11 @@ public class TemplateBuilderGUIController extends GUIController
 				
 				if(editorDaten.hasBildfahrplan())
 				{
-					tabs.setSelectedTab(tabs.getTabIndexOf(editorDaten.getBildfahrplan().getBildfahrplanGUI()));
+					tabs.setSelectedTab(tabs.getTabIndexOf(editorDaten.getBildfahrplan().getGUI()));
 					break;
 				}
 				
-				int index = tabs.addBildfahrplanTab(editorDaten.getName(), null, null, new BildfahrplanGUIController(gui, editorDaten, config));
+				int index = tabs.addTab(editorDaten.getName(), null, null, new BildfahrplanGUIController(gui, editorDaten, config));
 				tabs.setSelectedTab(index);
 				gui.updateAnsichtAuswahl();
 				break;
@@ -303,11 +299,11 @@ public class TemplateBuilderGUIController extends GUIController
 				if(editorDaten.hasTabEditorHin())
 				{
 					log.info("Wechseln auf EditorHin");
-					tabs.setSelectedTab(tabs.getTabIndexOf(editorDaten.getTabEditorHin().getTabEditorGUI()));
+					tabs.setSelectedTab(tabs.getTabIndexOf(editorDaten.getTabEditorHin().getGUI()));
 					break;
 				}
 				
-				int index = tabs.addTabEditorTab(tabs.getSelectedEditorDaten().getName(), null, null,
+				int index = tabs.addTab(tabs.getSelectedEditorDaten().getName(), null, null,
 						new TabEditorGUIController(editorDaten, config, true));
 				tabs.setSelectedTab(index);
 				gui.updateAnsichtAuswahl();
@@ -325,11 +321,11 @@ public class TemplateBuilderGUIController extends GUIController
 				
 				if(editorDaten.hasTabEditorRück())
 				{
-					tabs.setSelectedTab(tabs.getTabIndexOf(editorDaten.getTabEditorRück().getTabEditorGUI()));
+					tabs.setSelectedTab(tabs.getTabIndexOf(editorDaten.getTabEditorRück().getGUI()));
 					break;
 				}
 				
-				int index = tabs.addTabEditorTab(tabs.getSelectedEditorDaten().getName(), null, null,
+				int index = tabs.addTab(tabs.getSelectedEditorDaten().getName(), null, null,
 						new TabEditorGUIController(editorDaten, config, false));
 				tabs.setSelectedTab(index);
 				gui.updateAnsichtAuswahl();
