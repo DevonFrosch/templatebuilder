@@ -357,7 +357,7 @@ public class TemplateBuilderGUIController extends GUIController
 				StringJoiner aboutText = new StringJoiner("\n");
 				aboutText.add("TemplateBuilder " + version + ((dev) ? " (Entwicklungsversion)" : ""));
 				aboutText.add("Copyright DevonFrosch, Koschi");
-				aboutText.add("Webseite: https://sts-fan-gruppe.de/?seite=templatebuilder.");
+				aboutText.add("Webseite: https://sts-fan-gruppe.de/?seite=templatebuilder");
 				
 				gui.infoMessage(aboutText.toString(), "Über");
 				break;
