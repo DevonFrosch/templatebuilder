@@ -181,6 +181,11 @@ public class Fahrt implements Comparable<Fahrt>, XMLExportable
 		return false;
 	}
 	
+	public boolean isSichtbar()
+	{
+		return fahrplanhalte.size() > 1;
+	}
+	
 	public String toString()
 	{
 		StringBuilder stringBuilder = new StringBuilder("Fahrt " + getName() + " { Linie: " + getLinie());

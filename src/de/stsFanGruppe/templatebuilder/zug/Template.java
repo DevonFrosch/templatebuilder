@@ -102,6 +102,11 @@ public class Template implements Comparable<Template>, XMLExportable
 		return !fahrten.isEmpty();
 	}
 	
+	public boolean hasSichtbareFahrten()
+	{
+		return fahrten.stream().anyMatch(fahrt -> fahrt.isSichtbar());
+	}
+	
 	public Set<Fahrt> getFahrten()
 	{
 		return fahrten;
