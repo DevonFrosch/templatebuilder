@@ -15,7 +15,7 @@ public class Startup
 	protected static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Startup.class);
 	
 	// Versionsinformationen
-	public final static String version = "0.3.11";
+	public final static String version = "0.3.12";
 	public final static boolean dev = true;
 	
 	public final static String updateUrl = "https://sts-fan-gruppe.de/spielzeug/templatebuilder/version.txt";
