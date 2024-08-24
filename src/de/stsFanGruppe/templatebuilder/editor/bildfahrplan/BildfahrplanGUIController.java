@@ -389,7 +389,6 @@ public class BildfahrplanGUIController extends EditorGUIController
 			int schachtelungMinuten = editorDaten.getSchachtelungMinuten();
 			Template schachtelungTemplate = editorDaten.getSchachtelungTemplate();
 			Set<Integer> verschiebungen = getVerschiebungen(schachtelungTemplate);
-			log.info("Schachtelung {} Minuten {}", schachtelung, schachtelungMinuten);
 			
 			int zeigeZugnamen = bildfahrplanConfig.getZeigeZugnamen();
 			boolean zeigeZeiten = bildfahrplanConfig.getZeigeZeiten();
