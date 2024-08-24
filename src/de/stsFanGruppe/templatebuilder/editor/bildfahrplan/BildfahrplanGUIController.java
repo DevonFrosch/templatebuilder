@@ -130,7 +130,7 @@ public class BildfahrplanGUIController extends EditorGUIController
 		 * Das Rechteck muss viewportHeight hoch sein, ansonsten wird nur so gescrollt,
 		 * dass der Beginn der Fahrt irgendwo auf dem Bildschirm sichtbar ist
 		 */ 
-		Rectangle scrollPos = new Rectangle(0, Math.min(top - 20, 0), 0, viewportHeight);
+		Rectangle scrollPos = new Rectangle(0, Math.max(top - 20, 0), 0, viewportHeight);
 		gui.scrollRectToVisible(scrollPos);
 	}
 	
