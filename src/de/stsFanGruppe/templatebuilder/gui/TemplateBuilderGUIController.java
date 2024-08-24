@@ -451,6 +451,8 @@ public class TemplateBuilderGUIController extends GUIController
 		
 		log.debug("jumpToZug, ab={}, an={}", ab, an);
 		bfp.jumpToZug(ab, an);
+		
+		bfp.highlightTemplate(schachtelungTemplate);
 	}
 	
 	public Set<Template> getTemplates() {

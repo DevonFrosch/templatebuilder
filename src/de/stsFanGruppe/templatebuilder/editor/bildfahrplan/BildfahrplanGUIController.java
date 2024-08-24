@@ -217,6 +217,17 @@ public class BildfahrplanGUIController extends EditorGUIController
 		lastClickTime = System.nanoTime();
 	}
 	
+	public void highlightTemplate(Template template)
+	{
+		Set<Fahrtabschnitt> abschnitte = getZugLinien()
+				.stream()
+				.map(linie -> linie.getFahrtabschnitt())
+				.filter(fahrtabschnitt -> template.getFahrten().contains(fahrtabschnitt.getFahrt()))
+				.collect(Collectors.toSet());
+		
+		bildfahrplanConfig.getFahrtDarstellungConfig().setHervorgehobeneZuege(abschnitte);
+	}
+	
 	private void chooseZug(List<HervorgehobeneFahrtabschnitt> hervorgehobeneFahrtabschnitte) {
 		
 		//Nur wenn es mehr als 1 Zug in diesem Abschnitt gibt.
