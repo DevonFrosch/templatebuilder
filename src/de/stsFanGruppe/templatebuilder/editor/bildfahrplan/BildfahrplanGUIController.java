@@ -121,6 +121,19 @@ public class BildfahrplanGUIController extends EditorGUIController
 		zeilenGui.repaint();
 	}
 	
+	public void jumpToZug(double ab, double an)
+	{
+		int top = (int) ph.getZeitPos(ab);
+		int viewportHeight = (int) gui.getVisibleRect().getHeight();
+		
+		/* Springe zum Start der Fahrt
+		 * Das Rechteck muss viewportHeight hoch sein, ansonsten wird nur so gescrollt,
+		 * dass der Beginn der Fahrt irgendwo auf dem Bildschirm sichtbar ist
+		 */ 
+		Rectangle scrollPos = new Rectangle(0, Math.min(top - 20, 0), 0, viewportHeight);
+		gui.scrollRectToVisible(scrollPos);
+	}
+	
 	// Funktionen von EditorGUIController
 	public void ladeStreckenabschnitt(Streckenabschnitt streckenabschnitt)
 	{

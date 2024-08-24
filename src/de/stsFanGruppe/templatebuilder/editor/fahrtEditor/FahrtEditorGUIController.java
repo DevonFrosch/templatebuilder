@@ -7,6 +7,7 @@ import java.util.OptionalDouble;
 import javax.swing.event.TableModelEvent;
 
 import de.stsFanGruppe.templatebuilder.editor.EditorDaten;
+import de.stsFanGruppe.templatebuilder.editor.bildfahrplan.BildfahrplanGUIController;
 import de.stsFanGruppe.templatebuilder.zug.Fahrplanhalt;
 import de.stsFanGruppe.templatebuilder.zug.Fahrt;
 import de.stsFanGruppe.tools.NullTester;
@@ -204,6 +205,33 @@ public class FahrtEditorGUIController
 	public synchronized void comboBoxSelectionChanged()
 	{
 		ladeFahrplan(editorDaten.getFahrt(gui.getSelectedFahrt()));
+	}
+	
+	public void jumpToZug()
+	{
+		if(aktuelleFahrt == null || editorDaten == null)
+		{
+			return;
+		}
+		
+		double ab = aktuelleFahrt.getFahrplanhalte().first().getAbfahrt().orElse(-1.0);
+		double an = aktuelleFahrt.getFahrplanhalte().last().getAnkunft().orElse(-1.0);
+		
+		if(an < 0.0 || ab < 0.0)
+		{
+			log.warn("jumpToZug: Fahrzeiten ungültig, an={}, ab={}", an, ab);
+			return;
+		}
+		
+		BildfahrplanGUIController bfp = editorDaten.getBildfahrplan();
+		
+		if(bfp == null)
+		{
+			log.info("jumpToZug: Kein Bildfahrplan offen");
+			return;
+		}
+		
+		bfp.jumpToZug(ab, an);
 	}
 	
 	protected void close()
