@@ -232,6 +232,8 @@ public class FahrtEditorGUIController
 		}
 		
 		bfp.jumpToZug(ab, an);
+		
+		bfp.highlightFahrt(aktuelleFahrt);
 	}
 	
 	protected void close()

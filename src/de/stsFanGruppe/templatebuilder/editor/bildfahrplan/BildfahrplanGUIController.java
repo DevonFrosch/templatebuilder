@@ -217,6 +217,17 @@ public class BildfahrplanGUIController extends EditorGUIController
 		lastClickTime = System.nanoTime();
 	}
 	
+	public void highlightFahrt(Fahrt fahrt)
+	{
+		Set<Fahrtabschnitt> abschnitte = getZugLinien()
+				.stream()
+				.map(linie -> linie.getFahrtabschnitt())
+				.filter(fahrtabschnitt -> fahrt == fahrtabschnitt.getFahrt())
+				.collect(Collectors.toSet());
+		
+		bildfahrplanConfig.getFahrtDarstellungConfig().setHervorgehobeneZuege(abschnitte);
+	}
+	
 	public void highlightTemplate(Template template)
 	{
 		Set<Fahrtabschnitt> abschnitte = getZugLinien()
