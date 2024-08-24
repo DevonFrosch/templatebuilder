@@ -43,6 +43,8 @@ public class TemplateBuilderGUIController extends GUIController
 	protected BildfahrplanConfig bildfahrplanConfig = null;
 	protected TemplateBuilderTabs tabs = null;
 	
+	protected Template schachtelungTemplate = null;
+	
 	public TemplateBuilderGUIController(GeneralConfig config, String version, boolean dev, String update)
 	{
 		NullTester.test(config);
@@ -400,11 +402,55 @@ public class TemplateBuilderGUIController extends GUIController
 	}
 	
 	public void schachtelungTemplateChanged() {
-		Template template = gui.getSchachtelungTemplate();
+		schachtelungTemplate = gui.getSchachtelungTemplate();
 		EditorGUI selectedGUI = tabs.getSelectedGUI();
 		if(selectedGUI != null) {
-			selectedGUI.getController().getEditorDaten().setSchachtelungTemplate(template);
+			selectedGUI.getController().getEditorDaten().setSchachtelungTemplate(schachtelungTemplate);
 		}
+	}
+	
+	public void jumpToTemplate()
+	{
+		EditorGUI selectedGUI = tabs.getSelectedGUI();
+		if(selectedGUI == null)
+		{
+			log.info("jumpToTemplate: Keine GUI offen");
+			return;
+		}
+		
+		EditorDaten editorDaten = selectedGUI.getController().getEditorDaten();
+		if(editorDaten == null)
+		{
+			log.info("jumpToTemplate: Keine Daten offen");
+			return;
+		}
+		
+		BildfahrplanGUIController bfp = editorDaten.getBildfahrplan();
+		if(bfp == null)
+		{
+			log.info("jumpToTemplate: Kein Bildfahrplan offen");
+			return;
+		}
+		
+		if(!gui.buttonSchachtelungTemplateJump.isEnabled() || schachtelungTemplate == null)
+		{
+			log.info("jumpToTemplate: Kein Template gewählt");
+			return;
+		}
+		
+		Fahrt firstFahrt = schachtelungTemplate.getFirstFahrt(bfp.getBildfahrplanConfig().getMinZeit());
+
+		double ab = firstFahrt.getFahrplanhalte().first().getAbfahrt().orElse(-1.0);
+		double an = firstFahrt.getFahrplanhalte().last().getAnkunft().orElse(-1.0);
+		
+		if(an < 0.0 || ab < 0.0)
+		{
+			log.warn("jumpToZug: Fahrzeiten ungültig, an={}, ab={}", an, ab);
+			return;
+		}
+		
+		log.debug("jumpToZug, ab={}, an={}", ab, an);
+		bfp.jumpToZug(ab, an);
 	}
 	
 	public Set<Template> getTemplates() {

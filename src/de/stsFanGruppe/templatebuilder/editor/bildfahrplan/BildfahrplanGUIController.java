@@ -94,6 +94,11 @@ public class BildfahrplanGUIController extends EditorGUIController
 		return zeilenGui;
 	}
 	
+	public BildfahrplanConfig getBildfahrplanConfig()
+	{
+		return bildfahrplanConfig;
+	}
+	
 	public Set<FahrtabschnittCalculatableLine> getZugLinien()
 	{
 		synchronized(zugLinienLock)
@@ -131,6 +136,7 @@ public class BildfahrplanGUIController extends EditorGUIController
 		 * dass der Beginn der Fahrt irgendwo auf dem Bildschirm sichtbar ist
 		 */ 
 		Rectangle scrollPos = new Rectangle(0, Math.max(top - 20, 0), 0, viewportHeight);
+		log.debug("jumpTo top={}, rect={}", top, scrollPos);
 		gui.scrollRectToVisible(scrollPos);
 	}
 	
