@@ -39,6 +39,7 @@ public class TemplateBuilderGUI implements GUI
 	protected JRadioButton radioSchachtelungTemplate;
 	protected JTextField inputSchachtelungMinuten;
 	protected JComboBox<Template> inputSchachtelungTemplate;
+	protected JButton buttonSchachtelungTemplateJump;
 	
 	/**
 	 * Create the application.
@@ -341,6 +342,13 @@ public class TemplateBuilderGUI implements GUI
 			inputSchachtelungTemplate.addActionListener(event -> controller.schachtelungTemplateChanged());
 			inputSchachtelungTemplate.setMaximumSize(new Dimension(250, 20));
 			toolBar.add(inputSchachtelungTemplate);
+			
+			buttonSchachtelungTemplateJump = new JButton("Springe zu Template");
+			buttonSchachtelungTemplateJump.setEnabled(false);
+			buttonSchachtelungTemplateJump.addActionListener((ActionEvent e) -> {
+				controller.jumpToTemplate();
+			});
+			toolBar.add(buttonSchachtelungTemplateJump);
 		}
 		
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP, JTabbedPane.SCROLL_TAB_LAYOUT);
@@ -433,6 +441,7 @@ public class TemplateBuilderGUI implements GUI
 		
 		radioSchachtelungTemplate.setSelected(typ == Schachtelung.TEMPLATE);
 		inputSchachtelungTemplate.setEnabled(typ == Schachtelung.TEMPLATE);
+		buttonSchachtelungTemplateJump.setEnabled(typ == Schachtelung.TEMPLATE);
 	}
 	
 	public void setSchachtelungMinuten(int minuten)

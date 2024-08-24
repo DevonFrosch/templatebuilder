@@ -23,6 +23,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextPane;
 import javax.swing.JComponent;
+import javax.swing.JButton;
+import java.awt.event.ActionEvent;
 
 public class FahrtEditorGUI extends JFrame implements GUI
 {
@@ -91,6 +93,8 @@ public class FahrtEditorGUI extends JFrame implements GUI
 				FormSpecs.DEFAULT_COLSPEC,
 				FormSpecs.RELATED_GAP_COLSPEC,
 				ColumnSpec.decode("default:grow"),
+				FormSpecs.RELATED_GAP_COLSPEC,
+				FormSpecs.DEFAULT_COLSPEC,
 				FormSpecs.RELATED_GAP_COLSPEC,},
 			new RowSpec[] {
 				FormSpecs.RELATED_GAP_ROWSPEC,
@@ -109,6 +113,12 @@ public class FahrtEditorGUI extends JFrame implements GUI
 		comboBoxZugname.setEditable(true);
 		contentPanel.add(comboBoxZugname, "4, 2, fill, fill");
 		
+		JButton btnJump = new JButton("springen");
+		btnJump.addActionListener((ActionEvent e) -> {
+			controller.jumpToZug();
+		});
+		contentPanel.add(btnJump, "6, 2");
+		
 		JLabel lblTemplate = new JLabel("Template");
 		contentPanel.add(lblTemplate, "2, 4");
 		
@@ -116,10 +126,10 @@ public class FahrtEditorGUI extends JFrame implements GUI
 		lblTemplateInfo.setEditable(false);
 		lblTemplateInfo.setBackground(null);
 		lblTemplateInfo.setBorder(null);
-		contentPanel.add(lblTemplateInfo, "4, 4, fill, fill");
+		contentPanel.add(lblTemplateInfo, "4, 4, 3, 1, fill, fill");
 		
 		JScrollPane scrollPane = new JScrollPane();
-		contentPanel.add(scrollPane, "2, 6, 3, 1, fill, fill");
+		contentPanel.add(scrollPane, "2, 6, 5, 1, fill, fill");
 		
 		tableModel = new FahrtEditorFahrplanTableModel(SPALTEN_ÜBERSCHRIFTEN);
 		table = new JTable(tableModel);

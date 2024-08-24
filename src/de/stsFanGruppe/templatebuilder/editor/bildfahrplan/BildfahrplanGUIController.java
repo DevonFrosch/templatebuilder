@@ -94,6 +94,11 @@ public class BildfahrplanGUIController extends EditorGUIController
 		return zeilenGui;
 	}
 	
+	public BildfahrplanConfig getBildfahrplanConfig()
+	{
+		return bildfahrplanConfig;
+	}
+	
 	public Set<FahrtabschnittCalculatableLine> getZugLinien()
 	{
 		synchronized(zugLinienLock)
@@ -119,6 +124,20 @@ public class BildfahrplanGUIController extends EditorGUIController
 		gui.repaint();
 		spaltenGui.repaint();
 		zeilenGui.repaint();
+	}
+	
+	public void jumpToZug(double ab, double an)
+	{
+		int top = (int) ph.getZeitPos(ab);
+		int viewportHeight = (int) gui.getVisibleRect().getHeight();
+		
+		/* Springe zum Start der Fahrt
+		 * Das Rechteck muss viewportHeight hoch sein, ansonsten wird nur so gescrollt,
+		 * dass der Beginn der Fahrt irgendwo auf dem Bildschirm sichtbar ist
+		 */ 
+		Rectangle scrollPos = new Rectangle(0, Math.max(top - 20, 0), 0, viewportHeight);
+		log.debug("jumpTo top={}, rect={}", top, scrollPos);
+		gui.scrollRectToVisible(scrollPos);
 	}
 	
 	// Funktionen von EditorGUIController
@@ -196,6 +215,28 @@ public class BildfahrplanGUIController extends EditorGUIController
 			bildfahrplanConfig.getFahrtDarstellungConfig().setHervorgehobeneZuege(abschnitte);
 		}
 		lastClickTime = System.nanoTime();
+	}
+	
+	public void highlightFahrt(Fahrt fahrt)
+	{
+		Set<Fahrtabschnitt> abschnitte = getZugLinien()
+				.stream()
+				.map(linie -> linie.getFahrtabschnitt())
+				.filter(fahrtabschnitt -> fahrt == fahrtabschnitt.getFahrt())
+				.collect(Collectors.toSet());
+		
+		bildfahrplanConfig.getFahrtDarstellungConfig().setHervorgehobeneZuege(abschnitte);
+	}
+	
+	public void highlightTemplate(Template template)
+	{
+		Set<Fahrtabschnitt> abschnitte = getZugLinien()
+				.stream()
+				.map(linie -> linie.getFahrtabschnitt())
+				.filter(fahrtabschnitt -> template.getFahrten().contains(fahrtabschnitt.getFahrt()))
+				.collect(Collectors.toSet());
+		
+		bildfahrplanConfig.getFahrtDarstellungConfig().setHervorgehobeneZuege(abschnitte);
 	}
 	
 	private void chooseZug(List<HervorgehobeneFahrtabschnitt> hervorgehobeneFahrtabschnitte) {
