@@ -128,7 +128,7 @@ public class BildfahrplanGUIController extends EditorGUIController
 	
 	public void jumpToZug(double ab, double an)
 	{
-		int top = (int) ph.getZeitPos(ab);
+		int top = (int) ph.getZeitPos(Math.min(an, ab));
 		int viewportHeight = (int) gui.getVisibleRect().getHeight();
 		
 		/* Springe zum Start der Fahrt
