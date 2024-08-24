@@ -435,7 +435,11 @@ public class BildfahrplanGUIController extends EditorGUIController
 			boolean zeigeZeiten = bildfahrplanConfig.getZeigeZeiten();
 			int zeigeRichtung = bildfahrplanConfig.getZeigeRichtung();
 			
-			Set<Fahrt> fahrten = editorDaten.getFahrten();
+			// Ignoriere Fahrten mit weniger als 2 Fahrplanhalten, weil die eh nicht gezeichnet werden
+			Set<Fahrt> fahrten = editorDaten.getFahrten()
+					.stream()
+					.filter(fahrt -> fahrt.getFahrplanhalte().size() > 1)
+					.collect(Collectors.toSet());
 			
 			synchronized(fahrten)
 			{
