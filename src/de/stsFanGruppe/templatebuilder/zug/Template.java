@@ -102,6 +102,11 @@ public class Template implements Comparable<Template>, XMLExportable
 		return !fahrten.isEmpty();
 	}
 	
+	public boolean hasSichtbareFahrten()
+	{
+		return fahrten.stream().anyMatch(fahrt -> fahrt.isSichtbar());
+	}
+	
 	public Set<Fahrt> getFahrten()
 	{
 		return fahrten;
@@ -133,14 +138,12 @@ public class Template implements Comparable<Template>, XMLExportable
 		
 		for(Fahrt fahrt : fahrten)
 		{
-			log.debug("Fahrt {}", fahrt);
-			if(fahrt.getMaxZeit() < minZeit)
+			if(fahrt.getMinZeit() < minZeit)
 			{
 				continue;
 			}
 			if(first == null || first.compareTo(fahrt) > 0)
 			{
-				log.debug("... ist früher");
 				first = fahrt;
 			}
 		}

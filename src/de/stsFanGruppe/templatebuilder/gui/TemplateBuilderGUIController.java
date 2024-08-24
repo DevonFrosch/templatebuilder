@@ -8,6 +8,8 @@ import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Set;
 import java.util.StringJoiner;
+import java.util.stream.Collectors;
+
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanConfig;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanSettingsGUI;
 import de.stsFanGruppe.templatebuilder.config.BildfahrplanSettingsGUIController;
@@ -460,7 +462,11 @@ public class TemplateBuilderGUIController extends GUIController
 		if(daten == null) {
 			return new HashSet<>();
 		}
-		return daten.getTemplates();
+		
+		return daten.getTemplates()
+				.stream()
+				.filter(template -> template.hasSichtbareFahrten())
+				.collect(Collectors.toSet());
 	}
 	
 	private EditorDaten getEditorDaten() {
